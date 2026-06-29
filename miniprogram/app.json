@@ -1,0 +1,22 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/students/index",
+    "pages/student-detail/index",
+    "pages/lesson-detail/index",
+    "pages/mistake-detail/index",
+    "pages/add-student/index",
+    "pages/add-lesson/index",
+    "pages/add-mistake/index"
+  ],
+  "window": {
+    "backgroundColor": "#F7F3EA",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F7F3EA",
+    "navigationBarTitleText": "课堂错题本",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

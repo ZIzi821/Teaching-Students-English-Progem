@@ -1,0 +1,40 @@
+<view class="page home-page">
+  <view class="hero">
+    <view class="eyebrow">老师的课堂记录</view>
+    <view class="title">课堂错题本</view>
+    <view class="subtitle">把每节课讲过的试卷、错题和解析整理在一起，学生和家长随时回看。</view>
+  </view>
+
+  <view class="stats-row">
+    <view class="stat-card">
+      <view class="stat-number">{{stats.studentCount}}</view>
+      <view class="stat-label">学生</view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-number">{{stats.lessonCount}}</view>
+      <view class="stat-label">课程</view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-number">{{stats.mistakeCount}}</view>
+      <view class="stat-label">错题</view>
+    </view>
+  </view>
+
+  <view class="actions">
+    <view class="primary-btn" bindtap="goStudents">查看学生</view>
+    <view class="ghost-btn" bindtap="goAddStudent">添加学生</view>
+    <view class="ghost-btn" bindtap="goAddLesson">添加课程</view>
+    <view class="ghost-btn" bindtap="goAddMistake">添加错题</view>
+  </view>
+
+  <view class="section-title">最近课程</view>
+  <view class="card lesson-card" wx:for="{{recentLessons}}" wx:key="_id">
+    <view class="lesson-main">
+      <view class="lesson-title">{{item.title}}</view>
+      <view class="lesson-meta">{{item.subject}} · {{item.lessonDate}}</view>
+    </view>
+    <view class="lesson-summary">{{item.summary}}</view>
+  </view>
+
+  <view class="env-tip">云环境：{{envId}}</view>
+</view>

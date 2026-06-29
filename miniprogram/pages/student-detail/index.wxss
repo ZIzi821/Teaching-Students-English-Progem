@@ -1,0 +1,86 @@
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  background: #e9f4ee;
+}
+
+.avatar {
+  display: flex;
+  width: 92rpx;
+  height: 92rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #4f8f73;
+  font-size: 38rpx;
+  font-weight: 700;
+}
+
+.profile-main {
+  flex: 1;
+}
+
+.name {
+  color: #243f35;
+  font-size: 38rpx;
+  font-weight: 700;
+}
+
+.meta,
+.summary {
+  margin-top: 10rpx;
+  color: #6a6258;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
+.sample-tip {
+  display: inline-flex;
+  margin-top: 14rpx;
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  color: #8a6730;
+  background: #fff1cf;
+  font-size: 22rpx;
+}
+
+.add-btn {
+  margin-bottom: 32rpx;
+}
+
+.section-title {
+  margin-bottom: 18rpx;
+  color: #2f2a24;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.empty {
+  padding: 40rpx 0;
+  color: #817669;
+  text-align: center;
+}
+
+.lesson-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.lesson-title {
+  color: #2f2a24;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.date,
+.subject {
+  color: #817669;
+  font-size: 24rpx;
+}
+
+.subject {
+  margin-top: 10rpx;
+}

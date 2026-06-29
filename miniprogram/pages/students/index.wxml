@@ -1,0 +1,20 @@
+<view class="page">
+  <view class="page-head">
+    <view>
+      <view class="title">学生列表</view>
+      <view class="subtitle">先用示例数据预览，创建云数据库后会自动读取真实学生。</view>
+    </view>
+  </view>
+
+  <view class="sample-tip" wx:if="{{isSample}}">当前显示示例学生</view>
+  <view class="primary-btn add-btn" bindtap="goAddStudent">添加学生</view>
+
+  <view class="card student-card" wx:for="{{students}}" wx:key="_id" bindtap="goStudent" data-id="{{item._id}}">
+    <view class="avatar">{{item.initial}}</view>
+    <view class="student-info">
+      <view class="student-name">{{item.name}} <text class="nickname">{{item.nickname}}</text></view>
+      <view class="student-meta">{{item.grade}} · 家长：{{item.parentName}}</view>
+    </view>
+    <view class="status">{{item.status}}</view>
+  </view>
+</view>

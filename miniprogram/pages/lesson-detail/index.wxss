@@ -1,0 +1,101 @@
+.lesson-head {
+  background: #e9f4ee;
+}
+
+.subject {
+  color: #4f8f73;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.title {
+  margin-top: 10rpx;
+  color: #243f35;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.date {
+  margin-top: 10rpx;
+  color: #817669;
+  font-size: 24rpx;
+}
+
+.summary,
+.reason {
+  margin-top: 16rpx;
+  color: #62584d;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
+.sample-tip {
+  display: inline-flex;
+  margin-top: 16rpx;
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  color: #8a6730;
+  background: #fff1cf;
+  font-size: 22rpx;
+}
+
+.add-btn {
+  margin-bottom: 32rpx;
+}
+
+.section-title {
+  margin: 14rpx 0 18rpx;
+  color: #2f2a24;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.empty {
+  padding: 30rpx 0;
+  color: #817669;
+  text-align: center;
+}
+
+.paper-title,
+.mistake-title {
+  color: #2f2a24;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.paper-meta {
+  margin-top: 10rpx;
+  color: #817669;
+  font-size: 24rpx;
+}
+
+.mistake-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.status {
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  color: #4f8f73;
+  background: #e9f4ee;
+  font-size: 22rpx;
+  white-space: nowrap;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-top: 18rpx;
+}
+
+.tag {
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  color: #6f593d;
+  background: #f5ead8;
+  font-size: 22rpx;
+}

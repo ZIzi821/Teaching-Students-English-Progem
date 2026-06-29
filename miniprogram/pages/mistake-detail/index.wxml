@@ -1,0 +1,35 @@
+<view class="page" wx:if="{{mistake}}">
+  <view class="card">
+    <view class="label">题目</view>
+    <view class="question-title">{{mistake.displayTitle}}</view>
+    <image wx:if="{{mistake.questionImageFileId}}" class="question-image" src="{{mistake.questionImageFileId}}" mode="widthFix"></image>
+    <view wx:else class="image-empty">题目图片待上传</view>
+    <view class="sample-tip" wx:if="{{isSample}}">示例错题</view>
+  </view>
+
+  <view class="card answer-card">
+    <view class="field">
+      <view class="label">学生答案</view>
+      <view class="content">{{mistake.studentAnswer}}</view>
+    </view>
+    <view class="field">
+      <view class="label">正确答案</view>
+      <view class="content correct">{{mistake.correctAnswer}}</view>
+    </view>
+    <view class="field">
+      <view class="label">错误原因</view>
+      <view class="content">{{mistake.reason}}</view>
+    </view>
+    <view class="field">
+      <view class="label">老师解析</view>
+      <view class="content">{{mistake.explanation}}</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="label">知识点标签</view>
+    <view class="tags">
+      <text class="tag" wx:for="{{mistake.tags}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+</view>

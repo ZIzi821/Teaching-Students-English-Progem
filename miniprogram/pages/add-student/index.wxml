@@ -1,0 +1,35 @@
+<view class="page">
+  <view class="form-head">
+    <view class="title">添加学生</view>
+    <view class="subtitle">先建立学生档案，再为学生添加课程记录和错题。</view>
+  </view>
+
+  <view class="card form-card">
+    <view class="field">
+      <view class="label">学生姓名</view>
+      <input class="input" placeholder="例如：小明" value="{{form.name}}" data-field="name" bindinput="onInput" />
+    </view>
+
+    <view class="field">
+      <view class="label">昵称</view>
+      <input class="input" placeholder="家长常用称呼，可不填" value="{{form.nickname}}" data-field="nickname" bindinput="onInput" />
+    </view>
+
+    <view class="field">
+      <view class="label">年级</view>
+      <input class="input" placeholder="例如：三年级" value="{{form.grade}}" data-field="grade" bindinput="onInput" />
+    </view>
+
+    <view class="field">
+      <view class="label">家长姓名</view>
+      <input class="input" placeholder="例如：李女士" value="{{form.parentName}}" data-field="parentName" bindinput="onInput" />
+    </view>
+
+    <view class="field">
+      <view class="label">状态</view>
+      <input class="input" placeholder="在读 / 暂停" value="{{form.status}}" data-field="status" bindinput="onInput" />
+    </view>
+  </view>
+
+  <view class="primary-btn" bindtap="submitStudent">保存学生</view>
+</view>

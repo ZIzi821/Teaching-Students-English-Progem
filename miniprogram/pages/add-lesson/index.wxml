@@ -1,0 +1,39 @@
+<view class="page">
+  <view class="form-head">
+    <view class="title">添加课程</view>
+    <view class="subtitle">记录这一节课讲了什么，后续可以继续补充试卷和错题。</view>
+  </view>
+
+  <view class="card form-card">
+    <view class="field">
+      <view class="label">学生</view>
+      <picker mode="selector" range="{{students}}" range-key="name" value="{{studentIndex}}" bindchange="onStudentChange">
+        <view class="picker-value">{{selectedStudentName}}</view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <view class="label">课程标题</view>
+      <input class="input" placeholder="例如：分数应用题复习" value="{{form.title}}" data-field="title" bindinput="onInput" />
+    </view>
+
+    <view class="field">
+      <view class="label">科目</view>
+      <input class="input" placeholder="数学 / 语文 / 英语" value="{{form.subject}}" data-field="subject" bindinput="onInput" />
+    </view>
+
+    <view class="field">
+      <view class="label">日期</view>
+      <picker mode="date" value="{{form.lessonDate}}" bindchange="onDateChange">
+        <view class="picker-value">{{form.lessonDate}}</view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <view class="label">课程总结</view>
+      <textarea class="textarea" placeholder="本节课重点、孩子掌握情况、下次复习提醒" value="{{form.summary}}" data-field="summary" bindinput="onInput"></textarea>
+    </view>
+  </view>
+
+  <view class="primary-btn" bindtap="submitLesson">保存课程</view>
+</view>

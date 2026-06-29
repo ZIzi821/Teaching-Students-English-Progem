@@ -1,0 +1,23 @@
+<view class="page" wx:if="{{student}}">
+  <view class="card profile-card">
+    <view class="avatar">{{student.initial}}</view>
+    <view class="profile-main">
+      <view class="name">{{student.name}}</view>
+      <view class="meta">{{student.grade}} · 家长：{{student.parentName}}</view>
+      <view class="sample-tip" wx:if="{{isSample}}">示例学生资料</view>
+    </view>
+  </view>
+
+  <view class="primary-btn add-btn" bindtap="goAddLesson">添加课程记录</view>
+
+  <view class="section-title">课程记录</view>
+  <view class="empty" wx:if="{{!lessons.length}}">还没有课程记录。</view>
+  <view class="card lesson-card" wx:for="{{lessons}}" wx:key="_id" bindtap="goLesson" data-id="{{item._id}}">
+    <view class="lesson-top">
+      <view class="lesson-title">{{item.title}}</view>
+      <view class="date">{{item.lessonDate}}</view>
+    </view>
+    <view class="subject">{{item.subject}}</view>
+    <view class="summary">{{item.summary}}</view>
+  </view>
+</view>
