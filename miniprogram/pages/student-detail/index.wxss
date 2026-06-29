@@ -70,6 +70,16 @@
   line-height: 1.6;
 }
 
+.preview-tip {
+  margin-bottom: 22rpx;
+  padding: 18rpx 22rpx;
+  border-radius: 14rpx;
+  color: #4f6f63;
+  background: #e9f4ee;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
 .lesson-top {
   display: flex;
   justify-content: space-between;

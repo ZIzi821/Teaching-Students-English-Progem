@@ -1,16 +1,23 @@
 Page({
   data: {
     studentId: "",
+    previewStudentId: "",
+    mode: "",
     role: "",
     isTeacher: false,
+    isTeacherPreview: false,
     student: null,
     lessons: [],
     message: "",
   },
 
   onLoad(options) {
+    const mode = options.mode || "";
+    const previewStudentId = options.previewStudentId || "";
     this.setData({
-      studentId: options.id || "",
+      studentId: previewStudentId || options.id || "",
+      previewStudentId,
+      mode,
     });
     this.loadStudent();
   },
@@ -23,6 +30,8 @@ Page({
           type: "getStudentDetail",
           data: {
             studentId: this.data.studentId,
+            previewStudentId: this.data.previewStudentId,
+            mode: this.data.mode,
           },
         },
       })
@@ -36,9 +45,11 @@ Page({
           });
           return;
         }
+        const isTeacherPreview = result.role === "teacher" && this.data.mode === "teacherPreview";
         this.setData({
           role: result.role,
-          isTeacher: result.role === "teacher",
+          isTeacher: result.role === "teacher" && !isTeacherPreview,
+          isTeacherPreview,
           student: this.prepareStudent(result.student),
           lessons: result.lessons || [],
           message: "",
@@ -59,14 +70,24 @@ Page({
   },
 
   goLesson(e) {
+    let url = "/pages/lesson-detail/index?id=" + e.currentTarget.dataset.id;
+    if (this.data.isTeacherPreview) {
+      url += "&mode=teacherPreview&previewStudentId=" + this.data.student._id;
+    }
     wx.navigateTo({
-      url: "/pages/lesson-detail/index?id=" + e.currentTarget.dataset.id,
+      url,
     });
   },
 
   goAddLesson() {
     wx.navigateTo({
       url: "/pages/add-lesson/index?studentId=" + this.data.student._id,
+    });
+  },
+
+  goTeacherPreview() {
+    wx.navigateTo({
+      url: "/pages/student-detail/index?mode=teacherPreview&previewStudentId=" + this.data.student._id,
     });
   },
 });

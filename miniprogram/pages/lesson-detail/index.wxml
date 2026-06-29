@@ -4,6 +4,8 @@
   </view>
 
   <view wx:if="{{lesson}}">
+  <view class="preview-tip" wx:if="{{isTeacherPreview}}">学生视角预览：已隐藏上传资料和添加错题等老师操作。</view>
+
   <view class="card lesson-head">
     <view class="subject">{{lesson.subject}}</view>
     <view class="title">{{lesson.title}}</view>

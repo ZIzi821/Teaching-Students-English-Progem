@@ -1,8 +1,11 @@
 Page({
   data: {
     lessonId: "",
+    previewStudentId: "",
+    mode: "",
     role: "",
     isTeacher: false,
+    isTeacherPreview: false,
     lesson: null,
     papers: [],
     mistakes: [],
@@ -21,6 +24,8 @@ Page({
   onLoad(options) {
     this.setData({
       lessonId: options.id || "",
+      previewStudentId: options.previewStudentId || "",
+      mode: options.mode || "",
     });
     this.loadLesson();
   },
@@ -39,6 +44,8 @@ Page({
           type: "getLessonDetail",
           data: {
             lessonId: this.data.lessonId,
+            previewStudentId: this.data.previewStudentId,
+            mode: this.data.mode,
           },
         },
       })
@@ -51,9 +58,11 @@ Page({
           return;
         }
         const papers = this.preparePapers(result.papers || []);
+        const isTeacherPreview = result.role === "teacher" && this.data.mode === "teacherPreview";
         this.setData({
           role: result.role,
-          isTeacher: result.role === "teacher",
+          isTeacher: result.role === "teacher" && !isTeacherPreview,
+          isTeacherPreview,
           lesson: result.lesson,
           papers,
           mistakes: this.prepareMistakes(result.mistakes || []),

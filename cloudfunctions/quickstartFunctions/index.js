@@ -349,7 +349,11 @@ const seedStudents = async () => {
 
 const getStudentDetail = async (event) => {
   const identity = await getIdentity();
-  const requestedId = event.data && event.data.studentId;
+  const data = event.data || {};
+  if (data.mode === "teacherPreview" && identity.role !== "teacher") {
+    throw createError("PERMISSION_DENIED", "只有朱老师可以使用学生视角预览");
+  }
+  const requestedId = data.previewStudentId || data.studentId;
   const studentId = identity.role === "student" ? identity.student._id : requestedId;
   if (!studentId) throw createError("INVALID_STUDENT", "缺少学生 ID");
   await ensureStudentAccess(studentId);
@@ -404,13 +408,20 @@ const addLesson = async (event) => {
 };
 
 const getLessonDetail = async (event) => {
-  const lessonId = event.data && event.data.lessonId;
+  const data = event.data || {};
+  const lessonId = data.lessonId;
   if (!lessonId) throw createError("INVALID_LESSON", "缺少课程 ID");
   const identity = await getIdentity();
   if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+  if (data.mode === "teacherPreview" && identity.role !== "teacher") {
+    throw createError("PERMISSION_DENIED", "只有朱老师可以使用学生视角预览");
+  }
 
   const lessonRes = await db.collection("lessons").doc(lessonId).get();
   const lesson = lessonRes.data;
+  if (data.mode === "teacherPreview" && data.previewStudentId && lesson.studentId !== data.previewStudentId) {
+    throw createError("PERMISSION_DENIED", "预览学生和课程不匹配");
+  }
   await ensureStudentAccess(lesson.studentId);
   const papersRes = await db.collection("papers").where({ lessonId }).orderBy("createdAt", "desc").get();
   const mistakesRes = await db.collection("mistakes").where({ lessonId }).orderBy("createdAt", "desc").get();
