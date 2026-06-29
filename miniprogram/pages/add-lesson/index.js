@@ -1,5 +1,3 @@
-const sampleData = require("../../utils/sampleData");
-
 function formatDate(date) {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
@@ -11,46 +9,55 @@ Page({
   data: {
     students: [],
     studentIndex: 0,
-    selectedStudentName: "",
+    selectedStudentName: "请选择学生",
+    message: "",
     form: {
       title: "",
-      subject: "数学",
+      subject: "英语",
       lessonDate: "",
+      lessonNo: "",
       summary: "",
     },
   },
 
   onLoad(options) {
+    this.preferredStudentId = options.studentId || "";
     this.setData({
       "form.lessonDate": formatDate(new Date()),
     });
-    this.loadStudents(options.studentId || "");
+    this.loadStudents();
   },
 
-  loadStudents(preferredStudentId) {
-    const fallbackStudents = sampleData.students;
-    this.applyStudents(fallbackStudents, preferredStudentId);
-
-    if (!wx.cloud) return;
+  loadStudents() {
     wx.cloud
-      .database()
-      .collection("students")
-      .orderBy("createdAt", "desc")
-      .get()
-      .then((res) => {
-        if (res.data && res.data.length) {
-          this.applyStudents(res.data, preferredStudentId);
-        }
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "listStudents",
+        },
       })
-      .catch(() => {
-        console.log("students 集合暂不可用，使用示例学生");
+      .then((res) => {
+        const result = res.result || {};
+        if (!result.success) {
+          this.setData({
+            message: result.message || "只有朱老师可以添加课程",
+          });
+          return;
+        }
+        this.applyStudents(result.data || []);
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setData({
+          message: "请先上传并部署云函数",
+        });
       });
   },
 
-  applyStudents(students, preferredStudentId) {
+  applyStudents(students) {
     let studentIndex = 0;
-    if (preferredStudentId) {
-      const foundIndex = students.findIndex((item) => item._id === preferredStudentId);
+    if (this.preferredStudentId) {
+      const foundIndex = students.findIndex((item) => item._id === this.preferredStudentId);
       studentIndex = foundIndex >= 0 ? foundIndex : 0;
     }
     this.setData({
@@ -84,36 +91,43 @@ Page({
   submitLesson() {
     const student = this.data.students[this.data.studentIndex];
     const form = this.data.form;
-    if (!student || !form.title || !form.subject || !form.lessonDate) {
+    if (!student || !form.title || !form.lessonDate || !form.lessonNo) {
       wx.showToast({
         title: "请填写课程信息",
         icon: "none",
       });
       return;
     }
-    if (!wx.cloud) {
-      wx.showToast({
-        title: "当前基础库不支持云开发",
-        icon: "none",
-      });
-      return;
-    }
 
     wx.showLoading({ title: "保存中" });
-    const db = wx.cloud.database();
-    db.collection("lessons")
-      .add({
+    wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
         data: {
-          studentId: student._id,
-          title: form.title,
-          subject: form.subject,
-          lessonDate: form.lessonDate,
-          summary: form.summary,
-          paperFileIds: [],
-          createdAt: db.serverDate(),
+          type: "addLesson",
+          data: {
+            studentId: student._id,
+            title: form.title,
+            subject: form.subject,
+            lessonDate: form.lessonDate,
+            lessonNo: form.lessonNo,
+            summary: form.summary,
+            paperFileIds: [],
+          },
         },
       })
-      .then(() => {
+      .then((res) => {
+        const result = res.result || {};
+        if (result.success === false) {
+          this.setData({
+            message: result.message || "保存失败",
+          });
+          wx.showToast({
+            title: "保存失败",
+            icon: "none",
+          });
+          return;
+        }
         wx.showToast({ title: "已保存" });
         setTimeout(() => {
           wx.navigateBack();
@@ -121,9 +135,8 @@ Page({
       })
       .catch((err) => {
         console.error(err);
-        wx.showToast({
-          title: "保存失败，请检查集合权限",
-          icon: "none",
+        this.setData({
+          message: "请先上传并部署云函数",
         });
       })
       .finally(() => {

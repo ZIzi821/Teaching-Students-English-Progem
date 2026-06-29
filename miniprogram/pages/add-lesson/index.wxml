@@ -1,8 +1,10 @@
 <view class="page">
   <view class="form-head">
-    <view class="title">添加课程</view>
-    <view class="subtitle">记录这一节课讲了什么，后续可以继续补充试卷和错题。</view>
+    <view class="title">添加英语课</view>
+    <view class="subtitle">记录朱老师这一节英语课讲了什么，后续可以继续补充练习和错题。</view>
   </view>
+
+  <view class="card message-card" wx:if="{{message}}">{{message}}</view>
 
   <view class="card form-card">
     <view class="field">
@@ -14,12 +16,7 @@
 
     <view class="field">
       <view class="label">课程标题</view>
-      <input class="input" placeholder="例如：分数应用题复习" value="{{form.title}}" data-field="title" bindinput="onInput" />
-    </view>
-
-    <view class="field">
-      <view class="label">科目</view>
-      <input class="input" placeholder="数学 / 语文 / 英语" value="{{form.subject}}" data-field="subject" bindinput="onInput" />
+      <input class="input" placeholder="例如：Past Simple 过去式练习" value="{{form.title}}" data-field="title" bindinput="onInput" />
     </view>
 
     <view class="field">
@@ -30,10 +27,15 @@
     </view>
 
     <view class="field">
+      <view class="label">第几节课</view>
+      <input class="input" type="number" placeholder="例如：1" value="{{form.lessonNo}}" data-field="lessonNo" bindinput="onInput" />
+    </view>
+
+    <view class="field">
       <view class="label">课程总结</view>
-      <textarea class="textarea" placeholder="本节课重点、孩子掌握情况、下次复习提醒" value="{{form.summary}}" data-field="summary" bindinput="onInput"></textarea>
+      <textarea class="textarea" placeholder="本节英语课重点、孩子掌握情况、单词/语法复习提醒" value="{{form.summary}}" data-field="summary" bindinput="onInput"></textarea>
     </view>
   </view>
 
-  <view class="primary-btn" bindtap="submitLesson">保存课程</view>
+  <view class="primary-btn" bindtap="submitLesson">保存英语课</view>
 </view>

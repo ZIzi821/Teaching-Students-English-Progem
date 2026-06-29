@@ -69,6 +69,33 @@
   font-size: 24rpx;
 }
 
+.upload-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.upload-title {
+  color: #2f2a24;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.picker-value {
+  box-sizing: border-box;
+  min-height: 78rpx;
+  padding: 0 22rpx;
+  border-radius: 14rpx;
+  background: #f8f2e8;
+  color: #2f2a24;
+  font-size: 28rpx;
+  line-height: 78rpx;
+}
+
+.upload-btn {
+  min-height: 78rpx;
+}
+
 .mistake-top {
   display: flex;
   align-items: center;
@@ -98,4 +125,11 @@
   color: #6f593d;
   background: #f5ead8;
   font-size: 22rpx;
+}
+
+.no-permission {
+  color: #8a6730;
+  background: #fff1cf;
+  font-size: 28rpx;
+  line-height: 1.6;
 }

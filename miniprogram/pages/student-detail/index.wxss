@@ -63,6 +63,13 @@
   text-align: center;
 }
 
+.no-permission {
+  color: #8a6730;
+  background: #fff1cf;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
 .lesson-top {
   display: flex;
   justify-content: space-between;

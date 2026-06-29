@@ -1,11 +1,11 @@
-const sampleData = require("../../utils/sampleData");
-
 Page({
   data: {
     studentId: "",
+    role: "",
+    isTeacher: false,
     student: null,
     lessons: [],
-    isSample: true,
+    message: "",
   },
 
   onLoad(options) {
@@ -16,37 +16,45 @@ Page({
   },
 
   loadStudent() {
-    const studentId = this.data.studentId;
-    const sampleStudent = sampleData.students.find((item) => item._id === studentId) || sampleData.students[0];
-    const sampleLessons = sampleData.lessons.filter((item) => item.studentId === sampleStudent._id);
-
-    this.setData({
-      student: this.prepareStudent(sampleStudent),
-      lessons: sampleLessons,
-      isSample: true,
-    });
-
-    if (!wx.cloud || studentId.indexOf("sample-") === 0) return;
-    const db = wx.cloud.database();
-    Promise.all([
-      db.collection("students").doc(studentId).get(),
-      db.collection("lessons").where({ studentId }).orderBy("lessonDate", "desc").get(),
-    ])
+    wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "getStudentDetail",
+          data: {
+            studentId: this.data.studentId,
+          },
+        },
+      })
       .then((res) => {
+        const result = res.result || {};
+        if (!result.success) {
+          this.setData({
+            message: result.message || "无权查看该学生",
+            student: null,
+            lessons: [],
+          });
+          return;
+        }
         this.setData({
-          student: this.prepareStudent(res[0].data),
-          lessons: res[1].data || [],
-          isSample: false,
+          role: result.role,
+          isTeacher: result.role === "teacher",
+          student: this.prepareStudent(result.student),
+          lessons: result.lessons || [],
+          message: "",
         });
       })
-      .catch(() => {
-        console.log("读取学生详情失败，保留示例数据");
+      .catch((err) => {
+        console.error(err);
+        this.setData({
+          message: "请先上传并部署云函数",
+        });
       });
   },
 
   prepareStudent(student) {
     return Object.assign({}, student, {
-      initial: student.name ? student.name.substr(0, 1) : "学",
+      initial: student && student.name ? student.name.substr(0, 1) : "学",
     });
   },
 
@@ -58,7 +66,7 @@ Page({
 
   goAddLesson() {
     wx.navigateTo({
-      url: "/pages/add-lesson/index?studentId=" + this.data.studentId,
+      url: "/pages/add-lesson/index?studentId=" + this.data.student._id,
     });
   },
 });

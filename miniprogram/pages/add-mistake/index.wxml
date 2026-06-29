@@ -1,8 +1,10 @@
 <view class="page">
   <view class="form-head">
-    <view class="title">添加错题</view>
-    <view class="subtitle">上传题目图片，记录孩子答案、正确答案和老师解析。</view>
+    <view class="title">添加英语错题</view>
+    <view class="subtitle">上传英语题目图片，记录学生答案、正确答案、错误原因和朱老师解析。</view>
   </view>
+
+  <view class="card message-card" wx:if="{{message}}">{{message}}</view>
 
   <view class="card form-card">
     <view class="field">
@@ -23,35 +25,35 @@
       <view class="label">题目图片</view>
       <view class="upload-box" bindtap="chooseImage">
         <image wx:if="{{questionImageFileId}}" class="preview" src="{{questionImageFileId}}" mode="aspectFill"></image>
-        <view wx:else class="upload-text">点击上传题目图片</view>
+        <view wx:else class="upload-text">点击上传英语题目图片</view>
       </view>
     </view>
 
     <view class="field">
       <view class="label">学生答案</view>
-      <textarea class="textarea" placeholder="学生当时写的答案或思路" value="{{form.studentAnswer}}" data-field="studentAnswer" bindinput="onInput"></textarea>
+      <textarea class="textarea" placeholder="学生当时写的英文答案或思路" value="{{form.studentAnswer}}" data-field="studentAnswer" bindinput="onInput"></textarea>
     </view>
 
     <view class="field">
       <view class="label">正确答案</view>
-      <textarea class="textarea" placeholder="正确答案" value="{{form.correctAnswer}}" data-field="correctAnswer" bindinput="onInput"></textarea>
+      <textarea class="textarea" placeholder="正确英文答案" value="{{form.correctAnswer}}" data-field="correctAnswer" bindinput="onInput"></textarea>
     </view>
 
     <view class="field">
       <view class="label">错误原因</view>
-      <textarea class="textarea" placeholder="例如：审题不清、单位 1 判断错误" value="{{form.reason}}" data-field="reason" bindinput="onInput"></textarea>
+      <textarea class="textarea" placeholder="例如：did 后面用了过去式、没有看清 what" value="{{form.reason}}" data-field="reason" bindinput="onInput"></textarea>
     </view>
 
     <view class="field">
       <view class="label">老师解析</view>
-      <textarea class="textarea tall" placeholder="讲解思路、提醒、下次复习方法" value="{{form.explanation}}" data-field="explanation" bindinput="onInput"></textarea>
+      <textarea class="textarea tall" placeholder="语法/阅读/单词讲解思路、提醒、下次复习方法" value="{{form.explanation}}" data-field="explanation" bindinput="onInput"></textarea>
     </view>
 
     <view class="field">
       <view class="label">知识点标签</view>
-      <input class="input" placeholder="用逗号分隔，如：分数应用题,单位1" value="{{form.tagsText}}" data-field="tagsText" bindinput="onInput" />
+      <input class="input" placeholder="用逗号分隔，如：Past Simple,Grammar" value="{{form.tagsText}}" data-field="tagsText" bindinput="onInput" />
     </view>
   </view>
 
-  <view class="primary-btn" bindtap="submitMistake">保存错题</view>
+  <view class="primary-btn" bindtap="submitMistake">保存英语错题</view>
 </view>

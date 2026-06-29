@@ -1,10 +1,8 @@
-const sampleData = require("../../utils/sampleData");
-
 Page({
   data: {
     mistakeId: "",
     mistake: null,
-    isSample: true,
+    message: "",
   },
 
   onLoad(options) {
@@ -15,33 +13,40 @@ Page({
   },
 
   loadMistake() {
-    const mistakeId = this.data.mistakeId;
-    const sampleMistake = sampleData.mistakes.find((item) => item._id === mistakeId) || sampleData.mistakes[0];
-    this.setData({
-      mistake: this.prepareMistake(sampleMistake),
-      isSample: true,
-    });
-
-    if (!wx.cloud || mistakeId.indexOf("sample-") === 0) return;
     wx.cloud
-      .database()
-      .collection("mistakes")
-      .doc(mistakeId)
-      .get()
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "getMistakeDetail",
+          data: {
+            mistakeId: this.data.mistakeId,
+          },
+        },
+      })
       .then((res) => {
+        const result = res.result || {};
+        if (!result.success) {
+          this.setData({
+            message: result.message || "无权查看该错题",
+          });
+          return;
+        }
         this.setData({
-          mistake: this.prepareMistake(res.data),
-          isSample: false,
+          mistake: this.prepareMistake(result.mistake),
+          message: "",
         });
       })
-      .catch(() => {
-        console.log("读取错题详情失败，保留示例数据");
+      .catch((err) => {
+        console.error(err);
+        this.setData({
+          message: "请先上传并部署云函数",
+        });
       });
   },
 
   prepareMistake(mistake) {
     return Object.assign({}, mistake, {
-      displayTitle: mistake.questionTitle || "题目图片",
+      displayTitle: mistake.questionTitle || "英语题目图片",
     });
   },
 });

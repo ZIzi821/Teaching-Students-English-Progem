@@ -1,0 +1,55 @@
+.bind-card {
+  background: #e9f4ee;
+}
+
+.eyebrow {
+  color: #4f8f73;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.title {
+  margin-top: 10rpx;
+  color: #243f35;
+  font-size: 42rpx;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin-top: 14rpx;
+  color: #52635b;
+  font-size: 28rpx;
+  line-height: 1.7;
+}
+
+.label {
+  margin-bottom: 12rpx;
+  color: #655b50;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 88rpx;
+  padding: 0 22rpx;
+  border-radius: 14rpx;
+  background: #f8f2e8;
+  color: #2f2a24;
+  font-size: 30rpx;
+  line-height: 88rpx;
+}
+
+.tip,
+.message {
+  margin-top: 18rpx;
+  color: #817669;
+  font-size: 24rpx;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.message {
+  color: #9a4d37;
+}

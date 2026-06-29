@@ -1,18 +1,20 @@
 <view class="page">
   <view class="form-head">
     <view class="title">添加学生</view>
-    <view class="subtitle">先建立学生档案，再为学生添加课程记录和错题。</view>
+    <view class="subtitle">先建立英语课学生档案，并给每位学生一个专属 accessCode 用于绑定微信。</view>
   </view>
+
+  <view class="card message-card" wx:if="{{message}}">{{message}}</view>
 
   <view class="card form-card">
     <view class="field">
       <view class="label">学生姓名</view>
-      <input class="input" placeholder="例如：小明" value="{{form.name}}" data-field="name" bindinput="onInput" />
+      <input class="input" placeholder="例如：安安" value="{{form.name}}" data-field="name" bindinput="onInput" />
     </view>
 
     <view class="field">
       <view class="label">昵称</view>
-      <input class="input" placeholder="家长常用称呼，可不填" value="{{form.nickname}}" data-field="nickname" bindinput="onInput" />
+      <input class="input" placeholder="英文名或昵称，例如：Annie" value="{{form.nickname}}" data-field="nickname" bindinput="onInput" />
     </view>
 
     <view class="field">
@@ -29,7 +31,28 @@
       <view class="label">状态</view>
       <input class="input" placeholder="在读 / 暂停" value="{{form.status}}" data-field="status" bindinput="onInput" />
     </view>
+
+    <view class="field">
+      <view class="label">accessCode</view>
+      <input class="input" placeholder="例如：RUIRUI-EN-4829" value="{{form.accessCode}}" data-field="accessCode" bindinput="onInput" />
+    </view>
+
+    <view class="field">
+      <view class="label">studentOpenId</view>
+      <input class="input" placeholder="默认留空，学生绑定后自动写入" value="{{form.studentOpenId}}" data-field="studentOpenId" bindinput="onInput" />
+    </view>
+
+    <view class="field">
+      <view class="label">老师</view>
+      <input class="input" value="{{form.teacherName}}" data-field="teacherName" bindinput="onInput" />
+    </view>
+
+    <view class="field">
+      <view class="label">科目</view>
+      <input class="input" value="{{form.subject}}" data-field="subject" bindinput="onInput" />
+    </view>
   </view>
 
   <view class="primary-btn" bindtap="submitStudent">保存学生</view>
+  <view class="ghost-btn seed-btn" bindtap="seedStudents">初始化三个学生</view>
 </view>

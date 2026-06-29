@@ -1,9 +1,8 @@
-const sampleData = require("../../utils/sampleData");
-
 Page({
   data: {
     students: [],
-    isSample: true,
+    noPermission: false,
+    message: "",
   },
 
   onShow() {
@@ -11,26 +10,35 @@ Page({
   },
 
   loadStudents() {
-    this.setData({
-      students: this.prepareStudents(sampleData.students),
-      isSample: true,
-    });
-
-    if (!wx.cloud) return;
-    const db = wx.cloud.database();
-    db.collection("students")
-      .orderBy("createdAt", "desc")
-      .get()
-      .then((res) => {
-        if (res.data && res.data.length) {
-          this.setData({
-            students: this.prepareStudents(res.data),
-            isSample: false,
-          });
-        }
+    wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "listStudents",
+        },
       })
-      .catch(() => {
-        console.log("students 集合暂不可用，展示示例学生");
+      .then((res) => {
+        const result = res.result || {};
+        if (!result.success) {
+          this.setData({
+            noPermission: true,
+            message: result.message || "只有朱老师可以查看学生列表",
+            students: [],
+          });
+          return;
+        }
+        this.setData({
+          noPermission: false,
+          message: "",
+          students: this.prepareStudents(result.data || []),
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setData({
+          noPermission: true,
+          message: "请先上传并部署云函数",
+        });
       });
   },
 
@@ -38,6 +46,7 @@ Page({
     return students.map((item) => {
       return Object.assign({}, item, {
         initial: item.name ? item.name.substr(0, 1) : "学",
+        bindStatus: item.studentOpenId ? "已绑定" : "待绑定",
       });
     });
   },

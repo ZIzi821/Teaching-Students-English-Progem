@@ -3,56 +3,104 @@ const sampleData = require("../../utils/sampleData");
 Page({
   data: {
     envId: "",
+    role: "loading",
+    isTeacher: false,
+    isStudent: false,
+    isGuest: false,
+    openid: "",
+    teacherName: "朱老师",
+    currentStudent: null,
     stats: {
       studentCount: 0,
       lessonCount: 0,
       mistakeCount: 0,
     },
     recentLessons: [],
+    errorMessage: "",
   },
 
-  onLoad() {
+  onShow() {
     const app = getApp();
     this.setData({
       envId: app.globalData.env,
+    });
+    this.loadHomeData();
+  },
+
+  loadHomeData() {
+    if (!wx.cloud) {
+      this.setFallbackData("当前基础库不支持云开发");
+      return;
+    }
+    wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "getHomeData",
+        },
+      })
+      .then((res) => {
+        const result = res.result || {};
+        if (!result.success) {
+          this.setFallbackData(result.message || "读取身份失败");
+          return;
+        }
+        const role = result.role || "guest";
+        this.setData({
+          role,
+          isTeacher: role === "teacher",
+          isStudent: role === "student",
+          isGuest: role === "guest",
+          openid: result.openid || "",
+          teacherName: result.teacherName || "朱老师",
+          currentStudent: result.currentStudent || null,
+          stats: result.stats || {},
+          recentLessons: result.recentLessons || [],
+          errorMessage: "",
+        });
+        if (role === "guest") {
+          wx.navigateTo({
+            url: "/pages/bind-student/index?openid=" + (result.openid || ""),
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setFallbackData("请先上传并部署 quickstartFunctions 云函数");
+      });
+  },
+
+  setFallbackData(message) {
+    this.setData({
+      role: "guest",
+      isTeacher: false,
+      isStudent: false,
+      isGuest: true,
+      errorMessage: message,
       stats: {
-        studentCount: sampleData.students.length,
         lessonCount: sampleData.lessons.length,
         mistakeCount: sampleData.mistakes.length,
       },
       recentLessons: sampleData.lessons.slice(0, 2),
     });
-    this.loadCloudStats();
-  },
-
-  loadCloudStats() {
-    if (!wx.cloud) return;
-    const db = wx.cloud.database();
-    Promise.all([
-      db.collection("students").count(),
-      db.collection("lessons").count(),
-      db.collection("mistakes").count(),
-      db.collection("lessons").orderBy("lessonDate", "desc").limit(2).get(),
-    ])
-      .then((res) => {
-        const cloudLessons = res[3].data || [];
-        this.setData({
-          stats: {
-            studentCount: res[0].total,
-            lessonCount: res[1].total,
-            mistakeCount: res[2].total,
-          },
-          recentLessons: cloudLessons.length ? cloudLessons : this.data.recentLessons,
-        });
-      })
-      .catch(() => {
-        console.log("使用本地示例数据展示首页");
-      });
   },
 
   goStudents() {
     wx.navigateTo({
       url: "/pages/students/index",
+    });
+  },
+
+  goMyLessons() {
+    const studentId = this.data.currentStudent ? this.data.currentStudent._id : "";
+    wx.navigateTo({
+      url: "/pages/student-detail/index?id=" + studentId,
+    });
+  },
+
+  goBind() {
+    wx.navigateTo({
+      url: "/pages/bind-student/index?openid=" + this.data.openid,
     });
   },
 

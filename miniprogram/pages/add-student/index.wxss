@@ -41,3 +41,14 @@
   font-size: 28rpx;
   line-height: 82rpx;
 }
+
+.message-card {
+  color: #8a6730;
+  background: #fff1cf;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.seed-btn {
+  margin-top: 18rpx;
+}

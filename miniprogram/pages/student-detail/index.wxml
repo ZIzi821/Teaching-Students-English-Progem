@@ -1,23 +1,29 @@
-<view class="page" wx:if="{{student}}">
-  <view class="card profile-card">
-    <view class="avatar">{{student.initial}}</view>
-    <view class="profile-main">
-      <view class="name">{{student.name}}</view>
-      <view class="meta">{{student.grade}} · 家长：{{student.parentName}}</view>
-      <view class="sample-tip" wx:if="{{isSample}}">示例学生资料</view>
-    </view>
+<view class="page">
+  <view class="card no-permission" wx:if="{{message}}">
+    <view>{{message}}</view>
   </view>
 
-  <view class="primary-btn add-btn" bindtap="goAddLesson">添加课程记录</view>
-
-  <view class="section-title">课程记录</view>
-  <view class="empty" wx:if="{{!lessons.length}}">还没有课程记录。</view>
-  <view class="card lesson-card" wx:for="{{lessons}}" wx:key="_id" bindtap="goLesson" data-id="{{item._id}}">
-    <view class="lesson-top">
-      <view class="lesson-title">{{item.title}}</view>
-      <view class="date">{{item.lessonDate}}</view>
+  <view wx:if="{{student}}">
+    <view class="card profile-card">
+      <view class="avatar">{{student.initial}}</view>
+      <view class="profile-main">
+        <view class="name">{{student.name}}</view>
+        <view class="meta">{{student.grade}} · {{student.subject}} · {{student.teacherName}}</view>
+        <view class="meta" wx:if="{{isTeacher}}">家长：{{student.parentName}} · accessCode：{{student.accessCode}}</view>
+      </view>
     </view>
-    <view class="subject">{{item.subject}}</view>
-    <view class="summary">{{item.summary}}</view>
+
+    <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddLesson">添加英语课记录</view>
+
+    <view class="section-title">英语课记录</view>
+    <view class="empty" wx:if="{{!lessons.length}}">还没有英语课记录。</view>
+    <view class="card lesson-card" wx:for="{{lessons}}" wx:key="_id" bindtap="goLesson" data-id="{{item._id}}">
+      <view class="lesson-top">
+        <view class="lesson-title">{{item.title}}</view>
+        <view class="date">{{item.lessonDate}}</view>
+      </view>
+      <view class="subject">{{item.subject}}<text wx:if="{{item.lessonNo}}"> · 第 {{item.lessonNo}} 节</text></view>
+      <view class="summary">{{item.summary}}</view>
+    </view>
   </view>
 </view>

@@ -1,4 +1,5 @@
 const cloud = require("wx-server-sdk");
+const appConfig = require("./config");
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV,
@@ -6,6 +7,114 @@ cloud.init({
 
 const db = cloud.database();
 const COLLECTIONS = ["students", "lessons", "papers", "mistakes"];
+const SEED_STUDENTS = [
+  {
+    name: "芮芮",
+    nickname: "",
+    grade: "三年级",
+    parentName: "",
+    status: "在读",
+    accessCode: "RUIRUI-EN-4829",
+    studentOpenId: "",
+    teacherName: appConfig.teacherName,
+    subject: appConfig.defaultSubject,
+  },
+  {
+    name: "任轩楠",
+    nickname: "",
+    grade: "初二",
+    parentName: "",
+    status: "在读",
+    accessCode: "XUANNAN-EN-7316",
+    studentOpenId: "",
+    teacherName: appConfig.teacherName,
+    subject: appConfig.defaultSubject,
+  },
+  {
+    name: "Jason梁",
+    nickname: "Jason",
+    grade: "大二",
+    parentName: "",
+    status: "在读",
+    accessCode: "JASON-PRC-0001",
+    studentOpenId: "",
+    teacherName: appConfig.teacherName,
+    subject: appConfig.defaultSubject,
+  },
+];
+
+const createError = (code, message) => {
+  const err = new Error(message);
+  err.code = code;
+  return err;
+};
+
+const normalizeCode = (code) => String(code || "").trim().toUpperCase();
+
+const getOpenIdFromContext = () => cloud.getWXContext().OPENID;
+
+const isTeacherOpenId = (openid) => appConfig.teacherOpenIds.indexOf(openid) >= 0;
+
+const getBoundStudent = async (openid) => {
+  const res = await db.collection("students").where({ studentOpenId: openid }).limit(1).get();
+  return res.data && res.data.length ? res.data[0] : null;
+};
+
+const getIdentity = async () => {
+  const openid = getOpenIdFromContext();
+  if (isTeacherOpenId(openid)) {
+    return {
+      role: "teacher",
+      openid,
+      teacherName: appConfig.teacherName,
+      isTeacher: true,
+      student: null,
+    };
+  }
+  const student = await getBoundStudent(openid);
+  return {
+    role: student ? "student" : "guest",
+    openid,
+    teacherName: appConfig.teacherName,
+    isTeacher: false,
+    student,
+  };
+};
+
+const sanitizeStudent = (student, includePrivate) => {
+  if (!student) return null;
+  const result = {
+    _id: student._id,
+    name: student.name || "",
+    nickname: student.nickname || "",
+    grade: student.grade || "",
+    parentName: student.parentName || "",
+    status: student.status || "在读",
+    teacherName: student.teacherName || appConfig.teacherName,
+    subject: student.subject || appConfig.defaultSubject,
+    createdAt: student.createdAt || "",
+  };
+  if (includePrivate) {
+    result.accessCode = student.accessCode || "";
+    result.studentOpenId = student.studentOpenId || "";
+  }
+  return result;
+};
+
+const ensureTeacher = async () => {
+  const identity = await getIdentity();
+  if (identity.role !== "teacher") {
+    throw createError("PERMISSION_DENIED", "只有朱老师可以进行此操作");
+  }
+  return identity;
+};
+
+const ensureStudentAccess = async (studentId) => {
+  const identity = await getIdentity();
+  if (identity.role === "teacher") return identity;
+  if (identity.role === "student" && identity.student && identity.student._id === studentId) return identity;
+  throw createError("PERMISSION_DENIED", "无权访问该学生的数据");
+};
 
 const getOpenId = async () => {
   const wxContext = cloud.getWXContext();
@@ -21,7 +130,7 @@ const getMiniProgramCode = async () => {
     path: "pages/index/index",
   });
   const upload = await cloud.uploadFile({
-    cloudPath: "class-mistake-book-code.png",
+    cloudPath: "zhu-teacher-english-code.png",
     fileContent: resp.buffer,
   });
   return upload.fileID;
@@ -54,13 +163,140 @@ const initCollections = async () => {
   };
 };
 
+const attachStudentNames = async (lessons) => {
+  const studentRes = await db.collection("students").get();
+  const studentMap = {};
+  studentRes.data.forEach((student) => {
+    studentMap[student._id] = student.name || "";
+  });
+  return lessons.map((lesson) => {
+    return Object.assign({}, lesson, {
+      studentName: studentMap[lesson.studentId] || "",
+    });
+  });
+};
+
+const getHomeData = async () => {
+  const identity = await getIdentity();
+  if (identity.role === "teacher") {
+    const studentCount = await db.collection("students").count();
+    const lessonCount = await db.collection("lessons").count();
+    const mistakeCount = await db.collection("mistakes").count();
+    const recentLessonRes = await db.collection("lessons").orderBy("lessonDate", "desc").limit(3).get();
+    return {
+      success: true,
+      role: "teacher",
+      openid: identity.openid,
+      teacherName: appConfig.teacherName,
+      canShowStudentCount: true,
+      stats: {
+        studentCount: studentCount.total,
+        lessonCount: lessonCount.total,
+        mistakeCount: mistakeCount.total,
+      },
+      recentLessons: await attachStudentNames(recentLessonRes.data || []),
+    };
+  }
+
+  if (identity.role === "student") {
+    const studentId = identity.student._id;
+    const lessonCount = await db.collection("lessons").where({ studentId }).count();
+    const mistakeCount = await db.collection("mistakes").where({ studentId }).count();
+    const recentLessonRes = await db.collection("lessons").where({ studentId }).orderBy("lessonDate", "desc").limit(3).get();
+    return {
+      success: true,
+      role: "student",
+      openid: identity.openid,
+      teacherName: appConfig.teacherName,
+      currentStudent: sanitizeStudent(identity.student, false),
+      canShowStudentCount: false,
+      stats: {
+        lessonCount: lessonCount.total,
+        mistakeCount: mistakeCount.total,
+      },
+      recentLessons: recentLessonRes.data || [],
+    };
+  }
+
+  return {
+    success: true,
+    role: "guest",
+    openid: identity.openid,
+    teacherName: appConfig.teacherName,
+    canShowStudentCount: false,
+    stats: {
+      lessonCount: 0,
+      mistakeCount: 0,
+    },
+    recentLessons: [],
+  };
+};
+
+const bindStudent = async (event) => {
+  const identity = await getIdentity();
+  if (identity.role === "teacher") {
+    throw createError("ALREADY_TEACHER", "朱老师账号不需要绑定学生");
+  }
+  if (identity.role === "student") {
+    return {
+      success: true,
+      role: "student",
+      openid: identity.openid,
+      student: sanitizeStudent(identity.student, false),
+      message: "当前微信已经绑定学生",
+    };
+  }
+
+  const accessCode = normalizeCode(event.data && event.data.accessCode);
+  if (!accessCode) {
+    throw createError("INVALID_ACCESS_CODE", "请输入专属 accessCode");
+  }
+
+  const res = await db.collection("students").where({ accessCode }).limit(1).get();
+  if (!res.data || !res.data.length) {
+    throw createError("ACCESS_CODE_NOT_FOUND", "没有找到对应学生，请检查 accessCode");
+  }
+
+  const student = res.data[0];
+  if (student.studentOpenId && student.studentOpenId !== identity.openid) {
+    throw createError("ACCESS_CODE_USED", "这个 accessCode 已经绑定了其他微信");
+  }
+
+  await db.collection("students").doc(student._id).update({
+    data: {
+      studentOpenId: identity.openid,
+    },
+  });
+
+  return {
+    success: true,
+    role: "student",
+    openid: identity.openid,
+    student: sanitizeStudent(Object.assign({}, student, { studentOpenId: identity.openid }), false),
+  };
+};
+
 const listStudents = async () => {
-  return await db.collection("students").orderBy("createdAt", "desc").get();
+  await ensureTeacher();
+  const res = await db.collection("students").orderBy("createdAt", "desc").get();
+  return {
+    success: true,
+    role: "teacher",
+    data: res.data.map((student) => sanitizeStudent(student, true)),
+  };
 };
 
 const addStudent = async (event) => {
+  await ensureTeacher();
   const data = event.data || {};
-  const wxContext = cloud.getWXContext();
+  const accessCode = normalizeCode(data.accessCode);
+  if (!data.name || !data.grade || !accessCode) {
+    throw createError("INVALID_STUDENT", "请填写学生姓名、年级和 accessCode");
+  }
+  const existing = await db.collection("students").where({ accessCode }).limit(1).get();
+  if (existing.data && existing.data.length) {
+    throw createError("ACCESS_CODE_EXISTS", "这个 accessCode 已经存在");
+  }
   return await db.collection("students").add({
     data: {
       name: data.name,
@@ -68,26 +304,98 @@ const addStudent = async (event) => {
       grade: data.grade || "",
       parentName: data.parentName || "",
       status: data.status || "在读",
-      teacherOpenId: wxContext.OPENID,
+      accessCode,
+      studentOpenId: data.studentOpenId || "",
+      teacherName: data.teacherName || appConfig.teacherName,
+      subject: data.subject || appConfig.defaultSubject,
       createdAt: db.serverDate(),
     },
   });
 };
 
+const seedStudents = async () => {
+  await ensureTeacher();
+  const inserted = [];
+  const skipped = [];
+  for (let i = 0; i < SEED_STUDENTS.length; i++) {
+    const student = Object.assign({}, SEED_STUDENTS[i], {
+      accessCode: normalizeCode(SEED_STUDENTS[i].accessCode),
+    });
+    const existing = await db.collection("students").where({ accessCode: student.accessCode }).limit(1).get();
+    if (existing.data && existing.data.length) {
+      skipped.push({
+        name: student.name,
+        accessCode: student.accessCode,
+      });
+      continue;
+    }
+    await db.collection("students").add({
+      data: Object.assign({}, student, {
+        createdAt: db.serverDate(),
+      }),
+    });
+    inserted.push({
+      name: student.name,
+      accessCode: student.accessCode,
+    });
+  }
+  return {
+    success: true,
+    inserted,
+    skipped,
+    message: `新增 ${inserted.length} 位学生，跳过 ${skipped.length} 位已存在学生`,
+  };
+};
+
+const getStudentDetail = async (event) => {
+  const identity = await getIdentity();
+  const requestedId = event.data && event.data.studentId;
+  const studentId = identity.role === "student" ? identity.student._id : requestedId;
+  if (!studentId) throw createError("INVALID_STUDENT", "缺少学生 ID");
+  await ensureStudentAccess(studentId);
+
+  const studentRes = await db.collection("students").doc(studentId).get();
+  const lessonsRes = await db.collection("lessons").where({ studentId }).orderBy("lessonDate", "desc").get();
+  return {
+    success: true,
+    role: identity.role,
+    student: sanitizeStudent(studentRes.data, identity.role === "teacher"),
+    lessons: lessonsRes.data || [],
+  };
+};
+
 const listLessons = async (event) => {
+  const identity = await getIdentity();
   const data = event.data || {};
-  const query = data.studentId ? { studentId: data.studentId } : {};
-  return await db.collection("lessons").where(query).orderBy("lessonDate", "desc").get();
+  let studentId = data.studentId || "";
+  if (identity.role === "student") studentId = identity.student._id;
+  if (studentId) await ensureStudentAccess(studentId);
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+
+  const lessonCollection = db.collection("lessons");
+  const res = studentId
+    ? await lessonCollection.where({ studentId }).orderBy("lessonDate", "desc").get()
+    : await lessonCollection.orderBy("lessonDate", "desc").get();
+  return {
+    success: true,
+    role: identity.role,
+    data: res.data || [],
+  };
 };
 
 const addLesson = async (event) => {
+  await ensureTeacher();
   const data = event.data || {};
+  if (!data.studentId || !data.title || !data.lessonDate) {
+    throw createError("INVALID_LESSON", "请填写学生、课程标题和日期");
+  }
   return await db.collection("lessons").add({
     data: {
       studentId: data.studentId,
       title: data.title,
-      subject: data.subject,
+      subject: data.subject || appConfig.defaultSubject,
       lessonDate: data.lessonDate,
+      lessonNo: data.lessonNo || "",
       summary: data.summary || "",
       paperFileIds: data.paperFileIds || [],
       createdAt: db.serverDate(),
@@ -95,16 +403,80 @@ const addLesson = async (event) => {
   });
 };
 
+const getLessonDetail = async (event) => {
+  const lessonId = event.data && event.data.lessonId;
+  if (!lessonId) throw createError("INVALID_LESSON", "缺少课程 ID");
+  const identity = await getIdentity();
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+
+  const lessonRes = await db.collection("lessons").doc(lessonId).get();
+  const lesson = lessonRes.data;
+  await ensureStudentAccess(lesson.studentId);
+  const papersRes = await db.collection("papers").where({ lessonId }).orderBy("createdAt", "desc").get();
+  const mistakesRes = await db.collection("mistakes").where({ lessonId }).orderBy("createdAt", "desc").get();
+  return {
+    success: true,
+    role: identity.role,
+    lesson,
+    papers: papersRes.data || [],
+    mistakes: mistakesRes.data || [],
+  };
+};
+
+const addPaper = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  if (!data.studentId || !data.lessonId || !data.fileID || !data.fileName || !data.type) {
+    throw createError("INVALID_PAPER", "请上传资料并填写资料类型");
+  }
+  const lessonRes = await db.collection("lessons").doc(data.lessonId).get();
+  if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
+    throw createError("INVALID_PAPER", "课程和学生不匹配");
+  }
+  return await db.collection("papers").add({
+    data: {
+      studentId: data.studentId,
+      lessonId: data.lessonId,
+      title: data.title || data.fileName,
+      type: data.type,
+      fileID: data.fileID,
+      fileName: data.fileName,
+      fileSize: data.fileSize || 0,
+      createdAt: db.serverDate(),
+    },
+  });
+};
+
 const listMistakes = async (event) => {
+  const identity = await getIdentity();
   const data = event.data || {};
   const query = {};
-  if (data.studentId) query.studentId = data.studentId;
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+  if (identity.role === "student") {
+    query.studentId = identity.student._id;
+  } else if (data.studentId) {
+    query.studentId = data.studentId;
+  }
   if (data.lessonId) query.lessonId = data.lessonId;
-  return await db.collection("mistakes").where(query).orderBy("createdAt", "desc").get();
+  if (query.studentId) await ensureStudentAccess(query.studentId);
+
+  const mistakeCollection = db.collection("mistakes");
+  const res = Object.keys(query).length
+    ? await mistakeCollection.where(query).orderBy("createdAt", "desc").get()
+    : await mistakeCollection.orderBy("createdAt", "desc").get();
+  return {
+    success: true,
+    role: identity.role,
+    data: res.data || [],
+  };
 };
 
 const addMistake = async (event) => {
+  await ensureTeacher();
   const data = event.data || {};
+  if (!data.studentId || !data.lessonId || !data.studentAnswer || !data.correctAnswer) {
+    throw createError("INVALID_MISTAKE", "请填写学生、课程、学生答案和正确答案");
+  }
   return await db.collection("mistakes").add({
     data: {
       studentId: data.studentId,
@@ -122,32 +494,70 @@ const addMistake = async (event) => {
   });
 };
 
+const getMistakeDetail = async (event) => {
+  const mistakeId = event.data && event.data.mistakeId;
+  if (!mistakeId) throw createError("INVALID_MISTAKE", "缺少错题 ID");
+  const identity = await getIdentity();
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+
+  const res = await db.collection("mistakes").doc(mistakeId).get();
+  await ensureStudentAccess(res.data.studentId);
+  return {
+    success: true,
+    role: identity.role,
+    mistake: res.data,
+  };
+};
+
 exports.main = async (event) => {
-  switch (event.type) {
-    case "getOpenId":
-      return await getOpenId();
-    case "getMiniProgramCode":
-      return await getMiniProgramCode();
-    case "initCollections":
-    case "createCollection":
-      return await initCollections();
-    case "listStudents":
-    case "selectRecord":
-      return await listStudents();
-    case "addStudent":
-      return await addStudent(event);
-    case "listLessons":
-      return await listLessons(event);
-    case "addLesson":
-      return await addLesson(event);
-    case "listMistakes":
-      return await listMistakes(event);
-    case "addMistake":
-      return await addMistake(event);
-    default:
-      return {
-        success: false,
-        message: "Unknown function type",
-      };
+  try {
+    switch (event.type) {
+      case "getOpenId":
+        return await getOpenId();
+      case "getMiniProgramCode":
+        return await getMiniProgramCode();
+      case "initCollections":
+      case "createCollection":
+        return await initCollections();
+      case "getHomeData":
+        return await getHomeData();
+      case "bindStudent":
+        return await bindStudent(event);
+      case "listStudents":
+      case "selectRecord":
+        return await listStudents();
+      case "addStudent":
+        return await addStudent(event);
+      case "seedStudents":
+        return await seedStudents();
+      case "getStudentDetail":
+        return await getStudentDetail(event);
+      case "listLessons":
+        return await listLessons(event);
+      case "addLesson":
+        return await addLesson(event);
+      case "getLessonDetail":
+        return await getLessonDetail(event);
+      case "addPaper":
+        return await addPaper(event);
+      case "listMistakes":
+        return await listMistakes(event);
+      case "addMistake":
+        return await addMistake(event);
+      case "getMistakeDetail":
+        return await getMistakeDetail(event);
+      default:
+        return {
+          success: false,
+          code: "UNKNOWN_TYPE",
+          message: "Unknown function type",
+        };
+    }
+  } catch (err) {
+    return {
+      success: false,
+      code: err.code || "SERVER_ERROR",
+      message: err.message || "服务暂时不可用",
+    };
   }
 };

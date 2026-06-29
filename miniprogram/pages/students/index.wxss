@@ -15,17 +15,15 @@
   line-height: 1.6;
 }
 
-.sample-tip {
-  margin-bottom: 18rpx;
-  padding: 16rpx 20rpx;
-  border-radius: 14rpx;
-  color: #8a6730;
-  background: #fff1cf;
-  font-size: 24rpx;
-}
-
 .add-btn {
   margin-bottom: 24rpx;
+}
+
+.no-permission {
+  color: #8a6730;
+  background: #fff1cf;
+  font-size: 28rpx;
+  line-height: 1.6;
 }
 
 .student-card {

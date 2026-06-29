@@ -1,14 +1,13 @@
-const sampleData = require("../../utils/sampleData");
-
 Page({
   data: {
     students: [],
     lessons: [],
     studentIndex: 0,
     lessonIndex: 0,
-    selectedStudentName: "",
-    selectedLessonTitle: "",
+    selectedStudentName: "请选择学生",
+    selectedLessonTitle: "请先选择学生",
     questionImageFileId: "",
+    message: "",
     form: {
       studentAnswer: "",
       correctAnswer: "",
@@ -25,21 +24,28 @@ Page({
   },
 
   loadStudents() {
-    this.applyStudents(sampleData.students);
-
-    if (!wx.cloud) return;
     wx.cloud
-      .database()
-      .collection("students")
-      .orderBy("createdAt", "desc")
-      .get()
-      .then((res) => {
-        if (res.data && res.data.length) {
-          this.applyStudents(res.data);
-        }
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "listStudents",
+        },
       })
-      .catch(() => {
-        console.log("students 集合暂不可用，使用示例学生");
+      .then((res) => {
+        const result = res.result || {};
+        if (!result.success) {
+          this.setData({
+            message: result.message || "只有朱老师可以添加错题",
+          });
+          return;
+        }
+        this.applyStudents(result.data || []);
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setData({
+          message: "请先上传并部署云函数",
+        });
       });
   },
 
@@ -54,25 +60,39 @@ Page({
       studentIndex,
       selectedStudentName: students[studentIndex] ? students[studentIndex].name : "请选择学生",
     });
-    this.loadLessons(students[studentIndex] ? students[studentIndex]._id : "");
+    if (students[studentIndex]) {
+      this.loadLessons(students[studentIndex]._id);
+    }
   },
 
   loadLessons(studentId) {
-    const fallbackLessons = sampleData.lessons.filter((item) => item.studentId === studentId);
-    this.applyLessons(fallbackLessons);
-
-    if (!wx.cloud || studentId.indexOf("sample-") === 0) return;
     wx.cloud
-      .database()
-      .collection("lessons")
-      .where({ studentId })
-      .orderBy("lessonDate", "desc")
-      .get()
-      .then((res) => {
-        this.applyLessons(res.data || []);
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "listLessons",
+          data: {
+            studentId,
+          },
+        },
       })
-      .catch(() => {
-        console.log("lessons 集合暂不可用，使用示例课程");
+      .then((res) => {
+        const result = res.result || {};
+        if (!result.success) {
+          this.setData({
+            lessons: [],
+            selectedLessonTitle: result.message || "无法读取课程",
+          });
+          return;
+        }
+        this.applyLessons(result.data || []);
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setData({
+          lessons: [],
+          selectedLessonTitle: "请先上传并部署云函数",
+        });
       });
   },
 
@@ -85,7 +105,7 @@ Page({
     this.setData({
       lessons,
       lessonIndex,
-      selectedLessonTitle: lessons[lessonIndex] ? lessons[lessonIndex].title : "请先添加课程",
+      selectedLessonTitle: lessons[lessonIndex] ? lessons[lessonIndex].title : "请先添加英语课",
     });
   },
 
@@ -96,16 +116,18 @@ Page({
     this.preferredLessonId = "";
     this.setData({
       studentIndex,
-      selectedStudentName: student ? student.name : "",
+      selectedStudentName: student ? student.name : "请选择学生",
     });
-    this.loadLessons(student ? student._id : "");
+    if (student) {
+      this.loadLessons(student._id);
+    }
   },
 
   onLessonChange(e) {
     const lessonIndex = Number(e.detail.value);
     this.setData({
       lessonIndex,
-      selectedLessonTitle: this.data.lessons[lessonIndex] ? this.data.lessons[lessonIndex].title : "",
+      selectedLessonTitle: this.data.lessons[lessonIndex] ? this.data.lessons[lessonIndex].title : "请先添加英语课",
     });
   },
 
@@ -129,17 +151,10 @@ Page({
   },
 
   uploadImage(filePath) {
-    if (!wx.cloud) {
-      wx.showToast({
-        title: "当前基础库不支持云开发",
-        icon: "none",
-      });
-      return;
-    }
     const student = this.data.students[this.data.studentIndex];
     const suffix = filePath.match(/\.[^.]+$/);
     const ext = suffix ? suffix[0] : ".png";
-    const cloudPath = "mistake-images/" + (student ? student._id : "student") + "-" + Date.now() + ext;
+    const cloudPath = "english-mistake-images/" + (student ? student._id : "student") + "-" + Date.now() + ext;
     wx.showLoading({ title: "上传中" });
     wx.cloud
       .uploadFile({
@@ -175,37 +190,43 @@ Page({
       });
       return;
     }
-    if (!wx.cloud) {
-      wx.showToast({
-        title: "当前基础库不支持云开发",
-        icon: "none",
-      });
-      return;
-    }
 
     const tags = form.tagsText
       .split(/[,，\s]+/)
       .map((item) => item.trim())
       .filter((item) => item);
-    const db = wx.cloud.database();
     wx.showLoading({ title: "保存中" });
-    db.collection("mistakes")
-      .add({
+    wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
         data: {
-          studentId: student._id,
-          lessonId: lesson._id,
-          paperId: "",
-          questionImageFileId: this.data.questionImageFileId,
-          studentAnswer: form.studentAnswer,
-          correctAnswer: form.correctAnswer,
-          explanation: form.explanation,
-          reason: form.reason,
-          tags,
-          status: "待复习",
-          createdAt: db.serverDate(),
+          type: "addMistake",
+          data: {
+            studentId: student._id,
+            lessonId: lesson._id,
+            paperId: "",
+            questionImageFileId: this.data.questionImageFileId,
+            studentAnswer: form.studentAnswer,
+            correctAnswer: form.correctAnswer,
+            explanation: form.explanation,
+            reason: form.reason,
+            tags,
+            status: "待复习",
+          },
         },
       })
-      .then(() => {
+      .then((res) => {
+        const result = res.result || {};
+        if (result.success === false) {
+          this.setData({
+            message: result.message || "保存失败",
+          });
+          wx.showToast({
+            title: "保存失败",
+            icon: "none",
+          });
+          return;
+        }
         wx.showToast({ title: "已保存" });
         setTimeout(() => {
           wx.navigateBack();
@@ -213,9 +234,8 @@ Page({
       })
       .catch((err) => {
         console.error(err);
-        wx.showToast({
-          title: "保存失败，请检查集合权限",
-          icon: "none",
+        this.setData({
+          message: "请先上传并部署云函数",
         });
       })
       .finally(() => {

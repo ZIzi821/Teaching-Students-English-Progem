@@ -41,6 +41,13 @@
   font-size: 28rpx;
 }
 
+.message-card {
+  color: #8a6730;
+  background: #fff1cf;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
 .input,
 .picker-value {
   min-height: 82rpx;

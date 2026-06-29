@@ -8,6 +8,16 @@
   background: #dff0e8;
 }
 
+.error-tip {
+  margin: 20rpx 0;
+  padding: 18rpx 22rpx;
+  border-radius: 14rpx;
+  color: #8a6730;
+  background: #fff1cf;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
 .eyebrow {
   margin-bottom: 12rpx;
   color: #587468;
@@ -106,6 +116,18 @@
   color: #62584d;
   font-size: 26rpx;
   line-height: 1.6;
+}
+
+.student-line {
+  margin-top: 12rpx;
+  color: #4f8f73;
+  font-size: 24rpx;
+}
+
+.empty {
+  padding: 30rpx 0;
+  color: #817669;
+  text-align: center;
 }
 
 .env-tip {

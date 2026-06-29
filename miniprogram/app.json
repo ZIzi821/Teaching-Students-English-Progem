@@ -5,6 +5,7 @@
     "pages/student-detail/index",
     "pages/lesson-detail/index",
     "pages/mistake-detail/index",
+    "pages/bind-student/index",
     "pages/add-student/index",
     "pages/add-lesson/index",
     "pages/add-mistake/index"
@@ -13,7 +14,7 @@
     "backgroundColor": "#F7F3EA",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F7F3EA",
-    "navigationBarTitleText": "课堂错题本",
+    "navigationBarTitleText": "朱老师英语课堂",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",
