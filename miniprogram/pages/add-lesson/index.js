@@ -10,6 +10,7 @@ Page({
     students: [],
     studentIndex: 0,
     selectedStudentName: "请选择学生",
+    lessonNoTip: "",
     message: "",
     form: {
       title: "",
@@ -64,22 +65,86 @@ Page({
       students,
       studentIndex,
       selectedStudentName: students[studentIndex] ? students[studentIndex].name : "请选择学生",
+    }, () => {
+      this.updateLessonNoSuggestion();
     });
   },
 
   onStudentChange(e) {
     const studentIndex = Number(e.detail.value);
+    const student = this.data.students[studentIndex];
     this.setData({
       studentIndex,
-      selectedStudentName: this.data.students[studentIndex].name,
+      selectedStudentName: student ? student.name : "请选择学生",
+    }, () => {
+      this.updateLessonNoSuggestion();
     });
   },
 
   onInput(e) {
     const field = e.currentTarget.dataset.field;
+    if (field === "lessonNo") {
+      this.lessonNoManuallyChanged = true;
+    }
     this.setData({
       ["form." + field]: e.detail.value,
     });
+  },
+
+  updateLessonNoSuggestion() {
+    const student = this.data.students[this.data.studentIndex];
+    this.lessonNoManuallyChanged = false;
+    if (!student) {
+      this.setData({
+        lessonNoTip: "",
+        "form.lessonNo": "",
+      });
+      return;
+    }
+
+    const requestId = (this.lessonNoSuggestionRequestId || 0) + 1;
+    this.lessonNoSuggestionRequestId = requestId;
+    wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "getNextLessonNo",
+          data: {
+            studentId: student._id,
+          },
+        },
+      })
+      .then((res) => {
+        if (requestId !== this.lessonNoSuggestionRequestId) return;
+        const result = res.result || {};
+        if (!result.success) {
+          this.setData({
+            lessonNoTip: "",
+            message: result.message || "课节建议计算失败",
+          });
+          return;
+        }
+
+        const nextLessonNo = result.nextLessonNo || 1;
+        const lessonNoTip = result.hasHistory
+          ? `上次记录到第 ${result.maxLessonNo} 节，本次建议第 ${nextLessonNo} 节`
+          : "暂无历史课程，建议第 1 节";
+        const updates = {
+          lessonNoTip,
+        };
+        if (!this.lessonNoManuallyChanged) {
+          updates["form.lessonNo"] = String(nextLessonNo);
+        }
+        this.setData(updates);
+      })
+      .catch((err) => {
+        if (requestId !== this.lessonNoSuggestionRequestId) return;
+        console.error(err);
+        this.setData({
+          lessonNoTip: "",
+          message: "请先上传并部署云函数",
+        });
+      });
   },
 
   onDateChange(e) {

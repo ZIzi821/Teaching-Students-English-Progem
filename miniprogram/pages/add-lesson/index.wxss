@@ -30,6 +30,13 @@
   font-weight: 600;
 }
 
+.field-tip {
+  margin-top: 10rpx;
+  color: #8a6730;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
 .input,
 .picker-value,
 .textarea {

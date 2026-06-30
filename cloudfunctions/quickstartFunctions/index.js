@@ -491,6 +491,43 @@ const listLessons = async (event) => {
   };
 };
 
+const toLessonNoInteger = (value) => {
+  const text = String(value === undefined || value === null ? "" : value).trim();
+  if (!/^\d+$/.test(text)) return null;
+  const num = Number(text);
+  return Number.isSafeInteger(num) && num > 0 ? num : null;
+};
+
+const getNextLessonNo = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const studentId = data.studentId;
+  if (!studentId) {
+    throw createError("INVALID_STUDENT", "缺少学生 ID");
+  }
+
+  let maxLessonNo = 0;
+  const pageSize = 100;
+  const lessonsQuery = db.collection("lessons").where({ studentId });
+  const countRes = await lessonsQuery.count();
+  for (let skip = 0; skip < countRes.total; skip += pageSize) {
+    const res = await lessonsQuery.skip(skip).limit(pageSize).get();
+    (res.data || []).forEach((lesson) => {
+      const lessonNo = toLessonNoInteger(lesson.lessonNo);
+      if (lessonNo && lessonNo > maxLessonNo) {
+        maxLessonNo = lessonNo;
+      }
+    });
+  }
+
+  return {
+    success: true,
+    maxLessonNo,
+    nextLessonNo: maxLessonNo + 1,
+    hasHistory: maxLessonNo > 0,
+  };
+};
+
 const addLesson = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
@@ -651,6 +688,8 @@ exports.main = async (event) => {
         return await getStudentDetail(event);
       case "listLessons":
         return await listLessons(event);
+      case "getNextLessonNo":
+        return await getNextLessonNo(event);
       case "addLesson":
         return await addLesson(event);
       case "getLessonDetail":
