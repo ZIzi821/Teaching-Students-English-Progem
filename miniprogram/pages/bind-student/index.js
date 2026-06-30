@@ -1,33 +1,7 @@
 Page({
   data: {
-    openid: "",
     accessCode: "",
     message: "",
-  },
-
-  onLoad(options) {
-    this.setData({
-      openid: options.openid || "",
-    });
-    if (!options.openid) {
-      this.loadOpenId();
-    }
-  },
-
-  loadOpenId() {
-    if (!wx.cloud) return;
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "getOpenId",
-        },
-      })
-      .then((res) => {
-        this.setData({
-          openid: res.result.openid || "",
-        });
-      });
   },
 
   onInput(e) {
@@ -36,7 +10,7 @@ Page({
     });
   },
 
-  bindStudent() {
+  bindAccessCode() {
     const accessCode = this.data.accessCode.trim();
     if (!accessCode) {
       wx.showToast({
@@ -50,7 +24,7 @@ Page({
       .callFunction({
         name: "quickstartFunctions",
         data: {
-          type: "bindStudent",
+          type: "bindAccessCode",
           data: {
             accessCode,
           },

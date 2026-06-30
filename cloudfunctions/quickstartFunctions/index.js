@@ -6,7 +6,7 @@ cloud.init({
 });
 
 const db = cloud.database();
-const COLLECTIONS = ["students", "lessons", "papers", "mistakes"];
+const COLLECTIONS = ["students", "teachers", "lessons", "papers", "mistakes"];
 const SEED_STUDENTS = [
   {
     name: "芮芮",
@@ -117,6 +117,17 @@ const getOpenIdFromContext = () => cloud.getWXContext().OPENID;
 
 const isTeacherOpenId = (openid) => appConfig.teacherOpenIds.indexOf(openid) >= 0;
 
+const isTeacherAccessCode = (accessCode) => normalizeCode(accessCode) === normalizeCode(appConfig.teacherAccessCode);
+
+const getBoundTeacher = async (openid) => {
+  try {
+    const res = await db.collection("teachers").where({ openid }).limit(1).get();
+    return res.data && res.data.length ? res.data[0] : null;
+  } catch (err) {
+    return null;
+  }
+};
+
 const getBoundStudent = async (openid) => {
   const res = await db.collection("students").where({ studentOpenId: openid }).limit(1).get();
   return res.data && res.data.length ? res.data[0] : null;
@@ -124,7 +135,7 @@ const getBoundStudent = async (openid) => {
 
 const getIdentity = async () => {
   const openid = getOpenIdFromContext();
-  if (isTeacherOpenId(openid)) {
+  if (isTeacherOpenId(openid) || (await getBoundTeacher(openid))) {
     return {
       role: "teacher",
       openid,
@@ -305,7 +316,42 @@ const getHomeData = async () => {
 };
 
 const bindStudent = async (event) => {
+  return await bindAccessCode(event);
+};
+
+const bindTeacher = async (openid) => {
+  await createOneCollection("teachers");
+  const existing = await db.collection("teachers").where({ openid }).limit(1).get();
+  if (!existing.data || !existing.data.length) {
+    await db.collection("teachers").add({
+      data: {
+        openid,
+        teacherName: appConfig.teacherName,
+        createdAt: db.serverDate(),
+      },
+    });
+  }
+
+  return {
+    success: true,
+    role: "teacher",
+    openid,
+    teacherName: appConfig.teacherName,
+    message: "教师身份已绑定",
+  };
+};
+
+const bindAccessCode = async (event) => {
   const identity = await getIdentity();
+  const accessCode = normalizeCode(event.data && event.data.accessCode);
+  if (!accessCode) {
+    throw createError("INVALID_ACCESS_CODE", "请输入专属 accessCode");
+  }
+
+  if (isTeacherAccessCode(accessCode)) {
+    return await bindTeacher(identity.openid);
+  }
+
   if (identity.role === "teacher") {
     throw createError("ALREADY_TEACHER", "朱老师账号不需要绑定学生");
   }
@@ -319,14 +365,9 @@ const bindStudent = async (event) => {
     };
   }
 
-  const accessCode = normalizeCode(event.data && event.data.accessCode);
-  if (!accessCode) {
-    throw createError("INVALID_ACCESS_CODE", "请输入专属 accessCode");
-  }
-
   const res = await db.collection("students").where({ accessCode }).limit(1).get();
   if (!res.data || !res.data.length) {
-    throw createError("ACCESS_CODE_NOT_FOUND", "没有找到对应学生，请检查 accessCode");
+    throw createError("ACCESS_CODE_NOT_FOUND", "accessCode 不正确");
   }
 
   const student = res.data[0];
@@ -674,7 +715,8 @@ exports.main = async (event) => {
       case "getHomeData":
         return await getHomeData();
       case "bindStudent":
-        return await bindStudent(event);
+      case "bindAccessCode":
+        return await bindAccessCode(event);
       case "listStudents":
       case "selectRecord":
         return await listStudents();

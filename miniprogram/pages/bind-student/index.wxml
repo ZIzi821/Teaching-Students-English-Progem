@@ -1,16 +1,14 @@
 <view class="page">
   <view class="card bind-card">
-    <view class="eyebrow">Student Access</view>
     <view class="title">绑定英语错题本</view>
-    <view class="subtitle">请输入朱老师发给你的专属 accessCode。绑定后，这个微信只能看到你自己的英语课程和错题。</view>
+    <view class="subtitle">请输入朱老师发给你的专属 accessCode。</view>
   </view>
 
   <view class="card form-card">
     <view class="label">专属 accessCode</view>
     <input class="input" placeholder="例如：ANNE-EN-2026" value="{{accessCode}}" bindinput="onInput" />
-    <view class="tip">当前 openid：{{openid}}</view>
     <view class="message" wx:if="{{message}}">{{message}}</view>
   </view>
 
-  <view class="primary-btn" bindtap="bindStudent">绑定学生身份</view>
+  <view class="primary-btn" bindtap="bindAccessCode">进入英语错题本</view>
 </view>

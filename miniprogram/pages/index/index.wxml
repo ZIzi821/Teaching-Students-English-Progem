@@ -4,7 +4,7 @@
     <view class="title">朱老师英语课堂</view>
     <view class="subtitle" wx:if="{{isTeacher}}">管理学生、英语课程记录、练习资料和错题解析。</view>
     <view class="subtitle" wx:if="{{isStudent}}">{{currentStudent.name}} 的英语错题本，复习每节课讲过的重点。</view>
-    <view class="subtitle" wx:if="{{isGuest}}">请输入朱老师给你的专属 accessCode，绑定后查看自己的英语课程和错题。</view>
+    <view class="subtitle" wx:if="{{isGuest}}">请输入朱老师给你的专属 accessCode。</view>
   </view>
 
   <view class="error-tip" wx:if="{{errorMessage}}">{{errorMessage}}</view>
@@ -47,7 +47,7 @@
   </view>
 
   <view class="actions" wx:if="{{isGuest}}">
-    <view class="primary-btn" bindtap="goBind">绑定学生身份</view>
+    <view class="primary-btn" bindtap="goBind">进入英语错题本</view>
   </view>
 
   <view class="teacher-progress-section" wx:if="{{isTeacher}}">
@@ -80,5 +80,4 @@
   </view>
 
   <view class="env-tip">云环境：{{envId}}</view>
-  <view class="env-tip" wx:if="{{openid}}">当前 openid：{{openid}}</view>
 </view>

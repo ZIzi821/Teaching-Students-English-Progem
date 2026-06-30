@@ -69,7 +69,7 @@ Page({
         });
         if (role === "guest") {
           wx.navigateTo({
-            url: "/pages/bind-student/index?openid=" + (result.openid || ""),
+            url: "/pages/bind-student/index",
           });
         }
       })
@@ -113,7 +113,7 @@ Page({
 
   goBind() {
     wx.navigateTo({
-      url: "/pages/bind-student/index?openid=" + this.data.openid,
+      url: "/pages/bind-student/index",
     });
   },
 
