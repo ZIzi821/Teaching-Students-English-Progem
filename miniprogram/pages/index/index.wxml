@@ -15,8 +15,8 @@
       <view class="stat-label">学生</view>
     </view>
     <view class="stat-card">
-      <view class="stat-number">{{stats.lessonCount}}</view>
-      <view class="stat-label">英语课</view>
+      <view class="stat-number">{{stats.progressOverview.progressText}}</view>
+      <view class="stat-label">课程进度</view>
     </view>
     <view class="stat-card">
       <view class="stat-number">{{stats.mistakeCount}}</view>
@@ -26,13 +26,21 @@
 
   <view class="stats-row" wx:if="{{isStudent}}">
     <view class="stat-card">
-      <view class="stat-number">{{stats.lessonCount}}</view>
-      <view class="stat-label">我的英语课</view>
+      <view class="stat-number">{{stats.progress.progressText}}</view>
+      <view class="stat-label">我的课程进度</view>
     </view>
     <view class="stat-card">
       <view class="stat-number">{{stats.mistakeCount}}</view>
       <view class="stat-label">我的错题</view>
     </view>
+  </view>
+
+  <view class="home-progress" wx:if="{{isTeacher}}">
+    <view class="home-progress-fill" style="width: {{stats.progressOverview.progressPercent}}%;"></view>
+  </view>
+
+  <view class="home-progress" wx:if="{{isStudent}}">
+    <view class="home-progress-fill" style="width: {{stats.progress.progressPercent}}%;"></view>
   </view>
 
   <view class="actions" wx:if="{{isTeacher}}">

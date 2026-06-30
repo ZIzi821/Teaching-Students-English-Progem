@@ -11,6 +11,8 @@ Page({
       studentOpenId: "",
       teacherName: "朱老师",
       subject: "English",
+      plannedLessonCount: "",
+      completedLessonCount: "",
     },
   },
 

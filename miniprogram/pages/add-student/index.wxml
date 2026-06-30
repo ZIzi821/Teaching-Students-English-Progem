@@ -51,6 +51,16 @@
       <view class="label">科目</view>
       <input class="input" value="{{form.subject}}" data-field="subject" bindinput="onInput" />
     </view>
+
+    <view class="field">
+      <view class="label">总课时 plannedLessonCount</view>
+      <input class="input" type="number" placeholder="例如：17" value="{{form.plannedLessonCount}}" data-field="plannedLessonCount" bindinput="onInput" />
+    </view>
+
+    <view class="field">
+      <view class="label">已上课时 completedLessonCount</view>
+      <input class="input" type="number" placeholder="例如：3" value="{{form.completedLessonCount}}" data-field="completedLessonCount" bindinput="onInput" />
+    </view>
   </view>
 
   <view class="primary-btn" bindtap="submitStudent">保存学生</view>

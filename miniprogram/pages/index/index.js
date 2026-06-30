@@ -12,8 +12,15 @@ Page({
     currentStudent: null,
     stats: {
       studentCount: 0,
-      lessonCount: 0,
       mistakeCount: 0,
+      progressOverview: {
+        progressText: "0 / 0",
+        progressPercent: 0,
+      },
+      progress: {
+        progressText: "0 / 0",
+        progressPercent: 0,
+      },
     },
     recentLessons: [],
     errorMessage: "",
@@ -78,8 +85,11 @@ Page({
       isGuest: true,
       errorMessage: message,
       stats: {
-        lessonCount: sampleData.lessons.length,
         mistakeCount: sampleData.mistakes.length,
+        progress: {
+          progressText: "0 / 0",
+          progressPercent: 0,
+        },
       },
       recentLessons: sampleData.lessons.slice(0, 2),
     });

@@ -15,6 +15,34 @@
       </view>
     </view>
 
+    <view class="card progress-card">
+      <view class="progress-top">
+        <view>
+          <view class="progress-title">课程进度</view>
+          <view class="progress-label">{{student.progressLabel}} · {{student.progressPercent}}%</view>
+        </view>
+        <view class="ghost-small" wx:if="{{isTeacher}}" bindtap="showProgressEditor">编辑课程进度</view>
+      </view>
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{student.progressPercent}}%;"></view>
+      </view>
+    </view>
+
+    <view class="card progress-editor" wx:if="{{showProgressEditor}}">
+      <view class="field">
+        <view class="label">总课时</view>
+        <input class="input" type="number" value="{{progressForm.plannedLessonCount}}" data-field="plannedLessonCount" bindinput="onProgressInput" />
+      </view>
+      <view class="field">
+        <view class="label">已上课时</view>
+        <input class="input" type="number" value="{{progressForm.completedLessonCount}}" data-field="completedLessonCount" bindinput="onProgressInput" />
+      </view>
+      <view class="editor-actions">
+        <view class="ghost-btn editor-btn" bindtap="hideProgressEditor">取消</view>
+        <view class="primary-btn editor-btn" bindtap="submitProgress">保存进度</view>
+      </view>
+    </view>
+
     <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddLesson">添加英语课记录</view>
     <view class="ghost-btn add-btn" wx:if="{{isTeacher}}" bindtap="goTeacherPreview">以学生视角查看</view>
 

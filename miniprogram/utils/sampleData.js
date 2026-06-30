@@ -10,6 +10,8 @@ const students = [
     studentOpenId: "",
     teacherName: "朱老师",
     subject: "English",
+    plannedLessonCount: 17,
+    completedLessonCount: 3,
     createdAt: "2026-06-01",
   },
   {
@@ -23,6 +25,8 @@ const students = [
     studentOpenId: "",
     teacherName: "朱老师",
     subject: "English",
+    plannedLessonCount: 0,
+    completedLessonCount: 0,
     createdAt: "2026-06-10",
   },
   {
@@ -36,6 +40,8 @@ const students = [
     studentOpenId: "",
     teacherName: "朱老师",
     subject: "English",
+    plannedLessonCount: 0,
+    completedLessonCount: 0,
     createdAt: "2026-06-11",
   },
 ];

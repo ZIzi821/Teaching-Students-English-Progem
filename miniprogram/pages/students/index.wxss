@@ -68,6 +68,27 @@
   font-size: 24rpx;
 }
 
+.progress-text {
+  margin-top: 12rpx;
+  color: #4f6f63;
+  font-size: 24rpx;
+}
+
+.mini-progress {
+  width: 100%;
+  height: 12rpx;
+  margin-top: 8rpx;
+  overflow: hidden;
+  border-radius: 999rpx;
+  background: #edf0e8;
+}
+
+.mini-progress-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: #4f8f73;
+}
+
 .status {
   padding: 8rpx 14rpx;
   border-radius: 999rpx;

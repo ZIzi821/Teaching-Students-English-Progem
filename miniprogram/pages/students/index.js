@@ -47,6 +47,8 @@ Page({
       return Object.assign({}, item, {
         initial: item.name ? item.name.substr(0, 1) : "学",
         bindStatus: item.studentOpenId ? "已绑定" : "待绑定",
+        progressLabel: "已上 " + (item.completedLessonCount || 0) + " / " + (item.plannedLessonCount || 0) + " 节",
+        progressPercent: item.progressPercent || 0,
       });
     });
   },

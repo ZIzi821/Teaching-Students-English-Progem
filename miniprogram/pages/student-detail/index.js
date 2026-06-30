@@ -9,6 +9,11 @@ Page({
     student: null,
     lessons: [],
     message: "",
+    showProgressEditor: false,
+    progressForm: {
+      plannedLessonCount: "",
+      completedLessonCount: "",
+    },
   },
 
   onLoad(options) {
@@ -66,6 +71,7 @@ Page({
   prepareStudent(student) {
     return Object.assign({}, student, {
       initial: student && student.name ? student.name.substr(0, 1) : "学",
+      progressLabel: "已上 " + (student.completedLessonCount || 0) + " / " + (student.plannedLessonCount || 0) + " 节",
     });
   },
 
@@ -89,5 +95,67 @@ Page({
     wx.navigateTo({
       url: "/pages/student-detail/index?mode=teacherPreview&previewStudentId=" + this.data.student._id,
     });
+  },
+
+  showProgressEditor() {
+    this.setData({
+      showProgressEditor: true,
+      progressForm: {
+        plannedLessonCount: String(this.data.student.plannedLessonCount || 0),
+        completedLessonCount: String(this.data.student.completedLessonCount || 0),
+      },
+    });
+  },
+
+  hideProgressEditor() {
+    this.setData({
+      showProgressEditor: false,
+    });
+  },
+
+  onProgressInput(e) {
+    const field = e.currentTarget.dataset.field;
+    this.setData({
+      ["progressForm." + field]: e.detail.value,
+    });
+  },
+
+  submitProgress() {
+    wx.showLoading({ title: "保存中" });
+    wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "updateStudentProgress",
+          data: {
+            studentId: this.data.student._id,
+            plannedLessonCount: this.data.progressForm.plannedLessonCount,
+            completedLessonCount: this.data.progressForm.completedLessonCount,
+          },
+        },
+      })
+      .then((res) => {
+        const result = res.result || {};
+        if (!result.success) {
+          wx.showToast({
+            title: result.message || "保存失败",
+            icon: "none",
+          });
+          return;
+        }
+        wx.showToast({ title: "已保存" });
+        this.setData({ showProgressEditor: false });
+        this.loadStudent();
+      })
+      .catch((err) => {
+        console.error(err);
+        wx.showToast({
+          title: "保存失败",
+          icon: "none",
+        });
+      })
+      .finally(() => {
+        wx.hideLoading();
+      });
   },
 });

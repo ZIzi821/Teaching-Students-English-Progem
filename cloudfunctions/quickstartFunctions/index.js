@@ -18,6 +18,8 @@ const SEED_STUDENTS = [
     studentOpenId: "",
     teacherName: appConfig.teacherName,
     subject: appConfig.defaultSubject,
+    plannedLessonCount: 0,
+    completedLessonCount: 0,
   },
   {
     name: "任轩楠",
@@ -29,6 +31,8 @@ const SEED_STUDENTS = [
     studentOpenId: "",
     teacherName: appConfig.teacherName,
     subject: appConfig.defaultSubject,
+    plannedLessonCount: 0,
+    completedLessonCount: 0,
   },
   {
     name: "Jason梁",
@@ -40,6 +44,8 @@ const SEED_STUDENTS = [
     studentOpenId: "",
     teacherName: appConfig.teacherName,
     subject: appConfig.defaultSubject,
+    plannedLessonCount: 0,
+    completedLessonCount: 0,
   },
 ];
 
@@ -50,6 +56,45 @@ const createError = (code, message) => {
 };
 
 const normalizeCode = (code) => String(code || "").trim().toUpperCase();
+
+const toNonNegativeNumber = (value, fieldName) => {
+  const num = Number(value || 0);
+  if (!Number.isFinite(num) || num < 0) {
+    throw createError("INVALID_PROGRESS", `${fieldName} 必须是非负数字`);
+  }
+  return num;
+};
+
+const buildProgress = (student) => {
+  const plannedRaw = Number(student.plannedLessonCount || 0);
+  const completedRaw = Number(student.completedLessonCount || 0);
+  const plannedLessonCount = Number.isFinite(plannedRaw) && plannedRaw > 0 ? plannedRaw : 0;
+  const completedLessonCount = Number.isFinite(completedRaw) && completedRaw > 0 ? completedRaw : 0;
+  const progressPercent = plannedLessonCount ? Math.min(100, Math.round((completedLessonCount / plannedLessonCount) * 100)) : 0;
+  return {
+    plannedLessonCount,
+    completedLessonCount,
+    progressPercent,
+    progressText: `${completedLessonCount} / ${plannedLessonCount}`,
+  };
+};
+
+const summarizeProgress = (students) => {
+  let plannedLessonCount = 0;
+  let completedLessonCount = 0;
+  students.forEach((student) => {
+    const progress = buildProgress(student);
+    plannedLessonCount += progress.plannedLessonCount;
+    completedLessonCount += progress.completedLessonCount;
+  });
+  const progressPercent = plannedLessonCount ? Math.min(100, Math.round((completedLessonCount / plannedLessonCount) * 100)) : 0;
+  return {
+    plannedLessonCount,
+    completedLessonCount,
+    progressPercent,
+    progressText: `${completedLessonCount} / ${plannedLessonCount}`,
+  };
+};
 
 const getOpenIdFromContext = () => cloud.getWXContext().OPENID;
 
@@ -94,6 +139,7 @@ const sanitizeStudent = (student, includePrivate) => {
     subject: student.subject || appConfig.defaultSubject,
     createdAt: student.createdAt || "",
   };
+  Object.assign(result, buildProgress(student));
   if (includePrivate) {
     result.accessCode = student.accessCode || "";
     result.studentOpenId = student.studentOpenId || "";
@@ -180,8 +226,9 @@ const getHomeData = async () => {
   const identity = await getIdentity();
   if (identity.role === "teacher") {
     const studentCount = await db.collection("students").count();
-    const lessonCount = await db.collection("lessons").count();
     const mistakeCount = await db.collection("mistakes").count();
+    const studentsRes = await db.collection("students").get();
+    const progressOverview = summarizeProgress(studentsRes.data || []);
     const recentLessonRes = await db.collection("lessons").orderBy("lessonDate", "desc").limit(3).get();
     return {
       success: true,
@@ -191,8 +238,8 @@ const getHomeData = async () => {
       canShowStudentCount: true,
       stats: {
         studentCount: studentCount.total,
-        lessonCount: lessonCount.total,
         mistakeCount: mistakeCount.total,
+        progressOverview,
       },
       recentLessons: await attachStudentNames(recentLessonRes.data || []),
     };
@@ -200,9 +247,9 @@ const getHomeData = async () => {
 
   if (identity.role === "student") {
     const studentId = identity.student._id;
-    const lessonCount = await db.collection("lessons").where({ studentId }).count();
     const mistakeCount = await db.collection("mistakes").where({ studentId }).count();
     const recentLessonRes = await db.collection("lessons").where({ studentId }).orderBy("lessonDate", "desc").limit(3).get();
+    const progress = buildProgress(identity.student);
     return {
       success: true,
       role: "student",
@@ -211,8 +258,8 @@ const getHomeData = async () => {
       currentStudent: sanitizeStudent(identity.student, false),
       canShowStudentCount: false,
       stats: {
-        lessonCount: lessonCount.total,
         mistakeCount: mistakeCount.total,
+        progress,
       },
       recentLessons: recentLessonRes.data || [],
     };
@@ -225,8 +272,13 @@ const getHomeData = async () => {
     teacherName: appConfig.teacherName,
     canShowStudentCount: false,
     stats: {
-      lessonCount: 0,
       mistakeCount: 0,
+      progress: {
+        plannedLessonCount: 0,
+        completedLessonCount: 0,
+        progressPercent: 0,
+        progressText: "0 / 0",
+      },
     },
     recentLessons: [],
   };
@@ -297,6 +349,11 @@ const addStudent = async (event) => {
   if (existing.data && existing.data.length) {
     throw createError("ACCESS_CODE_EXISTS", "这个 accessCode 已经存在");
   }
+  const plannedLessonCount = toNonNegativeNumber(data.plannedLessonCount, "总课时");
+  const completedLessonCount = toNonNegativeNumber(data.completedLessonCount, "已上课时");
+  if (completedLessonCount > plannedLessonCount) {
+    throw createError("INVALID_PROGRESS", "已上课时不能大于总课时");
+  }
   return await db.collection("students").add({
     data: {
       name: data.name,
@@ -308,9 +365,36 @@ const addStudent = async (event) => {
       studentOpenId: data.studentOpenId || "",
       teacherName: data.teacherName || appConfig.teacherName,
       subject: data.subject || appConfig.defaultSubject,
+      plannedLessonCount,
+      completedLessonCount,
       createdAt: db.serverDate(),
     },
   });
+};
+
+const updateStudentProgress = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  if (!data.studentId) {
+    throw createError("INVALID_PROGRESS", "缺少学生 ID");
+  }
+  const plannedLessonCount = toNonNegativeNumber(data.plannedLessonCount, "总课时");
+  const completedLessonCount = toNonNegativeNumber(data.completedLessonCount, "已上课时");
+  if (completedLessonCount > plannedLessonCount) {
+    throw createError("INVALID_PROGRESS", "已上课时不能大于总课时");
+  }
+  await db.collection("students").doc(data.studentId).update({
+    data: {
+      plannedLessonCount,
+      completedLessonCount,
+    },
+  });
+  return {
+    success: true,
+    plannedLessonCount,
+    completedLessonCount,
+    progressPercent: plannedLessonCount ? Math.round((completedLessonCount / plannedLessonCount) * 100) : 0,
+  };
 };
 
 const seedStudents = async () => {
@@ -541,6 +625,8 @@ exports.main = async (event) => {
         return await addStudent(event);
       case "seedStudents":
         return await seedStudents();
+      case "updateStudentProgress":
+        return await updateStudentProgress(event);
       case "getStudentDetail":
         return await getStudentDetail(event);
       case "listLessons":

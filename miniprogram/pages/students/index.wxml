@@ -18,6 +18,10 @@
         <view class="student-name">{{item.name}} <text class="nickname">{{item.nickname}}</text></view>
         <view class="student-meta">{{item.grade}} · {{item.subject}} · 家长：{{item.parentName}}</view>
         <view class="student-meta">accessCode：{{item.accessCode}}</view>
+        <view class="progress-text">{{item.progressLabel}}</view>
+        <view class="mini-progress">
+          <view class="mini-progress-fill" style="width: {{item.progressPercent}}%;"></view>
+        </view>
       </view>
       <view class="status">{{item.bindStatus}}</view>
     </view>
