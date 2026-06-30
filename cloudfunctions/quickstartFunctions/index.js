@@ -96,6 +96,23 @@ const summarizeProgress = (students) => {
   };
 };
 
+const buildStudentProgressItem = (student) => {
+  const safeStudent = sanitizeStudent(student, false);
+  const hasPlannedLessonCount = safeStudent.plannedLessonCount > 0;
+  return {
+    _id: safeStudent._id,
+    name: safeStudent.name,
+    grade: safeStudent.grade,
+    plannedLessonCount: safeStudent.plannedLessonCount,
+    completedLessonCount: safeStudent.completedLessonCount,
+    progressPercent: safeStudent.progressPercent,
+    hasPlannedLessonCount,
+    progressLabel: hasPlannedLessonCount
+      ? `已上 ${safeStudent.completedLessonCount} / ${safeStudent.plannedLessonCount} 节`
+      : "暂未设置总课时",
+  };
+};
+
 const getOpenIdFromContext = () => cloud.getWXContext().OPENID;
 
 const isTeacherOpenId = (openid) => appConfig.teacherOpenIds.indexOf(openid) >= 0;
@@ -228,7 +245,9 @@ const getHomeData = async () => {
     const studentCount = await db.collection("students").count();
     const mistakeCount = await db.collection("mistakes").count();
     const studentsRes = await db.collection("students").get();
-    const progressOverview = summarizeProgress(studentsRes.data || []);
+    const students = studentsRes.data || [];
+    const progressOverview = summarizeProgress(students);
+    const studentsProgress = students.map((student) => buildStudentProgressItem(student));
     const recentLessonRes = await db.collection("lessons").orderBy("lessonDate", "desc").limit(3).get();
     return {
       success: true,
@@ -241,6 +260,7 @@ const getHomeData = async () => {
         mistakeCount: mistakeCount.total,
         progressOverview,
       },
+      studentsProgress,
       recentLessons: await attachStudentNames(recentLessonRes.data || []),
     };
   }

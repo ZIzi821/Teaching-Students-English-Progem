@@ -15,10 +15,6 @@
       <view class="stat-label">学生</view>
     </view>
     <view class="stat-card">
-      <view class="stat-number">{{stats.progressOverview.progressText}}</view>
-      <view class="stat-label">课程进度</view>
-    </view>
-    <view class="stat-card">
       <view class="stat-number">{{stats.mistakeCount}}</view>
       <view class="stat-label">错题</view>
     </view>
@@ -33,10 +29,6 @@
       <view class="stat-number">{{stats.mistakeCount}}</view>
       <view class="stat-label">我的错题</view>
     </view>
-  </view>
-
-  <view class="home-progress" wx:if="{{isTeacher}}">
-    <view class="home-progress-fill" style="width: {{stats.progressOverview.progressPercent}}%;"></view>
   </view>
 
   <view class="home-progress" wx:if="{{isStudent}}">
@@ -56,6 +48,24 @@
 
   <view class="actions" wx:if="{{isGuest}}">
     <view class="primary-btn" bindtap="goBind">绑定学生身份</view>
+  </view>
+
+  <view class="teacher-progress-section" wx:if="{{isTeacher}}">
+    <view class="section-title">学生课程进度</view>
+    <view class="empty" wx:if="{{!studentsProgress.length}}">还没有学生进度。</view>
+    <view class="card student-progress-card" wx:for="{{studentsProgress}}" wx:key="_id">
+      <view class="student-progress-top">
+        <view>
+          <view class="student-progress-name">{{item.name}}</view>
+          <view class="student-progress-grade">{{item.grade}}</view>
+        </view>
+        <view class="student-progress-percent" wx:if="{{item.hasPlannedLessonCount}}">{{item.progressPercent}}%</view>
+      </view>
+      <view class="student-progress-text">{{item.progressLabel}}</view>
+      <view class="student-progress-bar">
+        <view class="student-progress-fill" style="width: {{item.progressPercent}}%;"></view>
+      </view>
+    </view>
   </view>
 
   <view class="section-title">最近英语课</view>

@@ -95,11 +95,64 @@
   width: 100%;
 }
 
+.teacher-progress-section {
+  margin-bottom: 34rpx;
+}
+
 .section-title {
   margin-bottom: 18rpx;
   color: #3d352e;
   font-size: 32rpx;
   font-weight: 700;
+}
+
+.student-progress-card {
+  margin-bottom: 18rpx;
+}
+
+.student-progress-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.student-progress-name {
+  color: #2f2a24;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.student-progress-grade {
+  margin-top: 6rpx;
+  color: #817669;
+  font-size: 24rpx;
+}
+
+.student-progress-percent {
+  color: #4f8f73;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.student-progress-text {
+  margin-top: 16rpx;
+  color: #62584d;
+  font-size: 26rpx;
+}
+
+.student-progress-bar {
+  height: 16rpx;
+  margin-top: 16rpx;
+  overflow: hidden;
+  border-radius: 999rpx;
+  background: #edf0e8;
+}
+
+.student-progress-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: #4f8f73;
 }
 
 .lesson-card {

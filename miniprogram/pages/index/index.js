@@ -23,6 +23,7 @@ Page({
       },
     },
     recentLessons: [],
+    studentsProgress: [],
     errorMessage: "",
   },
 
@@ -63,6 +64,7 @@ Page({
           currentStudent: result.currentStudent || null,
           stats: result.stats || {},
           recentLessons: result.recentLessons || [],
+          studentsProgress: result.studentsProgress || [],
           errorMessage: "",
         });
         if (role === "guest") {
@@ -92,6 +94,7 @@ Page({
         },
       },
       recentLessons: sampleData.lessons.slice(0, 2),
+      studentsProgress: [],
     });
   },
 
