@@ -113,6 +113,31 @@ const buildStudentProgressItem = (student) => {
   };
 };
 
+const getStudentLessonCount = async (studentId) => {
+  const res = await db.collection("lessons").where({ studentId }).count();
+  return res.total || 0;
+};
+
+const attachSyncedLessonCount = async (student) => {
+  if (!student || !student._id) return student;
+  const completedLessonCount = await getStudentLessonCount(student._id);
+  return Object.assign({}, student, { completedLessonCount });
+};
+
+const attachSyncedLessonCounts = async (students) => {
+  return await Promise.all((students || []).map((student) => attachSyncedLessonCount(student)));
+};
+
+const syncStudentCompletedLessonCount = async (studentId) => {
+  const completedLessonCount = await getStudentLessonCount(studentId);
+  await db.collection("students").doc(studentId).update({
+    data: {
+      completedLessonCount,
+    },
+  });
+  return completedLessonCount;
+};
+
 const getOpenIdFromContext = () => cloud.getWXContext().OPENID;
 
 const isTeacherOpenId = (openid) => appConfig.teacherOpenIds.indexOf(openid) >= 0;
@@ -256,7 +281,7 @@ const getHomeData = async () => {
     const studentCount = await db.collection("students").count();
     const mistakeCount = await db.collection("mistakes").count();
     const studentsRes = await db.collection("students").get();
-    const students = studentsRes.data || [];
+    const students = await attachSyncedLessonCounts(studentsRes.data || []);
     const progressOverview = summarizeProgress(students);
     const studentsProgress = students.map((student) => buildStudentProgressItem(student));
     const recentLessonRes = await db.collection("lessons").orderBy("lessonDate", "desc").limit(3).get();
@@ -280,13 +305,14 @@ const getHomeData = async () => {
     const studentId = identity.student._id;
     const mistakeCount = await db.collection("mistakes").where({ studentId }).count();
     const recentLessonRes = await db.collection("lessons").where({ studentId }).orderBy("lessonDate", "desc").limit(3).get();
-    const progress = buildProgress(identity.student);
+    const syncedStudent = await attachSyncedLessonCount(identity.student);
+    const progress = buildProgress(syncedStudent);
     return {
       success: true,
       role: "student",
       openid: identity.openid,
       teacherName: appConfig.teacherName,
-      currentStudent: sanitizeStudent(identity.student, false),
+      currentStudent: sanitizeStudent(syncedStudent, false),
       canShowStudentCount: false,
       stats: {
         mistakeCount: mistakeCount.total,
@@ -392,10 +418,11 @@ const bindAccessCode = async (event) => {
 const listStudents = async () => {
   await ensureTeacher();
   const res = await db.collection("students").orderBy("createdAt", "desc").get();
+  const students = await attachSyncedLessonCounts(res.data || []);
   return {
     success: true,
     role: "teacher",
-    data: res.data.map((student) => sanitizeStudent(student, true)),
+    data: students.map((student) => sanitizeStudent(student, true)),
   };
 };
 
@@ -504,11 +531,12 @@ const getStudentDetail = async (event) => {
   await ensureStudentAccess(studentId);
 
   const studentRes = await db.collection("students").doc(studentId).get();
+  const student = await attachSyncedLessonCount(studentRes.data);
   const lessonsRes = await db.collection("lessons").where({ studentId }).orderBy("lessonDate", "desc").get();
   return {
     success: true,
     role: identity.role,
-    student: sanitizeStudent(studentRes.data, identity.role === "teacher"),
+    student: sanitizeStudent(student, identity.role === "teacher"),
     lessons: lessonsRes.data || [],
   };
 };
@@ -575,7 +603,7 @@ const addLesson = async (event) => {
   if (!data.studentId || !data.title || !data.lessonDate) {
     throw createError("INVALID_LESSON", "请填写学生、课程标题和日期");
   }
-  return await db.collection("lessons").add({
+  const addRes = await db.collection("lessons").add({
     data: {
       studentId: data.studentId,
       title: data.title,
@@ -586,6 +614,11 @@ const addLesson = async (event) => {
       paperFileIds: data.paperFileIds || [],
       createdAt: db.serverDate(),
     },
+  });
+  const completedLessonCount = await syncStudentCompletedLessonCount(data.studentId);
+  return Object.assign({}, addRes, {
+    success: true,
+    completedLessonCount,
   });
 };
 
