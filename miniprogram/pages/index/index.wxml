@@ -53,7 +53,7 @@
   <view class="teacher-progress-section" wx:if="{{isTeacher}}">
     <view class="section-title">学生课程进度</view>
     <view class="empty" wx:if="{{!studentsProgress.length}}">还没有学生进度。</view>
-    <view class="card student-progress-card" wx:for="{{studentsProgress}}" wx:key="_id">
+    <view class="card student-progress-card" wx:for="{{studentsProgress}}" wx:key="_id" data-id="{{item._id}}" bindtap="goStudentDetail" hover-class="student-progress-card-hover">
       <view class="student-progress-top">
         <view>
           <view class="student-progress-name">{{item.name}}</view>

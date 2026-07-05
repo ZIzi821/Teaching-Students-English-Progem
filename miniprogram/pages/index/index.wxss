@@ -110,6 +110,10 @@
   margin-bottom: 18rpx;
 }
 
+.student-progress-card-hover {
+  background: #f7f0e5;
+}
+
 .student-progress-top {
   display: flex;
   align-items: flex-start;

@@ -104,6 +104,14 @@ Page({
     });
   },
 
+  goStudentDetail(e) {
+    const studentId = e.currentTarget.dataset.id;
+    if (!studentId) return;
+    wx.navigateTo({
+      url: "/pages/student-detail/index?id=" + studentId,
+    });
+  },
+
   goMyLessons() {
     const studentId = this.data.currentStudent ? this.data.currentStudent._id : "";
     wx.navigateTo({
