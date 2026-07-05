@@ -163,6 +163,10 @@
   margin-bottom: 18rpx;
 }
 
+.lesson-card-hover {
+  background: #f7f0e5;
+}
+
 .lesson-main {
   display: flex;
   align-items: baseline;

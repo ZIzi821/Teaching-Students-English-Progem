@@ -112,6 +112,14 @@ Page({
     });
   },
 
+  goLessonDetail(e) {
+    const lessonId = e.currentTarget.dataset.id;
+    if (!lessonId) return;
+    wx.navigateTo({
+      url: "/pages/lesson-detail/index?id=" + lessonId,
+    });
+  },
+
   goMyLessons() {
     const studentId = this.data.currentStudent ? this.data.currentStudent._id : "";
     wx.navigateTo({

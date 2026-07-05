@@ -70,7 +70,7 @@
 
   <view class="section-title">最近英语课</view>
   <view class="empty" wx:if="{{!recentLessons.length}}">还没有可以查看的课程。</view>
-  <view class="card lesson-card" wx:for="{{recentLessons}}" wx:key="_id">
+  <view class="card lesson-card" wx:for="{{recentLessons}}" wx:key="_id" data-id="{{item._id}}" bindtap="goLessonDetail" hover-class="lesson-card-hover">
     <view class="lesson-main">
       <view class="lesson-title">{{item.title}}</view>
       <view class="lesson-meta">{{item.subject}} · {{item.lessonDate}}</view>
