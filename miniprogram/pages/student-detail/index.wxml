@@ -4,8 +4,6 @@
   </view>
 
   <view wx:if="{{student}}">
-    <view class="preview-tip" wx:if="{{isTeacherPreview}}">学生视角预览：当前只显示 {{student.name}} 自己的英语课、课程资料和错题。</view>
-
     <view class="card profile-card">
       <view class="avatar">{{student.initial}}</view>
       <view class="profile-main">
@@ -20,6 +18,7 @@
         <view>
           <view class="progress-title">课程进度</view>
           <view class="progress-label">{{student.progressLabel}} · {{student.progressPercent}}%</view>
+          <view class="cycle-label" wx:if="{{cycleStatus}}">{{cycleStatus.label}}</view>
         </view>
         <view class="ghost-small" wx:if="{{isTeacher}}" bindtap="showProgressEditor">编辑课程进度</view>
       </view>
@@ -40,6 +39,41 @@
       <view class="editor-actions">
         <view class="ghost-btn editor-btn" bindtap="hideProgressEditor">取消</view>
         <view class="primary-btn editor-btn" bindtap="submitProgress">保存进度</view>
+      </view>
+    </view>
+
+    <view class="card analytics-card" wx:if="{{analytics}}">
+      <view class="analytics-head">
+        <view>
+          <view class="progress-title">错题分析</view>
+          <view class="progress-label">{{analytics.weakPointSummary}}</view>
+        </view>
+        <view class="ghost-small" bindtap="goReviewDashboard">{{cycleStatus.isReviewPhase ? '开始复习' : '查看复习'}}</view>
+      </view>
+      <view class="metric-grid">
+        <view class="metric-item">
+          <view class="metric-number">{{analytics.totalMistakeCount}}</view>
+          <view class="metric-label">总错题</view>
+        </view>
+        <view class="metric-item">
+          <view class="metric-number">{{analytics.pendingCount}}</view>
+          <view class="metric-label">待复习</view>
+        </view>
+        <view class="metric-item">
+          <view class="metric-number">{{analytics.masteredCount}}</view>
+          <view class="metric-label">已掌握</view>
+        </view>
+      </view>
+      <view class="rank-block" wx:if="{{analytics.topQuestionTypes.length}}">
+        <view class="rank-title">高频题型</view>
+        <view class="rank-row" wx:for="{{analytics.topQuestionTypes}}" wx:key="label">
+          <view class="rank-name">{{item.label}}</view>
+          <view class="rank-bar"><view class="rank-fill" style="width: {{item.count * 18 > 100 ? 100 : item.count * 18}}%;"></view></view>
+          <view class="rank-count">{{item.count}}</view>
+        </view>
+      </view>
+      <view class="tags analysis-tags" wx:if="{{analytics.topSkillTags.length}}">
+        <text class="tag" wx:for="{{analytics.topSkillTags}}" wx:key="label">{{item.label}} {{item.count}}</text>
       </view>
     </view>
 

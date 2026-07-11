@@ -23,6 +23,16 @@
   margin-bottom: 0;
 }
 
+.split-fields {
+  display: flex;
+  gap: 18rpx;
+}
+
+.split-field {
+  min-width: 0;
+  flex: 1;
+}
+
 .label {
   margin-bottom: 12rpx;
   color: #655b50;
@@ -84,4 +94,48 @@
   background: #fff1cf;
   font-size: 28rpx;
   line-height: 1.6;
+}
+
+.image-actions,
+.advanced-toggle,
+.action-row {
+  display: flex;
+  align-items: center;
+}
+
+.image-actions {
+  justify-content: flex-end;
+  gap: 28rpx;
+  margin-top: 14rpx;
+  color: #6f8f7c;
+  font-size: 24rpx;
+}
+
+.advanced-toggle {
+  justify-content: space-between;
+  padding: 22rpx 0 4rpx;
+  border-top: 1rpx solid #eadfce;
+  color: #4f8f73;
+  font-size: 27rpx;
+  font-weight: 600;
+}
+
+.advanced-fields {
+  margin-top: 26rpx;
+}
+
+.quick-tip {
+  margin: 20rpx 0;
+  color: #817669;
+  font-size: 24rpx;
+  text-align: center;
+}
+
+.action-row {
+  gap: 18rpx;
+}
+
+.action-btn {
+  flex: 1;
+  margin: 0;
 }

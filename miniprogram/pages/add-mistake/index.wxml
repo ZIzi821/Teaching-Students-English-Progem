@@ -1,7 +1,7 @@
 <view class="page">
   <view class="form-head">
-    <view class="title">添加英语错题</view>
-    <view class="subtitle">上传英语题目图片，记录学生答案、正确答案、错误原因和朱老师解析。</view>
+    <view class="title">{{isEditing ? '整理英语错题' : '快速记录英语错题'}}</view>
+    <view class="subtitle">{{isEditing ? '补充或修改答案、原因和解析。' : '先拍照保存，答案和详细分析可以现在填写，也可以之后再整理。'}}</view>
   </view>
 
   <view class="card message-card" wx:if="{{message}}">{{message}}</view>
@@ -25,35 +25,104 @@
       <view class="label">题目图片</view>
       <view class="upload-box" bindtap="chooseImage">
         <image wx:if="{{questionImageFileId}}" class="preview" src="{{questionImageFileId}}" mode="aspectFill"></image>
-        <view wx:else class="upload-text">点击上传英语题目图片</view>
+        <view wx:else class="upload-text">拍照或从相册选择题目</view>
+      </view>
+      <view class="image-actions" wx:if="{{questionImageFileId}}">
+        <text bindtap="chooseImage">重新选择</text>
+        <text bindtap="removeImage">移除图片</text>
       </view>
     </view>
 
     <view class="field">
-      <view class="label">学生答案</view>
+      <view class="label">学生答案（可稍后补充）</view>
       <textarea class="textarea" placeholder="学生当时写的英文答案或思路" value="{{form.studentAnswer}}" data-field="studentAnswer" bindinput="onInput"></textarea>
     </view>
 
     <view class="field">
-      <view class="label">正确答案</view>
+      <view class="label">正确答案（可稍后补充）</view>
       <textarea class="textarea" placeholder="正确英文答案" value="{{form.correctAnswer}}" data-field="correctAnswer" bindinput="onInput"></textarea>
     </view>
 
-    <view class="field">
-      <view class="label">错误原因</view>
-      <textarea class="textarea" placeholder="例如：did 后面用了过去式、没有看清 what" value="{{form.reason}}" data-field="reason" bindinput="onInput"></textarea>
+    <view class="advanced-toggle" bindtap="toggleAdvanced">
+      <text>{{showAdvanced ? '收起补充信息' : '补充题型、原因和解析（选填）'}}</text>
+      <text>{{showAdvanced ? '▲' : '▼'}}</text>
     </view>
 
-    <view class="field">
-      <view class="label">老师解析</view>
-      <textarea class="textarea tall" placeholder="语法/阅读/单词讲解思路、提醒、下次复习方法" value="{{form.explanation}}" data-field="explanation" bindinput="onInput"></textarea>
-    </view>
+    <view class="advanced-fields" wx:if="{{showAdvanced}}">
+      <view class="field">
+        <view class="label">所属试卷/资料</view>
+        <picker mode="selector" range="{{papers}}" range-key="displayTitle" value="{{paperIndex}}" bindchange="onPaperChange">
+          <view class="picker-value">{{selectedPaperTitle}}</view>
+        </picker>
+      </view>
 
-    <view class="field">
-      <view class="label">知识点标签</view>
-      <input class="input" placeholder="用逗号分隔，如：Past Simple,Grammar" value="{{form.tagsText}}" data-field="tagsText" bindinput="onInput" />
+      <view class="field split-fields">
+        <view class="split-field">
+          <view class="label">试卷部分</view>
+          <picker mode="selector" range="{{paperSections}}" value="{{paperSectionIndex}}" bindchange="onPaperSectionChange">
+            <view class="picker-value">{{paperSections[paperSectionIndex]}}</view>
+          </picker>
+        </view>
+        <view class="split-field">
+          <view class="label">题号</view>
+          <input class="input" placeholder="如 Q3" value="{{form.questionNo}}" data-field="questionNo" bindinput="onInput" />
+        </view>
+      </view>
+
+      <view class="field">
+        <view class="label">题型</view>
+        <picker mode="selector" range="{{questionTypes}}" value="{{questionTypeIndex}}" bindchange="onQuestionTypeChange">
+          <view class="picker-value">{{questionTypes[questionTypeIndex]}}</view>
+        </picker>
+      </view>
+
+      <view class="field">
+        <view class="label">题目文字（选填）</view>
+        <textarea class="textarea tall" placeholder="可以粘贴我整理好的题目文字" value="{{form.recognizedText}}" data-field="recognizedText" bindinput="onInput"></textarea>
+      </view>
+
+      <view class="field">
+        <view class="label">错误原因类型</view>
+        <picker mode="selector" range="{{reasonTypes}}" value="{{reasonTypeIndex}}" bindchange="onReasonTypeChange">
+          <view class="picker-value">{{reasonTypes[reasonTypeIndex]}}</view>
+        </picker>
+      </view>
+
+      <view class="field">
+        <view class="label">错误原因说明</view>
+        <textarea class="textarea" placeholder="例如：did 后面用了过去式" value="{{form.reason}}" data-field="reason" bindinput="onInput"></textarea>
+      </view>
+
+      <view class="field">
+        <view class="label">老师解析</view>
+        <textarea class="textarea tall" placeholder="讲解思路和下次复习提醒" value="{{form.explanation}}" data-field="explanation" bindinput="onInput"></textarea>
+      </view>
+
+      <view class="field">
+        <view class="label">知识点标签</view>
+        <input class="input" placeholder="用逗号分隔，如 Past Simple, Grammar" value="{{form.tagsText}}" data-field="tagsText" bindinput="onInput" />
+      </view>
+
+      <view class="field split-fields">
+        <view class="split-field">
+          <view class="label">复习优先级</view>
+          <picker mode="selector" range="{{reviewPriorities}}" value="{{reviewPriorityIndex}}" bindchange="onReviewPriorityChange">
+            <view class="picker-value">{{reviewPriorities[reviewPriorityIndex]}}</view>
+          </picker>
+        </view>
+        <view class="split-field">
+          <view class="label">复习状态</view>
+          <picker mode="selector" range="{{reviewStatuses}}" value="{{reviewStatusIndex}}" bindchange="onReviewStatusChange">
+            <view class="picker-value">{{reviewStatuses[reviewStatusIndex]}}</view>
+          </picker>
+        </view>
+      </view>
     </view>
   </view>
 
-  <view class="primary-btn" bindtap="submitMistake">保存英语错题</view>
+  <view class="quick-tip">只上传图片也可以保存，系统会标记为“待整理”。</view>
+  <view class="action-row">
+    <view class="ghost-btn action-btn" wx:if="{{!isEditing}}" data-action="continue" bindtap="submitMistake">保存并继续</view>
+    <view class="primary-btn action-btn" data-action="back" bindtap="submitMistake">{{isEditing ? '保存修改' : '保存并返回'}}</view>
+  </view>
 </view>

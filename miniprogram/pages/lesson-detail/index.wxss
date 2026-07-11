@@ -81,8 +81,10 @@
   font-weight: 700;
 }
 
+.input,
 .picker-value {
   box-sizing: border-box;
+  width: 100%;
   min-height: 78rpx;
   padding: 0 22rpx;
   border-radius: 14rpx;
@@ -94,6 +96,12 @@
 
 .upload-btn {
   min-height: 78rpx;
+}
+
+.upload-hint {
+  color: #817669;
+  font-size: 24rpx;
+  line-height: 1.5;
 }
 
 .mistake-top {

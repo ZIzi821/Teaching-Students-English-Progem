@@ -2,7 +2,9 @@ Page({
   data: {
     mistakeId: "",
     mistake: null,
+    role: "",
     message: "",
+    imageLoadFailed: false,
   },
 
   onLoad(options) {
@@ -10,6 +12,11 @@ Page({
       mistakeId: options.id || "",
     });
     this.loadMistake();
+  },
+
+  onShow() {
+    if (this.hasShown && this.data.mistakeId) this.loadMistake();
+    this.hasShown = true;
   },
 
   loadMistake() {
@@ -31,10 +38,16 @@ Page({
           });
           return;
         }
+        const mistake = this.prepareMistake(result.mistake);
         this.setData({
-          mistake: this.prepareMistake(result.mistake),
+          mistake,
+          role: result.role || "",
           message: "",
+          imageLoadFailed: false,
         });
+        if (!mistake.questionImageUrl) {
+          this.resolveQuestionImage(mistake.questionImageFileId);
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -46,7 +59,86 @@ Page({
 
   prepareMistake(mistake) {
     return Object.assign({}, mistake, {
-      displayTitle: mistake.questionTitle || "英语题目图片",
+      displayTitle: mistake.questionNo || mistake.questionTitle || "英语题目",
+      questionImageSrc: mistake.questionImageUrl || mistake.questionImageFileId || "",
+      entryStatus: mistake.entryStatus || (mistake.studentAnswer && mistake.correctAnswer ? "已整理" : "待整理"),
+    });
+  },
+
+  resolveQuestionImage(fileId) {
+    if (!fileId || fileId.indexOf("cloud://") !== 0) return;
+    wx.cloud
+      .getTempFileURL({
+        fileList: [fileId],
+      })
+      .then((res) => {
+        const file = res.fileList && res.fileList[0];
+        if (!file || file.status !== 0 || !file.tempFileURL) {
+          this.setData({ imageLoadFailed: true });
+          return;
+        }
+        this.setData({
+          "mistake.questionImageSrc": file.tempFileURL,
+          imageLoadFailed: false,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setData({ imageLoadFailed: true });
+      });
+  },
+
+  onQuestionImageError(e) {
+    console.error("question image load failed", e.detail);
+    this.setData({ imageLoadFailed: true });
+  },
+
+  updateReviewStatus(e) {
+    const reviewStatus = e.currentTarget.dataset.status;
+    if (!this.data.mistakeId || !reviewStatus) return;
+    wx.showLoading({ title: "保存中" });
+    wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "updateMistakeReviewStatus",
+          data: {
+            mistakeId: this.data.mistakeId,
+            reviewStatus,
+          },
+        },
+      })
+      .then((res) => {
+        const result = res.result || {};
+        if (!result.success) {
+          wx.showToast({
+            title: result.message || "保存失败",
+            icon: "none",
+          });
+          return;
+        }
+        this.setData({
+          "mistake.reviewStatus": result.reviewStatus,
+          "mistake.status": result.reviewStatus,
+          "mistake.reviewCount": result.reviewCount,
+        });
+        wx.showToast({ title: "已更新" });
+      })
+      .catch((err) => {
+        console.error(err);
+        wx.showToast({
+          title: "保存失败",
+          icon: "none",
+        });
+      })
+      .finally(() => {
+        wx.hideLoading();
+      });
+  },
+
+  editMistake() {
+    wx.navigateTo({
+      url: "/pages/add-mistake/index?id=" + this.data.mistakeId,
     });
   },
 });

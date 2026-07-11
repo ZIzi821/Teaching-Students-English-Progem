@@ -1,0 +1,54 @@
+<view class="page">
+  <view class="card no-permission" wx:if="{{message}}">{{message}}</view>
+
+  <view wx:if="{{analytics}}">
+    <view class="card hero-card">
+      <view class="eyebrow">{{student.name}} 的复习工作台</view>
+      <view class="title">{{cycleStatus.label}}</view>
+      <view class="subtitle">{{analytics.weakPointSummary}}</view>
+    </view>
+
+    <view class="metric-grid">
+      <view class="card metric-card">
+        <view class="metric-number">{{analytics.pendingCount}}</view>
+        <view class="metric-label">待复习</view>
+      </view>
+      <view class="card metric-card">
+        <view class="metric-number">{{analytics.reviewedCount}}</view>
+        <view class="metric-label">已复习</view>
+      </view>
+      <view class="card metric-card">
+        <view class="metric-number">{{analytics.masteredCount}}</view>
+        <view class="metric-label">已掌握</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title">最需要复习的题型</view>
+      <view class="empty" wx:if="{{!analytics.topQuestionTypes.length}}">还没有足够的错题数据。</view>
+      <view class="rank-row" wx:for="{{analytics.topQuestionTypes}}" wx:key="label">
+        <view class="rank-name">{{item.label}}</view>
+        <view class="rank-bar"><view class="rank-fill" style="width: {{item.count * 18 > 100 ? 100 : item.count * 18}}%;"></view></view>
+        <view class="rank-count">{{item.count}}</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title">知识点标签</view>
+      <view class="tags">
+        <text class="tag" wx:for="{{analytics.topSkillTags}}" wx:key="label">{{item.label}} {{item.count}}</text>
+      </view>
+      <view class="empty" wx:if="{{!analytics.topSkillTags.length}}">暂无知识点统计。</view>
+    </view>
+
+    <view class="card">
+      <view class="section-title">本周复习清单</view>
+      <view class="empty" wx:if="{{!analytics.reviewSuggestions.length}}">目前没有待复习错题。</view>
+      <view class="suggestion" wx:for="{{analytics.reviewSuggestions}}" wx:key="_id" bindtap="goMistake" data-id="{{item._id}}">
+        <view class="suggestion-title">{{item.title}}</view>
+        <view class="suggestion-meta">{{item.paperSection}} · {{item.questionType}} · {{item.reviewPriority}}优先级</view>
+        <view class="status">{{item.reviewStatus}}</view>
+      </view>
+    </view>
+  </view>
+</view>

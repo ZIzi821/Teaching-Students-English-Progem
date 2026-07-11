@@ -4,11 +4,13 @@
     "pages/students/index",
     "pages/student-detail/index",
     "pages/lesson-detail/index",
+    "pages/review-dashboard/index",
     "pages/mistake-detail/index",
     "pages/bind-student/index",
     "pages/add-student/index",
     "pages/add-lesson/index",
-    "pages/add-mistake/index"
+    "pages/add-mistake/index",
+    "pages/batch-import-mistakes/index"
   ],
   "window": {
     "backgroundColor": "#F7F3EA",

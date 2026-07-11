@@ -49,7 +49,7 @@ Page({
             message: result.message || "保存失败",
           });
           wx.showToast({
-            title: "保存失败",
+            title: result.message || "保存失败",
             icon: "none",
           });
           return;

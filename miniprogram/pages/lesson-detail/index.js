@@ -1,3 +1,6 @@
+const CONTENT_RISK_MESSAGE = "内容含违规信息，请修改后再提交";
+const MATERIAL_PREFERENCES_KEY = "lessonMaterialPreferences";
+
 Page({
   data: {
     lessonId: "",
@@ -19,6 +22,24 @@ Page({
     ],
     materialTypeIndex: 0,
     selectedMaterialTypeLabel: "PDF 试卷",
+    paperTypes: [
+      { label: "综合资料", value: "mixed" },
+      { label: "听力", value: "listening" },
+      { label: "笔试", value: "written" },
+    ],
+    paperTypeIndex: 0,
+    selectedPaperTypeLabel: "综合资料",
+    paperSources: [
+      { label: "练习", value: "practice" },
+      { label: "学校试卷", value: "school_exam" },
+      { label: "作业", value: "homework" },
+    ],
+    paperSourceIndex: 0,
+    selectedPaperSourceLabel: "练习",
+    paperForm: {
+      paperTitle: "",
+      term: "",
+    },
   },
 
   onLoad(options) {
@@ -27,7 +48,33 @@ Page({
       previewStudentId: options.previewStudentId || "",
       mode: options.mode || "",
     });
+    this.restoreMaterialPreferences();
     this.loadLesson();
+  },
+
+  restoreMaterialPreferences() {
+    const preferences = wx.getStorageSync(MATERIAL_PREFERENCES_KEY) || {};
+    const materialTypeIndex = Math.min(Number(preferences.materialTypeIndex || 0), this.data.materialTypes.length - 1);
+    const paperTypeIndex = Math.min(Number(preferences.paperTypeIndex || 0), this.data.paperTypes.length - 1);
+    const paperSourceIndex = Math.min(Number(preferences.paperSourceIndex || 0), this.data.paperSources.length - 1);
+    this.setData({
+      materialTypeIndex,
+      selectedMaterialTypeLabel: this.data.materialTypes[materialTypeIndex].label,
+      paperTypeIndex,
+      selectedPaperTypeLabel: this.data.paperTypes[paperTypeIndex].label,
+      paperSourceIndex,
+      selectedPaperSourceLabel: this.data.paperSources[paperSourceIndex].label,
+      "paperForm.term": preferences.term || "",
+    });
+  },
+
+  rememberMaterialPreferences() {
+    wx.setStorageSync(MATERIAL_PREFERENCES_KEY, {
+      materialTypeIndex: this.data.materialTypeIndex,
+      paperTypeIndex: this.data.paperTypeIndex,
+      paperSourceIndex: this.data.paperSourceIndex,
+      term: this.data.paperForm.term,
+    });
   },
 
   onUnload() {
@@ -84,6 +131,7 @@ Page({
       return Object.assign({}, item, {
         displayTitle: item.title || item.fileName || "课程资料",
         displayType: this.getMaterialTypeLabel(type),
+        displayPaperType: this.getPaperTypeLabel(item.paperType || "mixed"),
         fileCount: item.fileIds ? item.fileIds.length : 1,
         fileID: item.fileID || (item.fileIds && item.fileIds.length ? item.fileIds[0] : ""),
       });
@@ -93,7 +141,11 @@ Page({
   prepareMistakes(mistakes) {
     return mistakes.map((item) => {
       return Object.assign({}, item, {
-        displayTitle: item.questionTitle || "英语错题记录",
+        displayTitle: item.questionNo || item.questionTitle || "英语错题记录",
+        displayMeta: [item.paperSection, item.questionType].filter((value) => value).join(" · "),
+        displayTags: item.skillTags && item.skillTags.length ? item.skillTags : item.tags || [],
+        status: item.reviewStatus || item.status || "待复习",
+        entryStatus: item.entryStatus || (item.studentAnswer && item.correctAnswer ? "已整理" : "待整理"),
       });
     });
   },
@@ -109,6 +161,38 @@ Page({
       materialTypeIndex,
       selectedMaterialTypeLabel: this.data.materialTypes[materialTypeIndex].label,
     });
+    this.rememberMaterialPreferences();
+  },
+
+  onPaperTypeChange(e) {
+    const paperTypeIndex = Number(e.detail.value);
+    this.setData({
+      paperTypeIndex,
+      selectedPaperTypeLabel: this.data.paperTypes[paperTypeIndex].label,
+    });
+    this.rememberMaterialPreferences();
+  },
+
+  onPaperSourceChange(e) {
+    const paperSourceIndex = Number(e.detail.value);
+    this.setData({
+      paperSourceIndex,
+      selectedPaperSourceLabel: this.data.paperSources[paperSourceIndex].label,
+    });
+    this.rememberMaterialPreferences();
+  },
+
+  onPaperMetaInput(e) {
+    const field = e.currentTarget.dataset.field;
+    this.setData({
+      ["paperForm." + field]: e.detail.value,
+    });
+    if (field === "term") this.rememberMaterialPreferences();
+  },
+
+  getPaperTypeLabel(type) {
+    const found = this.data.paperTypes.find((item) => item.value === type);
+    return found ? found.label : "综合资料";
   },
 
   uploadMaterial() {
@@ -122,25 +206,65 @@ Page({
 
   chooseImageMaterial(type) {
     wx.chooseMedia({
-      count: 1,
+      count: 9,
       mediaType: ["image"],
       sourceType: ["album", "camera"],
       success: (res) => {
-        const tempFile = res.tempFiles[0];
-        const fileName = this.createMaterialFileName(type, tempFile.tempFilePath);
-        this.uploadSelectedFile(type, tempFile.tempFilePath, fileName, tempFile.size || 0);
+        const files = (res.tempFiles || []).map((tempFile) => ({
+          type,
+          filePath: tempFile.tempFilePath,
+          fileName: this.createMaterialFileName(type, tempFile.tempFilePath),
+          fileSize: tempFile.size || 0,
+        }));
+        this.uploadSelectedFiles(files);
       },
     });
   },
 
   chooseFileMaterial(type) {
     wx.chooseMessageFile({
-      count: 1,
+      count: 9,
       type: "file",
       success: (res) => {
-        const tempFile = res.tempFiles[0];
-        this.uploadSelectedFile(type, tempFile.path, tempFile.name || this.createMaterialFileName(type, tempFile.path), tempFile.size || 0);
+        const files = (res.tempFiles || []).map((tempFile) => ({
+          type,
+          filePath: tempFile.path,
+          fileName: tempFile.name || this.createMaterialFileName(type, tempFile.path),
+          fileSize: tempFile.size || 0,
+        }));
+        this.uploadSelectedFiles(files);
       },
+    });
+  },
+
+  uploadSelectedFiles(files) {
+    if (!files.length) return;
+    let successCount = 0;
+    const failedFiles = [];
+    let task = Promise.resolve();
+    files.forEach((file, index) => {
+      task = task.then(() => {
+        wx.showLoading({ title: "上传 " + (index + 1) + "/" + files.length, mask: true });
+        return this.uploadSelectedFile(file.type, file.filePath, file.fileName, file.fileSize)
+          .then(() => {
+            successCount += 1;
+          })
+          .catch((err) => {
+            console.error(err);
+            failedFiles.push(file.fileName);
+          });
+      });
+    });
+    task.finally(() => {
+      wx.hideLoading();
+      if (successCount) {
+        this.setData({ "paperForm.paperTitle": "" });
+        this.loadLesson();
+      }
+      wx.showToast({
+        title: failedFiles.length ? successCount + " 个成功，" + failedFiles.length + " 个失败" : successCount + " 个资料已上传",
+        icon: "none",
+      });
     });
   },
 
@@ -151,14 +275,33 @@ Page({
   },
 
   uploadSelectedFile(type, filePath, fileName, fileSize) {
-    if (!this.data.lesson) return;
+    if (!this.data.lesson) return Promise.reject(new Error("课程尚未加载"));
     const safeFileName = String(fileName || "material").replace(/[\\/:*?"<>|\s]+/g, "-");
     const cloudPath = "lesson-materials/" + this.data.lesson.studentId + "/" + this.data.lessonId + "/" + Date.now() + "-" + safeFileName;
-    wx.showLoading({ title: "上传中" });
-    wx.cloud
+    return wx.cloud
       .uploadFile({
         cloudPath,
         filePath,
+      })
+      .then((res) => {
+        if (type !== "image" && type !== "canva") return res;
+        return wx.cloud
+          .callFunction({
+            name: "quickstartFunctions",
+            data: {
+              type: "checkUploadedImage",
+              data: {
+                fileID: res.fileID,
+              },
+            },
+          })
+          .then((checkRes) => {
+            const result = checkRes.result || {};
+            if (result.success === false) {
+              throw new Error(result.message || CONTENT_RISK_MESSAGE);
+            }
+            return res;
+          });
       })
       .then((res) => {
         return wx.cloud.callFunction({
@@ -170,6 +313,10 @@ Page({
               lessonId: this.data.lessonId,
               title: fileName,
               type,
+              paperType: this.data.paperTypes[this.data.paperTypeIndex].value,
+              paperTitle: this.data.paperForm.paperTitle || fileName,
+              term: this.data.paperForm.term,
+              source: this.data.paperSources[this.data.paperSourceIndex].value,
               fileID: res.fileID,
               fileName,
               fileSize,
@@ -180,24 +327,9 @@ Page({
       .then((res) => {
         const result = res.result || {};
         if (result.success === false) {
-          wx.showToast({
-            title: result.message || "保存失败",
-            icon: "none",
-          });
-          return;
+          throw new Error(result.message || "保存失败");
         }
-        wx.showToast({ title: "已上传" });
-        this.loadLesson();
-      })
-      .catch((err) => {
-        console.error(err);
-        wx.showToast({
-          title: "上传失败",
-          icon: "none",
-        });
-      })
-      .finally(() => {
-        wx.hideLoading();
+        return result;
       });
   },
 
@@ -286,6 +418,12 @@ Page({
   goAddMistake() {
     wx.navigateTo({
       url: "/pages/add-mistake/index?lessonId=" + this.data.lessonId + "&studentId=" + this.data.lesson.studentId,
+    });
+  },
+
+  goBatchImportMistakes() {
+    wx.navigateTo({
+      url: "/pages/batch-import-mistakes/index?lessonId=" + this.data.lessonId + "&studentId=" + this.data.lesson.studentId,
     });
   },
 });

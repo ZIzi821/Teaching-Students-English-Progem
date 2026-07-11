@@ -4,8 +4,6 @@
   </view>
 
   <view wx:if="{{lesson}}">
-  <view class="preview-tip" wx:if="{{isTeacherPreview}}">学生视角预览：已隐藏上传资料和添加错题等老师操作。</view>
-
   <view class="card lesson-head">
     <view class="subject">{{lesson.subject}}</view>
     <view class="title">{{lesson.title}}</view>
@@ -14,20 +12,30 @@
   </view>
 
   <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddMistake">添加本节英语错题</view>
+  <view class="ghost-btn add-btn" wx:if="{{isTeacher}}" bindtap="goBatchImportMistakes">粘贴并批量导入错题</view>
 
   <view class="card upload-card" wx:if="{{isTeacher}}">
     <view class="upload-title">上传课程资料</view>
+    <input class="input" placeholder="资料标题，如 Unit 3 Test" value="{{paperForm.paperTitle}}" data-field="paperTitle" bindinput="onPaperMetaInput" />
+    <input class="input" placeholder="学期，如 2026 Term 1" value="{{paperForm.term}}" data-field="term" bindinput="onPaperMetaInput" />
+    <picker mode="selector" range="{{paperTypes}}" range-key="label" value="{{paperTypeIndex}}" bindchange="onPaperTypeChange">
+      <view class="picker-value">{{selectedPaperTypeLabel}}</view>
+    </picker>
+    <picker mode="selector" range="{{paperSources}}" range-key="label" value="{{paperSourceIndex}}" bindchange="onPaperSourceChange">
+      <view class="picker-value">{{selectedPaperSourceLabel}}</view>
+    </picker>
     <picker mode="selector" range="{{materialTypes}}" range-key="label" value="{{materialTypeIndex}}" bindchange="onMaterialTypeChange">
       <view class="picker-value">{{selectedMaterialTypeLabel}}</view>
     </picker>
-    <view class="ghost-btn upload-btn" bindtap="uploadMaterial">选择并上传</view>
+    <view class="upload-hint">可一次选择最多 9 个文件；资料标题留空时自动使用文件名。</view>
+    <view class="ghost-btn upload-btn" bindtap="uploadMaterial">批量选择并上传</view>
   </view>
 
   <view class="section-title">本节课资料</view>
   <view class="empty" wx:if="{{!hasPaperArea}}">暂未上传试卷、图片、音频或白板截图。</view>
   <view class="card paper-card" wx:for="{{papers}}" wx:key="_id" bindtap="openMaterial" data-index="{{index}}">
     <view class="paper-title">{{item.displayTitle}}</view>
-    <view class="paper-meta">{{item.displayType}} · {{item.fileName}}</view>
+    <view class="paper-meta">{{item.displayPaperType}} · {{item.displayType}} · {{item.fileName}}</view>
   </view>
 
   <view class="section-title">英语错题列表</view>
@@ -35,11 +43,12 @@
   <view class="card mistake-card" wx:for="{{mistakes}}" wx:key="_id" bindtap="goMistake" data-id="{{item._id}}">
     <view class="mistake-top">
       <view class="mistake-title">{{item.displayTitle}}</view>
-      <view class="status">{{item.status}}</view>
+      <view class="status">{{item.entryStatus === '待整理' ? '待整理' : item.status}}</view>
     </view>
+    <view class="paper-meta" wx:if="{{item.displayMeta}}">{{item.displayMeta}}</view>
     <view class="reason">{{item.reason}}</view>
     <view class="tags">
-      <text class="tag" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+      <text class="tag" wx:for="{{item.displayTags}}" wx:key="*this">{{item}}</text>
     </view>
   </view>
   </view>

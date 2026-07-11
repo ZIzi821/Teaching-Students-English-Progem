@@ -1,0 +1,50 @@
+.lesson-card {
+  background: #e9f4ee;
+}
+
+.eyebrow,
+.meta,
+.hint,
+.preview {
+  color: #817669;
+  font-size: 25rpx;
+}
+
+.title {
+  margin: 10rpx 0;
+  color: #2f2a24;
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.section-title {
+  color: #2f2a24;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.hint {
+  margin: 12rpx 0 20rpx;
+  line-height: 1.6;
+}
+
+.import-textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 460rpx;
+  padding: 20rpx;
+  border-radius: 14rpx;
+  background: #f8f2e8;
+  color: #2f2a24;
+  font-size: 25rpx;
+  line-height: 1.5;
+}
+
+.preview {
+  margin-top: 16rpx;
+}
+
+.message-card {
+  color: #8a6730;
+  background: #fff1cf;
+}

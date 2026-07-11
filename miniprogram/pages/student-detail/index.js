@@ -8,6 +8,8 @@ Page({
     isTeacherPreview: false,
     student: null,
     lessons: [],
+    cycleStatus: null,
+    analytics: null,
     message: "",
     showProgressEditor: false,
     progressForm: {
@@ -57,6 +59,8 @@ Page({
           isTeacherPreview,
           student: this.prepareStudent(result.student),
           lessons: result.lessons || [],
+          cycleStatus: result.cycleStatus || null,
+          analytics: this.prepareAnalytics(result.analytics),
           message: "",
         });
       })
@@ -68,10 +72,24 @@ Page({
       });
   },
 
+  prepareAnalytics(analytics) {
+    if (!analytics) return null;
+    return Object.assign({}, analytics, {
+      topQuestionTypes: analytics.topQuestionTypes || [],
+      topSkillTags: analytics.topSkillTags || [],
+      reviewSuggestions: analytics.reviewSuggestions || [],
+    });
+  },
+
   prepareStudent(student) {
+    const plannedLessonCount = student.plannedLessonCount || 0;
+    const completedLessonCount = student.completedLessonCount || 0;
+    const progressLabel = plannedLessonCount
+      ? "已上 " + completedLessonCount + " / " + plannedLessonCount + " 节"
+      : "已上 " + completedLessonCount + " 节 · 总课时未设置";
     return Object.assign({}, student, {
       initial: student && student.name ? student.name.substr(0, 1) : "学",
-      progressLabel: "已上 " + (student.completedLessonCount || 0) + " / " + (student.plannedLessonCount || 0) + " 节",
+      progressLabel,
     });
   },
 
@@ -95,6 +113,14 @@ Page({
     wx.navigateTo({
       url: "/pages/student-detail/index?mode=teacherPreview&previewStudentId=" + this.data.student._id,
     });
+  },
+
+  goReviewDashboard() {
+    let url = "/pages/review-dashboard/index?studentId=" + this.data.student._id;
+    if (this.data.isTeacherPreview) {
+      url += "&mode=teacherPreview&previewStudentId=" + this.data.student._id;
+    }
+    wx.navigateTo({ url });
   },
 
   showProgressEditor() {

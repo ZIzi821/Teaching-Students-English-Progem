@@ -4,11 +4,35 @@
   </view>
 
   <view wx:if="{{mistake}}">
+  <view class="primary-btn edit-btn" wx:if="{{role === 'teacher'}}" bindtap="editMistake">整理或修改这道错题</view>
+  <view class="card pending-card" wx:if="{{mistake.entryStatus === '待整理'}}">这是一条快速记录，答案和分析可以稍后补充。</view>
   <view class="card">
     <view class="label">题目</view>
     <view class="question-title">{{mistake.displayTitle}}</view>
-    <image wx:if="{{mistake.questionImageFileId}}" class="question-image" src="{{mistake.questionImageFileId}}" mode="widthFix"></image>
-    <view wx:else class="image-empty">题目图片待上传</view>
+    <view class="question-meta">
+      <text>{{mistake.paperSection}}</text>
+      <text wx:if="{{mistake.questionNo}}"> · {{mistake.questionNo}}</text>
+      <text> · {{mistake.questionType}}</text>
+    </view>
+    <view class="question-text" wx:if="{{mistake.recognizedText}}">{{mistake.recognizedText}}</view>
+    <image wx:if="{{mistake.questionImageSrc && !imageLoadFailed}}" class="question-image" src="{{mistake.questionImageSrc}}" mode="widthFix" binderror="onQuestionImageError"></image>
+    <view wx:elif="{{imageLoadFailed}}" class="image-empty">题目图片加载失败，请检查网络后重试</view>
+    <view wx:elif="{{!mistake.recognizedText}}" class="image-empty">题目图片待上传</view>
+  </view>
+
+  <view class="card review-card">
+    <view class="field">
+      <view class="label">复习状态</view>
+      <view class="review-top">
+        <view class="status">{{mistake.reviewStatus}}</view>
+        <view class="priority">{{mistake.reviewPriority}}优先级</view>
+      </view>
+    </view>
+    <view class="review-actions">
+      <view class="ghost-btn review-btn" bindtap="updateReviewStatus" data-status="待复习">待复习</view>
+      <view class="ghost-btn review-btn" bindtap="updateReviewStatus" data-status="已复习">已复习</view>
+      <view class="primary-btn review-btn" bindtap="updateReviewStatus" data-status="已掌握">已掌握</view>
+    </view>
   </view>
 
   <view class="card answer-card">
@@ -33,7 +57,7 @@
   <view class="card">
     <view class="label">知识点标签</view>
     <view class="tags">
-      <text class="tag" wx:for="{{mistake.tags}}" wx:key="*this">{{item}}</text>
+      <text class="tag" wx:for="{{mistake.skillTags}}" wx:key="*this">{{item}}</text>
     </view>
   </view>
   </view>

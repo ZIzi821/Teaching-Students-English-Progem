@@ -7,6 +7,14 @@ cloud.init({
 
 const db = cloud.database();
 const COLLECTIONS = ["students", "teachers", "lessons", "papers", "mistakes"];
+const SHARED_STUDENT_LIMIT = 5;
+const SHARED_STUDENT_ACCESS_CODES = ["RUIRUI-EN-4829", "XUANNAN-EN-7316"];
+const UNLIMITED_STUDENT_ACCESS_CODES = ["JASON-PRC-0001"];
+const DEFAULT_ANALYTICS_LIMIT = 100;
+const UNCATEGORIZED_LABEL = "未分类";
+const CONTENT_RISK_MESSAGE = "内容含违规信息，请修改后再提交";
+const CONTENT_CHECK_UNAVAILABLE_MESSAGE = "内容安全检测暂时不可用，请稍后再试";
+const TEXT_CHECK_CHUNK_SIZE = 1800;
 const SEED_STUDENTS = [
   {
     name: "芮芮",
@@ -16,6 +24,7 @@ const SEED_STUDENTS = [
     status: "在读",
     accessCode: "RUIRUI-EN-4829",
     studentOpenId: "",
+    studentOpenIds: [],
     teacherName: appConfig.teacherName,
     subject: appConfig.defaultSubject,
     plannedLessonCount: 0,
@@ -29,6 +38,7 @@ const SEED_STUDENTS = [
     status: "在读",
     accessCode: "XUANNAN-EN-7316",
     studentOpenId: "",
+    studentOpenIds: [],
     teacherName: appConfig.teacherName,
     subject: appConfig.defaultSubject,
     plannedLessonCount: 0,
@@ -42,6 +52,7 @@ const SEED_STUDENTS = [
     status: "在读",
     accessCode: "JASON-PRC-0001",
     studentOpenId: "",
+    studentOpenIds: [],
     teacherName: appConfig.teacherName,
     subject: appConfig.defaultSubject,
     plannedLessonCount: 0,
@@ -55,7 +66,200 @@ const createError = (code, message) => {
   return err;
 };
 
+const isRiskySecurityResult = (res) => {
+  if (!res) return false;
+  if (res.errCode === 87014 || res.errcode === 87014) return true;
+  const result = res.result || {};
+  return result.suggest === "risky" || result.suggest === "review";
+};
+
+const isSecurityPass = (res) => {
+  if (!res) return false;
+  if (res.errCode === 0 || res.errcode === 0) {
+    const result = res.result || {};
+    return !result.suggest || result.suggest === "pass";
+  }
+  const result = res.result || {};
+  return result.suggest === "pass";
+};
+
+const collectTextItems = (items) => {
+  return (items || [])
+    .flat()
+    .map((item) => String(item || "").trim())
+    .filter((item) => item);
+};
+
+const chunkText = (text) => {
+  const chunks = [];
+  for (let i = 0; i < text.length; i += TEXT_CHECK_CHUNK_SIZE) {
+    chunks.push(text.slice(i, i + TEXT_CHECK_CHUNK_SIZE));
+  }
+  return chunks;
+};
+
+const checkTextContent = async (textItems) => {
+  const texts = collectTextItems(textItems);
+  if (!texts.length) return;
+  const content = texts.join("\n");
+  const chunks = chunkText(content);
+  for (let i = 0; i < chunks.length; i++) {
+    try {
+      const res = await cloud.openapi.security.msgSecCheck({
+        content: chunks[i],
+        version: 2,
+        scene: 1,
+        openid: getOpenIdFromContext(),
+      });
+      if (isRiskySecurityResult(res)) {
+        throw createError("CONTENT_RISK", CONTENT_RISK_MESSAGE);
+      }
+      if (!isSecurityPass(res)) {
+        console.error("msgSecCheck unexpected result", res);
+        throw createError("CONTENT_CHECK_FAILED", CONTENT_CHECK_UNAVAILABLE_MESSAGE);
+      }
+    } catch (err) {
+      if (err.code === "CONTENT_RISK" || err.code === "CONTENT_CHECK_FAILED") throw err;
+      if (err.errCode === 87014 || err.errcode === 87014) {
+        throw createError("CONTENT_RISK", CONTENT_RISK_MESSAGE);
+      }
+      console.error("msgSecCheck failed", err);
+      throw createError("CONTENT_CHECK_FAILED", CONTENT_CHECK_UNAVAILABLE_MESSAGE);
+    }
+  }
+};
+
+const getImageContentType = (fileID) => {
+  const text = String(fileID || "").toLowerCase();
+  if (text.endsWith(".jpg") || text.endsWith(".jpeg")) return "image/jpeg";
+  if (text.endsWith(".webp")) return "image/webp";
+  if (text.endsWith(".gif")) return "image/gif";
+  return "image/png";
+};
+
+const checkImageFile = async (fileID) => {
+  if (!fileID) return;
+  try {
+    const download = await cloud.downloadFile({ fileID });
+    const fileContent = download.fileContent;
+    if (!fileContent) {
+      throw createError("CONTENT_CHECK_FAILED", CONTENT_CHECK_UNAVAILABLE_MESSAGE);
+    }
+    const res = await cloud.openapi.security.imgSecCheck({
+      media: {
+        contentType: getImageContentType(fileID),
+        value: fileContent,
+      },
+    });
+    if (isRiskySecurityResult(res)) {
+      throw createError("CONTENT_RISK", CONTENT_RISK_MESSAGE);
+    }
+    if (!isSecurityPass(res)) {
+      console.error("imgSecCheck unexpected result", res);
+      throw createError("CONTENT_CHECK_FAILED", CONTENT_CHECK_UNAVAILABLE_MESSAGE);
+    }
+  } catch (err) {
+    if (err.code === "CONTENT_RISK" || err.code === "CONTENT_CHECK_FAILED") throw err;
+    if (err.errCode === 87014 || err.errcode === 87014) {
+      throw createError("CONTENT_RISK", CONTENT_RISK_MESSAGE);
+    }
+    console.error("imgSecCheck failed", err);
+    throw createError("CONTENT_CHECK_FAILED", CONTENT_CHECK_UNAVAILABLE_MESSAGE);
+  }
+};
+
+const deleteUnsafeFiles = async (fileIDs) => {
+  const safeFileIDs = uniqueValues((fileIDs || []).filter((fileID) => fileID));
+  if (!safeFileIDs.length) return;
+  try {
+    await cloud.deleteFile({
+      fileList: safeFileIDs,
+    });
+  } catch (err) {
+    console.error("delete unsafe files failed", err);
+  }
+};
+
+const assertContentSafe = async ({ texts, imageFileIds }) => {
+  await checkTextContent(texts);
+  const fileIDs = uniqueValues((imageFileIds || []).filter((fileID) => fileID));
+  for (let i = 0; i < fileIDs.length; i++) {
+    await checkImageFile(fileIDs[i]);
+  }
+};
+
 const normalizeCode = (code) => String(code || "").trim().toUpperCase();
+
+const uniqueValues = (values) => {
+  const result = [];
+  (values || []).forEach((value) => {
+    if (value && result.indexOf(value) < 0) result.push(value);
+  });
+  return result;
+};
+
+const getStudentOpenIds = (student) => {
+  if (!student) return [];
+  return uniqueValues([student.studentOpenId].concat(student.studentOpenIds || []));
+};
+
+const getStudentBindLimit = (accessCode) => {
+  const normalized = normalizeCode(accessCode);
+  if (UNLIMITED_STUDENT_ACCESS_CODES.indexOf(normalized) >= 0) return Infinity;
+  if (SHARED_STUDENT_ACCESS_CODES.indexOf(normalized) >= 0) return SHARED_STUDENT_LIMIT;
+  return 1;
+};
+
+const normalizeTags = (tags) => {
+  if (Array.isArray(tags)) return uniqueValues(tags.map((item) => String(item || "").trim()).filter((item) => item));
+  return uniqueValues(
+    String(tags || "")
+      .split(/[,，\s]+/)
+      .map((item) => item.trim())
+      .filter((item) => item)
+  );
+};
+
+const getReviewStatus = (mistake) => mistake.reviewStatus || mistake.status || "待复习";
+
+const getCreatedTime = (item) => {
+  const value = item && item.createdAt;
+  if (!value) return 0;
+  if (typeof value === "string") {
+    const parsed = Date.parse(value);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  }
+  if (typeof value.getTime === "function") return value.getTime();
+  if (typeof value === "object" && value.$date) {
+    const parsed = Date.parse(value.$date);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  }
+  return 0;
+};
+
+const incrementStat = (stats, key) => {
+  const label = key || UNCATEGORIZED_LABEL;
+  stats[label] = (stats[label] || 0) + 1;
+};
+
+const toRankList = (stats, limit) => {
+  return Object.keys(stats)
+    .map((label) => ({ label, count: stats[label] }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit || 6);
+};
+
+const buildCycleStatus = (student) => {
+  const progress = buildProgress(student);
+  const hasPlan = progress.plannedLessonCount > 0;
+  const isReviewPhase = hasPlan && progress.completedLessonCount >= progress.plannedLessonCount;
+  return {
+    hasPlan,
+    isReviewPhase,
+    label: !hasPlan ? "暂未设置课程循环" : isReviewPhase ? "本轮课程已完成，进入期末复习期" : "课程循环进行中",
+    nextAction: !hasPlan ? "先设置总课时" : isReviewPhase ? "开始期末复习" : `继续第 ${progress.completedLessonCount + 1} 节课`,
+  };
+};
 
 const toNonNegativeNumber = (value, fieldName) => {
   const num = Number(value || 0);
@@ -63,6 +267,23 @@ const toNonNegativeNumber = (value, fieldName) => {
     throw createError("INVALID_PROGRESS", `${fieldName} 必须是非负数字`);
   }
   return num;
+};
+
+const attachQuestionImageUrl = async (mistake) => {
+  if (!mistake || !mistake.questionImageFileId) return mistake;
+  try {
+    const res = await cloud.getTempFileURL({
+      fileList: [mistake.questionImageFileId],
+    });
+    const file = res.fileList && res.fileList[0];
+    if (!file || file.status !== 0 || !file.tempFileURL) return mistake;
+    return Object.assign({}, mistake, {
+      questionImageUrl: file.tempFileURL,
+    });
+  } catch (err) {
+    console.error("get question image temp url failed", err);
+    return mistake;
+  }
 };
 
 const buildProgress = (student) => {
@@ -109,7 +330,7 @@ const buildStudentProgressItem = (student) => {
     hasPlannedLessonCount,
     progressLabel: hasPlannedLessonCount
       ? `已上 ${safeStudent.completedLessonCount} / ${safeStudent.plannedLessonCount} 节`
-      : "暂未设置总课时",
+      : `已上 ${safeStudent.completedLessonCount} 节，总课时未设置`,
   };
 };
 
@@ -118,10 +339,19 @@ const getStudentLessonCount = async (studentId) => {
   return res.total || 0;
 };
 
+const getEffectiveCompletedLessonCount = (student, lessonCount) => {
+  const storedRaw = Number(student && student.completedLessonCount ? student.completedLessonCount : 0);
+  const storedCount = Number.isFinite(storedRaw) && storedRaw > 0 ? storedRaw : 0;
+  const countedRaw = Number(lessonCount || 0);
+  const countedCount = Number.isFinite(countedRaw) && countedRaw > 0 ? countedRaw : 0;
+  return Math.max(storedCount, countedCount);
+};
+
 const attachSyncedLessonCount = async (student) => {
   if (!student || !student._id) return student;
-  const completedLessonCount = await getStudentLessonCount(student._id);
-  return Object.assign({}, student, { completedLessonCount });
+  const recordedLessonCount = await getStudentLessonCount(student._id);
+  const completedLessonCount = getEffectiveCompletedLessonCount(student, recordedLessonCount);
+  return Object.assign({}, student, { completedLessonCount, recordedLessonCount });
 };
 
 const attachSyncedLessonCounts = async (students) => {
@@ -129,7 +359,9 @@ const attachSyncedLessonCounts = async (students) => {
 };
 
 const syncStudentCompletedLessonCount = async (studentId) => {
-  const completedLessonCount = await getStudentLessonCount(studentId);
+  const recordedLessonCount = await getStudentLessonCount(studentId);
+  const studentRes = await db.collection("students").doc(studentId).get();
+  const completedLessonCount = getEffectiveCompletedLessonCount(studentRes.data, recordedLessonCount);
   await db.collection("students").doc(studentId).update({
     data: {
       completedLessonCount,
@@ -155,7 +387,15 @@ const getBoundTeacher = async (openid) => {
 
 const getBoundStudent = async (openid) => {
   const res = await db.collection("students").where({ studentOpenId: openid }).limit(1).get();
-  return res.data && res.data.length ? res.data[0] : null;
+  if (res.data && res.data.length) return res.data[0];
+  try {
+    const multiRes = await db.collection("students").where({ studentOpenIds: openid }).limit(1).get();
+    if (multiRes.data && multiRes.data.length) return multiRes.data[0];
+  } catch (err) {
+    console.error("query studentOpenIds failed", err);
+  }
+  const studentsRes = await db.collection("students").get();
+  return (studentsRes.data || []).find((student) => getStudentOpenIds(student).indexOf(openid) >= 0) || null;
 };
 
 const getIdentity = async () => {
@@ -196,6 +436,7 @@ const sanitizeStudent = (student, includePrivate) => {
   if (includePrivate) {
     result.accessCode = student.accessCode || "";
     result.studentOpenId = student.studentOpenId || "";
+    result.studentOpenIds = getStudentOpenIds(student);
   }
   return result;
 };
@@ -397,13 +638,17 @@ const bindAccessCode = async (event) => {
   }
 
   const student = res.data[0];
-  if (student.studentOpenId && student.studentOpenId !== identity.openid) {
-    throw createError("ACCESS_CODE_USED", "这个 accessCode 已经绑定了其他微信");
+  const studentOpenIds = getStudentOpenIds(student);
+  const bindLimit = getStudentBindLimit(accessCode);
+  if (studentOpenIds.indexOf(identity.openid) < 0 && Number.isFinite(bindLimit) && studentOpenIds.length >= bindLimit) {
+    throw createError("ACCESS_CODE_USED", `这个 accessCode 最多只能绑定 ${bindLimit} 个微信`);
   }
+  const nextStudentOpenIds = uniqueValues(studentOpenIds.concat(identity.openid));
 
   await db.collection("students").doc(student._id).update({
     data: {
-      studentOpenId: identity.openid,
+      studentOpenId: student.studentOpenId || identity.openid,
+      studentOpenIds: nextStudentOpenIds,
     },
   });
 
@@ -411,7 +656,13 @@ const bindAccessCode = async (event) => {
     success: true,
     role: "student",
     openid: identity.openid,
-    student: sanitizeStudent(Object.assign({}, student, { studentOpenId: identity.openid }), false),
+    student: sanitizeStudent(
+      Object.assign({}, student, {
+        studentOpenId: student.studentOpenId || identity.openid,
+        studentOpenIds: nextStudentOpenIds,
+      }),
+      false
+    ),
   };
 };
 
@@ -437,9 +688,12 @@ const addStudent = async (event) => {
   if (existing.data && existing.data.length) {
     throw createError("ACCESS_CODE_EXISTS", "这个 accessCode 已经存在");
   }
+  await assertContentSafe({
+    texts: [data.name, data.nickname, data.grade, data.parentName, data.status, data.teacherName, data.subject],
+  });
   const plannedLessonCount = toNonNegativeNumber(data.plannedLessonCount, "总课时");
   const completedLessonCount = toNonNegativeNumber(data.completedLessonCount, "已上课时");
-  if (completedLessonCount > plannedLessonCount) {
+  if (plannedLessonCount > 0 && completedLessonCount > plannedLessonCount) {
     throw createError("INVALID_PROGRESS", "已上课时不能大于总课时");
   }
   return await db.collection("students").add({
@@ -451,6 +705,7 @@ const addStudent = async (event) => {
       status: data.status || "在读",
       accessCode,
       studentOpenId: data.studentOpenId || "",
+      studentOpenIds: getStudentOpenIds({ studentOpenId: data.studentOpenId || "" }),
       teacherName: data.teacherName || appConfig.teacherName,
       subject: data.subject || appConfig.defaultSubject,
       plannedLessonCount,
@@ -468,7 +723,7 @@ const updateStudentProgress = async (event) => {
   }
   const plannedLessonCount = toNonNegativeNumber(data.plannedLessonCount, "总课时");
   const completedLessonCount = toNonNegativeNumber(data.completedLessonCount, "已上课时");
-  if (completedLessonCount > plannedLessonCount) {
+  if (plannedLessonCount > 0 && completedLessonCount > plannedLessonCount) {
     throw createError("INVALID_PROGRESS", "已上课时不能大于总课时");
   }
   await db.collection("students").doc(data.studentId).update({
@@ -533,11 +788,102 @@ const getStudentDetail = async (event) => {
   const studentRes = await db.collection("students").doc(studentId).get();
   const student = await attachSyncedLessonCount(studentRes.data);
   const lessonsRes = await db.collection("lessons").where({ studentId }).orderBy("lessonDate", "desc").get();
+  const analytics = await buildStudentAnalytics(studentId);
   return {
     success: true,
     role: identity.role,
     student: sanitizeStudent(student, identity.role === "teacher"),
     lessons: lessonsRes.data || [],
+    cycleStatus: buildCycleStatus(student),
+    analytics,
+  };
+};
+
+const buildStudentAnalytics = async (studentId) => {
+  const mistakesRes = await db.collection("mistakes").where({ studentId }).orderBy("createdAt", "desc").limit(DEFAULT_ANALYTICS_LIMIT).get();
+  const mistakes = mistakesRes.data || [];
+  const now = Date.now();
+  const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000;
+  const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
+  const questionTypeStats = {};
+  const skillStats = {};
+  const sectionStats = {};
+  const reasonStats = {};
+  const reviewStatusStats = {};
+  let pendingCount = 0;
+  let reviewedCount = 0;
+  let masteredCount = 0;
+  let recent7Count = 0;
+  let recent30Count = 0;
+  let lastReviewedAt = "";
+
+  mistakes.forEach((mistake) => {
+    const reviewStatus = getReviewStatus(mistake);
+    const createdTime = getCreatedTime(mistake);
+    const skillTags = normalizeTags(mistake.skillTags && mistake.skillTags.length ? mistake.skillTags : mistake.tags);
+    incrementStat(questionTypeStats, mistake.questionType);
+    incrementStat(sectionStats, mistake.paperSection);
+    incrementStat(reasonStats, mistake.mistakeReasonType);
+    incrementStat(reviewStatusStats, reviewStatus);
+    if (skillTags.length) {
+      skillTags.forEach((tag) => incrementStat(skillStats, tag));
+    } else {
+      incrementStat(skillStats, UNCATEGORIZED_LABEL);
+    }
+    if (reviewStatus === "已掌握") masteredCount += 1;
+    else if (reviewStatus === "已复习") reviewedCount += 1;
+    else pendingCount += 1;
+    if (createdTime >= sevenDaysAgo) recent7Count += 1;
+    if (createdTime >= thirtyDaysAgo) recent30Count += 1;
+    if (mistake.lastReviewedAt && !lastReviewedAt) lastReviewedAt = mistake.lastReviewedAt;
+  });
+
+  const topQuestionTypes = toRankList(questionTypeStats, 5);
+  const topSkillTags = toRankList(skillStats, 5);
+  const topReasons = toRankList(reasonStats, 5);
+  const weakPointTexts = topQuestionTypes.slice(0, 3).map((item) => `${item.label} ${item.count} 题`);
+  return {
+    totalMistakeCount: mistakes.length,
+    pendingCount,
+    reviewedCount,
+    masteredCount,
+    recent7Count,
+    recent30Count,
+    lastReviewedAt,
+    topQuestionTypes,
+    topSkillTags,
+    topReasons,
+    sectionStats: toRankList(sectionStats, 6),
+    reviewStatusStats: toRankList(reviewStatusStats, 4),
+    weakPointSummary: weakPointTexts.length ? weakPointTexts.join("、") : "暂时没有明显薄弱题型",
+    reviewSuggestions: mistakes
+      .filter((mistake) => getReviewStatus(mistake) !== "已掌握")
+      .slice(0, 5)
+      .map((mistake) => ({
+        _id: mistake._id,
+        title: mistake.questionNo || mistake.questionTitle || "英语错题记录",
+        questionType: mistake.questionType || UNCATEGORIZED_LABEL,
+        paperSection: mistake.paperSection || UNCATEGORIZED_LABEL,
+        reviewPriority: mistake.reviewPriority || "中",
+        reviewStatus: getReviewStatus(mistake),
+      })),
+  };
+};
+
+const getStudentAnalytics = async (event) => {
+  const identity = await getIdentity();
+  const data = event.data || {};
+  const studentId = identity.role === "student" ? identity.student._id : data.studentId;
+  if (!studentId) throw createError("INVALID_STUDENT", "缺少学生 ID");
+  await ensureStudentAccess(studentId);
+  const studentRes = await db.collection("students").doc(studentId).get();
+  const student = await attachSyncedLessonCount(studentRes.data);
+  return {
+    success: true,
+    role: identity.role,
+    student: sanitizeStudent(student, identity.role === "teacher"),
+    cycleStatus: buildCycleStatus(student),
+    analytics: await buildStudentAnalytics(studentId),
   };
 };
 
@@ -603,6 +949,9 @@ const addLesson = async (event) => {
   if (!data.studentId || !data.title || !data.lessonDate) {
     throw createError("INVALID_LESSON", "请填写学生、课程标题和日期");
   }
+  await assertContentSafe({
+    texts: [data.title, data.subject, data.lessonNo, data.summary],
+  });
   const addRes = await db.collection("lessons").add({
     data: {
       studentId: data.studentId,
@@ -659,18 +1008,53 @@ const addPaper = async (event) => {
   if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
     throw createError("INVALID_PAPER", "课程和学生不匹配");
   }
+  try {
+    await assertContentSafe({
+      texts: [data.title, data.paperTitle, data.term, data.fileName],
+      imageFileIds: data.type === "image" || data.type === "canva" ? [data.fileID] : [],
+    });
+  } catch (err) {
+    if (err.code === "CONTENT_RISK") {
+      await deleteUnsafeFiles([data.fileID]);
+    }
+    throw err;
+  }
   return await db.collection("papers").add({
     data: {
       studentId: data.studentId,
       lessonId: data.lessonId,
       title: data.title || data.fileName,
       type: data.type,
+      paperType: data.paperType || (data.type === "audio" ? "listening" : "mixed"),
+      paperTitle: data.paperTitle || data.title || data.fileName,
+      term: data.term || "",
+      source: data.source || "practice",
       fileID: data.fileID,
       fileName: data.fileName,
       fileSize: data.fileSize || 0,
       createdAt: db.serverDate(),
     },
   });
+};
+
+const checkUploadedImage = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const fileID = data.fileID;
+  if (!fileID) throw createError("INVALID_FILE", "缺少图片文件");
+  try {
+    await assertContentSafe({
+      imageFileIds: [fileID],
+    });
+  } catch (err) {
+    if (err.code === "CONTENT_RISK") {
+      await deleteUnsafeFiles([fileID]);
+    }
+    throw err;
+  }
+  return {
+    success: true,
+  };
 };
 
 const listMistakes = async (event) => {
@@ -700,8 +1084,35 @@ const listMistakes = async (event) => {
 const addMistake = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
-  if (!data.studentId || !data.lessonId || !data.studentAnswer || !data.correctAnswer) {
-    throw createError("INVALID_MISTAKE", "请填写学生、课程、学生答案和正确答案");
+  if (!data.studentId || !data.lessonId) {
+    throw createError("INVALID_MISTAKE", "请选择学生和课程");
+  }
+  if (!data.questionImageFileId && !data.studentAnswer && !data.correctAnswer) {
+    throw createError("INVALID_MISTAKE", "请上传题目图片或填写答案");
+  }
+  const skillTags = normalizeTags(data.skillTags && data.skillTags.length ? data.skillTags : data.tags);
+  const reviewStatus = data.reviewStatus || data.status || "待复习";
+  try {
+    await assertContentSafe({
+      texts: [
+        data.questionNo,
+        data.paperSection,
+        data.questionType,
+        data.mistakeReasonType,
+        data.studentAnswer,
+        data.correctAnswer,
+        data.explanation,
+        data.reason,
+        data.recognizedText,
+        skillTags,
+      ],
+      imageFileIds: data.questionImageFileId ? [data.questionImageFileId] : [],
+    });
+  } catch (err) {
+    if (err.code === "CONTENT_RISK") {
+      await deleteUnsafeFiles([data.questionImageFileId]);
+    }
+    throw err;
   }
   return await db.collection("mistakes").add({
     data: {
@@ -709,15 +1120,190 @@ const addMistake = async (event) => {
       lessonId: data.lessonId,
       paperId: data.paperId || "",
       questionImageFileId: data.questionImageFileId || "",
+      questionNo: data.questionNo || "",
+      paperSection: data.paperSection || "",
+      questionType: data.questionType || "",
+      skillTags,
+      mistakeReasonType: data.mistakeReasonType || "",
       studentAnswer: data.studentAnswer || "",
       correctAnswer: data.correctAnswer || "",
       explanation: data.explanation || "",
-      reason: data.reason || "",
-      tags: data.tags || [],
-      status: data.status || "待复习",
+      reason: data.reason || data.mistakeReasonType || "",
+      tags: skillTags,
+      reviewStatus,
+      reviewPriority: data.reviewPriority || "中",
+      reviewCount: 0,
+      recognizedText: data.recognizedText || "",
+      entryStatus: data.entryStatus || (data.studentAnswer && data.correctAnswer ? "已整理" : "待整理"),
+      status: reviewStatus,
       createdAt: db.serverDate(),
     },
   });
+};
+
+const updateMistake = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  if (!data.mistakeId || !data.studentId || !data.lessonId) {
+    throw createError("INVALID_MISTAKE", "缺少错题、学生或课程信息");
+  }
+  if (!data.questionImageFileId && !data.studentAnswer && !data.correctAnswer) {
+    throw createError("INVALID_MISTAKE", "请上传题目图片或填写答案");
+  }
+  const skillTags = normalizeTags(data.skillTags && data.skillTags.length ? data.skillTags : data.tags);
+  const reviewStatus = data.reviewStatus || data.status || "待复习";
+  await assertContentSafe({
+    texts: [
+      data.questionNo,
+      data.paperSection,
+      data.questionType,
+      data.mistakeReasonType,
+      data.studentAnswer,
+      data.correctAnswer,
+      data.explanation,
+      data.reason,
+      data.recognizedText,
+      skillTags,
+    ],
+    imageFileIds: data.questionImageFileId ? [data.questionImageFileId] : [],
+  });
+  await db.collection("mistakes").doc(data.mistakeId).update({
+    data: {
+      studentId: data.studentId,
+      lessonId: data.lessonId,
+      paperId: data.paperId || "",
+      questionImageFileId: data.questionImageFileId || "",
+      questionNo: data.questionNo || "",
+      paperSection: data.paperSection || "",
+      questionType: data.questionType || "",
+      skillTags,
+      mistakeReasonType: data.mistakeReasonType || "",
+      studentAnswer: data.studentAnswer || "",
+      correctAnswer: data.correctAnswer || "",
+      explanation: data.explanation || "",
+      reason: data.reason || data.mistakeReasonType || "",
+      tags: skillTags,
+      reviewStatus,
+      reviewPriority: data.reviewPriority || "中",
+      recognizedText: data.recognizedText || "",
+      entryStatus: data.entryStatus || (data.studentAnswer && data.correctAnswer ? "已整理" : "待整理"),
+      status: reviewStatus,
+      updatedAt: db.serverDate(),
+    },
+  });
+  return { success: true };
+};
+
+const batchImportMistakes = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const items = Array.isArray(data.items) ? data.items : [];
+  if (!data.studentId || !data.lessonId) {
+    throw createError("INVALID_MISTAKE", "缺少学生或课程信息");
+  }
+  if (!items.length || items.length > 50) {
+    throw createError("INVALID_IMPORT", "每次请导入 1 至 50 道错题");
+  }
+  const lessonRes = await db.collection("lessons").doc(data.lessonId).get();
+  if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
+    throw createError("INVALID_IMPORT", "课程和学生不匹配");
+  }
+  const safeItems = items.map((item) => {
+    const source = item || {};
+    const skillTags = normalizeTags(source.skillTags && source.skillTags.length ? source.skillTags : source.tags);
+    const studentAnswer = String(source.studentAnswer || "").trim();
+    const correctAnswer = String(source.correctAnswer || "").trim();
+    return {
+      paperId: source.paperId || data.paperId || "",
+      questionNo: String(source.questionNo || "").trim(),
+      paperSection: String(source.paperSection || "").trim(),
+      questionType: String(source.questionType || "").trim(),
+      recognizedText: String(source.questionText || source.recognizedText || "").trim(),
+      skillTags,
+      mistakeReasonType: String(source.mistakeReasonType || "").trim(),
+      studentAnswer,
+      correctAnswer,
+      explanation: String(source.explanation || "").trim(),
+      reason: String(source.reason || source.mistakeReasonType || "").trim(),
+      reviewStatus: ["待复习", "已复习", "已掌握"].indexOf(source.reviewStatus) >= 0 ? source.reviewStatus : "待复习",
+      reviewPriority: ["高", "中", "低"].indexOf(source.reviewPriority) >= 0 ? source.reviewPriority : "中",
+      entryStatus: studentAnswer && correctAnswer ? "已整理" : "待整理",
+    };
+  });
+  const emptyIndex = safeItems.findIndex((item) => !item.recognizedText && !item.studentAnswer && !item.correctAnswer);
+  if (emptyIndex >= 0) {
+    throw createError("INVALID_IMPORT", `第 ${emptyIndex + 1} 道错题没有题目或答案内容`);
+  }
+  await assertContentSafe({
+    texts: safeItems.map((item) => [
+      item.questionNo,
+      item.paperSection,
+      item.questionType,
+      item.recognizedText,
+      item.skillTags,
+      item.mistakeReasonType,
+      item.studentAnswer,
+      item.correctAnswer,
+      item.explanation,
+      item.reason,
+    ]),
+  });
+  for (let i = 0; i < safeItems.length; i++) {
+    const item = safeItems[i];
+    await db.collection("mistakes").add({
+      data: {
+        studentId: data.studentId,
+        lessonId: data.lessonId,
+        paperId: item.paperId,
+        questionImageFileId: "",
+        questionNo: item.questionNo,
+        paperSection: item.paperSection,
+        questionType: item.questionType,
+        recognizedText: item.recognizedText,
+        skillTags: item.skillTags,
+        mistakeReasonType: item.mistakeReasonType,
+        studentAnswer: item.studentAnswer,
+        correctAnswer: item.correctAnswer,
+        explanation: item.explanation,
+        reason: item.reason,
+        tags: item.skillTags,
+        reviewStatus: item.reviewStatus,
+        reviewPriority: item.reviewPriority,
+        reviewCount: 0,
+        entryStatus: item.entryStatus,
+        status: item.reviewStatus,
+        createdAt: db.serverDate(),
+      },
+    });
+  }
+  return { success: true, importedCount: safeItems.length };
+};
+
+const updateMistakeReviewStatus = async (event) => {
+  const data = event.data || {};
+  const mistakeId = data.mistakeId;
+  const reviewStatus = data.reviewStatus;
+  if (!mistakeId || ["待复习", "已复习", "已掌握"].indexOf(reviewStatus) < 0) {
+    throw createError("INVALID_MISTAKE", "请选择有效的复习状态");
+  }
+  const identity = await getIdentity();
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+  const res = await db.collection("mistakes").doc(mistakeId).get();
+  await ensureStudentAccess(res.data.studentId);
+  const reviewCount = Number(res.data.reviewCount || 0) + 1;
+  await db.collection("mistakes").doc(mistakeId).update({
+    data: {
+      reviewStatus,
+      status: reviewStatus,
+      reviewCount,
+      lastReviewedAt: db.serverDate(),
+    },
+  });
+  return {
+    success: true,
+    reviewStatus,
+    reviewCount,
+  };
 };
 
 const getMistakeDetail = async (event) => {
@@ -728,10 +1314,19 @@ const getMistakeDetail = async (event) => {
 
   const res = await db.collection("mistakes").doc(mistakeId).get();
   await ensureStudentAccess(res.data.studentId);
+  const hydratedMistake = Object.assign({}, res.data, {
+    reviewStatus: getReviewStatus(res.data),
+    status: getReviewStatus(res.data),
+    questionType: res.data.questionType || UNCATEGORIZED_LABEL,
+    paperSection: res.data.paperSection || UNCATEGORIZED_LABEL,
+    skillTags: normalizeTags(res.data.skillTags && res.data.skillTags.length ? res.data.skillTags : res.data.tags),
+    reviewPriority: res.data.reviewPriority || "中",
+  });
+  const mistake = await attachQuestionImageUrl(hydratedMistake);
   return {
     success: true,
     role: identity.role,
-    mistake: res.data,
+    mistake,
   };
 };
 
@@ -761,6 +1356,8 @@ exports.main = async (event) => {
         return await updateStudentProgress(event);
       case "getStudentDetail":
         return await getStudentDetail(event);
+      case "getStudentAnalytics":
+        return await getStudentAnalytics(event);
       case "listLessons":
         return await listLessons(event);
       case "getNextLessonNo":
@@ -771,12 +1368,20 @@ exports.main = async (event) => {
         return await getLessonDetail(event);
       case "addPaper":
         return await addPaper(event);
+      case "checkUploadedImage":
+        return await checkUploadedImage(event);
       case "listMistakes":
         return await listMistakes(event);
       case "addMistake":
         return await addMistake(event);
+      case "updateMistake":
+        return await updateMistake(event);
+      case "batchImportMistakes":
+        return await batchImportMistakes(event);
       case "getMistakeDetail":
         return await getMistakeDetail(event);
+      case "updateMistakeReviewStatus":
+        return await updateMistakeReviewStatus(event);
       default:
         return {
           success: false,
