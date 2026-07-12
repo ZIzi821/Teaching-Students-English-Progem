@@ -78,7 +78,7 @@
 
       <view class="field">
         <view class="label">题目文字（选填）</view>
-        <textarea class="textarea tall" placeholder="可以粘贴我整理好的题目文字" value="{{form.recognizedText}}" data-field="recognizedText" bindinput="onInput"></textarea>
+        <textarea class="textarea tall" placeholder="可以粘贴我整理好的题目文字" value="{{form.questionText}}" data-field="questionText" bindinput="onInput"></textarea>
       </view>
 
       <view class="field">

@@ -14,10 +14,10 @@
       <text wx:if="{{mistake.questionNo}}"> · {{mistake.questionNo}}</text>
       <text> · {{mistake.questionType}}</text>
     </view>
-    <view class="question-text" wx:if="{{mistake.recognizedText}}">{{mistake.recognizedText}}</view>
+    <view class="question-text" wx:if="{{mistake.questionText}}">{{mistake.questionText}}</view>
     <image wx:if="{{mistake.questionImageSrc && !imageLoadFailed}}" class="question-image" src="{{mistake.questionImageSrc}}" mode="widthFix" binderror="onQuestionImageError"></image>
     <view wx:elif="{{imageLoadFailed}}" class="image-empty">题目图片加载失败，请检查网络后重试</view>
-    <view wx:elif="{{!mistake.recognizedText}}" class="image-empty">题目图片待上传</view>
+    <view wx:elif="{{!mistake.questionText}}" class="image-empty">题目图片待上传</view>
   </view>
 
   <view class="card review-card">

@@ -9,7 +9,7 @@
 
   <view class="card">
     <view class="section-title">粘贴错题导入内容</view>
-    <view class="hint">把课件发给我后，我会返回可直接粘贴到这里的内容。</view>
+    <view class="hint">把包含题目和讲题笔记的 PDF 发给我，我会整理成可直接粘贴到这里的内容。</view>
     <textarea class="import-textarea" placeholder='粘贴 JSON 内容，例如：[{"questionNo":"1","questionText":"...","correctAnswer":"..."}]' value="{{importText}}" bindinput="onImportTextInput"></textarea>
     <view class="preview">{{previewCount ? '已识别 ' + previewCount + ' 道错题' : '等待粘贴有效内容'}}</view>
   </view>

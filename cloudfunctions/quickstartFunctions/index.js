@@ -1103,7 +1103,7 @@ const addMistake = async (event) => {
         data.correctAnswer,
         data.explanation,
         data.reason,
-        data.recognizedText,
+        data.questionText,
         skillTags,
       ],
       imageFileIds: data.questionImageFileId ? [data.questionImageFileId] : [],
@@ -1133,7 +1133,7 @@ const addMistake = async (event) => {
       reviewStatus,
       reviewPriority: data.reviewPriority || "中",
       reviewCount: 0,
-      recognizedText: data.recognizedText || "",
+      questionText: data.questionText || "",
       entryStatus: data.entryStatus || (data.studentAnswer && data.correctAnswer ? "已整理" : "待整理"),
       status: reviewStatus,
       createdAt: db.serverDate(),
@@ -1162,7 +1162,7 @@ const updateMistake = async (event) => {
       data.correctAnswer,
       data.explanation,
       data.reason,
-      data.recognizedText,
+      data.questionText,
       skillTags,
     ],
     imageFileIds: data.questionImageFileId ? [data.questionImageFileId] : [],
@@ -1185,7 +1185,7 @@ const updateMistake = async (event) => {
       tags: skillTags,
       reviewStatus,
       reviewPriority: data.reviewPriority || "中",
-      recognizedText: data.recognizedText || "",
+      questionText: data.questionText || "",
       entryStatus: data.entryStatus || (data.studentAnswer && data.correctAnswer ? "已整理" : "待整理"),
       status: reviewStatus,
       updatedAt: db.serverDate(),
@@ -1218,7 +1218,7 @@ const batchImportMistakes = async (event) => {
       questionNo: String(source.questionNo || "").trim(),
       paperSection: String(source.paperSection || "").trim(),
       questionType: String(source.questionType || "").trim(),
-      recognizedText: String(source.questionText || source.recognizedText || "").trim(),
+      questionText: String(source.questionText || "").trim(),
       skillTags,
       mistakeReasonType: String(source.mistakeReasonType || "").trim(),
       studentAnswer,
@@ -1230,7 +1230,7 @@ const batchImportMistakes = async (event) => {
       entryStatus: studentAnswer && correctAnswer ? "已整理" : "待整理",
     };
   });
-  const emptyIndex = safeItems.findIndex((item) => !item.recognizedText && !item.studentAnswer && !item.correctAnswer);
+  const emptyIndex = safeItems.findIndex((item) => !item.questionText && !item.studentAnswer && !item.correctAnswer);
   if (emptyIndex >= 0) {
     throw createError("INVALID_IMPORT", `第 ${emptyIndex + 1} 道错题没有题目或答案内容`);
   }
@@ -1239,7 +1239,7 @@ const batchImportMistakes = async (event) => {
       item.questionNo,
       item.paperSection,
       item.questionType,
-      item.recognizedText,
+      item.questionText,
       item.skillTags,
       item.mistakeReasonType,
       item.studentAnswer,
@@ -1259,7 +1259,7 @@ const batchImportMistakes = async (event) => {
         questionNo: item.questionNo,
         paperSection: item.paperSection,
         questionType: item.questionType,
-        recognizedText: item.recognizedText,
+        questionText: item.questionText,
         skillTags: item.skillTags,
         mistakeReasonType: item.mistakeReasonType,
         studentAnswer: item.studentAnswer,
