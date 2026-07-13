@@ -1,0 +1,84 @@
+<view class="page booking-page">
+  <view class="booking-head">
+    <view class="eyebrow">Lesson Booking</view>
+    <view class="title">{{isTeacher ? '处理上课预约' : '预约英语课'}}</view>
+    <view class="subtitle" wx:if="{{isTeacher}}">确认家长期望的上课时间，并填写上课会议号。</view>
+    <view class="subtitle" wx:if="{{isStudent}}">选择期望日期和时间，朱老师确认后会在这里公布会议号。</view>
+  </view>
+
+  <view class="card message-card" wx:if="{{message}}">{{message}}</view>
+
+  <view class="card request-form" wx:if="{{isStudent}}">
+    <view class="form-title">提交期望上课时间</view>
+    <view class="field">
+      <view class="label">日期</view>
+      <picker mode="date" value="{{form.requestedDate}}" start="{{minDate}}" bindchange="onRequestDateChange">
+        <view class="picker-value">{{form.requestedDate || '请选择日期'}}</view>
+      </picker>
+    </view>
+    <view class="field">
+      <view class="label">当天时间</view>
+      <picker mode="time" value="{{form.requestedTime}}" bindchange="onRequestTimeChange">
+        <view class="picker-value">{{form.requestedTime || '请选择时间'}}</view>
+      </picker>
+    </view>
+    <view class="field">
+      <view class="label">给老师的备注（可不填）</view>
+      <textarea class="textarea" maxlength="300" placeholder="例如：当天 19:00 后都可以" value="{{form.parentNote}}" bindinput="onParentNoteInput"></textarea>
+    </view>
+    <view class="primary-btn" bindtap="submitBooking">提交预约</view>
+  </view>
+
+  <view class="section-title" wx:if="{{isTeacher}}">家长提交的时间</view>
+  <view class="section-title" wx:if="{{isStudent}}">我的上课安排</view>
+  <view class="empty" wx:if="{{(isTeacher || isStudent) && !bookings.length}}">还没有上课预约。</view>
+
+  <view class="card booking-card" wx:for="{{bookings}}" wx:key="_id" wx:for-index="index">
+    <view class="booking-top">
+      <view>
+        <view class="student-name" wx:if="{{isTeacher}}">{{item.studentName}}</view>
+        <view class="requested-time">期望：{{item.requestedDate}} {{item.requestedTime}}</view>
+      </view>
+      <view class="status-tag status-{{item.statusKey}}">{{item.status}}</view>
+    </view>
+
+    <view class="parent-note" wx:if="{{item.parentNote}}">家长备注：{{item.parentNote}}</view>
+
+    <view class="confirmed-box" wx:if="{{item.status === '已确认'}}">
+      <view class="confirmed-label">已确认上课时间</view>
+      <view class="confirmed-time">{{item.confirmedDate}} {{item.confirmedTime}}</view>
+      <view class="meeting-row" wx:if="{{item.meetingNo}}">
+        <view>会议号：<text selectable="true">{{item.meetingNo}}</text></view>
+        <view class="copy-btn" data-value="{{item.meetingNo}}" bindtap="copyMeetingNo">复制</view>
+      </view>
+      <view class="meeting-pending" wx:else>会议号待朱老师发布</view>
+    </view>
+
+    <view class="teacher-editor" wx:if="{{isTeacher && item.status !== '已取消'}}">
+      <view class="editor-grid">
+        <view class="field compact-field">
+          <view class="label">确认日期</view>
+          <picker mode="date" value="{{item.confirmedDate}}" data-index="{{index}}" bindchange="onConfirmedDateChange">
+            <view class="picker-value">{{item.confirmedDate}}</view>
+          </picker>
+        </view>
+        <view class="field compact-field">
+          <view class="label">确认时间</view>
+          <picker mode="time" value="{{item.confirmedTime}}" data-index="{{index}}" bindchange="onConfirmedTimeChange">
+            <view class="picker-value">{{item.confirmedTime}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="field">
+        <view class="label">上课会议号（可以稍后补充）</view>
+        <input class="input" maxlength="120" placeholder="请输入会议号" value="{{item.meetingNo}}" data-index="{{index}}" bindinput="onMeetingNoInput" />
+      </view>
+      <view class="editor-actions">
+        <view class="primary-btn action-btn" data-index="{{index}}" bindtap="saveBooking">{{item.status === '已确认' ? '保存修改' : '确认并保存'}}</view>
+        <view class="cancel-btn" data-index="{{index}}" bindtap="cancelBooking">取消预约</view>
+      </view>
+    </view>
+
+    <view class="cancel-btn parent-cancel" wx:if="{{isStudent && item.status !== '已取消'}}" data-index="{{index}}" bindtap="cancelBooking">取消这个预约</view>
+  </view>
+</view>

@@ -150,4 +150,10 @@ Page({
       url: "/pages/add-mistake/index",
     });
   },
+
+  goLessonBookings() {
+    wx.navigateTo({
+      url: "/pages/lesson-bookings/index",
+    });
+  },
 });

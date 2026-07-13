@@ -6,7 +6,7 @@ cloud.init({
 });
 
 const db = cloud.database();
-const COLLECTIONS = ["students", "teachers", "lessons", "papers", "mistakes"];
+const COLLECTIONS = ["students", "teachers", "lessons", "lessonBookings", "papers", "mistakes"];
 const SHARED_STUDENT_LIMIT = 5;
 const SHARED_STUDENT_ACCESS_CODES = ["RUIRUI-EN-4829", "XUANNAN-EN-7316"];
 const UNLIMITED_STUDENT_ACCESS_CODES = ["JASON-PRC-0001"];
@@ -943,6 +943,191 @@ const getNextLessonNo = async (event) => {
   };
 };
 
+const BOOKING_STATUSES = ["待确认", "已确认", "已取消"];
+const BOOKING_NOTE_LIMIT = 300;
+const MEETING_NO_LIMIT = 120;
+
+const parseBookingDateTime = (dateValue, timeValue) => {
+  const date = String(dateValue || "").trim();
+  const time = String(timeValue || "").trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) {
+    throw createError("INVALID_BOOKING_TIME", "请选择正确的上课日期和时间");
+  }
+  const dateParts = date.split("-").map(Number);
+  const timeParts = time.split(":").map(Number);
+  const year = dateParts[0];
+  const month = dateParts[1];
+  const day = dateParts[2];
+  const hour = timeParts[0];
+  const minute = timeParts[1];
+  const dateCheck = new Date(Date.UTC(year, month - 1, day));
+  if (
+    dateCheck.getUTCFullYear() !== year ||
+    dateCheck.getUTCMonth() !== month - 1 ||
+    dateCheck.getUTCDate() !== day ||
+    hour < 0 ||
+    hour > 23 ||
+    minute < 0 ||
+    minute > 59
+  ) {
+    throw createError("INVALID_BOOKING_TIME", "请选择正确的上课日期和时间");
+  }
+  return {
+    date,
+    time,
+    timestamp: Date.UTC(year, month - 1, day, hour - 8, minute),
+  };
+};
+
+const prepareLessonBooking = (booking) => {
+  const status = BOOKING_STATUSES.indexOf(booking.status) >= 0 ? booking.status : "待确认";
+  return Object.assign({}, booking, {
+    status,
+    confirmedDate: booking.confirmedDate || booking.requestedDate || "",
+    confirmedTime: booking.confirmedTime || booking.requestedTime || "",
+    meetingNo: String(booking.meetingNo || ""),
+  });
+};
+
+const sortLessonBookings = (bookings) => {
+  const statusRank = { "待确认": 0, "已确认": 1, "已取消": 2 };
+  return (bookings || []).map(prepareLessonBooking).sort((a, b) => {
+    const rankDiff = statusRank[a.status] - statusRank[b.status];
+    if (rankDiff) return rankDiff;
+    const timeA = `${a.confirmedDate || a.requestedDate} ${a.confirmedTime || a.requestedTime}`;
+    const timeB = `${b.confirmedDate || b.requestedDate} ${b.confirmedTime || b.requestedTime}`;
+    return timeA.localeCompare(timeB);
+  });
+};
+
+const submitLessonBooking = async (event) => {
+  const identity = await getIdentity();
+  if (identity.role !== "student" || !identity.student) {
+    throw createError("PERMISSION_DENIED", "请先绑定学生身份后再预约");
+  }
+  await createOneCollection("lessonBookings");
+  const data = event.data || {};
+  const requested = parseBookingDateTime(data.requestedDate, data.requestedTime);
+  if (requested.timestamp < Date.now() - 60 * 1000) {
+    throw createError("INVALID_BOOKING_TIME", "期望上课时间不能早于现在");
+  }
+  const parentNote = String(data.parentNote || "").trim();
+  if (parentNote.length > BOOKING_NOTE_LIMIT) {
+    throw createError("INVALID_BOOKING_NOTE", `备注不能超过 ${BOOKING_NOTE_LIMIT} 个字`);
+  }
+  await assertContentSafe({ texts: [parentNote] });
+
+  const studentId = identity.student._id;
+  const existingRes = await db.collection("lessonBookings").where({ studentId }).limit(100).get();
+  const duplicate = (existingRes.data || []).find((item) => {
+    return item.status !== "已取消" && item.requestedDate === requested.date && item.requestedTime === requested.time;
+  });
+  if (duplicate) {
+    throw createError("BOOKING_EXISTS", "这个日期和时间已经提交过了");
+  }
+
+  const addRes = await db.collection("lessonBookings").add({
+    data: {
+      studentId,
+      requestedDate: requested.date,
+      requestedTime: requested.time,
+      confirmedDate: "",
+      confirmedTime: "",
+      parentNote,
+      meetingNo: "",
+      status: "待确认",
+      createdByOpenId: identity.openid,
+      createdAt: db.serverDate(),
+      updatedAt: db.serverDate(),
+    },
+  });
+  return Object.assign({}, addRes, { success: true });
+};
+
+const listLessonBookings = async () => {
+  const identity = await getIdentity();
+  if (identity.role === "guest") {
+    throw createError("PERMISSION_DENIED", "请先绑定身份");
+  }
+  await createOneCollection("lessonBookings");
+  const collection = db.collection("lessonBookings");
+  const res = identity.role === "teacher"
+    ? await collection.limit(100).get()
+    : await collection.where({ studentId: identity.student._id }).limit(100).get();
+  const bookings = identity.role === "teacher"
+    ? await attachStudentNames(res.data || [])
+    : (res.data || []).map((item) => Object.assign({}, item, { studentName: identity.student.name || "" }));
+  return {
+    success: true,
+    role: identity.role,
+    student: identity.role === "student" ? sanitizeStudent(identity.student, false) : null,
+    data: sortLessonBookings(bookings),
+  };
+};
+
+const updateLessonBooking = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  if (!data.bookingId) throw createError("INVALID_BOOKING", "缺少预约 ID");
+  const bookingRes = await db.collection("lessonBookings").doc(data.bookingId).get();
+  if (!bookingRes.data) throw createError("BOOKING_NOT_FOUND", "预约不存在或已删除");
+  if (bookingRes.data.status === "已取消") {
+    throw createError("BOOKING_CANCELLED", "已取消的预约不能再次确认");
+  }
+  const confirmed = parseBookingDateTime(
+    data.confirmedDate || bookingRes.data.requestedDate,
+    data.confirmedTime || bookingRes.data.requestedTime
+  );
+  const meetingNo = String(data.meetingNo || "").trim();
+  if (meetingNo.length > MEETING_NO_LIMIT) {
+    throw createError("INVALID_MEETING_NO", `会议号不能超过 ${MEETING_NO_LIMIT} 个字`);
+  }
+  await assertContentSafe({ texts: [meetingNo] });
+  await db.collection("lessonBookings").doc(data.bookingId).update({
+    data: {
+      confirmedDate: confirmed.date,
+      confirmedTime: confirmed.time,
+      meetingNo,
+      status: "已确认",
+      confirmedAt: db.serverDate(),
+      updatedAt: db.serverDate(),
+    },
+  });
+  return { success: true };
+};
+
+const cancelLessonBooking = async (event) => {
+  const identity = await getIdentity();
+  const bookingId = event.data && event.data.bookingId;
+  if (!bookingId) throw createError("INVALID_BOOKING", "缺少预约 ID");
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定身份");
+  const bookingRes = await db.collection("lessonBookings").doc(bookingId).get();
+  const booking = bookingRes.data;
+  if (!booking) throw createError("BOOKING_NOT_FOUND", "预约不存在或已删除");
+  if (identity.role === "student" && booking.studentId !== identity.student._id) {
+    throw createError("PERMISSION_DENIED", "无权取消这个预约");
+  }
+  if (booking.status === "已取消") return { success: true };
+  if (identity.role === "student") {
+    const scheduled = parseBookingDateTime(
+      booking.confirmedDate || booking.requestedDate,
+      booking.confirmedTime || booking.requestedTime
+    );
+    if (scheduled.timestamp < Date.now()) {
+      throw createError("BOOKING_STARTED", "已开始或已结束的预约不能取消");
+    }
+  }
+  await db.collection("lessonBookings").doc(bookingId).update({
+    data: {
+      status: "已取消",
+      cancelledBy: identity.role,
+      cancelledAt: db.serverDate(),
+      updatedAt: db.serverDate(),
+    },
+  });
+  return { success: true };
+};
+
 const addLesson = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
@@ -1408,6 +1593,14 @@ exports.main = async (event) => {
         return await listLessons(event);
       case "getNextLessonNo":
         return await getNextLessonNo(event);
+      case "submitLessonBooking":
+        return await submitLessonBooking(event);
+      case "listLessonBookings":
+        return await listLessonBookings();
+      case "updateLessonBooking":
+        return await updateLessonBooking(event);
+      case "cancelLessonBooking":
+        return await cancelLessonBooking(event);
       case "addLesson":
         return await addLesson(event);
       case "getLessonDetail":

@@ -40,10 +40,12 @@
     <view class="ghost-btn" bindtap="goAddStudent">添加学生</view>
     <view class="ghost-btn" bindtap="goAddLesson">添加英语课</view>
     <view class="ghost-btn" bindtap="goAddMistake">添加错题</view>
+    <view class="ghost-btn" bindtap="goLessonBookings">处理上课预约</view>
   </view>
 
   <view class="actions" wx:if="{{isStudent}}">
     <view class="primary-btn" bindtap="goMyLessons">查看我的英语课</view>
+    <view class="ghost-btn" bindtap="goLessonBookings">预约上课 / 查看会议号</view>
   </view>
 
   <view class="actions" wx:if="{{isGuest}}">

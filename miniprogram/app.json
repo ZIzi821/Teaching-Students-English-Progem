@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/students/index",
     "pages/student-detail/index",
+    "pages/lesson-bookings/index",
     "pages/lesson-detail/index",
     "pages/review-dashboard/index",
     "pages/mistake-detail/index",

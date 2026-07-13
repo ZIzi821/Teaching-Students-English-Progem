@@ -1,0 +1,210 @@
+.booking-page {
+  gap: 22rpx;
+}
+
+.booking-head {
+  padding: 32rpx 30rpx;
+  border-radius: 24rpx;
+  background: #dff0e8;
+}
+
+.eyebrow {
+  margin-bottom: 10rpx;
+  color: #587468;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.title {
+  color: #243f35;
+  font-size: 42rpx;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin-top: 14rpx;
+  color: #52635b;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
+.message-card {
+  color: #8a6730;
+  background: #fff1cf;
+}
+
+.form-title,
+.section-title {
+  color: #3d352e;
+  font-size: 31rpx;
+  font-weight: 700;
+}
+
+.form-title {
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  margin-top: 10rpx;
+}
+
+.field {
+  margin-bottom: 24rpx;
+}
+
+.label {
+  margin-bottom: 10rpx;
+  color: #62584d;
+  font-size: 25rpx;
+}
+
+.picker-value,
+.input,
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1rpx solid #ded4c5;
+  border-radius: 14rpx;
+  color: #2f2a24;
+  background: #fff;
+  font-size: 28rpx;
+}
+
+.picker-value,
+.input {
+  min-height: 76rpx;
+  padding: 18rpx 20rpx;
+}
+
+.textarea {
+  min-height: 150rpx;
+  padding: 18rpx 20rpx;
+}
+
+.booking-top,
+.meeting-row,
+.editor-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.student-name {
+  color: #2f2a24;
+  font-size: 31rpx;
+  font-weight: 700;
+}
+
+.requested-time {
+  margin-top: 6rpx;
+  color: #62584d;
+  font-size: 26rpx;
+}
+
+.status-tag {
+  flex: none;
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 23rpx;
+}
+
+.status-pending {
+  color: #8a6730;
+  background: #fff1cf;
+}
+
+.status-confirmed {
+  color: #316a53;
+  background: #dff0e8;
+}
+
+.status-cancelled {
+  color: #817669;
+  background: #eee9e1;
+}
+
+.parent-note {
+  margin-top: 18rpx;
+  color: #756a5e;
+  font-size: 25rpx;
+  line-height: 1.6;
+}
+
+.confirmed-box {
+  margin-top: 20rpx;
+  padding: 20rpx;
+  border-radius: 14rpx;
+  background: #edf7f2;
+}
+
+.confirmed-label,
+.meeting-pending {
+  color: #658074;
+  font-size: 24rpx;
+}
+
+.confirmed-time {
+  margin-top: 6rpx;
+  color: #315d4b;
+  font-size: 31rpx;
+  font-weight: 700;
+}
+
+.meeting-row,
+.meeting-pending {
+  margin-top: 16rpx;
+}
+
+.meeting-row {
+  color: #315d4b;
+  font-size: 27rpx;
+}
+
+.copy-btn {
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  color: #4f6f63;
+  background: #d7ebe1;
+  font-size: 23rpx;
+}
+
+.teacher-editor {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #eadfcf;
+}
+
+.editor-grid {
+  display: flex;
+  gap: 18rpx;
+}
+
+.compact-field {
+  flex: 1;
+}
+
+.action-btn {
+  flex: 1;
+  min-height: 76rpx;
+  font-size: 27rpx;
+}
+
+.cancel-btn {
+  flex: none;
+  padding: 18rpx 20rpx;
+  color: #b64a3a;
+  font-size: 25rpx;
+  text-align: center;
+}
+
+.parent-cancel {
+  margin-top: 14rpx;
+  border-top: 1rpx solid #eee5d8;
+}
+
+.empty {
+  padding: 34rpx 0;
+  color: #817669;
+  text-align: center;
+}
