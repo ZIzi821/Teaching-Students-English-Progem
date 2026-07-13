@@ -5,11 +5,14 @@ Page({
     role: "",
     message: "",
     imageLoadFailed: false,
+    deleting: false,
+    isReadOnly: false,
   },
 
   onLoad(options) {
     this.setData({
       mistakeId: options.id || "",
+      isReadOnly: options.readOnly === "1",
     });
     this.loadMistake();
   },
@@ -139,6 +142,46 @@ Page({
   editMistake() {
     wx.navigateTo({
       url: "/pages/add-mistake/index?id=" + this.data.mistakeId,
+    });
+  },
+
+  deleteMistake() {
+    if (this.data.deleting || !this.data.mistakeId) return;
+    wx.showModal({
+      title: "删除这道错题？",
+      content: "删除后无法恢复，关联的题目图片也会一并删除。",
+      confirmText: "删除",
+      confirmColor: "#b94a48",
+      success: (modalRes) => {
+        if (!modalRes.confirm) return;
+        this.setData({ deleting: true });
+        wx.showLoading({ title: "删除中", mask: true });
+        wx.cloud
+          .callFunction({
+            name: "quickstartFunctions",
+            data: {
+              type: "deleteMistake",
+              data: { mistakeId: this.data.mistakeId },
+            },
+          })
+          .then((res) => {
+            const result = res.result || {};
+            if (!result.success) {
+              wx.showToast({ title: result.message || "删除失败", icon: "none" });
+              return;
+            }
+            wx.showToast({ title: "已删除" });
+            setTimeout(() => wx.navigateBack(), 500);
+          })
+          .catch((err) => {
+            console.error(err);
+            wx.showToast({ title: "删除失败", icon: "none" });
+          })
+          .finally(() => {
+            wx.hideLoading();
+            this.setData({ deleting: false });
+          });
+      },
     });
   },
 });

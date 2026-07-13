@@ -19,6 +19,11 @@ Page({
     this.loadAnalytics();
   },
 
+  onShow() {
+    if (this.hasShown && this.data.studentId) this.loadAnalytics();
+    this.hasShown = true;
+  },
+
   loadAnalytics() {
     wx.cloud
       .callFunction({
@@ -74,8 +79,10 @@ Page({
   },
 
   goMistake(e) {
+    let url = "/pages/mistake-detail/index?id=" + e.currentTarget.dataset.id;
+    if (this.data.mode === "teacherPreview") url += "&readOnly=1";
     wx.navigateTo({
-      url: "/pages/mistake-detail/index?id=" + e.currentTarget.dataset.id,
+      url,
     });
   },
 });

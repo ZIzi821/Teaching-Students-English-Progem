@@ -29,6 +29,11 @@ Page({
     this.loadStudent();
   },
 
+  onShow() {
+    if (this.hasShown && this.data.studentId) this.loadStudent();
+    this.hasShown = true;
+  },
+
   loadStudent() {
     wx.cloud
       .callFunction({

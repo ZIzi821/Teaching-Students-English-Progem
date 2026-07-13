@@ -377,8 +377,8 @@ Page({
     const paper = this.data.papers[this.data.paperIndex];
     const form = this.data.form;
     const action = (e && e.currentTarget && e.currentTarget.dataset.action) || "back";
-    const hasAnswerText = Boolean(form.studentAnswer || form.correctAnswer);
-    if (!student || !lesson || (!this.data.questionImageFileId && !hasAnswerText)) {
+    const hasTextContent = Boolean(form.questionText || form.studentAnswer || form.correctAnswer);
+    if (!student || !lesson || (!this.data.questionImageFileId && !hasTextContent)) {
       wx.showToast({
         title: "请上传题目图片或填写答案",
         icon: "none",

@@ -140,3 +140,20 @@
   line-height: 1.65;
   white-space: pre-wrap;
 }
+
+.source-note {
+  margin: 12rpx 0;
+  color: #817669;
+  font-size: 24rpx;
+}
+
+.danger-btn {
+  margin-top: 24rpx;
+  padding: 22rpx;
+  border: 2rpx solid #e3b5b2;
+  border-radius: 16rpx;
+  color: #a33f3c;
+  background: #fff7f6;
+  font-size: 27rpx;
+  text-align: center;
+}

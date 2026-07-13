@@ -1087,8 +1087,8 @@ const addMistake = async (event) => {
   if (!data.studentId || !data.lessonId) {
     throw createError("INVALID_MISTAKE", "请选择学生和课程");
   }
-  if (!data.questionImageFileId && !data.studentAnswer && !data.correctAnswer) {
-    throw createError("INVALID_MISTAKE", "请上传题目图片或填写答案");
+  if (!data.questionImageFileId && !data.questionText && !data.studentAnswer && !data.correctAnswer) {
+    throw createError("INVALID_MISTAKE", "请上传题目图片或填写题目、答案");
   }
   const skillTags = normalizeTags(data.skillTags && data.skillTags.length ? data.skillTags : data.tags);
   const reviewStatus = data.reviewStatus || data.status || "待复习";
@@ -1147,9 +1147,12 @@ const updateMistake = async (event) => {
   if (!data.mistakeId || !data.studentId || !data.lessonId) {
     throw createError("INVALID_MISTAKE", "缺少错题、学生或课程信息");
   }
-  if (!data.questionImageFileId && !data.studentAnswer && !data.correctAnswer) {
-    throw createError("INVALID_MISTAKE", "请上传题目图片或填写答案");
+  if (!data.questionImageFileId && !data.questionText && !data.studentAnswer && !data.correctAnswer) {
+    throw createError("INVALID_MISTAKE", "请上传题目图片或填写题目、答案");
   }
+  const existingRes = await db.collection("mistakes").doc(data.mistakeId).get();
+  if (!existingRes.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
+  const previousImageFileId = existingRes.data.questionImageFileId || "";
   const skillTags = normalizeTags(data.skillTags && data.skillTags.length ? data.skillTags : data.tags);
   const reviewStatus = data.reviewStatus || data.status || "待复习";
   await assertContentSafe({
@@ -1191,6 +1194,9 @@ const updateMistake = async (event) => {
       updatedAt: db.serverDate(),
     },
   });
+  if (previousImageFileId && previousImageFileId !== (data.questionImageFileId || "")) {
+    await deleteUnsafeFiles([previousImageFileId]);
+  }
   return { success: true };
 };
 
@@ -1198,11 +1204,15 @@ const batchImportMistakes = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
   const items = Array.isArray(data.items) ? data.items : [];
+  const importBatchId = String(data.importBatchId || "").trim();
   if (!data.studentId || !data.lessonId) {
     throw createError("INVALID_MISTAKE", "缺少学生或课程信息");
   }
   if (!items.length || items.length > 50) {
     throw createError("INVALID_IMPORT", "每次请导入 1 至 50 道错题");
+  }
+  if (!importBatchId || importBatchId.length > 100) {
+    throw createError("INVALID_IMPORT", "导入批次信息无效，请重新粘贴后再试");
   }
   const lessonRes = await db.collection("lessons").doc(data.lessonId).get();
   if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
@@ -1219,6 +1229,8 @@ const batchImportMistakes = async (event) => {
       paperSection: String(source.paperSection || "").trim(),
       questionType: String(source.questionType || "").trim(),
       questionText: String(source.questionText || "").trim(),
+      sourcePage: String(source.sourcePage || "").trim(),
+      sourceImageName: String(source.sourceImageName || "").trim(),
       skillTags,
       mistakeReasonType: String(source.mistakeReasonType || "").trim(),
       studentAnswer,
@@ -1240,6 +1252,8 @@ const batchImportMistakes = async (event) => {
       item.paperSection,
       item.questionType,
       item.questionText,
+      item.sourcePage,
+      item.sourceImageName,
       item.skillTags,
       item.mistakeReasonType,
       item.studentAnswer,
@@ -1248,7 +1262,11 @@ const batchImportMistakes = async (event) => {
       item.reason,
     ]),
   });
+  const existingImportRes = await db.collection("mistakes").where({ importBatchId }).get();
+  const existingIndexes = new Set((existingImportRes.data || []).map((item) => Number(item.importItemIndex)));
+  let addedCount = 0;
   for (let i = 0; i < safeItems.length; i++) {
+    if (existingIndexes.has(i)) continue;
     const item = safeItems[i];
     await db.collection("mistakes").add({
       data: {
@@ -1260,6 +1278,8 @@ const batchImportMistakes = async (event) => {
         paperSection: item.paperSection,
         questionType: item.questionType,
         questionText: item.questionText,
+        sourcePage: item.sourcePage,
+        sourceImageName: item.sourceImageName,
         skillTags: item.skillTags,
         mistakeReasonType: item.mistakeReasonType,
         studentAnswer: item.studentAnswer,
@@ -1272,11 +1292,14 @@ const batchImportMistakes = async (event) => {
         reviewCount: 0,
         entryStatus: item.entryStatus,
         status: item.reviewStatus,
+        importBatchId,
+        importItemIndex: i,
         createdAt: db.serverDate(),
       },
     });
+    addedCount += 1;
   }
-  return { success: true, importedCount: safeItems.length };
+  return { success: true, importedCount: safeItems.length, addedCount };
 };
 
 const updateMistakeReviewStatus = async (event) => {
@@ -1289,7 +1312,16 @@ const updateMistakeReviewStatus = async (event) => {
   const identity = await getIdentity();
   if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
   const res = await db.collection("mistakes").doc(mistakeId).get();
+  if (!res.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
   await ensureStudentAccess(res.data.studentId);
+  const currentReviewStatus = getReviewStatus(res.data);
+  if (currentReviewStatus === reviewStatus) {
+    return {
+      success: true,
+      reviewStatus,
+      reviewCount: Number(res.data.reviewCount || 0),
+    };
+  }
   const reviewCount = Number(res.data.reviewCount || 0) + 1;
   await db.collection("mistakes").doc(mistakeId).update({
     data: {
@@ -1313,6 +1345,7 @@ const getMistakeDetail = async (event) => {
   if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
 
   const res = await db.collection("mistakes").doc(mistakeId).get();
+  if (!res.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
   await ensureStudentAccess(res.data.studentId);
   const hydratedMistake = Object.assign({}, res.data, {
     reviewStatus: getReviewStatus(res.data),
@@ -1328,6 +1361,19 @@ const getMistakeDetail = async (event) => {
     role: identity.role,
     mistake,
   };
+};
+
+const deleteMistake = async (event) => {
+  await ensureTeacher();
+  const mistakeId = event.data && event.data.mistakeId;
+  if (!mistakeId) throw createError("INVALID_MISTAKE", "缺少错题 ID");
+  const res = await db.collection("mistakes").doc(mistakeId).get();
+  if (!res.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
+  await db.collection("mistakes").doc(mistakeId).remove();
+  if (res.data.questionImageFileId) {
+    await deleteUnsafeFiles([res.data.questionImageFileId]);
+  }
+  return { success: true };
 };
 
 exports.main = async (event) => {
@@ -1382,6 +1428,8 @@ exports.main = async (event) => {
         return await getMistakeDetail(event);
       case "updateMistakeReviewStatus":
         return await updateMistakeReviewStatus(event);
+      case "deleteMistake":
+        return await deleteMistake(event);
       default:
         return {
           success: false,

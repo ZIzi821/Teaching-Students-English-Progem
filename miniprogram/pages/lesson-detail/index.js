@@ -1,6 +1,11 @@
 const CONTENT_RISK_MESSAGE = "内容含违规信息，请修改后再提交";
 const MATERIAL_PREFERENCES_KEY = "lessonMaterialPreferences";
 
+const getSafeOptionIndex = (value, options) => {
+  const index = Number(value);
+  return Number.isInteger(index) && index >= 0 && index < options.length ? index : 0;
+};
+
 Page({
   data: {
     lessonId: "",
@@ -52,11 +57,16 @@ Page({
     this.loadLesson();
   },
 
+  onShow() {
+    if (this.hasShown && this.data.lessonId) this.loadLesson();
+    this.hasShown = true;
+  },
+
   restoreMaterialPreferences() {
     const preferences = wx.getStorageSync(MATERIAL_PREFERENCES_KEY) || {};
-    const materialTypeIndex = Math.min(Number(preferences.materialTypeIndex || 0), this.data.materialTypes.length - 1);
-    const paperTypeIndex = Math.min(Number(preferences.paperTypeIndex || 0), this.data.paperTypes.length - 1);
-    const paperSourceIndex = Math.min(Number(preferences.paperSourceIndex || 0), this.data.paperSources.length - 1);
+    const materialTypeIndex = getSafeOptionIndex(preferences.materialTypeIndex, this.data.materialTypes);
+    const paperTypeIndex = getSafeOptionIndex(preferences.paperTypeIndex, this.data.paperTypes);
+    const paperSourceIndex = getSafeOptionIndex(preferences.paperSourceIndex, this.data.paperSources);
     this.setData({
       materialTypeIndex,
       selectedMaterialTypeLabel: this.data.materialTypes[materialTypeIndex].label,
@@ -276,6 +286,13 @@ Page({
 
   uploadSelectedFile(type, filePath, fileName, fileSize) {
     if (!this.data.lesson) return Promise.reject(new Error("课程尚未加载"));
+    const lowerFileName = String(fileName || "").toLowerCase();
+    if (type === "pdf" && !lowerFileName.endsWith(".pdf")) {
+      return Promise.reject(new Error("PDF 资料请选择 .pdf 文件"));
+    }
+    if (type === "audio" && !/\.(mp3|m4a|wav|aac)$/i.test(lowerFileName)) {
+      return Promise.reject(new Error("听力音频请选择 mp3、m4a、wav 或 aac 文件"));
+    }
     const safeFileName = String(fileName || "material").replace(/[\\/:*?"<>|\s]+/g, "-");
     const cloudPath = "lesson-materials/" + this.data.lesson.studentId + "/" + this.data.lessonId + "/" + Date.now() + "-" + safeFileName;
     return wx.cloud
@@ -410,8 +427,10 @@ Page({
   },
 
   goMistake(e) {
+    let url = "/pages/mistake-detail/index?id=" + e.currentTarget.dataset.id;
+    if (this.data.isTeacherPreview) url += "&readOnly=1";
     wx.navigateTo({
-      url: "/pages/mistake-detail/index?id=" + e.currentTarget.dataset.id,
+      url,
     });
   },
 

@@ -53,6 +53,16 @@ Page({
     this.setData({ importText, previewCount, message: "" });
   },
 
+  createImportBatchId(importText) {
+    const source = this.data.lessonId + "|" + importText;
+    let hash = 2166136261;
+    for (let i = 0; i < source.length; i++) {
+      hash ^= source.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    return "import-" + (hash >>> 0).toString(16) + "-" + source.length;
+  },
+
   importMistakes() {
     if (this.data.importing) return;
     let items;
@@ -77,6 +87,7 @@ Page({
           data: {
             studentId: this.data.studentId,
             lessonId: this.data.lessonId,
+            importBatchId: this.createImportBatchId(this.data.importText),
             items,
           },
         },
