@@ -166,11 +166,28 @@
 }
 
 .meeting-row {
+  align-items: flex-start;
   color: #315d4b;
-  font-size: 27rpx;
+}
+
+.meeting-content {
+  flex: 1;
+  min-width: 0;
+  color: #315d4b;
+  font-size: 29rpx;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.meeting-textarea {
+  min-height: 320rpx;
+  font-size: 28rpx;
+  line-height: 1.65;
 }
 
 .copy-btn {
+  flex: none;
   padding: 8rpx 18rpx;
   border-radius: 999rpx;
   color: #4f6f63;

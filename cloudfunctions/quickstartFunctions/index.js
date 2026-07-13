@@ -945,7 +945,7 @@ const getNextLessonNo = async (event) => {
 
 const BOOKING_STATUSES = ["待确认", "已确认", "已取消"];
 const BOOKING_NOTE_LIMIT = 300;
-const MEETING_NO_LIMIT = 120;
+const MEETING_NO_LIMIT = 2000;
 
 const parseBookingDateTime = (dateValue, timeValue) => {
   const date = String(dateValue || "").trim();
@@ -1109,7 +1109,7 @@ const updateLessonBooking = async (event) => {
   );
   const meetingNo = String(data.meetingNo || "").trim();
   if (meetingNo.length > MEETING_NO_LIMIT) {
-    throw createError("INVALID_MEETING_NO", `会议号不能超过 ${MEETING_NO_LIMIT} 个字`);
+    throw createError("INVALID_MEETING_NO", `会议信息不能超过 ${MEETING_NO_LIMIT} 个字`);
   }
   await assertContentSafe({ texts: [meetingNo] });
   await db.collection("lessonBookings").doc(data.bookingId).update({
