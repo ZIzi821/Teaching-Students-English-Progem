@@ -7,28 +7,27 @@
   </view>
 
   <view class="card message-card" wx:if="{{message}}">{{message}}</view>
-  <view class="preview-tip" wx:if="{{isTeacherPreview}}">当前是学生视角预览；真实家长可以提交或取消预约。</view>
+  <view class="preview-tip" wx:if="{{isTeacherPreview}}">当前是教师代操作模式；你可以为该学生提交或取消预约。</view>
 
   <view class="card request-form" wx:if="{{isStudentView}}">
     <view class="form-title">提交期望上课时间</view>
     <view class="field">
       <view class="label">日期</view>
-      <picker mode="date" value="{{form.requestedDate}}" start="{{minDate}}" disabled="{{isTeacherPreview}}" bindchange="onRequestDateChange">
+      <picker mode="date" value="{{form.requestedDate}}" start="{{minDate}}" bindchange="onRequestDateChange">
         <view class="picker-value">{{form.requestedDate || '请选择日期'}}</view>
       </picker>
     </view>
     <view class="field">
       <view class="label">当天时间</view>
-      <picker mode="time" value="{{form.requestedTime}}" disabled="{{isTeacherPreview}}" bindchange="onRequestTimeChange">
+      <picker mode="time" value="{{form.requestedTime}}" bindchange="onRequestTimeChange">
         <view class="picker-value">{{form.requestedTime || '请选择时间'}}</view>
       </picker>
     </view>
     <view class="field">
-      <view class="label">给老师的备注（可不填）</view>
-      <textarea class="textarea" maxlength="300" disabled="{{isTeacherPreview}}" placeholder="例如：当天 19:00 后都可以" value="{{form.parentNote}}" bindinput="onParentNoteInput"></textarea>
+      <view class="label">{{isTeacherPreview ? '预约备注（可不填）' : '给老师的备注（可不填）'}}</view>
+      <textarea class="textarea" maxlength="300" placeholder="例如：当天 19:00 后都可以" value="{{form.parentNote}}" bindinput="onParentNoteInput"></textarea>
     </view>
-    <view class="primary-btn" wx:if="{{!isTeacherPreview}}" bindtap="submitBooking">提交预约</view>
-    <view class="preview-submit" wx:else>家长端显示“提交预约”按钮</view>
+    <view class="primary-btn" bindtap="submitBooking">{{isTeacherPreview ? '代家长提交预约' : '提交预约'}}</view>
   </view>
 
   <view class="section-title" wx:if="{{isTeacher}}">家长提交的时间</view>
@@ -81,6 +80,6 @@
       </view>
     </view>
 
-    <view class="cancel-btn parent-cancel" wx:if="{{isStudent && item.status !== '已取消'}}" data-index="{{index}}" bindtap="cancelBooking">取消这个预约</view>
+    <view class="cancel-btn parent-cancel" wx:if="{{(isStudent || isTeacherPreview) && item.status !== '已取消'}}" data-index="{{index}}" bindtap="cancelBooking">取消这个预约</view>
   </view>
 </view>

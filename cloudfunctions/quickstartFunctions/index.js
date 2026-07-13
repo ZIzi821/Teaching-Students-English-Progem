@@ -1002,11 +1002,12 @@ const sortLessonBookings = (bookings) => {
 
 const submitLessonBooking = async (event) => {
   const identity = await getIdentity();
-  if (identity.role !== "student" || !identity.student) {
+  const data = event.data || {};
+  const isTeacherProxy = identity.role === "teacher" && data.mode === "teacherPreview";
+  if (identity.role !== "student" && !isTeacherProxy) {
     throw createError("PERMISSION_DENIED", "请先绑定学生身份后再预约");
   }
   await createOneCollection("lessonBookings");
-  const data = event.data || {};
   const requested = parseBookingDateTime(data.requestedDate, data.requestedTime);
   if (requested.timestamp < Date.now() - 60 * 1000) {
     throw createError("INVALID_BOOKING_TIME", "期望上课时间不能早于现在");
@@ -1017,7 +1018,14 @@ const submitLessonBooking = async (event) => {
   }
   await assertContentSafe({ texts: [parentNote] });
 
-  const studentId = identity.student._id;
+  const studentId = identity.role === "student"
+    ? identity.student._id
+    : String(data.previewStudentId || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "缺少预约学生 ID");
+  if (isTeacherProxy) {
+    const studentRes = await db.collection("students").doc(studentId).get();
+    if (!studentRes.data) throw createError("INVALID_STUDENT", "预约学生不存在");
+  }
   const existingRes = await db.collection("lessonBookings").where({ studentId }).limit(100).get();
   const duplicate = (existingRes.data || []).find((item) => {
     return item.status !== "已取消" && item.requestedDate === requested.date && item.requestedTime === requested.time;
@@ -1037,6 +1045,7 @@ const submitLessonBooking = async (event) => {
       meetingNo: "",
       status: "待确认",
       createdByOpenId: identity.openid,
+      createdByRole: identity.role,
       createdAt: db.serverDate(),
       updatedAt: db.serverDate(),
     },

@@ -33,18 +33,13 @@
   background: #fff1cf;
 }
 
-.preview-tip,
-.preview-submit {
+.preview-tip {
   padding: 18rpx 22rpx;
   border-radius: 14rpx;
   color: #6f6254;
   background: #eee9e1;
   font-size: 24rpx;
   line-height: 1.5;
-}
-
-.preview-submit {
-  text-align: center;
 }
 
 .form-title,

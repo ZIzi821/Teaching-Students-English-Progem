@@ -122,7 +122,10 @@ Page({
         name: "quickstartFunctions",
         data: {
           type: "submitLessonBooking",
-          data: form,
+          data: Object.assign({}, form, {
+            mode: this.data.mode,
+            previewStudentId: this.data.previewStudentId,
+          }),
         },
       })
       .then((res) => {
