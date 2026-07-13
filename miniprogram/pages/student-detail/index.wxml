@@ -79,6 +79,7 @@
 
     <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddLesson">添加英语课记录</view>
     <view class="ghost-btn add-btn" wx:if="{{isTeacher}}" bindtap="goTeacherPreview">以学生视角查看</view>
+    <view class="primary-btn add-btn" wx:if="{{isTeacherPreview}}" bindtap="goLessonBookings">预约上课 / 查看会议号</view>
 
     <view class="section-title">英语课记录</view>
     <view class="empty" wx:if="{{!lessons.length}}">还没有英语课记录。</view>

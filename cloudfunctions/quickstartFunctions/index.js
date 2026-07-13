@@ -1044,24 +1044,44 @@ const submitLessonBooking = async (event) => {
   return Object.assign({}, addRes, { success: true });
 };
 
-const listLessonBookings = async () => {
+const listLessonBookings = async (event) => {
   const identity = await getIdentity();
   if (identity.role === "guest") {
     throw createError("PERMISSION_DENIED", "请先绑定身份");
   }
+  const data = event.data || {};
+  const isTeacherPreview = data.mode === "teacherPreview";
+  if (isTeacherPreview && identity.role !== "teacher") {
+    throw createError("PERMISSION_DENIED", "只有朱老师可以使用学生视角预览");
+  }
+  const previewStudentId = isTeacherPreview ? String(data.previewStudentId || "").trim() : "";
+  if (isTeacherPreview && !previewStudentId) {
+    throw createError("INVALID_STUDENT", "缺少预览学生 ID");
+  }
   await createOneCollection("lessonBookings");
   const collection = db.collection("lessonBookings");
-  const res = identity.role === "teacher"
-    ? await collection.limit(100).get()
-    : await collection.where({ studentId: identity.student._id }).limit(100).get();
-  const bookings = identity.role === "teacher"
+  const targetStudentId = identity.role === "student" ? identity.student._id : previewStudentId;
+  const res = targetStudentId
+    ? await collection.where({ studentId: targetStudentId }).limit(100).get()
+    : await collection.limit(100).get();
+  const bookings = identity.role === "teacher" && !isTeacherPreview
     ? await attachStudentNames(res.data || [])
-    : (res.data || []).map((item) => Object.assign({}, item, { studentName: identity.student.name || "" }));
+    : res.data || [];
+  let student = identity.role === "student" ? identity.student : null;
+  if (isTeacherPreview) {
+    const studentRes = await db.collection("students").doc(previewStudentId).get();
+    if (!studentRes.data) throw createError("INVALID_STUDENT", "预览学生不存在");
+    student = studentRes.data;
+  }
+  const namedBookings = student
+    ? bookings.map((item) => Object.assign({}, item, { studentName: student.name || "" }))
+    : bookings;
   return {
     success: true,
     role: identity.role,
-    student: identity.role === "student" ? sanitizeStudent(identity.student, false) : null,
-    data: sortLessonBookings(bookings),
+    isTeacherPreview,
+    student: student ? sanitizeStudent(student, false) : null,
+    data: sortLessonBookings(namedBookings),
   };
 };
 
@@ -1596,7 +1616,7 @@ exports.main = async (event) => {
       case "submitLessonBooking":
         return await submitLessonBooking(event);
       case "listLessonBookings":
-        return await listLessonBookings();
+        return await listLessonBookings(event);
       case "updateLessonBooking":
         return await updateLessonBooking(event);
       case "cancelLessonBooking":

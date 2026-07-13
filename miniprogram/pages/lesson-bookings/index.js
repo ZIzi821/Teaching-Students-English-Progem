@@ -25,6 +25,8 @@ Page({
     role: "loading",
     isTeacher: false,
     isStudent: false,
+    isStudentView: false,
+    isTeacherPreview: false,
     student: null,
     bookings: [],
     minDate: "",
@@ -36,13 +38,18 @@ Page({
     message: "",
     submitting: false,
     savingId: "",
+    mode: "",
+    previewStudentId: "",
   },
 
-  onLoad() {
+  onLoad(options) {
+    options = options || {};
     const today = formatDate(new Date());
     this.setData({
       minDate: today,
       "form.requestedDate": today,
+      mode: options.mode || "",
+      previewStudentId: options.previewStudentId || "",
     });
   },
 
@@ -54,7 +61,13 @@ Page({
     wx.cloud
       .callFunction({
         name: "quickstartFunctions",
-        data: { type: "listLessonBookings" },
+        data: {
+          type: "listLessonBookings",
+          data: {
+            mode: this.data.mode,
+            previewStudentId: this.data.previewStudentId,
+          },
+        },
       })
       .then((res) => {
         const result = res.result || {};
@@ -65,10 +78,13 @@ Page({
           });
           return;
         }
+        const isTeacherPreview = result.role === "teacher" && result.isTeacherPreview;
         this.setData({
           role: result.role,
-          isTeacher: result.role === "teacher",
+          isTeacher: result.role === "teacher" && !isTeacherPreview,
           isStudent: result.role === "student",
+          isStudentView: result.role === "student" || isTeacherPreview,
+          isTeacherPreview,
           student: result.student || null,
           bookings: prepareBookings(result.data),
           message: "",

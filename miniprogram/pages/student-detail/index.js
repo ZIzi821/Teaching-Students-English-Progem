@@ -128,6 +128,14 @@ Page({
     wx.navigateTo({ url });
   },
 
+  goLessonBookings() {
+    const studentId = this.data.student ? this.data.student._id : "";
+    if (!studentId) return;
+    wx.navigateTo({
+      url: "/pages/lesson-bookings/index?mode=teacherPreview&previewStudentId=" + studentId,
+    });
+  },
+
   showProgressEditor() {
     this.setData({
       showProgressEditor: true,
