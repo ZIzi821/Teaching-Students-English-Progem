@@ -2,8 +2,8 @@
   <view class="hero">
     <view class="eyebrow">{{teacherName}} · English Class</view>
     <view class="title">朱老师英语课堂</view>
-    <view class="subtitle" wx:if="{{isTeacher}}">管理学生、英语课程记录、练习资料和错题解析。</view>
-    <view class="subtitle" wx:if="{{isStudent}}">{{currentStudent.name}} 的英语错题本，复习每节课讲过的重点。</view>
+    <view class="subtitle" wx:if="{{isTeacher}}">先选择学生查看学习主页，再处理课程、错题和预约。</view>
+    <view class="subtitle" wx:if="{{isStudent}}">{{currentStudent.name}}，从今天最重要的一项开始。</view>
     <view class="subtitle" wx:if="{{isGuest}}">请输入朱老师给你的专属 accessCode。</view>
   </view>
 
@@ -36,16 +36,23 @@
   </view>
 
   <view class="actions" wx:if="{{isTeacher}}">
-    <view class="primary-btn" bindtap="goStudents">查看学生</view>
-    <view class="ghost-btn" bindtap="goAddStudent">添加学生</view>
-    <view class="ghost-btn" bindtap="goAddLesson">添加英语课</view>
-    <view class="ghost-btn" bindtap="goAddMistake">添加错题</view>
-    <view class="ghost-btn" bindtap="goLessonBookings">处理上课预约</view>
+    <view class="primary-btn" bindtap="goStudents">选择学生 · 查看学习主页</view>
+    <view class="management-title">教师快捷管理</view>
+    <view class="management-grid">
+      <view class="ghost-btn" bindtap="goLessonBookings">处理预约</view>
+      <view class="ghost-btn" bindtap="goAddLesson">记录课程</view>
+      <view class="ghost-btn" bindtap="goAddMistake">快速记错题</view>
+      <view class="ghost-btn" bindtap="goAddStudent">添加学生</view>
+    </view>
   </view>
 
   <view class="actions" wx:if="{{isStudent}}">
-    <view class="primary-btn" bindtap="goMyLessons">查看我的英语课</view>
-    <view class="ghost-btn" bindtap="goLessonBookings">预约上课 / 查看会议号</view>
+    <view class="primary-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabulary">继续今日单词</view>
+    <view class="primary-btn" wx:else bindtap="goMyLessons">查看学习主页</view>
+    <view class="student-action-grid">
+      <view class="ghost-btn" bindtap="goMyLessons">课程与错题</view>
+      <view class="ghost-btn" bindtap="goLessonBookings">预约与会议号</view>
+    </view>
   </view>
 
   <view class="actions" wx:if="{{isGuest}}">
@@ -67,6 +74,7 @@
       <view class="student-progress-bar">
         <view class="student-progress-fill" style="width: {{item.progressPercent}}%;"></view>
       </view>
+      <view class="student-progress-link">进入学习主页 →</view>
     </view>
   </view>
 

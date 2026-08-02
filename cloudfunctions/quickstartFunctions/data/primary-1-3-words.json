@@ -1,0 +1,1668 @@
+{
+  "libraryId": "primary-1-3",
+  "title": "小学1-3年级四会单词汇总",
+  "version": 1,
+  "sourceFile": "小学1-3年级四会单词.docx",
+  "levels": [
+    {
+      "id": "1A",
+      "label": "一年级（上册）",
+      "grade": 1,
+      "semester": "上册",
+      "order": 1
+    },
+    {
+      "id": "1B",
+      "label": "一年级（下册）",
+      "grade": 1,
+      "semester": "下册",
+      "order": 2
+    },
+    {
+      "id": "2A",
+      "label": "二年级（上册）",
+      "grade": 2,
+      "semester": "上册",
+      "order": 3
+    },
+    {
+      "id": "2B",
+      "label": "二年级（下册）",
+      "grade": 2,
+      "semester": "下册",
+      "order": 4
+    },
+    {
+      "id": "3A",
+      "label": "三年级（上册）",
+      "grade": 3,
+      "semester": "上册",
+      "order": 5
+    },
+    {
+      "id": "3B",
+      "label": "三年级（下册）",
+      "grade": 3,
+      "semester": "下册",
+      "order": 6
+    }
+  ],
+  "words": [
+    {
+      "key": "i",
+      "word": "I",
+      "meaning": "我",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "1A",
+      "order": 1
+    },
+    {
+      "key": "you",
+      "word": "you",
+      "meaning": "你；你们",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "1A",
+      "order": 2
+    },
+    {
+      "key": "he",
+      "word": "he",
+      "meaning": "他",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "1A",
+      "order": 3
+    },
+    {
+      "key": "she",
+      "word": "she",
+      "meaning": "她",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "1A",
+      "order": 4
+    },
+    {
+      "key": "it",
+      "word": "it",
+      "meaning": "它",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "1A",
+      "order": 5
+    },
+    {
+      "key": "am",
+      "word": "am",
+      "meaning": "是（I 连用）",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "1A",
+      "order": 6
+    },
+    {
+      "key": "is",
+      "word": "is",
+      "meaning": "是（单数）",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "1A",
+      "order": 7
+    },
+    {
+      "key": "are",
+      "word": "are",
+      "meaning": "是（复数）",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "1A",
+      "order": 8
+    },
+    {
+      "key": "this",
+      "word": "this",
+      "meaning": "这；这个",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "1A",
+      "order": 9
+    },
+    {
+      "key": "that",
+      "word": "that",
+      "meaning": "那；那个",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "1A",
+      "order": 10
+    },
+    {
+      "key": "pen",
+      "word": "pen",
+      "meaning": "钢笔",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1A",
+      "order": 11
+    },
+    {
+      "key": "pencil",
+      "word": "pencil",
+      "meaning": "铅笔",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1A",
+      "order": 12
+    },
+    {
+      "key": "book",
+      "word": "book",
+      "meaning": "书",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1A",
+      "order": 13
+    },
+    {
+      "key": "bag",
+      "word": "bag",
+      "meaning": "书包",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1A",
+      "order": 14
+    },
+    {
+      "key": "ruler",
+      "word": "ruler",
+      "meaning": "尺子",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1A",
+      "order": 15
+    },
+    {
+      "key": "eraser",
+      "word": "eraser",
+      "meaning": "橡皮",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1A",
+      "order": 16
+    },
+    {
+      "key": "cat",
+      "word": "cat",
+      "meaning": "猫",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1A",
+      "order": 17
+    },
+    {
+      "key": "dog",
+      "word": "dog",
+      "meaning": "狗",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1A",
+      "order": 18
+    },
+    {
+      "key": "one",
+      "word": "one",
+      "meaning": "一",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "1A",
+      "order": 19
+    },
+    {
+      "key": "two",
+      "word": "two",
+      "meaning": "二",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "1A",
+      "order": 20
+    },
+    {
+      "key": "three",
+      "word": "three",
+      "meaning": "三",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "1A",
+      "order": 21
+    },
+    {
+      "key": "four",
+      "word": "four",
+      "meaning": "四",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "1A",
+      "order": 22
+    },
+    {
+      "key": "five",
+      "word": "five",
+      "meaning": "五",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "1A",
+      "order": 23
+    },
+    {
+      "key": "red",
+      "word": "red",
+      "meaning": "红色的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "1A",
+      "order": 24
+    },
+    {
+      "key": "blue",
+      "word": "blue",
+      "meaning": "蓝色的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "1A",
+      "order": 25
+    },
+    {
+      "key": "yellow",
+      "word": "yellow",
+      "meaning": "黄色的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "1A",
+      "order": 26
+    },
+    {
+      "key": "green",
+      "word": "green",
+      "meaning": "绿色的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "1A",
+      "order": 27
+    },
+    {
+      "key": "black",
+      "word": "black",
+      "meaning": "黑色的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "1A",
+      "order": 28
+    },
+    {
+      "key": "white",
+      "word": "white",
+      "meaning": "白色的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "1A",
+      "order": 29
+    },
+    {
+      "key": "six",
+      "word": "six",
+      "meaning": "六",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "1B",
+      "order": 1
+    },
+    {
+      "key": "seven",
+      "word": "seven",
+      "meaning": "七",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "1B",
+      "order": 2
+    },
+    {
+      "key": "eight",
+      "word": "eight",
+      "meaning": "八",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "1B",
+      "order": 3
+    },
+    {
+      "key": "nine",
+      "word": "nine",
+      "meaning": "九",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "1B",
+      "order": 4
+    },
+    {
+      "key": "ten",
+      "word": "ten",
+      "meaning": "十",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "1B",
+      "order": 5
+    },
+    {
+      "key": "boy",
+      "word": "boy",
+      "meaning": "男孩",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 6
+    },
+    {
+      "key": "girl",
+      "word": "girl",
+      "meaning": "女孩",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 7
+    },
+    {
+      "key": "teacher",
+      "word": "teacher",
+      "meaning": "老师",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 8
+    },
+    {
+      "key": "student",
+      "word": "student",
+      "meaning": "学生",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 9
+    },
+    {
+      "key": "mother",
+      "word": "mother",
+      "meaning": "妈妈",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 10
+    },
+    {
+      "key": "father",
+      "word": "father",
+      "meaning": "爸爸",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 11
+    },
+    {
+      "key": "sister",
+      "word": "sister",
+      "meaning": "姐妹",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 12
+    },
+    {
+      "key": "brother",
+      "word": "brother",
+      "meaning": "兄弟",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 13
+    },
+    {
+      "key": "head",
+      "word": "head",
+      "meaning": "头",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 14
+    },
+    {
+      "key": "face",
+      "word": "face",
+      "meaning": "脸",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 15
+    },
+    {
+      "key": "nose",
+      "word": "nose",
+      "meaning": "鼻子",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 16
+    },
+    {
+      "key": "mouth",
+      "word": "mouth",
+      "meaning": "嘴",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 17
+    },
+    {
+      "key": "eye",
+      "word": "eye",
+      "meaning": "眼睛",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 18
+    },
+    {
+      "key": "ear",
+      "word": "ear",
+      "meaning": "耳朵",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 19
+    },
+    {
+      "key": "hand",
+      "word": "hand",
+      "meaning": "手",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 20
+    },
+    {
+      "key": "arm",
+      "word": "arm",
+      "meaning": "胳膊",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 21
+    },
+    {
+      "key": "leg",
+      "word": "leg",
+      "meaning": "腿",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 22
+    },
+    {
+      "key": "foot",
+      "word": "foot",
+      "meaning": "脚",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "1B",
+      "order": 23
+    },
+    {
+      "key": "go",
+      "word": "go",
+      "meaning": "去",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "1B",
+      "order": 24
+    },
+    {
+      "key": "come",
+      "word": "come",
+      "meaning": "来",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "1B",
+      "order": 25
+    },
+    {
+      "key": "eat",
+      "word": "eat",
+      "meaning": "吃",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "1B",
+      "order": 26
+    },
+    {
+      "key": "drink",
+      "word": "drink",
+      "meaning": "喝",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "1B",
+      "order": 27
+    },
+    {
+      "key": "play",
+      "word": "play",
+      "meaning": "玩",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "1B",
+      "order": 28
+    },
+    {
+      "key": "eleven",
+      "word": "eleven",
+      "meaning": "十一",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "2A",
+      "order": 1
+    },
+    {
+      "key": "twelve",
+      "word": "twelve",
+      "meaning": "十二",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "2A",
+      "order": 2
+    },
+    {
+      "key": "thirteen",
+      "word": "thirteen",
+      "meaning": "十三",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "2A",
+      "order": 3
+    },
+    {
+      "key": "fourteen",
+      "word": "fourteen",
+      "meaning": "十四",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "2A",
+      "order": 4
+    },
+    {
+      "key": "fifteen",
+      "word": "fifteen",
+      "meaning": "十五",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "2A",
+      "order": 5
+    },
+    {
+      "key": "school",
+      "word": "school",
+      "meaning": "学校",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 6
+    },
+    {
+      "key": "classroom",
+      "word": "classroom",
+      "meaning": "教室",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 7
+    },
+    {
+      "key": "desk",
+      "word": "desk",
+      "meaning": "书桌",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 8
+    },
+    {
+      "key": "chair",
+      "word": "chair",
+      "meaning": "椅子",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 9
+    },
+    {
+      "key": "door",
+      "word": "door",
+      "meaning": "门",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 10
+    },
+    {
+      "key": "window",
+      "word": "window",
+      "meaning": "窗户",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 11
+    },
+    {
+      "key": "bird",
+      "word": "bird",
+      "meaning": "鸟",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 12
+    },
+    {
+      "key": "fish",
+      "word": "fish",
+      "meaning": "鱼",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 13
+    },
+    {
+      "key": "duck",
+      "word": "duck",
+      "meaning": "鸭子",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 14
+    },
+    {
+      "key": "pig",
+      "word": "pig",
+      "meaning": "猪",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 15
+    },
+    {
+      "key": "monkey",
+      "word": "monkey",
+      "meaning": "猴子",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 16
+    },
+    {
+      "key": "panda",
+      "word": "panda",
+      "meaning": "熊猫",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 17
+    },
+    {
+      "key": "rabbit",
+      "word": "rabbit",
+      "meaning": "兔子",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 18
+    },
+    {
+      "key": "apple",
+      "word": "apple",
+      "meaning": "苹果",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 19
+    },
+    {
+      "key": "banana",
+      "word": "banana",
+      "meaning": "香蕉",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 20
+    },
+    {
+      "key": "orange",
+      "word": "orange",
+      "meaning": "橙子",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 21
+    },
+    {
+      "key": "pear",
+      "word": "pear",
+      "meaning": "梨",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 22
+    },
+    {
+      "key": "milk",
+      "word": "milk",
+      "meaning": "牛奶",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 23
+    },
+    {
+      "key": "water",
+      "word": "water",
+      "meaning": "水",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 24
+    },
+    {
+      "key": "juice",
+      "word": "juice",
+      "meaning": "果汁",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 25
+    },
+    {
+      "key": "tea",
+      "word": "tea",
+      "meaning": "茶",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 26
+    },
+    {
+      "key": "cake",
+      "word": "cake",
+      "meaning": "蛋糕",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 27
+    },
+    {
+      "key": "bread",
+      "word": "bread",
+      "meaning": "面包",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 28
+    },
+    {
+      "key": "egg",
+      "word": "egg",
+      "meaning": "鸡蛋",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 29
+    },
+    {
+      "key": "rice",
+      "word": "rice",
+      "meaning": "米饭",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2A",
+      "order": 30
+    },
+    {
+      "key": "happy",
+      "word": "happy",
+      "meaning": "开心的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 31
+    },
+    {
+      "key": "sad",
+      "word": "sad",
+      "meaning": "难过的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 32
+    },
+    {
+      "key": "hungry",
+      "word": "hungry",
+      "meaning": "饿的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 33
+    },
+    {
+      "key": "thirsty",
+      "word": "thirsty",
+      "meaning": "渴的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 34
+    },
+    {
+      "key": "small",
+      "word": "small",
+      "meaning": "小的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 35
+    },
+    {
+      "key": "big",
+      "word": "big",
+      "meaning": "大的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 36
+    },
+    {
+      "key": "long",
+      "word": "long",
+      "meaning": "长的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 37
+    },
+    {
+      "key": "short",
+      "word": "short",
+      "meaning": "短的；矮的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 38
+    },
+    {
+      "key": "tall",
+      "word": "tall",
+      "meaning": "高的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 39
+    },
+    {
+      "key": "fat",
+      "word": "fat",
+      "meaning": "胖的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 40
+    },
+    {
+      "key": "thin",
+      "word": "thin",
+      "meaning": "瘦的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2A",
+      "order": 41
+    },
+    {
+      "key": "sixteen",
+      "word": "sixteen",
+      "meaning": "十六",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "2B",
+      "order": 1
+    },
+    {
+      "key": "seventeen",
+      "word": "seventeen",
+      "meaning": "十七",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "2B",
+      "order": 2
+    },
+    {
+      "key": "eighteen",
+      "word": "eighteen",
+      "meaning": "十八",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "2B",
+      "order": 3
+    },
+    {
+      "key": "nineteen",
+      "word": "nineteen",
+      "meaning": "十九",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "2B",
+      "order": 4
+    },
+    {
+      "key": "twenty",
+      "word": "twenty",
+      "meaning": "二十",
+      "partOfSpeech": "数词（num.）",
+      "levelId": "2B",
+      "order": 5
+    },
+    {
+      "key": "morning",
+      "word": "morning",
+      "meaning": "早上",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 6
+    },
+    {
+      "key": "afternoon",
+      "word": "afternoon",
+      "meaning": "下午",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 7
+    },
+    {
+      "key": "evening",
+      "word": "evening",
+      "meaning": "傍晚",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 8
+    },
+    {
+      "key": "night",
+      "word": "night",
+      "meaning": "夜晚",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 9
+    },
+    {
+      "key": "today",
+      "word": "today",
+      "meaning": "今天",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 10
+    },
+    {
+      "key": "tomorrow",
+      "word": "tomorrow",
+      "meaning": "明天",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 11
+    },
+    {
+      "key": "friend",
+      "word": "friend",
+      "meaning": "朋友",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 12
+    },
+    {
+      "key": "toy",
+      "word": "toy",
+      "meaning": "玩具",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 13
+    },
+    {
+      "key": "ball",
+      "word": "ball",
+      "meaning": "球",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 14
+    },
+    {
+      "key": "car",
+      "word": "car",
+      "meaning": "小汽车",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 15
+    },
+    {
+      "key": "bike",
+      "word": "bike",
+      "meaning": "自行车",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 16
+    },
+    {
+      "key": "bus",
+      "word": "bus",
+      "meaning": "公共汽车",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 17
+    },
+    {
+      "key": "train",
+      "word": "train",
+      "meaning": "火车",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 18
+    },
+    {
+      "key": "plane",
+      "word": "plane",
+      "meaning": "飞机",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 19
+    },
+    {
+      "key": "ship",
+      "word": "ship",
+      "meaning": "船",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "2B",
+      "order": 20
+    },
+    {
+      "key": "hot",
+      "word": "hot",
+      "meaning": "热的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2B",
+      "order": 21
+    },
+    {
+      "key": "cold",
+      "word": "cold",
+      "meaning": "冷的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2B",
+      "order": 22
+    },
+    {
+      "key": "warm",
+      "word": "warm",
+      "meaning": "温暖的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2B",
+      "order": 23
+    },
+    {
+      "key": "cool",
+      "word": "cool",
+      "meaning": "凉爽的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2B",
+      "order": 24
+    },
+    {
+      "key": "sunny",
+      "word": "sunny",
+      "meaning": "晴朗的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2B",
+      "order": 25
+    },
+    {
+      "key": "rainy",
+      "word": "rainy",
+      "meaning": "下雨的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2B",
+      "order": 26
+    },
+    {
+      "key": "windy",
+      "word": "windy",
+      "meaning": "有风的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2B",
+      "order": 27
+    },
+    {
+      "key": "snowy",
+      "word": "snowy",
+      "meaning": "下雪的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "2B",
+      "order": 28
+    },
+    {
+      "key": "run",
+      "word": "run",
+      "meaning": "跑",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "2B",
+      "order": 29
+    },
+    {
+      "key": "jump",
+      "word": "jump",
+      "meaning": "跳",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "2B",
+      "order": 30
+    },
+    {
+      "key": "swim",
+      "word": "swim",
+      "meaning": "游泳",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "2B",
+      "order": 31
+    },
+    {
+      "key": "sing",
+      "word": "sing",
+      "meaning": "唱",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "2B",
+      "order": 32
+    },
+    {
+      "key": "dance",
+      "word": "dance",
+      "meaning": "跳舞",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "2B",
+      "order": 33
+    },
+    {
+      "key": "read",
+      "word": "read",
+      "meaning": "读",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "2B",
+      "order": 34
+    },
+    {
+      "key": "write",
+      "word": "write",
+      "meaning": "写",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "2B",
+      "order": 35
+    },
+    {
+      "key": "draw",
+      "word": "draw",
+      "meaning": "画",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "2B",
+      "order": 36
+    },
+    {
+      "key": "my",
+      "word": "my",
+      "meaning": "我的",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "3A",
+      "order": 1
+    },
+    {
+      "key": "your",
+      "word": "your",
+      "meaning": "你的；你们的",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "3A",
+      "order": 2
+    },
+    {
+      "key": "his",
+      "word": "his",
+      "meaning": "他的",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "3A",
+      "order": 3
+    },
+    {
+      "key": "her",
+      "word": "her",
+      "meaning": "她的",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "3A",
+      "order": 4
+    },
+    {
+      "key": "its",
+      "word": "its",
+      "meaning": "它的",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "3A",
+      "order": 5
+    },
+    {
+      "key": "our",
+      "word": "our",
+      "meaning": "我们的",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "3A",
+      "order": 6
+    },
+    {
+      "key": "their",
+      "word": "their",
+      "meaning": "他们的",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "3A",
+      "order": 7
+    },
+    {
+      "key": "pencil-box",
+      "word": "pencil-box",
+      "meaning": "铅笔盒",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 8
+    },
+    {
+      "key": "crayon",
+      "word": "crayon",
+      "meaning": "蜡笔",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 9
+    },
+    {
+      "key": "sharpener",
+      "word": "sharpener",
+      "meaning": "卷笔刀",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 10
+    },
+    {
+      "key": "body",
+      "word": "body",
+      "meaning": "身体",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 11
+    },
+    {
+      "key": "finger",
+      "word": "finger",
+      "meaning": "手指",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 12
+    },
+    {
+      "key": "purple",
+      "word": "purple",
+      "meaning": "紫色的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "3A",
+      "order": 13
+    },
+    {
+      "key": "pink",
+      "word": "pink",
+      "meaning": "粉色的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "3A",
+      "order": 14
+    },
+    {
+      "key": "brown",
+      "word": "brown",
+      "meaning": "棕色的",
+      "partOfSpeech": "形容词（adj.）",
+      "levelId": "3A",
+      "order": 15
+    },
+    {
+      "key": "bear",
+      "word": "bear",
+      "meaning": "熊",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 16
+    },
+    {
+      "key": "elephant",
+      "word": "elephant",
+      "meaning": "大象",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 17
+    },
+    {
+      "key": "mouse",
+      "word": "mouse",
+      "meaning": "老鼠",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 18
+    },
+    {
+      "key": "squirrel",
+      "word": "squirrel",
+      "meaning": "松鼠",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 19
+    },
+    {
+      "key": "hot dog",
+      "word": "hot dog",
+      "meaning": "热狗",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 20
+    },
+    {
+      "key": "hamburger",
+      "word": "hamburger",
+      "meaning": "汉堡包",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 21
+    },
+    {
+      "key": "chicken",
+      "word": "chicken",
+      "meaning": "鸡肉",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 22
+    },
+    {
+      "key": "french fries",
+      "word": "French fries",
+      "meaning": "炸薯条",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 23
+    },
+    {
+      "key": "coke",
+      "word": "Coke",
+      "meaning": "可乐",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 24
+    },
+    {
+      "key": "coffee",
+      "word": "coffee",
+      "meaning": "咖啡",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3A",
+      "order": 25
+    },
+    {
+      "key": "like",
+      "word": "like",
+      "meaning": "喜欢",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3A",
+      "order": 26
+    },
+    {
+      "key": "have",
+      "word": "have",
+      "meaning": "有",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3A",
+      "order": 27
+    },
+    {
+      "key": "look",
+      "word": "look",
+      "meaning": "看",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3A",
+      "order": 28
+    },
+    {
+      "key": "see",
+      "word": "see",
+      "meaning": "看见",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3A",
+      "order": 29
+    },
+    {
+      "key": "hear",
+      "word": "hear",
+      "meaning": "听见",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3A",
+      "order": 30
+    },
+    {
+      "key": "touch",
+      "word": "touch",
+      "meaning": "触摸",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3A",
+      "order": 31
+    },
+    {
+      "key": "smell",
+      "word": "smell",
+      "meaning": "闻",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3A",
+      "order": 32
+    },
+    {
+      "key": "taste",
+      "word": "taste",
+      "meaning": "尝",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3A",
+      "order": 33
+    },
+    {
+      "key": "learn",
+      "word": "learn",
+      "meaning": "学习",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3A",
+      "order": 34
+    },
+    {
+      "key": "where",
+      "word": "where",
+      "meaning": "在哪里",
+      "partOfSpeech": "副词（adv.）",
+      "levelId": "3B",
+      "order": 1
+    },
+    {
+      "key": "what",
+      "word": "what",
+      "meaning": "什么",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "3B",
+      "order": 2
+    },
+    {
+      "key": "who",
+      "word": "who",
+      "meaning": "谁",
+      "partOfSpeech": "代词（pron.）",
+      "levelId": "3B",
+      "order": 3
+    },
+    {
+      "key": "when",
+      "word": "when",
+      "meaning": "何时",
+      "partOfSpeech": "副词（adv.）",
+      "levelId": "3B",
+      "order": 4
+    },
+    {
+      "key": "how",
+      "word": "how",
+      "meaning": "怎样",
+      "partOfSpeech": "副词（adv.）",
+      "levelId": "3B",
+      "order": 5
+    },
+    {
+      "key": "in",
+      "word": "in",
+      "meaning": "在……里",
+      "partOfSpeech": "介词（prep.）",
+      "levelId": "3B",
+      "order": 6
+    },
+    {
+      "key": "on",
+      "word": "on",
+      "meaning": "在……上",
+      "partOfSpeech": "介词（prep.）",
+      "levelId": "3B",
+      "order": 7
+    },
+    {
+      "key": "under",
+      "word": "under",
+      "meaning": "在……下面",
+      "partOfSpeech": "介词（prep.）",
+      "levelId": "3B",
+      "order": 8
+    },
+    {
+      "key": "near",
+      "word": "near",
+      "meaning": "在……附近",
+      "partOfSpeech": "介词（prep.）",
+      "levelId": "3B",
+      "order": 9
+    },
+    {
+      "key": "behind",
+      "word": "behind",
+      "meaning": "在……后面",
+      "partOfSpeech": "介词（prep.）",
+      "levelId": "3B",
+      "order": 10
+    },
+    {
+      "key": "front",
+      "word": "front",
+      "meaning": "前面",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 11
+    },
+    {
+      "key": "beside",
+      "word": "beside",
+      "meaning": "在……旁边",
+      "partOfSpeech": "介词（prep.）",
+      "levelId": "3B",
+      "order": 12
+    },
+    {
+      "key": "between",
+      "word": "between",
+      "meaning": "在……之间",
+      "partOfSpeech": "介词（prep.）",
+      "levelId": "3B",
+      "order": 13
+    },
+    {
+      "key": "family",
+      "word": "family",
+      "meaning": "家庭",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 14
+    },
+    {
+      "key": "parent",
+      "word": "parent",
+      "meaning": "父母",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 15
+    },
+    {
+      "key": "grandfather",
+      "word": "grandfather",
+      "meaning": "爷爷；外公",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 16
+    },
+    {
+      "key": "grandmother",
+      "word": "grandmother",
+      "meaning": "奶奶；外婆",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 17
+    },
+    {
+      "key": "son",
+      "word": "son",
+      "meaning": "儿子",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 18
+    },
+    {
+      "key": "daughter",
+      "word": "daughter",
+      "meaning": "女儿",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 19
+    },
+    {
+      "key": "cousin",
+      "word": "cousin",
+      "meaning": "堂/表兄弟姐妹",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 20
+    },
+    {
+      "key": "doctor",
+      "word": "doctor",
+      "meaning": "医生",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 21
+    },
+    {
+      "key": "nurse",
+      "word": "nurse",
+      "meaning": "护士",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 22
+    },
+    {
+      "key": "driver",
+      "word": "driver",
+      "meaning": "司机",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 23
+    },
+    {
+      "key": "farmer",
+      "word": "farmer",
+      "meaning": "农民",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 24
+    },
+    {
+      "key": "worker",
+      "word": "worker",
+      "meaning": "工人",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 25
+    },
+    {
+      "key": "policeman",
+      "word": "policeman",
+      "meaning": "警察",
+      "partOfSpeech": "名词（n.）",
+      "levelId": "3B",
+      "order": 26
+    },
+    {
+      "key": "cook",
+      "word": "cook",
+      "meaning": "厨师；烹饪",
+      "partOfSpeech": "名词/动词（n./v.）",
+      "levelId": "3B",
+      "order": 27
+    },
+    {
+      "key": "clean",
+      "word": "clean",
+      "meaning": "打扫；干净的",
+      "partOfSpeech": "动词/形容词（v./adj.）",
+      "levelId": "3B",
+      "order": 28
+    },
+    {
+      "key": "wash",
+      "word": "wash",
+      "meaning": "洗",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3B",
+      "order": 29
+    },
+    {
+      "key": "brush",
+      "word": "brush",
+      "meaning": "刷",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3B",
+      "order": 30
+    },
+    {
+      "key": "dress",
+      "word": "dress",
+      "meaning": "穿衣服",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3B",
+      "order": 31
+    },
+    {
+      "key": "climb",
+      "word": "climb",
+      "meaning": "爬",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3B",
+      "order": 32
+    },
+    {
+      "key": "walk",
+      "word": "walk",
+      "meaning": "走",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3B",
+      "order": 33
+    },
+    {
+      "key": "fly",
+      "word": "fly",
+      "meaning": "飞",
+      "partOfSpeech": "动词（v.）",
+      "levelId": "3B",
+      "order": 34
+    }
+  ]
+}

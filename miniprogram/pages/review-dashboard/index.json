@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "期末复习"
+  "navigationBarTitleText": "复习分析",
+  "usingComponents": {
+    "data-chart": "/components/data-chart/index"
+  }
 }

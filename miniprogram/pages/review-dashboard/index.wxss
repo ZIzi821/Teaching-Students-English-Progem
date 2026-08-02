@@ -46,6 +46,10 @@
   font-size: 22rpx;
 }
 
+.status-chart-card {
+  padding-bottom: 24rpx;
+}
+
 .section-title {
   margin-bottom: 18rpx;
   color: #2f2a24;
@@ -137,4 +141,18 @@
   color: #8a6730;
   font-size: 26rpx;
   line-height: 1.6;
+}
+
+.review-retry {
+  display: inline-flex;
+  min-height: 64rpx;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16rpx;
+  padding: 0 24rpx;
+  border-radius: 999rpx;
+  color: #4f6f63;
+  background: #ffffff;
+  font-size: 24rpx;
+  font-weight: 700;
 }

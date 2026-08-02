@@ -91,6 +91,29 @@
   min-width: 240rpx;
 }
 
+.management-title {
+  width: 100%;
+  margin-top: 4rpx;
+  color: #817669;
+  font-size: 23rpx;
+  font-weight: 600;
+}
+
+.management-grid,
+.student-action-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+}
+
+.management-grid .ghost-btn,
+.student-action-grid .ghost-btn {
+  min-width: 0;
+  min-height: 76rpx;
+  font-size: 27rpx;
+}
+
 .actions .primary-btn {
   width: 100%;
 }
@@ -143,6 +166,14 @@
   margin-top: 16rpx;
   color: #62584d;
   font-size: 26rpx;
+}
+
+.student-progress-link {
+  margin-top: 16rpx;
+  color: #326d56;
+  font-size: 23rpx;
+  font-weight: 700;
+  text-align: right;
 }
 
 .student-progress-bar {

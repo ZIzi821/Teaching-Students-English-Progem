@@ -7,6 +7,7 @@ Page({
     student: null,
     cycleStatus: null,
     analytics: null,
+    mistakeStatusSegments: [],
     message: "",
   },
 
@@ -45,11 +46,17 @@ Page({
           });
           return;
         }
+        const analytics = this.prepareAnalytics(result.analytics);
         this.setData({
           role: result.role,
           student: result.student,
           cycleStatus: result.cycleStatus,
-          analytics: this.prepareAnalytics(result.analytics),
+          analytics,
+          mistakeStatusSegments: [
+            { label: "待复习", value: analytics.pendingCount, color: "#e0b96a" },
+            { label: "已复习", value: analytics.reviewedCount, color: "#7b8eaa" },
+            { label: "已掌握", value: analytics.masteredCount, color: "#4f8f73" },
+          ],
           message: "",
         });
       })
@@ -62,7 +69,7 @@ Page({
   },
 
   prepareAnalytics(analytics) {
-    return Object.assign(
+    const result = Object.assign(
       {
         totalMistakeCount: 0,
         pendingCount: 0,
@@ -76,6 +83,11 @@ Page({
       },
       analytics || {}
     );
+    const maxQuestionTypeCount = Math.max(1, ...result.topQuestionTypes.map((item) => Number(item.count) || 0));
+    result.topQuestionTypes = result.topQuestionTypes.map((item) => Object.assign({}, item, {
+      percent: Math.round((Number(item.count || 0) / maxQuestionTypeCount) * 100),
+    }));
+    return result;
   },
 
   goMistake(e) {

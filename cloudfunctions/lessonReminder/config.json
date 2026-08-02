@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "openapi": [
+      "subscribeMessage.getTemplateList",
+      "subscribeMessage.send"
+    ]
+  },
+  "triggers": [
+    {
+      "name": "lessonReminderEveryMinute",
+      "type": "timer",
+      "config": "0 * * * * * *"
+    }
+  ]
+}

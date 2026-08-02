@@ -1,0 +1,16 @@
+{
+  "name": "lessonReminder",
+  "version": "1.0.0",
+  "description": "Send one-time lesson reminders before confirmed classes",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --check index.js"
+  },
+  "license": "ISC",
+  "cloudfunction-config": {
+    "timeout": 10
+  },
+  "dependencies": {
+    "wx-server-sdk": "~2.4.0"
+  }
+}

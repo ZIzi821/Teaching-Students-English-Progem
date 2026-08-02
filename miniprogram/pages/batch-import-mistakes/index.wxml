@@ -7,12 +7,88 @@
 
   <view class="card message-card" wx:if="{{message}}">{{message}}</view>
 
-  <view class="card">
-    <view class="section-title">粘贴错题导入内容</view>
-    <view class="hint">把包含题目和讲题笔记的 PDF 发给我，我会整理成可直接粘贴到这里的内容。</view>
-    <textarea class="import-textarea" maxlength="-1" placeholder='粘贴 JSON 内容，例如：[{"questionNo":"1","questionText":"...","correctAnswer":"..."}]' value="{{importText}}" bindinput="onImportTextInput"></textarea>
-    <view class="preview">{{previewCount ? '已识别 ' + previewCount + ' 道错题' : '等待粘贴有效内容'}}</view>
+  <view class="card computer-import-card" wx:if="{{isDevTools}}">
+    <view class="computer-import-badge">推荐方式</view>
+    <view class="section-title">从电脑本地读取整套文件</view>
+    <view class="hint">先启动电脑本地导入助手并选择 JSON 和图片文件夹，再点击下面按钮。文件不需要发送到微信聊天。</view>
+    <view class="computer-import-btn {{localBridgeLoading ? 'disabled-btn' : ''}}" bindtap="loadFromComputer">
+      {{localBridgeLoading ? '正在从电脑读取...' : '从电脑本地读取'}}
+    </view>
+    <view class="local-bridge-status" wx:if="{{localBridgeProgressText}}">
+      <view>{{localBridgeProgressText}}</view>
+      <view class="progress-track local-progress-track" wx:if="{{localBridgeTotalCount}}">
+        <view class="progress-fill" style="width: {{localBridgeTotalCount ? localBridgeCompletedCount * 100 / localBridgeTotalCount : 0}}%;"></view>
+      </view>
+      <view class="progress-count" wx:if="{{localBridgeTotalCount}}">{{localBridgeCompletedCount}} / {{localBridgeTotalCount}}</view>
+    </view>
+    <view class="local-bridge-error" wx:if="{{localBridgeError}}">{{localBridgeError}}</view>
   </view>
 
-  <view class="primary-btn" bindtap="importMistakes">确认批量导入</view>
+  <view class="card">
+    <view class="section-title">{{isDevTools ? '手动备用：选择或粘贴错题 JSON' : '1. 选择或粘贴错题 JSON'}}</view>
+    <view class="hint">{{isDevTools ? '电脑本地助手不可用时，可以粘贴 JSON，或从微信聊天选择文件。' : '可以从微信聊天选择整理好的 JSON 文件，也可以直接粘贴纯 JSON 数组。'}}</view>
+    <view class="file-row">
+      <view class="ghost-btn compact-btn" bindtap="chooseJsonFile">{{isDevTools ? '备用：从微信聊天选择 JSON' : '从微信聊天选择 JSON'}}</view>
+      <view class="file-name">{{jsonFileName || '尚未选择文件'}}</view>
+    </view>
+    <textarea class="import-textarea" maxlength="-1" placeholder='粘贴 JSON 内容，例如：[{&quot;questionNo&quot;:&quot;1&quot;,&quot;questionText&quot;:&quot;...&quot;}]' value="{{importText}}" bindinput="onImportTextInput"></textarea>
+    <view class="preview">
+      <block wx:if="{{jsonValid}}">已识别 {{previewCount}} 道错题</block>
+      <block wx:else>{{importText ? 'JSON 格式待检查' : '等待选择或粘贴有效内容'}}</block>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">{{isDevTools ? '手动备用：选择题目截图' : '2. 选择题目截图'}}</view>
+    <view class="hint">{{isDevTools ? '仅在电脑本地助手未读取完整时使用。' : '可多次从微信聊天选择，图片会自动合并；文件名按大小写不敏感匹配。'}}</view>
+    <view class="file-row image-actions">
+      <view class="ghost-btn compact-btn" bindtap="chooseImages">{{isDevTools ? '备用：从微信聊天选择图片' : '从微信聊天选择图片'}}</view>
+      <view class="text-action" wx:if="{{selectedImageCount}}" bindtap="clearSelectedImages">清空已选</view>
+    </view>
+
+    <view class="stats-grid">
+      <view class="stat-item">
+        <view class="stat-value">{{previewCount}}</view>
+        <view class="stat-label">错题数</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">{{expectedImageCount}}</view>
+        <view class="stat-label">应有截图</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">{{selectedImageCount}}</view>
+        <view class="stat-label">已选图片</view>
+      </view>
+      <view class="stat-item {{hasDeclaredImages && matchedImageCount !== expectedImageCount ? 'stat-warning' : 'stat-ready'}}">
+        <view class="stat-value">{{matchedImageCount}}</view>
+        <view class="stat-label">已匹配</view>
+      </view>
+    </view>
+
+    <view class="legacy-note" wx:if="{{jsonValid && !hasDeclaredImages}}">这份 JSON 没有声明截图，可按原来的纯文字方式导入。</view>
+    <view class="missing-box" wx:if="{{missingImageNames.length}}">
+      <view class="missing-title">缺少 {{missingImageNames.length}} 张截图：</view>
+      <view class="missing-name" wx:for="{{missingImageNames}}" wx:key="*this">{{item}}</view>
+    </view>
+  </view>
+
+  <view class="card progress-card" wx:if="{{uploadProgressText}}">
+    <view class="progress-title">{{uploadProgressText}}</view>
+    <block wx:if="{{importTotalCount}}">
+      <view class="progress-track">
+        <view class="progress-fill" style="width: {{importTotalCount ? importedItemCount * 100 / importTotalCount : 0}}%;"></view>
+      </view>
+      <view class="progress-count">{{importedItemCount}} / {{importTotalCount}}</view>
+    </block>
+    <block wx:else wx:if="{{uploadTotalCount}}">
+      <view class="progress-track">
+        <view class="progress-fill" style="width: {{uploadTotalCount ? uploadedImageCount * 100 / uploadTotalCount : 0}}%;"></view>
+      </view>
+      <view class="progress-count">{{uploadedImageCount}} / {{uploadTotalCount}}</view>
+    </block>
+  </view>
+
+  <view class="primary-btn {{importing || !canImport ? 'disabled-btn' : ''}}" bindtap="importMistakes">
+    {{importing ? '正在导入...' : '确认批量导入'}}
+  </view>
 </view>

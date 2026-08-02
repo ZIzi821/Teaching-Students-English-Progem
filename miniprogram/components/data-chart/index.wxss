@@ -1,0 +1,52 @@
+.chart-shell {
+  width: 100%;
+}
+
+.chart-canvas {
+  display: block;
+  width: 100%;
+}
+
+.donut-canvas {
+  height: 300rpx;
+}
+
+.bar-canvas {
+  height: 270rpx;
+}
+
+.chart-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12rpx 18rpx;
+  margin-top: 10rpx;
+}
+
+.legend-item {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10rpx;
+  color: #655b50;
+  font-size: 23rpx;
+}
+
+.legend-dot {
+  width: 16rpx;
+  height: 16rpx;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.legend-label {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.legend-value {
+  color: #2f2a24;
+  font-weight: 700;
+}

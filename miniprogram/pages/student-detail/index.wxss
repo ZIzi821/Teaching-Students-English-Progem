@@ -70,6 +70,20 @@
   line-height: 1.6;
 }
 
+.detail-retry {
+  display: inline-flex;
+  min-height: 64rpx;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16rpx;
+  padding: 0 24rpx;
+  border-radius: 999rpx;
+  color: #4f6f63;
+  background: #ffffff;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
 .preview-tip {
   margin-bottom: 22rpx;
   padding: 18rpx 22rpx;
@@ -125,6 +139,81 @@
   background: #4f8f73;
 }
 
+.learning-overview-card {
+  background: linear-gradient(145deg, #fffdfa 0%, #f2f8f4 100%);
+}
+
+.overview-head,
+.settings-head-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.overview-streak,
+.settings-toggle {
+  flex-shrink: 0;
+  padding: 10rpx 16rpx;
+  border-radius: 999rpx;
+  color: #326d56;
+  background: #e9f4ee;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.overview-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.overview-chart-item {
+  min-width: 0;
+  padding: 18rpx 14rpx;
+  border-radius: 18rpx;
+  background: #ffffff;
+}
+
+.overview-chart-title {
+  color: #3d352e;
+  font-size: 25rpx;
+  font-weight: 700;
+  text-align: center;
+}
+
+.weekly-mini {
+  margin-top: 20rpx;
+  padding: 20rpx 14rpx 8rpx;
+  border-radius: 18rpx;
+  background: #ffffff;
+}
+
+.overview-action {
+  margin-top: 22rpx;
+}
+
+.settings-head-actions {
+  justify-content: flex-end;
+}
+
+.settings-toggle {
+  color: #655b50;
+  background: #f3ece1;
+}
+
+.settings-first-row {
+  margin-top: 24rpx;
+  padding-top: 22rpx;
+  border-top: 1rpx solid #eadfcf;
+}
+
+.mistake-chart-wrap {
+  max-width: 520rpx;
+  margin: 20rpx auto 6rpx;
+}
+
 .ghost-small {
   flex-shrink: 0;
   padding: 12rpx 18rpx;
@@ -164,6 +253,149 @@
 
 .editor-btn {
   flex: 1;
+}
+
+.vocabulary-settings-card {
+  background: #fffdfa;
+}
+
+.vocabulary-settings-head,
+.setting-row,
+.vocabulary-setting-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.feature-status {
+  flex-shrink: 0;
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+}
+
+.feature-on {
+  color: #326d56;
+  background: #dff0e8;
+}
+
+.feature-off {
+  color: #817669;
+  background: #f1ece3;
+}
+
+.setting-row,
+.setting-block {
+  margin-top: 26rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #eee4d6;
+}
+
+.setting-row switch {
+  flex-shrink: 0;
+}
+
+.setting-title {
+  color: #3d352e;
+  font-size: 27rpx;
+  font-weight: 600;
+}
+
+.setting-hint {
+  margin-top: 6rpx;
+  color: #817669;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14rpx;
+  margin-top: 16rpx;
+}
+
+.level-option {
+  display: flex;
+  min-height: 68rpx;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 16rpx;
+  border-radius: 14rpx;
+  color: #62584d;
+  background: #f8f2e8;
+  font-size: 24rpx;
+}
+
+.level-option-checked {
+  color: #326d56;
+  background: #e9f4ee;
+}
+
+.level-option checkbox {
+  transform: scale(0.82);
+}
+
+.goal-picker {
+  min-width: 112rpx;
+  padding: 14rpx 18rpx;
+  border-radius: 12rpx;
+  color: #326d56;
+  background: #e9f4ee;
+  font-size: 26rpx;
+  font-weight: 600;
+  text-align: center;
+}
+
+.student-goal-status {
+  margin-top: 20rpx;
+  padding: 20rpx;
+  border-radius: 14rpx;
+  background: #f8f2e8;
+}
+
+.vocabulary-setting-actions {
+  margin-top: 28rpx;
+}
+
+.setting-action-btn {
+  flex: 1;
+  min-height: 76rpx;
+  font-size: 26rpx;
+}
+
+.disabled-action {
+  opacity: 0.6;
+}
+
+.vocabulary-entry-card {
+  overflow: hidden;
+  background: linear-gradient(135deg, #e2f3ea 0%, #fff7df 100%);
+}
+
+.vocabulary-entry-eyebrow {
+  color: #4f8f73;
+  font-size: 22rpx;
+  font-weight: 700;
+  letter-spacing: 3rpx;
+}
+
+.vocabulary-entry-title {
+  margin-top: 10rpx;
+  color: #243f35;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.vocabulary-entry-hint {
+  margin-top: 10rpx;
+  color: #52635b;
+  font-size: 24rpx;
+}
+
+.vocabulary-entry-btn {
+  margin-top: 24rpx;
 }
 
 .analytics-card {

@@ -1,7 +1,11 @@
 {
   "permissions": {
     "openapi": [
-      "wxacode.get"
+      "wxacode.get",
+      "subscribeMessage.getTemplateList",
+      "subscribeMessage.send",
+      "security.msgSecCheck",
+      "security.imgSecCheck"
     ]
   }
 }

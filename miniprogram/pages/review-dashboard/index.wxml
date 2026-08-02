@@ -1,5 +1,8 @@
 <view class="page">
-  <view class="card no-permission" wx:if="{{message}}">{{message}}</view>
+  <view class="card no-permission" wx:if="{{message}}">
+    <view>{{message}}</view>
+    <view class="review-retry" bindtap="loadAnalytics">重新读取</view>
+  </view>
 
   <view wx:if="{{analytics}}">
     <view class="card hero-card">
@@ -23,12 +26,22 @@
       </view>
     </view>
 
+    <view class="card status-chart-card">
+      <view class="section-title">错题掌握情况</view>
+      <data-chart
+        segments="{{mistakeStatusSegments}}"
+        center-value="{{analytics.totalMistakeCount + ''}}"
+        center-label="错题总数"
+        aria-label="错题共 {{analytics.totalMistakeCount}} 道，待复习 {{analytics.pendingCount}} 道，已复习 {{analytics.reviewedCount}} 道，已掌握 {{analytics.masteredCount}} 道"
+      ></data-chart>
+    </view>
+
     <view class="card">
       <view class="section-title">最需要复习的题型</view>
       <view class="empty" wx:if="{{!analytics.topQuestionTypes.length}}">还没有足够的错题数据。</view>
       <view class="rank-row" wx:for="{{analytics.topQuestionTypes}}" wx:key="label">
         <view class="rank-name">{{item.label}}</view>
-        <view class="rank-bar"><view class="rank-fill" style="width: {{item.count * 18 > 100 ? 100 : item.count * 18}}%;"></view></view>
+        <view class="rank-bar"><view class="rank-fill" style="width: {{item.percent}}%;"></view></view>
         <view class="rank-count">{{item.count}}</view>
       </view>
     </view>

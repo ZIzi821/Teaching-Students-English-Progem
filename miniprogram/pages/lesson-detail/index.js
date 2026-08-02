@@ -19,6 +19,7 @@ Page({
     mistakes: [],
     hasPaperArea: false,
     message: "",
+    deletingLesson: false,
     materialTypes: [
       { label: "PDF 试卷", value: "pdf" },
       { label: "图片", value: "image" },
@@ -443,6 +444,54 @@ Page({
   goBatchImportMistakes() {
     wx.navigateTo({
       url: "/pages/batch-import-mistakes/index?lessonId=" + this.data.lessonId + "&studentId=" + this.data.lesson.studentId,
+    });
+  },
+
+  deleteLesson() {
+    const lesson = this.data.lesson;
+    if (!this.data.isTeacher || !lesson || this.data.deletingLesson) return;
+    wx.showModal({
+      title: "删除这节课？",
+      content: "将永久删除“" + lesson.title + "”、本课资料和错题，删除后无法恢复。",
+      confirmText: "确认删除",
+      confirmColor: "#b6534b",
+      success: (modalRes) => {
+        if (!modalRes.confirm) return;
+        this.setData({ deletingLesson: true });
+        wx.showLoading({ title: "删除中", mask: true });
+        wx.cloud
+          .callFunction({
+            name: "quickstartFunctions",
+            data: {
+              type: "deleteLesson",
+              data: {
+                lessonId: this.data.lessonId,
+                expectedTitle: lesson.title,
+              },
+            },
+          })
+          .then((res) => {
+            const result = res.result || {};
+            if (!result.success) {
+              throw new Error(result.message || "课程删除失败");
+            }
+            wx.showToast({ title: "课程已删除" });
+            setTimeout(() => {
+              wx.navigateBack({
+                delta: 1,
+                fail: () => wx.reLaunch({ url: "/pages/index/index" }),
+              });
+            }, 500);
+          })
+          .catch((err) => {
+            console.error(err);
+            wx.showToast({ title: err.message || "课程删除失败", icon: "none" });
+          })
+          .finally(() => {
+            wx.hideLoading();
+            this.setData({ deletingLesson: false });
+          });
+      },
     });
   },
 });

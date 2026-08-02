@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "英语课记录"
+  "navigationBarTitleText": "学习主页",
+  "usingComponents": {
+    "data-chart": "/components/data-chart/index"
+  }
 }

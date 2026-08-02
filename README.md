@@ -14,6 +14,7 @@
 
 - `students`
 - `lessons`
+- `lessonBookings`
 - `papers`
 - `mistakes`
 
@@ -58,3 +59,17 @@ teacherOpenIds: ["朱老师的 openid"]
 ```
 
 修改后需要重新上传并部署 `quickstartFunctions` 云函数。
+
+## 上课预约订阅提醒
+
+家长提交预约时可一次选择接收两类微信提醒：
+
+- 老师首次确认预约后发送“预约记录提醒”。
+- 已确认课程开始前约 10 分钟发送“日程提醒”。
+
+预约提交成功仍由当前页面直接提示，以免提前消耗一次性订阅额度。订阅提醒代码更新后需要：
+
+1. 重新上传并部署 `quickstartFunctions`（云端安装依赖）。
+2. 创建并部署 `lessonReminder`（云端安装依赖）。
+3. 上传 `lessonReminder/config.json` 中的定时触发器，确认 `lessonReminderEveryMinute` 已启用。
+4. 在云函数配置中确认两个函数的超时时间均为 10 秒。

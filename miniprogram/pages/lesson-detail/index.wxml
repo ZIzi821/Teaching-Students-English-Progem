@@ -13,6 +13,9 @@
 
   <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddMistake">添加本节英语错题</view>
   <view class="ghost-btn add-btn" wx:if="{{isTeacher}}" bindtap="goBatchImportMistakes">粘贴并批量导入错题</view>
+  <view class="danger-btn delete-lesson-btn" wx:if="{{isTeacher}}" bindtap="deleteLesson">
+    {{deletingLesson ? '正在删除…' : '删除本节课'}}
+  </view>
 
   <view class="card upload-card" wx:if="{{isTeacher}}">
     <view class="upload-title">上传课程资料</view>

@@ -43,6 +43,21 @@
   margin-bottom: 32rpx;
 }
 
+.delete-lesson-btn {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 78rpx;
+  margin-bottom: 32rpx;
+  border: 2rpx solid #d9a29d;
+  border-radius: 16rpx;
+  color: #a43f38;
+  background: #fff5f4;
+  font-size: 28rpx;
+  font-weight: 700;
+  line-height: 74rpx;
+  text-align: center;
+}
+
 .section-title {
   margin: 14rpx 0 18rpx;
   color: #2f2a24;

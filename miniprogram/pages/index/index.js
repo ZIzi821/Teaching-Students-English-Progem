@@ -127,6 +127,14 @@ Page({
     });
   },
 
+  goVocabulary() {
+    const student = this.data.currentStudent;
+    if (!student || !student._id || !student.vocabularyEnabled) return;
+    wx.navigateTo({
+      url: "/pages/vocabulary/index?studentId=" + student._id,
+    });
+  },
+
   goBind() {
     wx.navigateTo({
       url: "/pages/bind-student/index",

@@ -1,6 +1,7 @@
 <view class="page">
   <view class="card no-permission" wx:if="{{message}}">
     <view>{{message}}</view>
+    <view class="detail-retry" bindtap="loadStudent">重新读取</view>
   </view>
 
   <view wx:if="{{student}}">
@@ -42,6 +43,126 @@
       </view>
     </view>
 
+    <view class="card learning-overview-card" wx:if="{{student.vocabularyEnabled}}">
+      <view class="overview-head">
+        <view>
+          <view class="progress-title">单词学习概览</view>
+          <view class="progress-label">教师和学生看到同一份学习数据</view>
+        </view>
+        <view class="overview-streak">连续 {{vocabularyOverview.weeklyStats.streakDays}} 天</view>
+      </view>
+      <view class="overview-chart-grid">
+        <view class="overview-chart-item">
+          <view class="overview-chart-title">今日目标</view>
+          <data-chart
+            segments="{{vocabularyTodaySegments}}"
+            center-value="{{vocabularyOverview.summary.todayReviewedCount + '/' + vocabularyOverview.dailyPlan.dailyGoal}}"
+            center-label="今日完成"
+            aria-label="今日完成 {{vocabularyOverview.summary.todayReviewedCount}} 个，目标 {{vocabularyOverview.dailyPlan.dailyGoal}} 个"
+          ></data-chart>
+        </view>
+        <view class="overview-chart-item">
+          <view class="overview-chart-title">词库掌握</view>
+          <data-chart
+            segments="{{vocabularyMasterySegments}}"
+            center-value="{{vocabularyOverview.summary.totalCount + ''}}"
+            center-label="词库总数"
+            aria-label="词库共 {{vocabularyOverview.summary.totalCount}} 个，已掌握 {{vocabularyOverview.summary.masteredCount}} 个"
+          ></data-chart>
+        </view>
+      </view>
+      <view class="weekly-mini" wx:if="{{weeklyChartPoints.length}}">
+        <view class="overview-chart-title">近 7 天学习</view>
+        <data-chart
+          type="bar"
+          points="{{weeklyChartPoints}}"
+          aria-label="近七天共完成 {{vocabularyOverview.weeklyStats.totalReviewed}} 个单词"
+        ></data-chart>
+      </view>
+      <view class="primary-btn overview-action" bindtap="goVocabulary">
+        {{isTeacher ? '查看学生学习明细' : isTeacherPreview ? '查看学生单词页' : '继续今日学习'}}
+      </view>
+    </view>
+
+    <view class="card vocabulary-settings-card" wx:if="{{isTeacher}}">
+      <view class="vocabulary-settings-head" bindtap="toggleVocabularySettings">
+        <view>
+          <view class="progress-title">背单词功能</view>
+          <view class="progress-label">管理词库范围和每日建议数量</view>
+        </view>
+        <view class="settings-head-actions">
+          <view class="feature-status {{vocabularyForm.enabled ? 'feature-on' : 'feature-off'}}">
+            {{vocabularyForm.enabled ? '已开启' : '未开启'}}
+          </view>
+          <view class="settings-toggle">{{showVocabularySettings ? '收起' : '管理'}}</view>
+        </view>
+      </view>
+
+      <block wx:if="{{showVocabularySettings}}">
+      <view class="setting-row settings-first-row">
+        <view>
+          <view class="setting-title">允许学生背单词</view>
+          <view class="setting-hint">关闭后学生端不显示入口，原学习记录会保留。</view>
+        </view>
+        <switch checked="{{vocabularyForm.enabled}}" color="#4f8f73" disabled="{{vocabularySaving}}" bindchange="onVocabularyEnabledChange" />
+      </view>
+
+      <view class="setting-row">
+        <view>
+          <view class="setting-title">加入错题单词</view>
+          <view class="setting-hint">从已经整理过的错题文字中收集单词。</view>
+        </view>
+        <switch checked="{{vocabularyForm.includeMistakeWords}}" color="#4f8f73" disabled="{{vocabularySaving}}" bindchange="onIncludeMistakeWordsChange" />
+      </view>
+
+      <view class="setting-row">
+        <view>
+          <view class="setting-title">今日任务跳过简单词</view>
+          <view class="setting-hint">简单词仍保留在词库和搜索结果里，只是不占每天的学习数量。</view>
+        </view>
+        <switch checked="{{vocabularyForm.hideBasicWords}}" color="#4f8f73" disabled="{{vocabularySaving}}" bindchange="onHideBasicWordsChange" />
+      </view>
+
+      <view class="setting-block">
+        <view class="setting-title">课本 / 基础词库范围</view>
+        <view class="setting-hint">任轩楠可选择译林七至九年级六册；词库版本会单独标注。</view>
+        <checkbox-group class="level-grid" bindchange="onVocabularyLevelsChange">
+          <label class="level-option {{item.checked ? 'level-option-checked' : ''}}" wx:for="{{vocabularyLevels}}" wx:key="id">
+            <checkbox value="{{item.id}}" checked="{{item.checked}}" disabled="{{vocabularySaving}}" color="#4f8f73" />
+            <view>
+              <view>{{item.label}}</view>
+              <view class="setting-hint" wx:if="{{item.edition}}">{{item.edition}}</view>
+            </view>
+          </label>
+        </checkbox-group>
+      </view>
+
+      <view class="setting-row daily-goal-row">
+        <view>
+          <view class="setting-title">老师建议数量</view>
+          <view class="setting-hint">孩子每天可在单词页自己选择 5 至 30 个。</view>
+        </view>
+        <picker mode="selector" range="{{dailyGoalOptions}}" value="{{dailyGoalIndex}}" disabled="{{vocabularySaving}}" bindchange="onVocabularyDailyGoalChange">
+          <view class="goal-picker">{{vocabularyForm.dailyGoal}} 个</view>
+        </picker>
+      </view>
+
+      <view class="student-goal-status">
+        <view class="setting-title">孩子今日目标：{{vocabularyDailyPlan.dailyGoal}} 个</view>
+        <view class="setting-hint">
+          {{vocabularyDailyPlan.hasStudentChoice ? '孩子今天已经自己选择；进入今日学习可查看完成了哪些词。' : '孩子今天尚未主动选择，暂按老师建议安排。'}}
+        </view>
+      </view>
+
+      <view class="vocabulary-setting-actions">
+        <view class="ghost-btn setting-action-btn" bindtap="goVocabulary">查看今日学习</view>
+        <view class="primary-btn setting-action-btn {{vocabularySaving ? 'disabled-action' : ''}}" bindtap="saveVocabularySettings">
+          {{vocabularySaving ? '保存中…' : '保存单词设置'}}
+        </view>
+      </view>
+      </block>
+    </view>
+
     <view class="card analytics-card" wx:if="{{analytics}}">
       <view class="analytics-head">
         <view>
@@ -49,6 +170,14 @@
           <view class="progress-label">{{analytics.weakPointSummary}}</view>
         </view>
         <view class="ghost-small" bindtap="goReviewDashboard">{{cycleStatus.isReviewPhase ? '开始复习' : '查看复习'}}</view>
+      </view>
+      <view class="mistake-chart-wrap">
+        <data-chart
+          segments="{{mistakeStatusSegments}}"
+          center-value="{{analytics.totalMistakeCount + ''}}"
+          center-label="错题总数"
+          aria-label="错题共 {{analytics.totalMistakeCount}} 道，待复习 {{analytics.pendingCount}} 道，已复习 {{analytics.reviewedCount}} 道，已掌握 {{analytics.masteredCount}} 道"
+        ></data-chart>
       </view>
       <view class="metric-grid">
         <view class="metric-item">
@@ -68,7 +197,7 @@
         <view class="rank-title">高频题型</view>
         <view class="rank-row" wx:for="{{analytics.topQuestionTypes}}" wx:key="label">
           <view class="rank-name">{{item.label}}</view>
-          <view class="rank-bar"><view class="rank-fill" style="width: {{item.count * 18 > 100 ? 100 : item.count * 18}}%;"></view></view>
+          <view class="rank-bar"><view class="rank-fill" style="width: {{item.percent}}%;"></view></view>
           <view class="rank-count">{{item.count}}</view>
         </view>
       </view>
@@ -78,7 +207,6 @@
     </view>
 
     <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddLesson">添加英语课记录</view>
-    <view class="ghost-btn add-btn" wx:if="{{isTeacher}}" bindtap="goTeacherPreview">以学生视角查看</view>
     <view class="primary-btn add-btn" wx:if="{{isTeacherPreview}}" bindtap="goLessonBookings">预约上课 / 查看会议号</view>
 
     <view class="section-title">英语课记录</view>

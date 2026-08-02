@@ -1,0 +1,15 @@
+<view class="chart-shell">
+  <canvas
+    id="chartCanvas"
+    class="chart-canvas {{type === 'bar' ? 'bar-canvas' : 'donut-canvas'}}"
+    type="2d"
+    aria-label="{{ariaLabel}}"
+  ></canvas>
+  <view class="chart-legend" wx:if="{{type !== 'bar'}}">
+    <view class="legend-item" wx:for="{{segments}}" wx:key="label">
+      <view class="legend-dot" style="background: {{item.color}};"></view>
+      <text class="legend-label">{{item.label}}</text>
+      <text class="legend-value">{{item.value}}</text>
+    </view>
+  </view>
+</view>

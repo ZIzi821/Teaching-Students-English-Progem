@@ -8,6 +8,9 @@
   },
   "author": "",
   "license": "ISC",
+  "cloudfunction-config": {
+    "timeout": 60
+  },
   "dependencies": {
     "wx-server-sdk": "~2.4.0"
   }
