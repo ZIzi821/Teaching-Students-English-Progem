@@ -2,6 +2,11 @@ const DEFAULT_GREEN = "#4f8f73";
 const EMPTY_COLOR = "#ece5da";
 
 Component({
+  data: {
+    resolvedAriaLabel: "学习数据图表",
+    isBarEmpty: false,
+  },
+
   properties: {
     type: {
       type: String,
@@ -30,7 +35,8 @@ Component({
   },
 
   observers: {
-    "type,segments,points,centerValue,centerLabel": function () {
+    "type,segments,points,centerValue,centerLabel,ariaLabel": function () {
+      this.refreshChartMeta();
       this.scheduleDraw();
     },
   },
@@ -38,11 +44,53 @@ Component({
   lifetimes: {
     ready() {
       this.isReady = true;
+      this.refreshChartMeta();
       this.scheduleDraw();
+    },
+    detached() {
+      if (this.drawTimer) clearTimeout(this.drawTimer);
+      this.drawTimer = null;
     },
   },
 
   methods: {
+    normalizeBarPoints() {
+      return (this.data.points || []).map((item, index) => ({
+        label: String(item.label || `第${index + 1}天`),
+        value: Math.max(0, Number(item.value) || 0),
+        goal: Math.max(0, Number(item.goal) || 0),
+      }));
+    },
+
+    refreshChartMeta() {
+      const baseLabel = String(this.data.ariaLabel || "学习数据图表").trim() || "学习数据图表";
+      if (this.data.type !== "bar") {
+        if (this.data.resolvedAriaLabel !== baseLabel || this.data.isBarEmpty) {
+          this.setData({ resolvedAriaLabel: baseLabel, isBarEmpty: false });
+        }
+        return;
+      }
+
+      const points = this.normalizeBarPoints();
+      const isBarEmpty = !points.some((point) => point.value > 0);
+      const pointSummary = points
+        .map((point) => {
+          const goalText = point.goal > 0 ? `，目标 ${point.goal}` : "";
+          return `${point.label}完成 ${point.value}${goalText}`;
+        })
+        .join("；");
+      const stateText = isBarEmpty ? "暂无学习记录" : "";
+      const detailText = pointSummary ? `每日数据：${pointSummary}` : "";
+      const resolvedAriaLabel = [baseLabel, stateText, detailText].filter(Boolean).join("。");
+
+      if (
+        this.data.resolvedAriaLabel !== resolvedAriaLabel ||
+        this.data.isBarEmpty !== isBarEmpty
+      ) {
+        this.setData({ resolvedAriaLabel, isBarEmpty });
+      }
+    },
+
     scheduleDraw() {
       if (!this.isReady) return;
       if (this.drawTimer) clearTimeout(this.drawTimer);
@@ -113,11 +161,7 @@ Component({
     },
 
     drawBars(context, width, height) {
-      const points = (this.data.points || []).map((item) => ({
-        label: String(item.label || ""),
-        value: Math.max(0, Number(item.value) || 0),
-        goal: Math.max(0, Number(item.goal) || 0),
-      }));
+      const points = this.normalizeBarPoints();
       const padding = { top: 18, right: 12, bottom: 34, left: 12 };
       const chartWidth = Math.max(0, width - padding.left - padding.right);
       const chartHeight = Math.max(0, height - padding.top - padding.bottom);
@@ -144,12 +188,29 @@ Component({
           context.rect(x - barWidth / 2, padding.top + chartHeight - barHeight, barWidth, barHeight);
         }
         context.fill();
-        context.fillStyle = "#4f6f63";
-        context.font = "600 12px sans-serif";
-        context.textAlign = "center";
-        context.fillText(String(point.value), x, padding.top + chartHeight - barHeight - 8);
+
+        if (point.goal > 0) {
+          const goalY = padding.top + chartHeight - (point.goal / maxValue) * chartHeight;
+          context.save();
+          context.strokeStyle = "#a37d58";
+          context.lineWidth = 2;
+          context.lineCap = "round";
+          context.beginPath();
+          context.moveTo(x - barWidth / 2 - 4, goalY);
+          context.lineTo(x + barWidth / 2 + 4, goalY);
+          context.stroke();
+          context.restore();
+        }
+
+        if (point.value > 0) {
+          context.fillStyle = "#4f6f63";
+          context.font = "600 12px sans-serif";
+          context.textAlign = "center";
+          context.fillText(String(point.value), x, padding.top + chartHeight - barHeight - 8);
+        }
         context.fillStyle = "#817669";
         context.font = "11px sans-serif";
+        context.textAlign = "center";
         context.fillText(point.label, x, height - 10);
       });
     },

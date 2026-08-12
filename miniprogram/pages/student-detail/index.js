@@ -48,7 +48,14 @@ Page({
       enabled: false,
       dailyPlan: { dailyGoal: 0 },
       summary: { todayReviewedCount: 0, todayRemainingCount: 0, totalCount: 0, masteredCount: 0 },
-      weeklyStats: { totalReviewed: 0, activeDays: 0, streakDays: 0 },
+      weeklyStats: {
+        totalReviewed: 0,
+        activeDays: 0,
+        streakDays: 0,
+        totalReviewActions: 0,
+        fluentRate: 0,
+        streakPendingToday: false,
+      },
     },
     vocabularyTodaySegments: [],
     vocabularyMasterySegments: [],
@@ -124,6 +131,10 @@ Page({
         console.error(err);
         this.setData({
           message: "请先上传并部署云函数",
+          student: null,
+          lessons: [],
+          cycleStatus: null,
+          analytics: null,
         });
       });
   },
@@ -166,6 +177,9 @@ Page({
           totalReviewed: Math.max(0, Number(weeklyStats.totalReviewed) || 0),
           activeDays: Math.max(0, Number(weeklyStats.activeDays) || 0),
           streakDays: Math.max(0, Number(weeklyStats.streakDays) || 0),
+          totalReviewActions: Math.max(0, Number(weeklyStats.totalReviewActions) || 0),
+          fluentRate: Math.max(0, Math.min(100, Number(weeklyStats.fluentRate) || 0)),
+          streakPendingToday: weeklyStats.streakPendingToday === true,
         },
       },
       todaySegments: [
@@ -282,8 +296,11 @@ Page({
   goLessonBookings() {
     const studentId = this.data.student ? this.data.student._id : "";
     if (!studentId) return;
+    const url = this.data.isTeacherPreview
+      ? "/pages/lesson-bookings/index?mode=teacherPreview&previewStudentId=" + encodeURIComponent(studentId)
+      : "/pages/lesson-bookings/index";
     wx.navigateTo({
-      url: "/pages/lesson-bookings/index?mode=teacherPreview&previewStudentId=" + studentId,
+      url,
     });
   },
 
@@ -296,6 +313,18 @@ Page({
     }
     wx.navigateTo({
       url: "/pages/vocabulary/index?" + params.join("&"),
+    });
+  },
+
+  goVocabularyChallenge() {
+    const student = this.data.student;
+    if (!student || !student._id || !student.vocabularyEnabled) return;
+    const params = ["studentId=" + encodeURIComponent(student._id)];
+    if (this.data.isTeacherPreview) {
+      params.push("mode=teacherPreview", "previewStudentId=" + encodeURIComponent(student._id));
+    }
+    wx.navigateTo({
+      url: "/pages/vocabulary-challenge/index?" + params.join("&"),
     });
   },
 

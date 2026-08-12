@@ -79,6 +79,103 @@
   background: #4f8f73;
 }
 
+.home-vocabulary-card {
+  margin-top: -4rpx;
+  background: linear-gradient(135deg, #fffdfa 0%, #e8f4ee 100%);
+}
+
+.home-vocabulary-top,
+.student-vocabulary-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.home-vocabulary-title {
+  color: #2d4f42;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.home-vocabulary-hint,
+.student-vocabulary-note {
+  margin-top: 7rpx;
+  color: #71675c;
+  font-size: 23rpx;
+}
+
+.home-vocabulary-count,
+.student-vocabulary-count {
+  flex-shrink: 0;
+  color: #326d56;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.home-vocabulary-progress,
+.student-vocabulary-bar {
+  height: 15rpx;
+  margin-top: 18rpx;
+  overflow: hidden;
+  border-radius: 999rpx;
+  background: #dfe9e2;
+}
+
+.home-vocabulary-progress-fill,
+.student-vocabulary-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: #4f8f73;
+}
+
+.home-vocabulary-challenge {
+  margin-top: 18rpx;
+  color: #326d56;
+  font-size: 24rpx;
+  font-weight: 700;
+  text-align: right;
+}
+
+.next-booking-card {
+  border-color: #dfd3c3;
+  background: #fffaf0;
+}
+
+.next-booking-eyebrow {
+  color: #8a6730;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.next-booking-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-top: 10rpx;
+}
+
+.next-booking-time {
+  color: #3d352e;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.next-booking-student,
+.next-booking-meeting {
+  margin-top: 7rpx;
+  color: #71675c;
+  font-size: 23rpx;
+}
+
+.next-booking-link {
+  flex-shrink: 0;
+  color: #326d56;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -188,6 +285,28 @@
   height: 100%;
   border-radius: 999rpx;
   background: #4f8f73;
+}
+
+.student-vocabulary-row {
+  align-items: center;
+  margin-top: 22rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid #eee4d6;
+}
+
+.student-vocabulary-label {
+  color: #3f584d;
+  font-size: 25rpx;
+  font-weight: 700;
+}
+
+.student-vocabulary-count {
+  font-size: 26rpx;
+}
+
+.student-vocabulary-bar {
+  height: 12rpx;
+  margin-top: 12rpx;
 }
 
 .lesson-card {

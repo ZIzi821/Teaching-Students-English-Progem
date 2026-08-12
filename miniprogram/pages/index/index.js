@@ -24,6 +24,15 @@ Page({
     },
     recentLessons: [],
     studentsProgress: [],
+    nextLessonBooking: null,
+    vocabularyPulse: {
+      enabled: false,
+      goal: 0,
+      reviewedCount: 0,
+      remainingCount: 0,
+      progressPercent: 0,
+      completed: false,
+    },
     errorMessage: "",
   },
 
@@ -65,6 +74,15 @@ Page({
           stats: result.stats || {},
           recentLessons: result.recentLessons || [],
           studentsProgress: result.studentsProgress || [],
+          nextLessonBooking: result.nextLessonBooking || null,
+          vocabularyPulse: result.vocabularyPulse || {
+            enabled: false,
+            goal: 0,
+            reviewedCount: 0,
+            remainingCount: 0,
+            progressPercent: 0,
+            completed: false,
+          },
           errorMessage: "",
         });
         if (role === "guest") {
@@ -95,6 +113,15 @@ Page({
       },
       recentLessons: sampleData.lessons.slice(0, 2),
       studentsProgress: [],
+      nextLessonBooking: null,
+      vocabularyPulse: {
+        enabled: false,
+        goal: 0,
+        reviewedCount: 0,
+        remainingCount: 0,
+        progressPercent: 0,
+        completed: false,
+      },
     });
   },
 
@@ -135,6 +162,14 @@ Page({
     });
   },
 
+  goVocabularyChallenge() {
+    const student = this.data.currentStudent;
+    if (!student || !student._id || !student.vocabularyEnabled) return;
+    wx.navigateTo({
+      url: "/pages/vocabulary-challenge/index?studentId=" + encodeURIComponent(student._id),
+    });
+  },
+
   goBind() {
     wx.navigateTo({
       url: "/pages/bind-student/index",
@@ -162,6 +197,14 @@ Page({
   goLessonBookings() {
     wx.navigateTo({
       url: "/pages/lesson-bookings/index",
+    });
+  },
+
+  goNextLessonBooking() {
+    const booking = this.data.nextLessonBooking;
+    const suffix = booking && booking._id ? "?bookingId=" + encodeURIComponent(booking._id) : "";
+    wx.navigateTo({
+      url: "/pages/lesson-bookings/index" + suffix,
     });
   },
 });

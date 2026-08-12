@@ -1,6 +1,7 @@
 Page({
   data: {
     message: "",
+    operationPending: false,
     form: {
       name: "",
       nickname: "",
@@ -24,6 +25,7 @@ Page({
   },
 
   submitStudent() {
+    if (this.data.operationPending) return;
     const form = this.data.form;
     if (!form.name || !form.grade || !form.accessCode) {
       wx.showToast({
@@ -33,7 +35,8 @@ Page({
       return;
     }
 
-    wx.showLoading({ title: "保存中" });
+    this.setData({ operationPending: true });
+    wx.showLoading({ title: "保存中", mask: true });
     wx.cloud
       .callFunction({
         name: "quickstartFunctions",
@@ -67,11 +70,14 @@ Page({
       })
       .finally(() => {
         wx.hideLoading();
+        this.setData({ operationPending: false });
       });
   },
 
   seedStudents() {
-    wx.showLoading({ title: "初始化中" });
+    if (this.data.operationPending) return;
+    this.setData({ operationPending: true });
+    wx.showLoading({ title: "初始化中", mask: true });
     wx.cloud
       .callFunction({
         name: "quickstartFunctions",
@@ -106,6 +112,7 @@ Page({
       })
       .finally(() => {
         wx.hideLoading();
+        this.setData({ operationPending: false });
       });
   },
 });

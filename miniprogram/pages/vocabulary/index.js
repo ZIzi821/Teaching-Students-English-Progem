@@ -2,9 +2,10 @@ const WORD_TABS = [
   { value: "all", label: "全部" },
   { value: "textbook", label: "课本" },
   { value: "mistake", label: "错题" },
+  { value: "weak", label: "需巩固" },
   { value: "mastered", label: "已掌握" },
 ];
-const DAILY_GOAL_OPTIONS = [5, 10, 15, 20, 30];
+const DAILY_GOAL_OPTIONS = [5, 8, 10, 15, 20, 30];
 const PAGE_SIZE = 40;
 const VIEW_PREFERENCE_KEY = "vocabularyViewPreference";
 
@@ -57,6 +58,7 @@ Page({
       learningCount: 0,
       textbookWordCount: 0,
       mistakeWordCount: 0,
+      weakCount: 0,
       easyCount: 0,
       basicHiddenCount: 0,
     },
@@ -87,6 +89,10 @@ Page({
       totalReviewed: 0,
       activeDays: 0,
       streakDays: 0,
+      totalReviewActions: 0,
+      fluentActions: 0,
+      fluentRate: 0,
+      streakPendingToday: false,
     },
   },
 
@@ -340,6 +346,7 @@ Page({
       learningCount: getFirstCount([source.learningCount, source.learning], 0),
       textbookWordCount: getFirstCount([source.textbookWordCount], 0),
       mistakeWordCount: getFirstCount([source.mistakeWordCount], 0),
+      weakCount: getFirstCount([source.weakCount], 0),
       easyCount: getFirstCount([source.easyCount], 0),
       basicHiddenCount: getFirstCount([source.basicHiddenCount], 0),
       todayReviewedCount: getFirstCount([source.todayReviewedCount], 0),
@@ -380,6 +387,10 @@ Page({
       totalReviewed: Math.max(0, Number(source.totalReviewed) || 0),
       activeDays: Math.max(0, Number(source.activeDays) || 0),
       streakDays: Math.max(0, Number(source.streakDays) || 0),
+      totalReviewActions: Math.max(0, Number(source.totalReviewActions) || 0),
+      fluentActions: Math.max(0, Number(source.fluentActions) || 0),
+      fluentRate: Math.max(0, Math.min(100, Number(source.fluentRate) || 0)),
+      streakPendingToday: source.streakPendingToday === true,
     };
   },
 
@@ -419,6 +430,9 @@ Page({
       isDue: source.isDue !== false,
       reviewedToday: source.reviewedToday === true,
       lastResult: String(source.lastResult || ""),
+      reviewCount: Math.max(0, Number(source.reviewCount) || 0),
+      correctCount: Math.max(0, Number(source.correctCount) || 0),
+      wrongCount: Math.max(0, Number(source.wrongCount) || 0),
       nextReviewAtMs: Number(source.nextReviewAtMs || 0),
       pronunciationFileId: String(source.pronunciationFileId || ""),
       pronunciationUrl: String(source.pronunciationUrl || ""),
@@ -521,6 +535,19 @@ Page({
 
   continueLearning() {
     wx.pageScrollTo({ selector: ".word-list-heading", duration: 260 });
+  },
+
+  goChallenge(e) {
+    const scope = String(e.currentTarget.dataset.scope || "smart");
+    const query = [`scope=${encodeURIComponent(scope)}`];
+    if (this.data.studentId) query.push(`studentId=${encodeURIComponent(this.data.studentId)}`);
+    if (this.data.previewStudentId) {
+      query.push(`previewStudentId=${encodeURIComponent(this.data.previewStudentId)}`);
+    }
+    if (this.data.mode) query.push(`mode=${encodeURIComponent(this.data.mode)}`);
+    wx.navigateTo({
+      url: `/pages/vocabulary-challenge/index?${query.join("&")}`,
+    });
   },
 
   onSearchInput(e) {

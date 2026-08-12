@@ -4,6 +4,7 @@
     "pages/students/index",
     "pages/student-detail/index",
     "pages/vocabulary/index",
+    "pages/vocabulary-challenge/index",
     "pages/lesson-bookings/index",
     "pages/lesson-detail/index",
     "pages/review-dashboard/index",

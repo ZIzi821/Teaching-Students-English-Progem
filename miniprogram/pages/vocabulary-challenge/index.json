@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "巩固挑战",
+  "usingComponents": {
+    "data-chart": "/components/data-chart/index"
+  }
+}

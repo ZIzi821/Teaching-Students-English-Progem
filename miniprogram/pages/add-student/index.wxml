@@ -63,6 +63,6 @@
     </view>
   </view>
 
-  <view class="primary-btn" bindtap="submitStudent">保存学生</view>
-  <view class="ghost-btn seed-btn" bindtap="seedStudents">初始化三个学生</view>
+  <view class="primary-btn {{operationPending ? 'action-disabled' : ''}}" bindtap="submitStudent">{{operationPending ? '处理中…' : '保存学生'}}</view>
+  <view class="ghost-btn seed-btn {{operationPending ? 'action-disabled' : ''}}" bindtap="seedStudents">初始化三个学生</view>
 </view>

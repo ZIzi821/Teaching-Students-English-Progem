@@ -157,7 +157,7 @@
 
 .daily-goal-options {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 10rpx;
   margin-top: 18rpx;
 }
@@ -249,6 +249,56 @@
   background: #e9f4ee;
   font-size: 23rpx;
   line-height: 1.5;
+}
+
+.challenge-entry {
+  background: linear-gradient(135deg, #fffdfa 0%, #e8f4ee 100%);
+}
+
+.challenge-entry .section-title,
+.challenge-entry .section-hint {
+  margin-bottom: 0;
+}
+
+.challenge-entry-copy {
+  min-width: 0;
+}
+
+.challenge-weak-count {
+  margin-top: 12rpx;
+  color: #9a5e46;
+  font-size: 23rpx;
+  font-weight: 600;
+}
+
+.challenge-actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+
+.challenge-primary,
+.challenge-secondary {
+  display: flex;
+  min-height: 72rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14rpx;
+  font-size: 25rpx;
+  font-weight: 700;
+}
+
+.challenge-primary {
+  flex: 1;
+  color: #ffffff;
+  background: #4f8f73;
+}
+
+.challenge-secondary {
+  padding: 0 22rpx;
+  color: #326d56;
+  background: #ffffff;
+  border: 1rpx solid #cfe1d8;
 }
 
 .tab-bar {

@@ -406,6 +406,17 @@ const getProgressLabel = (stage) => {
   return "未学习";
 };
 
+const isVocabularyWeakWord = (word) => {
+  const source = word || {};
+  if (source.isEasy === true) return false;
+  const lastResult = asText(source.lastResult);
+  const wrongCount = Math.max(0, Number(source.wrongCount || 0));
+  const correctCount = Math.max(0, Number(source.correctCount || 0));
+  return lastResult === "forgot"
+    || lastResult === "hard"
+    || (wrongCount >= 2 && wrongCount >= correctCount);
+};
+
 const getSourceLabel = (sources) => {
   const hasMistake = sources.indexOf("mistake") >= 0;
   const hasLibrary = sources.indexOf("library") >= 0;
@@ -628,6 +639,7 @@ const buildVocabularyView = ({
     libraryWordCount: confirmedWords.filter((item) => item.sources.indexOf("library") >= 0).length,
     textbookWordCount: confirmedWords.filter((item) => item.sources.indexOf("textbook") >= 0).length,
     mistakeWordCount: confirmedWords.filter((item) => item.sources.indexOf("mistake") >= 0).length,
+    weakCount: confirmedWords.filter((item) => isVocabularyWeakWord(item)).length,
     masteredCount: confirmedWords.filter((item) => item.masteryLevel >= 5).length,
     learningCount: confirmedWords.filter((item) => item.masteryLevel > 0 && item.masteryLevel < 5).length,
     dueCount: dueWords.length,
@@ -704,4 +716,5 @@ module.exports = {
   buildVocabularyView,
   buildReviewProgress,
   getProgressLabel,
+  isVocabularyWeakWord,
 };

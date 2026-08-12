@@ -2,10 +2,48 @@ const fs = require("fs");
 const path = require("path");
 
 const projectRoot = path.resolve(__dirname, "..");
-const sourceDir = path.join(projectRoot, "output", "vocabulary-audio", "v1");
-const spriteDir = path.join(projectRoot, "output", "vocabulary-audio", "sprites-v1");
 const sourceManifest = require("../cloudfunctions/quickstartFunctions/data/vocabulary-audio-manifest.json");
 const spriteManifest = require("../cloudfunctions/quickstartFunctions/data/vocabulary-audio-sprites.json");
+const errors = [];
+
+const readManifest = (filePath, label) => {
+  if (!fs.existsSync(filePath)) {
+    errors.push(`Missing ${label}: ${path.relative(projectRoot, filePath)}`);
+    return { items: [] };
+  }
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch (err) {
+    errors.push(`Invalid ${label}: ${err.message}`);
+    return { items: [] };
+  }
+};
+
+const extraSourceManifest = (spriteManifest.sprites || []).some((item) => (
+  String(item.id || "").startsWith("extra-")
+))
+  ? readManifest(
+    path.join(projectRoot, "output", "vocabulary-audio", "extra-v1-manifest.json"),
+    "extra source manifest"
+  )
+  : { items: [] };
+
+const sourceSets = {
+  base: {
+    sourceDir: path.join(projectRoot, "output", "vocabulary-audio", "v1"),
+    spriteDir: path.join(projectRoot, "output", "vocabulary-audio", "sprites-v1"),
+    sourceByKey: new Map((sourceManifest.items || []).map((item) => [item.key, item])),
+  },
+  extra: {
+    sourceDir: path.join(projectRoot, "output", "vocabulary-audio", "extra-v1"),
+    spriteDir: path.join(projectRoot, "output", "vocabulary-audio", "sprites-extra-v1"),
+    sourceByKey: new Map((extraSourceManifest.items || []).map((item) => [item.key, item])),
+  },
+};
+
+const getSourceSet = (spriteId) => (
+  String(spriteId || "").startsWith("extra-") ? sourceSets.extra : sourceSets.base
+);
 
 const readPcmData = (filePath) => {
   const source = fs.readFileSync(filePath);
@@ -25,13 +63,12 @@ const readPcmData = (filePath) => {
   throw new Error(`Missing WAV data chunk: ${filePath}`);
 };
 
-const sourceByKey = new Map(sourceManifest.items.map((item) => [item.key, item]));
 const spriteById = new Map(spriteManifest.sprites.map((item) => [item.id, item]));
 const spritePcmById = new Map();
-const errors = [];
 
 spriteManifest.sprites.forEach((sprite) => {
-  const filePath = path.join(spriteDir, sprite.fileName);
+  const sourceSet = getSourceSet(sprite.id);
+  const filePath = path.join(sourceSet.spriteDir, sprite.fileName);
   if (!fs.existsSync(filePath)) {
     errors.push(`Missing sprite: ${sprite.fileName}`);
     return;
@@ -42,14 +79,15 @@ spriteManifest.sprites.forEach((sprite) => {
 });
 
 spriteManifest.items.forEach((item) => {
-  const sourceItem = sourceByKey.get(item.key);
+  const sourceSet = getSourceSet(item.spriteId);
+  const sourceItem = sourceSet.sourceByKey.get(item.key);
   const sprite = spriteById.get(item.spriteId);
   const spritePcm = spritePcmById.get(item.spriteId);
   if (!sourceItem || !sprite || !spritePcm) {
     errors.push(`Missing mapping data: ${item.key}`);
     return;
   }
-  const sourcePcm = readPcmData(path.join(sourceDir, sourceItem.fileName));
+  const sourcePcm = readPcmData(path.join(sourceSet.sourceDir, sourceItem.fileName));
   const startByte = Math.round((item.startMs / 1000) * 32000);
   const endByte = startByte + sourcePcm.length;
   if (!spritePcm.subarray(startByte, endByte).equals(sourcePcm)) {
@@ -58,7 +96,7 @@ spriteManifest.items.forEach((item) => {
 });
 
 const result = {
-  expectedWords: sourceManifest.items.length,
+  expectedWords: sourceSets.base.sourceByKey.size + sourceSets.extra.sourceByKey.size,
   mappedWords: spriteManifest.items.length,
   spriteCount: spriteManifest.sprites.length,
   totalBytes: spriteManifest.sprites.reduce((sum, item) => sum + item.bytes, 0),

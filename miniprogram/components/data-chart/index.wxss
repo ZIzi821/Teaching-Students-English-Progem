@@ -1,4 +1,5 @@
 .chart-shell {
+  position: relative;
   width: 100%;
 }
 
@@ -13,6 +14,32 @@
 
 .bar-canvas {
   height: 270rpx;
+}
+
+.bar-empty-state {
+  position: absolute;
+  top: 66rpx;
+  right: 44rpx;
+  left: 44rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18rpx 16rpx;
+  border-radius: 16rpx;
+  background: rgba(255, 253, 249, 0.9);
+  color: #817669;
+  pointer-events: none;
+}
+
+.bar-empty-title {
+  color: #4f6f63;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.bar-empty-hint {
+  margin-top: 6rpx;
+  font-size: 21rpx;
 }
 
 .chart-legend {

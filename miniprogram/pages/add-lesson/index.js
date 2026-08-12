@@ -12,6 +12,7 @@ Page({
     selectedStudentName: "请选择学生",
     lessonNoTip: "",
     message: "",
+    saving: false,
     form: {
       title: "",
       subject: "英语",
@@ -154,6 +155,7 @@ Page({
   },
 
   submitLesson() {
+    if (this.data.saving) return;
     const student = this.data.students[this.data.studentIndex];
     const form = this.data.form;
     if (!student || !form.title || !form.lessonDate || !form.lessonNo) {
@@ -164,7 +166,11 @@ Page({
       return;
     }
 
-    wx.showLoading({ title: "保存中" });
+    if (!this.lessonRequestId) {
+      this.lessonRequestId = `lesson-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+    this.setData({ saving: true });
+    wx.showLoading({ title: "保存中", mask: true });
     wx.cloud
       .callFunction({
         name: "quickstartFunctions",
@@ -178,6 +184,7 @@ Page({
             lessonNo: form.lessonNo,
             summary: form.summary,
             paperFileIds: [],
+            requestId: this.lessonRequestId,
           },
         },
       })
@@ -193,6 +200,7 @@ Page({
           });
           return;
         }
+        this.lessonRequestId = "";
         wx.showToast({ title: "已保存" });
         setTimeout(() => {
           wx.navigateBack();
@@ -206,6 +214,7 @@ Page({
       })
       .finally(() => {
         wx.hideLoading();
+        this.setData({ saving: false });
       });
   },
 });

@@ -62,6 +62,11 @@
   gap: 14rpx;
 }
 
+.review-actions-saving {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .review-actions {
   margin-top: 18rpx;
 }

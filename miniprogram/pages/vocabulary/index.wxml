@@ -53,14 +53,20 @@
             <view class="section-title">近 7 天学习</view>
             <view class="section-hint">每天柱形越高，完成的单词越多。</view>
           </view>
-          <view class="weekly-streak">连续 {{weeklyStats.streakDays}} 天</view>
+          <view class="weekly-streak" wx:if="{{weeklyStats.streakDays}}">
+            连续 {{weeklyStats.streakDays}} 天<text wx:if="{{weeklyStats.streakPendingToday}}"> · 今日待延续</text>
+          </view>
+          <view class="weekly-streak" wx:else>本周待开始</view>
         </view>
         <data-chart
           type="bar"
           points="{{weeklyChartPoints}}"
           aria-label="近七天共完成 {{weeklyStats.totalReviewed}} 个单词，学习 {{weeklyStats.activeDays}} 天"
         ></data-chart>
-        <view class="weekly-summary">7 天完成 {{weeklyStats.totalReviewed}} 个 · 学习 {{weeklyStats.activeDays}} 天</view>
+        <view class="weekly-summary">
+          7 天完成 {{weeklyStats.totalReviewed}} 个 · 学习 {{weeklyStats.activeDays}} 天
+          <text wx:if="{{weeklyStats.totalReviewActions}}"> · 顺利记住 {{weeklyStats.fluentRate}}%</text>
+        </view>
       </view>
 
       <view class="card daily-goal-card" wx:if="{{canReview}}">
@@ -102,6 +108,18 @@
 
       <view class="view-mode-tip" wx:if="{{readOnly}}">
         {{isTeacherManager ? '教师管理模式：可以检查单词，但不会记录学习结果。' : '教师预览模式：仅查看，不记录学生学习结果。'}}
+      </view>
+
+      <view class="card challenge-entry">
+        <view class="challenge-entry-copy">
+          <view class="section-title">六题巩固挑战</view>
+          <view class="section-hint">约 2 分钟，从选择题逐步进入拼写回忆；{{readOnly ? '当前只读预览，不写入学习记录。' : '答错会加入后续复习。'}}</view>
+          <view class="challenge-weak-count" wx:if="{{summary.weakCount}}">当前有 {{summary.weakCount}} 个单词需要巩固</view>
+        </view>
+        <view class="challenge-actions">
+          <view class="challenge-primary" data-scope="smart" bindtap="goChallenge">{{readOnly ? '预览挑战' : '开始挑战'}}</view>
+          <view class="challenge-secondary" wx:if="{{summary.weakCount}}" data-scope="weak" bindtap="goChallenge">只练需巩固</view>
+        </view>
       </view>
 
       <view class="word-tools card">
@@ -149,7 +167,7 @@
 
       <view class="word-list-heading">
         <view class="section-title">
-          {{searchActive ? '全局搜索结果' : isStudyMode ? '今天的学习' : activeTab === 'mastered' ? '已掌握的单词' : activeTab === 'mistake' ? '错题单词' : activeTab === 'textbook' ? '课本单词' : '全部单词'}}
+          {{searchActive ? '全局搜索结果' : isStudyMode ? '今天的学习' : activeTab === 'mastered' ? '已掌握的单词' : activeTab === 'weak' ? '需要巩固的单词' : activeTab === 'mistake' ? '错题单词' : activeTab === 'textbook' ? '课本单词' : '全部单词'}}
         </view>
         <view class="section-hint" wx:if="{{isStudyMode}}">点开意思后选择记忆情况；不会的词会自动再出现。</view>
       </view>

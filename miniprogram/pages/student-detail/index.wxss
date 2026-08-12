@@ -191,7 +191,25 @@
 }
 
 .overview-action {
+  min-width: 0;
+}
+
+.weekly-mini-summary {
+  color: #71675c;
+  font-size: 22rpx;
+  text-align: center;
+}
+
+.overview-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 12rpx;
   margin-top: 22rpx;
+}
+
+.overview-challenge {
+  min-width: 0;
+  font-size: 26rpx;
 }
 
 .settings-head-actions {

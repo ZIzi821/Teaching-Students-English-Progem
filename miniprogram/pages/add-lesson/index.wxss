@@ -37,6 +37,10 @@
   line-height: 1.5;
 }
 
+.action-disabled {
+  opacity: 0.55;
+}
+
 .input,
 .picker-value,
 .textarea {

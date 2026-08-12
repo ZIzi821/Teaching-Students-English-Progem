@@ -49,7 +49,10 @@
           <view class="progress-title">单词学习概览</view>
           <view class="progress-label">教师和学生看到同一份学习数据</view>
         </view>
-        <view class="overview-streak">连续 {{vocabularyOverview.weeklyStats.streakDays}} 天</view>
+        <view class="overview-streak" wx:if="{{vocabularyOverview.weeklyStats.streakDays}}">
+          连续 {{vocabularyOverview.weeklyStats.streakDays}} 天<text wx:if="{{vocabularyOverview.weeklyStats.streakPendingToday}}"> · 今日待延续</text>
+        </view>
+        <view class="overview-streak" wx:else>本周待开始</view>
       </view>
       <view class="overview-chart-grid">
         <view class="overview-chart-item">
@@ -78,9 +81,16 @@
           points="{{weeklyChartPoints}}"
           aria-label="近七天共完成 {{vocabularyOverview.weeklyStats.totalReviewed}} 个单词"
         ></data-chart>
+        <view class="weekly-mini-summary">
+          7 天完成 {{vocabularyOverview.weeklyStats.totalReviewed}} 个
+          <text wx:if="{{vocabularyOverview.weeklyStats.totalReviewActions}}"> · 顺利记住 {{vocabularyOverview.weeklyStats.fluentRate}}%</text>
+        </view>
       </view>
-      <view class="primary-btn overview-action" bindtap="goVocabulary">
-        {{isTeacher ? '查看学生学习明细' : isTeacherPreview ? '查看学生单词页' : '继续今日学习'}}
+      <view class="overview-actions">
+        <view class="primary-btn overview-action" bindtap="goVocabulary">
+          {{isTeacher ? '查看学生学习明细' : isTeacherPreview ? '查看学生单词页' : '继续今日学习'}}
+        </view>
+        <view class="ghost-btn overview-challenge" bindtap="goVocabularyChallenge">六题巩固挑战</view>
       </view>
     </view>
 
@@ -207,7 +217,7 @@
     </view>
 
     <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddLesson">添加英语课记录</view>
-    <view class="primary-btn add-btn" wx:if="{{isTeacherPreview}}" bindtap="goLessonBookings">预约上课 / 查看会议号</view>
+    <view class="primary-btn add-btn" wx:if="{{!isTeacher}}" bindtap="goLessonBookings">预约上课 / 查看会议号</view>
 
     <view class="section-title">英语课记录</view>
     <view class="empty" wx:if="{{!lessons.length}}">还没有英语课记录。</view>

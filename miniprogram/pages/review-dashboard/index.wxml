@@ -55,7 +55,7 @@
     </view>
 
     <view class="card">
-      <view class="section-title">本周复习清单</view>
+      <view class="section-title">优先复习清单</view>
       <view class="empty" wx:if="{{!analytics.reviewSuggestions.length}}">目前没有待复习错题。</view>
       <view class="suggestion" wx:for="{{analytics.reviewSuggestions}}" wx:key="_id" bindtap="goMistake" data-id="{{item._id}}">
         <view class="suggestion-title">{{item.title}}</view>

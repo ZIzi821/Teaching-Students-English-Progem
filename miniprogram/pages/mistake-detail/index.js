@@ -6,6 +6,7 @@ Page({
     message: "",
     imageLoadFailed: false,
     deleting: false,
+    reviewSaving: false,
     isReadOnly: false,
   },
 
@@ -98,8 +99,9 @@ Page({
 
   updateReviewStatus(e) {
     const reviewStatus = e.currentTarget.dataset.status;
-    if (!this.data.mistakeId || !reviewStatus) return;
-    wx.showLoading({ title: "保存中" });
+    if (!this.data.mistakeId || !reviewStatus || this.data.reviewSaving) return;
+    this.setData({ reviewSaving: true });
+    wx.showLoading({ title: "保存中", mask: true });
     wx.cloud
       .callFunction({
         name: "quickstartFunctions",
@@ -136,6 +138,7 @@ Page({
       })
       .finally(() => {
         wx.hideLoading();
+        this.setData({ reviewSaving: false });
       });
   },
 

@@ -38,5 +38,5 @@
     </view>
   </view>
 
-  <view class="primary-btn" bindtap="submitLesson">保存英语课</view>
+  <view class="primary-btn {{saving ? 'action-disabled' : ''}}" bindtap="submitLesson">{{saving ? '保存中…' : '保存英语课'}}</view>
 </view>

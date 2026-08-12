@@ -1,0 +1,91 @@
+<view class="page challenge-page">
+  <view class="card status-card" wx:if="{{message}}">
+    <view>{{message}}</view>
+    <view class="status-action" wx:if="{{scope === 'weak' && student}}" bindtap="startSmartChallenge">改做综合挑战</view>
+    <view class="status-action" wx:else bindtap="loadChallenge">重新准备</view>
+  </view>
+  <view class="card status-card" wx:elif="{{loading}}">正在挑选本次练习…</view>
+
+  <block wx:elif="{{student}}">
+      <view class="challenge-head">
+      <view>
+        <view class="challenge-eyebrow">{{student.name}} · {{scope === 'weak' ? '需巩固专项' : '六题巩固挑战'}}</view>
+        <view class="challenge-title">短时练习，马上知道哪里没记牢</view>
+      </view>
+      <view class="preview-badge" wx:if="{{readOnly}}">教师只读预览</view>
+    </view>
+    <view class="preview-tip" wx:if="{{readOnly}}">只读预览不会改变学生进度，答错也不会写入复习记录。</view>
+
+    <block wx:if="{{!completed}}">
+      <view class="progress-meta">
+        <text>第 {{questionIndex + 1}} / {{totalQuestions}} 题</text>
+        <text>{{currentQuestion.typeLabel}}</text>
+      </view>
+      <view class="challenge-progress">
+        <view class="challenge-progress-fill" style="width: {{progressPercent}}%;"></view>
+      </view>
+
+      <view class="card question-card">
+        <view class="question-type">{{currentQuestion.promptHint}}</view>
+        <view class="question-prompt {{currentQuestion.direction === 'wordToMeaning' ? 'english-prompt' : ''}}">{{currentQuestion.prompt}}</view>
+        <view class="question-meta" wx:if="{{currentQuestion.partOfSpeech}}">{{currentQuestion.partOfSpeech}}</view>
+
+        <view class="choice-list" wx:if="{{currentQuestion.type === 'choice'}}">
+          <view
+            class="choice-item {{item.state === 'correct' ? 'choice-correct' : item.state === 'wrong' ? 'choice-wrong' : ''}}"
+            wx:for="{{currentQuestion.options}}"
+            wx:key="id"
+            data-index="{{index}}"
+            bindtap="selectOption"
+          >
+            <view class="choice-letter">{{index + 1}}</view>
+            <view class="choice-label">{{item.label}}</view>
+          </view>
+        </view>
+
+        <view class="spelling-area" wx:else>
+          <input
+            class="spelling-input"
+            value="{{spellingAnswer}}"
+            disabled="{{answered}}"
+            placeholder="输入对应英文"
+            confirm-type="done"
+            bindinput="onSpellingInput"
+            bindconfirm="submitSpelling"
+          />
+          <view class="spelling-submit {{answered ? 'action-disabled' : ''}}" bindtap="submitSpelling">确认答案</view>
+        </view>
+      </view>
+
+      <view class="card feedback-card {{answerCorrect ? 'feedback-correct' : 'feedback-wrong'}}" wx:if="{{answered}}">
+        <view class="feedback-title">{{answerMessage}}</view>
+        <view class="feedback-answer">{{currentQuestion.word}} · {{currentQuestion.meaning}}</view>
+        <view class="feedback-source" wx:if="{{currentQuestion.sourceLabel}}">来源：{{currentQuestion.sourceLabel}}</view>
+        <view class="save-warning" wx:if="{{saveWarning}}">{{saveWarning}}</view>
+        <view class="next-action {{saving ? 'action-disabled' : ''}}" bindtap="nextQuestion">
+          {{saving ? '正在保存…' : questionIndex + 1 === totalQuestions ? '查看结果' : '下一题'}}
+        </view>
+      </view>
+    </block>
+
+    <view class="card result-card" wx:else>
+      <view class="result-eyebrow">本轮完成</view>
+      <view class="result-title">答对 {{score}} / {{totalQuestions}} 题</view>
+      <data-chart
+        segments="{{resultSegments}}"
+        center-value="{{accuracy + '%'}}"
+        center-label="正确率"
+        aria-label="本轮答对 {{score}} 题，需要巩固 {{incorrectCount}} 题"
+      ></data-chart>
+      <view class="result-tip result-warning" wx:if="{{saveFailureCount}}">有 {{saveFailureCount}} 题未能保存，请回单词页继续复习。</view>
+      <view class="result-tip" wx:elif="{{incorrectCount && readOnly}}">只读预览未写入学生记录，可重练查看完整流程。</view>
+      <view class="result-tip" wx:elif="{{incorrectCount}}">错题已经记录到复习进度，建议现在再练一轮。</view>
+      <view class="result-tip" wx:else>全部答对，可以回单词页继续今天的任务。</view>
+      <view class="result-actions">
+        <view class="result-primary" wx:if="{{incorrectCount}}" bindtap="retryMistakes">只重练错题</view>
+        <view class="result-secondary" bindtap="restartSession">再来六题</view>
+        <view class="result-secondary" bindtap="goBack">返回单词页</view>
+      </view>
+    </view>
+  </block>
+</view>

@@ -30,7 +30,7 @@
         <view class="priority">{{mistake.reviewPriority}}优先级</view>
       </view>
     </view>
-    <view class="review-actions" wx:if="{{!isReadOnly}}">
+    <view class="review-actions {{reviewSaving ? 'review-actions-saving' : ''}}" wx:if="{{!isReadOnly}}">
       <view class="ghost-btn review-btn" bindtap="updateReviewStatus" data-status="待复习">待复习</view>
       <view class="ghost-btn review-btn" bindtap="updateReviewStatus" data-status="已复习">已复习</view>
       <view class="primary-btn review-btn" bindtap="updateReviewStatus" data-status="已掌握">已掌握</view>

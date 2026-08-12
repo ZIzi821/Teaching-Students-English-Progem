@@ -52,3 +52,7 @@
 .seed-btn {
   margin-top: 18rpx;
 }
+
+.action-disabled {
+  opacity: 0.55;
+}

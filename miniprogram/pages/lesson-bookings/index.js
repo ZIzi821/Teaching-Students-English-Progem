@@ -266,10 +266,18 @@ Page({
         const bookings = prepareBookings(result.data, this.data.focusBookingId);
         const bookingCounts = countBookingBuckets(bookings);
         let teacherFilter = this.data.teacherFilter;
-        if (result.role === "teacher" && !isTeacherPreview && !bookingCounts[teacherFilter]) {
-          teacherFilter = bookingCounts.pending
-            ? "pending"
-            : bookingCounts.upcoming ? "upcoming" : "history";
+        if (result.role === "teacher" && !isTeacherPreview) {
+          const focusedBooking = this.data.focusBookingId
+            ? bookings.find((item) => item._id === this.data.focusBookingId)
+            : null;
+          if (focusedBooking && !this._focusApplied) {
+            teacherFilter = focusedBooking.bucket;
+            this._focusApplied = true;
+          } else if (!bookingCounts[teacherFilter]) {
+            teacherFilter = bookingCounts.pending
+              ? "pending"
+              : bookingCounts.upcoming ? "upcoming" : "history";
+          }
         }
         if (result.role === "teacher" && !isTeacherPreview) {
           try {
@@ -295,7 +303,12 @@ Page({
       .catch((err) => {
         console.error(err);
         if (requestId !== this._loadRequestId) return;
-        this.setData({ message: "网络异常，请下拉刷新后重试" });
+        this.setData({
+          message: "网络异常，请下拉刷新后重试",
+          bookings: [],
+          bookingCounts: { pending: 0, upcoming: 0, history: 0 },
+          teacherVisibleCount: 0,
+        });
       });
   },
 
