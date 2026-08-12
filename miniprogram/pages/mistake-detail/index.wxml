@@ -4,8 +4,8 @@
   </view>
 
   <view wx:if="{{mistake}}">
-  <view class="primary-btn edit-btn" wx:if="{{role === 'teacher' && !isReadOnly}}" bindtap="editMistake">整理或修改这道错题</view>
-  <view class="card pending-card" wx:if="{{mistake.entryStatus === '待整理'}}">这是一条快速记录，答案和分析可以稍后补充。</view>
+  <view class="primary-btn edit-btn" wx:if="{{role === 'teacher' && !isReadOnly}}" bindtap="editMistake">编辑错题</view>
+  <view class="card pending-card" wx:if="{{mistake.entryStatus === '待整理'}}">这道题还没整理完，答案和解析可以稍后补充。</view>
   <view class="card">
     <view class="label">题目</view>
     <view class="question-title">{{mistake.displayTitle}}</view>
@@ -18,7 +18,7 @@
     <view class="question-text" wx:if="{{mistake.questionText}}">{{mistake.questionText}}</view>
     <view class="source-note" wx:if="{{mistake.sourceImageName}}">对应截图：{{mistake.sourceImageName}}</view>
     <image wx:if="{{mistake.questionImageSrc && !imageLoadFailed}}" class="question-image" src="{{mistake.questionImageSrc}}" mode="widthFix" binderror="onQuestionImageError"></image>
-    <view wx:elif="{{imageLoadFailed}}" class="image-empty">题目图片加载失败，请检查网络后重试</view>
+      <view wx:elif="{{imageLoadFailed}}" class="image-empty">图片加载失败，请检查网络后重试</view>
     <view wx:elif="{{!mistake.questionText}}" class="image-empty">题目图片待上传</view>
   </view>
 
@@ -27,7 +27,7 @@
       <view class="label">复习状态</view>
       <view class="review-top">
         <view class="status">{{mistake.reviewStatus}}</view>
-        <view class="priority">{{mistake.reviewPriority}}优先级</view>
+      <view class="priority">优先级：{{mistake.reviewPriority}}</view>
       </view>
     </view>
     <view class="review-actions {{reviewSaving ? 'review-actions-saving' : ''}}" wx:if="{{!isReadOnly}}">
@@ -51,7 +51,7 @@
       <view class="content">{{mistake.reason}}</view>
     </view>
     <view class="field">
-      <view class="label">老师解析</view>
+    <view class="label">老师讲解</view>
       <view class="content">{{mistake.explanation}}</view>
     </view>
   </view>
@@ -62,6 +62,6 @@
       <text class="tag" wx:for="{{mistake.skillTags}}" wx:key="*this">{{item}}</text>
     </view>
   </view>
-  <view class="danger-btn" wx:if="{{role === 'teacher' && !isReadOnly}}" bindtap="deleteMistake">删除这道错题</view>
+  <view class="danger-btn" wx:if="{{role === 'teacher' && !isReadOnly}}" bindtap="deleteMistake">删除错题</view>
   </view>
 </view>

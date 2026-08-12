@@ -29,7 +29,7 @@ Page({
     const form = this.data.form;
     if (!form.name || !form.grade || !form.accessCode) {
       wx.showToast({
-        title: "请填写姓名、年级和 accessCode",
+        title: "请填写姓名、年级和访问码",
         icon: "none",
       });
       return;
@@ -65,7 +65,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       })
       .finally(() => {
@@ -77,7 +77,7 @@ Page({
   seedStudents() {
     if (this.data.operationPending) return;
     this.setData({ operationPending: true });
-    wx.showLoading({ title: "初始化中", mask: true });
+    wx.showLoading({ title: "导入中", mask: true });
     wx.cloud
       .callFunction({
         name: "quickstartFunctions",
@@ -89,25 +89,25 @@ Page({
         const result = res.result || {};
         if (!result.success) {
           this.setData({
-            message: result.message || "初始化失败",
+            message: result.message || "导入失败",
           });
           wx.showToast({
-            title: "初始化失败",
+            title: "导入失败",
             icon: "none",
           });
           return;
         }
         this.setData({
-          message: result.message || "初始化完成",
+          message: result.message || "导入完成",
         });
         wx.showToast({
-          title: "初始化完成",
+          title: "导入完成",
         });
       })
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       })
       .finally(() => {

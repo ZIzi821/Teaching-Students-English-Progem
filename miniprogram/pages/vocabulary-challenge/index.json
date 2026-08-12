@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "巩固挑战",
+  "navigationBarTitleText": "单词小测",
   "usingComponents": {
     "data-chart": "/components/data-chart/index"
   }

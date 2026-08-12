@@ -131,7 +131,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       });
   },
@@ -273,7 +273,7 @@ Page({
         this.loadLesson();
       }
       wx.showToast({
-        title: failedFiles.length ? successCount + " 个成功，" + failedFiles.length + " 个失败" : successCount + " 个资料已上传",
+          title: failedFiles.length ? "已上传 " + successCount + " 个，" + failedFiles.length + " 个上传失败" : successCount + " 个资料已上传",
         icon: "none",
       });
     });

@@ -37,7 +37,7 @@ Page({
         console.error(err);
         this.setData({
           noPermission: true,
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       });
   },

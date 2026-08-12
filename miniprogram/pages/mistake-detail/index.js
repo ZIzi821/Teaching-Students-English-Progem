@@ -56,7 +56,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       });
   },
@@ -152,7 +152,7 @@ Page({
     if (this.data.deleting || !this.data.mistakeId) return;
     wx.showModal({
       title: "删除这道错题？",
-      content: "删除后无法恢复，关联的题目图片也会一并删除。",
+      content: "删除后无法恢复。",
       confirmText: "删除",
       confirmColor: "#b94a48",
       success: (modalRes) => {

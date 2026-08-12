@@ -51,7 +51,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       });
   },
@@ -121,15 +121,15 @@ Page({
         if (!result.success) {
           this.setData({
             lessonNoTip: "",
-            message: result.message || "课节建议计算失败",
+            message: result.message || "无法获取建议课次",
           });
           return;
         }
 
         const nextLessonNo = result.nextLessonNo || 1;
         const lessonNoTip = result.hasHistory
-          ? `上次记录到第 ${result.maxLessonNo} 节，本次建议第 ${nextLessonNo} 节`
-          : "暂无历史课程，建议第 1 节";
+          ? `上次是第 ${result.maxLessonNo} 节，本次可填第 ${nextLessonNo} 节`
+          : "还没有课程记录，可从第 1 节开始";
         const updates = {
           lessonNoTip,
         };
@@ -143,7 +143,7 @@ Page({
         console.error(err);
         this.setData({
           lessonNoTip: "",
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       });
   },
@@ -209,7 +209,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       })
       .finally(() => {

@@ -1,7 +1,7 @@
 <view class="page">
   <view class="form-head">
     <view class="title">{{isEditing ? '整理英语错题' : '快速记录英语错题'}}</view>
-    <view class="subtitle">{{isEditing ? '补充或修改答案、原因和解析。' : '先拍照保存，答案和详细分析可以现在填写，也可以之后再整理。'}}</view>
+    <view class="subtitle">{{isEditing ? '补充或修改答案、原因和解析。' : '先拍照保存，答案和解析可以稍后再补。'}}</view>
   </view>
 
   <view class="card message-card" wx:if="{{message}}">{{message}}</view>
@@ -15,7 +15,7 @@
     </view>
 
     <view class="field">
-      <view class="label">所属课程</view>
+      <view class="label">课程</view>
       <picker mode="selector" range="{{lessons}}" range-key="title" value="{{lessonIndex}}" bindchange="onLessonChange">
         <view class="picker-value">{{selectedLessonTitle}}</view>
       </picker>
@@ -50,7 +50,7 @@
 
     <view class="advanced-fields" wx:if="{{showAdvanced}}">
       <view class="field">
-        <view class="label">所属试卷/资料</view>
+        <view class="label">试卷或资料</view>
         <picker mode="selector" range="{{papers}}" range-key="displayTitle" value="{{paperIndex}}" bindchange="onPaperChange">
           <view class="picker-value">{{selectedPaperTitle}}</view>
         </picker>
@@ -82,19 +82,19 @@
       </view>
 
       <view class="field">
-        <view class="label">错误原因类型</view>
+        <view class="label">原因分类</view>
         <picker mode="selector" range="{{reasonTypes}}" value="{{reasonTypeIndex}}" bindchange="onReasonTypeChange">
           <view class="picker-value">{{reasonTypes[reasonTypeIndex]}}</view>
         </picker>
       </view>
 
       <view class="field">
-        <view class="label">错误原因说明</view>
+        <view class="label">具体原因</view>
         <textarea class="textarea" placeholder="例如：did 后面用了过去式" value="{{form.reason}}" data-field="reason" bindinput="onInput"></textarea>
       </view>
 
       <view class="field">
-        <view class="label">老师解析</view>
+        <view class="label">老师讲解</view>
         <textarea class="textarea tall" placeholder="讲解思路和下次复习提醒" value="{{form.explanation}}" data-field="explanation" bindinput="onInput"></textarea>
       </view>
 
@@ -120,7 +120,7 @@
     </view>
   </view>
 
-  <view class="quick-tip">只上传图片也可以保存，系统会标记为“待整理”。</view>
+  <view class="quick-tip">只上传图片也能先保存，之后可继续整理。</view>
   <view class="action-row">
     <view class="ghost-btn action-btn" wx:if="{{!isEditing}}" data-action="continue" bindtap="submitMistake">保存并继续</view>
     <view class="primary-btn action-btn" data-action="back" bindtap="submitMistake">{{isEditing ? '保存修改' : '保存并返回'}}</view>

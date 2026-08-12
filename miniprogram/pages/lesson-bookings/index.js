@@ -176,7 +176,7 @@ function showSubmissionFeedback(selection) {
     title: "预约已提交",
     content: enabled.length
       ? `已开启：${enabled.join("、")}。`
-      : "本次没有开启微信提醒，但仍可在预约列表中查看安排。",
+            : "没有开启微信提醒，但仍可在预约列表查看安排。",
     showCancel: false,
     confirmText: "知道了",
   });
@@ -347,7 +347,7 @@ Page({
     }
     const requestedStartAtMs = parseBookingTimestamp(form.requestedDate, form.requestedTime);
     if (!requestedStartAtMs || requestedStartAtMs <= Date.now()) {
-      wx.showToast({ title: "期望时间必须晚于现在", icon: "none" });
+      wx.showToast({ title: "预约时间必须晚于现在", icon: "none" });
       return;
     }
     const duplicate = this.data.bookings.some((item) => {
@@ -400,7 +400,7 @@ Page({
         } else {
           wx.showModal({
             title: "预约已提交",
-            content: "这是教师代提交，不会替家长开启微信提醒。",
+        content: "这是老师代为提交的预约，无法替学生开启微信提醒。",
             showCancel: false,
           });
         }
@@ -458,8 +458,8 @@ Page({
       wx.showModal({
         title: "确认改期",
         content: reminderNeedsReauthorization
-          ? "当前课前提醒不能沿用。改期后家长需要在预约页重新开启课前提醒，确认要保存吗？"
-          : "老师确认提醒不会重复发送；课前提醒会按新时间发送。确认要保存吗？",
+        ? "改期后需要重新开启课前提醒。确定保存吗？"
+        : "确认提醒不会重复发送，课前提醒会按新时间发送。确定保存吗？",
         confirmText: "确认改期",
         success: (modalRes) => {
           if (modalRes.confirm) this.saveBookingChanges(booking);
@@ -499,19 +499,19 @@ Page({
         if (result.reminderReauthorizationRequired) {
           wx.showModal({
             title: "改期已保存",
-            content: "家长原来的课前提醒已经用过，需要在预约页点击“重新开启课前提醒”。",
+        content: "改期后需要在预约页重新开启课前提醒。",
             showCancel: false,
           });
         } else if (result.scheduleChanged && booking.confirmationNotifyStatus === "sent") {
           wx.showModal({
             title: "改期已保存",
-            content: "确认提醒不会重复发送，请同步告知家长；尚未发送的课前提醒会按新时间执行。",
+        content: "确认提醒不会重复发送；课前提醒会按新时间发送。",
             showCancel: false,
           });
         } else if (notificationStatus === "sent") {
-          wx.showToast({ title: "已保存并通知家长" });
+      wx.showToast({ title: "已保存并发送提醒" });
         } else if (notificationStatus === "not_subscribed") {
-          wx.showToast({ title: "已保存，家长未订阅", icon: "none" });
+      wx.showToast({ title: "已保存，未开启提醒", icon: "none" });
         } else if (notificationStatus === "failed") {
           wx.showToast({ title: "已保存，提醒未发送", icon: "none" });
         } else {
@@ -575,10 +575,10 @@ Page({
         if (result.confirmationSubscribed) enabled.push("老师确认提醒");
         if (result.reminderSubscribed) enabled.push("课前提醒");
         wx.showModal({
-          title: result.confirmationStatus === "failed" ? "授权已保存" : "提醒已开启",
+            title: result.confirmationStatus === "failed" ? "提醒设置已保存" : "提醒已开启",
           content: result.confirmationStatus === "failed"
-            ? "确认提醒暂时发送失败；课前提醒授权不受影响，可在列表中查看状态。"
-            : enabled.length ? `本次已开启：${enabled.join("、")}。` : "提醒状态已更新。",
+              ? "老师确认提醒暂时发送失败，课前提醒不受影响，可在列表查看状态。"
+              : enabled.length ? `已开启：${enabled.join("、")}。` : "提醒状态已更新。",
           showCancel: false,
         });
         return this.loadBookings();

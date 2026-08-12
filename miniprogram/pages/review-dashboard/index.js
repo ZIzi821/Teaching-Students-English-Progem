@@ -63,7 +63,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       });
   },

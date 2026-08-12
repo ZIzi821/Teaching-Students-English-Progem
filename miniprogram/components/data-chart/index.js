@@ -76,7 +76,7 @@ Component({
       const pointSummary = points
         .map((point) => {
           const goalText = point.goal > 0 ? `，目标 ${point.goal}` : "";
-          return `${point.label}完成 ${point.value}${goalText}`;
+          return `${point.label}：完成 ${point.value}${goalText}`;
         })
         .join("；");
       const stateText = isBarEmpty ? "暂无学习记录" : "";

@@ -2,7 +2,7 @@
   <view class="page-head">
     <view>
       <view class="title">朱老师的学生</view>
-      <view class="subtitle">学生列表仅老师可见。学生账号只能看到自己绑定的英语课和错题。</view>
+      <view class="subtitle">学生列表仅老师可见。学生账号只能查看自己的学习内容。</view>
     </view>
   </view>
 
@@ -16,8 +16,8 @@
       <view class="avatar">{{item.initial}}</view>
       <view class="student-info">
         <view class="student-name">{{item.name}} <text class="nickname">{{item.nickname}}</text></view>
-        <view class="student-meta">{{item.grade}} · {{item.subject}} · 家长：{{item.parentName}}</view>
-        <view class="student-meta">accessCode：{{item.accessCode}}</view>
+        <view class="student-meta">{{item.grade}} · {{item.subject}} · 联系人：{{item.parentName}}</view>
+        <view class="student-meta">访问码：{{item.accessCode}}</view>
         <view class="progress-text">{{item.progressLabel}}</view>
         <view class="mini-progress">
           <view class="mini-progress-fill" style="width: {{item.progressPercent}}%;"></view>

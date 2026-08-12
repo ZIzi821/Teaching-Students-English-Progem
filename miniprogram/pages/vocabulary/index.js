@@ -2,7 +2,7 @@ const WORD_TABS = [
   { value: "all", label: "全部" },
   { value: "textbook", label: "课本" },
   { value: "mistake", label: "错题" },
-  { value: "weak", label: "需巩固" },
+  { value: "weak", label: "没记牢" },
   { value: "mastered", label: "已掌握" },
 ];
 const DAILY_GOAL_OPTIONS = [5, 8, 10, 15, 20, 30];
@@ -606,7 +606,7 @@ Page({
       .then((res) => {
         const result = res.result || {};
         if (!result.success) throw new Error(result.message || "今日目标保存失败");
-        wx.showToast({ title: `今天学 ${dailyGoal} 个`, icon: "none" });
+        wx.showToast({ title: `今天学 ${dailyGoal} 个单词`, icon: "none" });
         return this.loadVocabularyData();
       })
       .catch((err) => {
@@ -799,10 +799,10 @@ Page({
         const result = res.result || {};
         if (!result.success) throw new Error(result.message || "暂时无法保存");
         const messages = {
-          forgot: "稍后再记一次",
-          hard: this.data.activeTab === "mastered" ? "已重新加入学习" : "已缩短复习间隔",
-          known: "记住啦！",
-          easy: "已跳过这个简单词",
+          forgot: "稍后再复习",
+          hard: this.data.activeTab === "mastered" ? "已重新加入学习" : "很快再练一次",
+          known: "记住了",
+          easy: "已跳过这个词",
         };
         wx.showToast({ title: messages[resultValue], icon: "none" });
         return this.loadVocabularyData();
@@ -835,7 +835,7 @@ Page({
     if (action === "exclude") {
       wx.showModal({
         title: "忽略这个单词？",
-        content: "忽略后不会放入该学生的错题词汇。",
+        content: "忽略后，这个词不会加入学生词库。",
         confirmText: "确认忽略",
         confirmColor: "#b6534b",
         success: (res) => {
@@ -845,7 +845,7 @@ Page({
       return;
     }
     if (!String(word.meaning || "").trim()) {
-      wx.showToast({ title: "请先填写确认过的释义", icon: "none" });
+      wx.showToast({ title: "请先填写中文释义", icon: "none" });
       return;
     }
     this.submitPendingWord(word, false);

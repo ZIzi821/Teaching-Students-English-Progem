@@ -1,28 +1,28 @@
 <view class="page vocabulary-page">
   <view class="card message-card" wx:if="{{message}}">
     <view>{{message}}</view>
-    <view class="retry-action" bindtap="loadVocabularyData">重新读取</view>
+    <view class="retry-action" bindtap="loadVocabularyData">重新加载</view>
   </view>
   <view class="card loading-card" wx:elif="{{loading}}">正在准备单词…</view>
 
   <block wx:elif="{{student}}">
     <view class="card vocabulary-hero">
       <view class="hero-eyebrow">{{student.name}} 的单词本</view>
-      <view class="hero-title">今天先完成这一组</view>
+      <view class="hero-title">今天学这组单词</view>
       <view class="hero-progress">
         <text class="hero-progress-number">{{summary.todayReviewedCount}}</text>
         <text> / {{dailyPlan.dailyGoal}} 个</text>
       </view>
-      <view class="hero-meta">{{summary.todayRemainingCount ? '还差 ' + summary.todayRemainingCount + ' 个，继续加油' : '今天的目标完成啦'}}</view>
-      <view class="hero-meta" wx:if="{{settings.includeMistakeWords}}">已加入平时错题中的单词</view>
-      <view class="hero-meta" wx:if="{{settings.hideBasicWords && summary.basicHiddenCount}}">已自动跳过 {{summary.basicHiddenCount}} 个基础词，不占今日任务</view>
+      <view class="hero-meta">{{summary.todayRemainingCount ? '还差 ' + summary.todayRemainingCount + ' 个' : '今天的单词学完了'}}</view>
+      <view class="hero-meta" wx:if="{{settings.includeMistakeWords}}">今天也会复习错题里的单词</view>
+      <view class="hero-meta" wx:if="{{settings.hideBasicWords && summary.basicHiddenCount}}">已跳过 {{summary.basicHiddenCount}} 个基础词</view>
       <view class="hero-action" wx:if="{{canReview && summary.todayRemainingCount}}" bindtap="continueLearning">继续今日学习</view>
     </view>
 
     <view class="card feature-disabled-card" wx:if="{{!enabled}}">
       <view class="disabled-title">背单词功能尚未开启</view>
-      <view class="disabled-hint" wx:if="{{isTeacherManager}}">当前仍可检查词库和待确认单词；学生端暂时看不到入口。</view>
-      <view class="disabled-hint" wx:else>请联系朱老师开启后再来学习。</view>
+      <view class="disabled-hint" wx:if="{{isTeacherManager}}">你仍可以管理词库；学生暂时看不到背单词入口。</view>
+      <view class="disabled-hint" wx:else>朱老师开启后，就可以开始背单词了。</view>
     </view>
 
     <block wx:if="{{enabled || isTeacherManager}}">
@@ -51,12 +51,12 @@
         <view class="weekly-head">
           <view>
             <view class="section-title">近 7 天学习</view>
-            <view class="section-hint">每天柱形越高，完成的单词越多。</view>
+            <view class="section-hint">柱子越高，当天完成的单词越多。</view>
           </view>
           <view class="weekly-streak" wx:if="{{weeklyStats.streakDays}}">
-            连续 {{weeklyStats.streakDays}} 天<text wx:if="{{weeklyStats.streakPendingToday}}"> · 今日待延续</text>
+            连续 {{weeklyStats.streakDays}} 天<text wx:if="{{weeklyStats.streakPendingToday}}"> · 今天还没学</text>
           </view>
-          <view class="weekly-streak" wx:else>本周待开始</view>
+          <view class="weekly-streak" wx:else>还没有连续学习记录</view>
         </view>
         <data-chart
           type="bar"
@@ -65,7 +65,7 @@
         ></data-chart>
         <view class="weekly-summary">
           7 天完成 {{weeklyStats.totalReviewed}} 个 · 学习 {{weeklyStats.activeDays}} 天
-          <text wx:if="{{weeklyStats.totalReviewActions}}"> · 顺利记住 {{weeklyStats.fluentRate}}%</text>
+          <text wx:if="{{weeklyStats.totalReviewActions}}"> · 记住率 {{weeklyStats.fluentRate}}%</text>
         </view>
       </view>
 
@@ -74,7 +74,7 @@
           <view>
             <view class="section-title">今天想学多少个？</view>
             <view class="section-hint">
-              {{dailyPlan.hasStudentChoice ? '已按你的选择安排，完成前也可以加量。' : '老师建议 ' + dailyPlan.defaultGoal + ' 个，你可以自己选择。'}}
+              {{dailyPlan.hasStudentChoice ? '今天按你选的数量来，想多学也可以再加。' : '老师建议 ' + dailyPlan.defaultGoal + ' 个，也可以自己选。'}}
             </view>
           </view>
           <view class="daily-goal-current">{{dailyPlan.dailyGoal}} 个</view>
@@ -93,9 +93,9 @@
       <view class="card teacher-daily-card" wx:if="{{isTeacherManager}}">
         <view class="teacher-daily-head">
           <view>
-            <view class="section-title">孩子今天的学习</view>
+            <view class="section-title">今天的学习</view>
             <view class="section-hint">
-              {{dailyPlan.hasStudentChoice ? '孩子今天选择了 ' + dailyPlan.dailyGoal + ' 个。' : '孩子尚未主动选择，按老师建议的 ' + dailyPlan.defaultGoal + ' 个安排。'}}
+              {{dailyPlan.hasStudentChoice ? '学生今天选了 ' + dailyPlan.dailyGoal + ' 个单词。' : '学生还没选择，先按老师建议的 ' + dailyPlan.defaultGoal + ' 个学习。'}}
             </view>
           </view>
           <view class="teacher-daily-count">{{summary.todayReviewedCount}} / {{dailyPlan.dailyGoal}}</view>
@@ -103,22 +103,22 @@
         <view class="reviewed-word-list" wx:if="{{todayReviewedWords.length}}">
           <view class="reviewed-word-chip" wx:for="{{todayReviewedWords}}" wx:key="key">{{item.word}}</view>
         </view>
-        <view class="section-hint" wx:else>今天还没有完成的单词。</view>
+        <view class="section-hint" wx:else>今天还没开始学习。</view>
       </view>
 
       <view class="view-mode-tip" wx:if="{{readOnly}}">
-        {{isTeacherManager ? '教师管理模式：可以检查单词，但不会记录学习结果。' : '教师预览模式：仅查看，不记录学生学习结果。'}}
+        {{isTeacherManager ? '老师查看模式，不会改动学生进度。' : '老师预览模式，不会改动学生进度。'}}
       </view>
 
       <view class="card challenge-entry">
         <view class="challenge-entry-copy">
-          <view class="section-title">六题巩固挑战</view>
-          <view class="section-hint">约 2 分钟，从选择题逐步进入拼写回忆；{{readOnly ? '当前只读预览，不写入学习记录。' : '答错会加入后续复习。'}}</view>
-          <view class="challenge-weak-count" wx:if="{{summary.weakCount}}">当前有 {{summary.weakCount}} 个单词需要巩固</view>
+          <view class="section-title">6 题单词小测</view>
+          <view class="section-hint">约 2 分钟，先做选择题，再试试拼写。{{readOnly ? '老师预览不会改动学生进度。' : '答错的词会安排再复习。'}}</view>
+          <view class="challenge-weak-count" wx:if="{{summary.weakCount}}">有 {{summary.weakCount}} 个词还没记牢</view>
         </view>
         <view class="challenge-actions">
-          <view class="challenge-primary" data-scope="smart" bindtap="goChallenge">{{readOnly ? '预览挑战' : '开始挑战'}}</view>
-          <view class="challenge-secondary" wx:if="{{summary.weakCount}}" data-scope="weak" bindtap="goChallenge">只练需巩固</view>
+          <view class="challenge-primary" data-scope="smart" bindtap="goChallenge">{{readOnly ? '预览小测' : '开始小测'}}</view>
+          <view class="challenge-secondary" wx:if="{{summary.weakCount}}" data-scope="weak" bindtap="goChallenge">只练没记牢的词</view>
         </view>
       </view>
 
@@ -127,13 +127,13 @@
           <input
             class="word-search"
             value="{{searchKeyword}}"
-            placeholder="全局搜索英文、中文或词性"
+            placeholder="搜索英文、中文或词性"
             confirm-type="search"
             bindinput="onSearchInput"
           />
           <view class="clear-search" wx:if="{{searchKeyword}}" bindtap="clearSearch">清空</view>
         </view>
-        <view class="search-scope-hint">会在课本词、错题词和已掌握词中一起查找</view>
+        <view class="search-scope-hint">会同时搜索课本词、错题词和已掌握词</view>
         <view class="filter-row" wx:if="{{searchActive || browsePanelOpen}}">
           <picker class="filter-picker" mode="selector" range="{{bookFilterOptions}}" range-key="label" value="{{bookFilterIndex}}" bindchange="onBookFilterChange">
             <view class="filter-value">{{bookFilterOptions[bookFilterIndex].label}}</view>
@@ -142,7 +142,7 @@
             <view class="filter-value">{{unitFilterOptions[unitFilterIndex].label}}</view>
           </picker>
         </view>
-        <view class="result-count" wx:if="{{searchActive || browsePanelOpen}}">找到 {{filteredWordCount}} 个单词</view>
+        <view class="result-count" wx:if="{{searchActive || browsePanelOpen}}">共 {{filteredWordCount}} 个单词</view>
       </view>
 
       <view class="library-toggle card" bindtap="toggleBrowsePanel">
@@ -167,13 +167,13 @@
 
       <view class="word-list-heading">
         <view class="section-title">
-          {{searchActive ? '全局搜索结果' : isStudyMode ? '今天的学习' : activeTab === 'mastered' ? '已掌握的单词' : activeTab === 'weak' ? '需要巩固的单词' : activeTab === 'mistake' ? '错题单词' : activeTab === 'textbook' ? '课本单词' : '全部单词'}}
+          {{searchActive ? '搜索结果' : isStudyMode ? '今天的单词' : activeTab === 'mastered' ? '已掌握的单词' : activeTab === 'weak' ? '还没记牢的单词' : activeTab === 'mistake' ? '错题单词' : activeTab === 'textbook' ? '课本单词' : '全部单词'}}
         </view>
-        <view class="section-hint" wx:if="{{isStudyMode}}">点开意思后选择记忆情况；不会的词会自动再出现。</view>
+        <view class="section-hint" wx:if="{{isStudyMode}}">点开释义，再选记得怎么样。没记住的词会稍后再出现。</view>
       </view>
 
       <view class="empty card" wx:if="{{!visibleWords.length}}">
-        {{isStudyMode ? '今天的学习已经完成。' : '没有找到符合条件的单词。'}}
+        {{isStudyMode ? '今天的单词学完了。' : '没有找到相关单词。'}}
       </view>
 
       <view class="card word-card" wx:for="{{visibleWords}}" wx:key="key">
@@ -203,7 +203,7 @@
           </view>
           <view class="meaning-shown" wx:else>
             <view class="part-of-speech" wx:if="{{item.partOfSpeech}}">{{item.partOfSpeech}}</view>
-            <view class="meaning-text">{{item.meaning || '释义待老师确认'}}</view>
+            <view class="meaning-text">{{item.meaning || '释义待确认'}}</view>
             <view class="source-context" wx:if="{{item.sourceText}}">{{item.sourceText}}</view>
             <view
               class="source-link"
@@ -220,19 +220,19 @@
             data-key="{{item.key}}"
             data-result="forgot"
             bindtap="reviewWord"
-          >忘记</view>
+          >没记住</view>
           <view
             class="hard-btn review-btn {{reviewingWordKey ? 'action-disabled' : ''}}"
             data-key="{{item.key}}"
             data-result="hard"
             bindtap="reviewWord"
-          >吃力</view>
+          >有点难</view>
           <view
             class="known-btn review-btn {{reviewingWordKey ? 'action-disabled' : ''}}"
             data-key="{{item.key}}"
             data-result="known"
             bindtap="reviewWord"
-          >我认识</view>
+          >记住了</view>
           <view
             class="easy-btn review-btn {{reviewingWordKey ? 'action-disabled' : ''}}"
             data-key="{{item.key}}"
@@ -249,17 +249,17 @@
           data-key="{{item.key}}"
           data-result="hard"
           bindtap="reviewWord"
-        >重新加入学习</view>
+        >重新学习</view>
       </view>
 
       <view class="load-more-btn" wx:if="{{hasMoreWords}}" bindtap="loadMoreWords">
         <text wx:if="{{wordPageLoading}}">读取中…</text>
-        <text wx:else>继续显示 · 剩余 {{filteredWordCount - visibleWords.length}} 个</text>
+        <text wx:else>加载更多 · 还剩 {{filteredWordCount - visibleWords.length}} 个</text>
       </view>
 
       <view class="pending-section" wx:if="{{isTeacherManager}}">
-        <view class="section-title">待确认的错题单词</view>
-        <view class="section-hint">只依据课堂错题补充释义；无法确定的词可以忽略。</view>
+        <view class="section-title">待确认释义的单词</view>
+        <view class="section-hint">请根据课堂资料补充释义；不确定可以先忽略。</view>
         <view class="card empty" wx:if="{{!pendingWords.length}}">目前没有待确认单词。</view>
 
         <view class="card pending-word-card" wx:for="{{pendingWords}}" wx:key="key">
@@ -275,11 +275,11 @@
             bindtap="goSourceMistake"
           >查看原错题<text wx:if="{{item.sourceQuestionNo}}"> · {{item.sourceQuestionNo}}</text></view>
           <view class="pending-field">
-            <view class="pending-label">确认后的中文释义</view>
+            <view class="pending-label">中文释义</view>
             <input
               class="pending-input"
               maxlength="100"
-              placeholder="请依据资料填写，不要猜测"
+              placeholder="请按课堂资料填写"
               value="{{item.meaning}}"
               data-index="{{index}}"
               data-field="meaning"
@@ -310,7 +310,7 @@
               data-index="{{index}}"
               data-action="save"
               bindtap="updatePendingWord"
-            >{{pendingSavingKey === item.key ? '保存中…' : '确认并加入'}}</view>
+            >{{pendingSavingKey === item.key ? '保存中…' : '保存并加入词库'}}</view>
           </view>
         </view>
       </view>

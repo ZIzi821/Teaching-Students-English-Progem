@@ -1,7 +1,7 @@
 <view class="page">
   <view class="form-head">
     <view class="title">添加英语课</view>
-    <view class="subtitle">记录朱老师这一节英语课讲了什么，后续可以继续补充练习和错题。</view>
+    <view class="subtitle">记录本节课的内容，之后还可以添加资料和错题。</view>
   </view>
 
   <view class="card message-card" wx:if="{{message}}">{{message}}</view>
@@ -34,7 +34,7 @@
 
     <view class="field">
       <view class="label">课程总结</view>
-      <textarea class="textarea" placeholder="本节英语课重点、孩子掌握情况、单词/语法复习提醒" value="{{form.summary}}" data-field="summary" bindinput="onInput"></textarea>
+      <textarea class="textarea" placeholder="本节课重点、学生掌握情况和复习提醒" value="{{form.summary}}" data-field="summary" bindinput="onInput"></textarea>
     </view>
   </view>
 

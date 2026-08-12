@@ -56,7 +56,7 @@ Page({
       },
     }).then((res) => {
       const result = res.result || {};
-      if (!result.success) throw new Error(result.message || "暂时无法准备挑战");
+        if (!result.success) throw new Error(result.message || "暂时无法准备小测");
       const role = result.role || "guest";
       const canReview = role === "student" && result.readOnly !== true;
       const allWords = challenge.uniqueWords((result.words || []).concat(result.todayWords || []));
@@ -74,7 +74,7 @@ Page({
       console.error(err);
       this.setData({
         loading: false,
-        message: err.message || "暂时无法准备挑战，请稍后重试",
+          message: err.message || "暂时无法准备小测，请稍后重试",
       });
     });
   },
@@ -90,8 +90,8 @@ Page({
     if (!questions.length) {
       this.setData({
         message: scope === "weak"
-          ? "需要巩固的单词正在等待复习时间，可以先做综合挑战。"
-          : "当前没有可用于挑战的已确认单词。",
+          ? "这些词还没到复习时间，可以先做综合小测。"
+          : "暂时没有可以出题的单词。",
       });
       return;
     }
@@ -170,8 +170,8 @@ Page({
       answered: true,
       answerCorrect: isCorrect,
       answerMessage: isCorrect
-        ? "答对了，记忆更稳了一步"
-        : this.data.readOnly ? "这次没想起来，可在学生端继续巩固" : "这次没想起来，稍后会再复习",
+        ? "答对了！"
+        : this.data.readOnly ? "这题没答对，学生可以稍后再练" : "没关系，这个词稍后再练",
       score: this.data.score + (isCorrect ? 1 : 0),
     });
     if (this.data.canReview) this.saveReview(question.wordKey, isCorrect);
@@ -195,7 +195,7 @@ Page({
     }).catch((err) => {
       console.error(err);
       this.setData({
-        saveWarning: "本题结果未保存，可继续完成挑战后再回单词页复习。",
+        saveWarning: "这题的结果没有保存，完成后请回单词页再试。",
         saveFailureCount: this.data.saveFailureCount + 1,
       });
     }).finally(() => {
@@ -221,7 +221,7 @@ Page({
       incorrectCount,
       resultSegments: [
         { label: "答对", value: score, color: "#4f8f73" },
-        { label: "需巩固", value: incorrectCount, color: "#e0b96a" },
+      { label: "没记牢", value: incorrectCount, color: "#e0b96a" },
       ],
     });
   },

@@ -1,7 +1,7 @@
 <view class="page">
   <view class="card no-permission" wx:if="{{message}}">
     <view>{{message}}</view>
-    <view class="detail-retry" bindtap="loadStudent">重新读取</view>
+    <view class="detail-retry" bindtap="loadStudent">重新加载</view>
   </view>
 
   <view wx:if="{{student}}">
@@ -10,7 +10,7 @@
       <view class="profile-main">
         <view class="name">{{student.name}}</view>
         <view class="meta">{{student.grade}} · {{student.subject}} · {{student.teacherName}}</view>
-        <view class="meta" wx:if="{{isTeacher}}">家长：{{student.parentName}} · accessCode：{{student.accessCode}}</view>
+        <view class="meta" wx:if="{{isTeacher}}">联系人：{{student.parentName}} · 访问码：{{student.accessCode}}</view>
       </view>
     </view>
 
@@ -30,7 +30,7 @@
 
     <view class="card progress-editor" wx:if="{{showProgressEditor}}">
       <view class="field">
-        <view class="label">总课时</view>
+        <view class="label">计划课时</view>
         <input class="input" type="number" value="{{progressForm.plannedLessonCount}}" data-field="plannedLessonCount" bindinput="onProgressInput" />
       </view>
       <view class="field">
@@ -47,12 +47,12 @@
       <view class="overview-head">
         <view>
           <view class="progress-title">单词学习概览</view>
-          <view class="progress-label">教师和学生看到同一份学习数据</view>
+          <view class="progress-label">这里的数据与学生端一致</view>
         </view>
         <view class="overview-streak" wx:if="{{vocabularyOverview.weeklyStats.streakDays}}">
-          连续 {{vocabularyOverview.weeklyStats.streakDays}} 天<text wx:if="{{vocabularyOverview.weeklyStats.streakPendingToday}}"> · 今日待延续</text>
+          连续 {{vocabularyOverview.weeklyStats.streakDays}} 天<text wx:if="{{vocabularyOverview.weeklyStats.streakPendingToday}}"> · 今天还没学</text>
         </view>
-        <view class="overview-streak" wx:else>本周待开始</view>
+        <view class="overview-streak" wx:else>还没有连续学习记录</view>
       </view>
       <view class="overview-chart-grid">
         <view class="overview-chart-item">
@@ -83,14 +83,14 @@
         ></data-chart>
         <view class="weekly-mini-summary">
           7 天完成 {{vocabularyOverview.weeklyStats.totalReviewed}} 个
-          <text wx:if="{{vocabularyOverview.weeklyStats.totalReviewActions}}"> · 顺利记住 {{vocabularyOverview.weeklyStats.fluentRate}}%</text>
+          <text wx:if="{{vocabularyOverview.weeklyStats.totalReviewActions}}"> · 记住率 {{vocabularyOverview.weeklyStats.fluentRate}}%</text>
         </view>
       </view>
       <view class="overview-actions">
         <view class="primary-btn overview-action" bindtap="goVocabulary">
           {{isTeacher ? '查看学生学习明细' : isTeacherPreview ? '查看学生单词页' : '继续今日学习'}}
         </view>
-        <view class="ghost-btn overview-challenge" bindtap="goVocabularyChallenge">六题巩固挑战</view>
+        <view class="ghost-btn overview-challenge" bindtap="goVocabularyChallenge">6 题单词小测</view>
       </view>
     </view>
 
@@ -98,7 +98,7 @@
       <view class="vocabulary-settings-head" bindtap="toggleVocabularySettings">
         <view>
           <view class="progress-title">背单词功能</view>
-          <view class="progress-label">管理词库范围和每日建议数量</view>
+          <view class="progress-label">设置词库范围和每天的单词数量</view>
         </view>
         <view class="settings-head-actions">
           <view class="feature-status {{vocabularyForm.enabled ? 'feature-on' : 'feature-off'}}">
@@ -127,15 +127,15 @@
 
       <view class="setting-row">
         <view>
-          <view class="setting-title">今日任务跳过简单词</view>
-          <view class="setting-hint">简单词仍保留在词库和搜索结果里，只是不占每天的学习数量。</view>
+          <view class="setting-title">每天跳过基础词</view>
+          <view class="setting-hint">基础词仍可搜索，但不计入每天的学习任务。</view>
         </view>
         <switch checked="{{vocabularyForm.hideBasicWords}}" color="#4f8f73" disabled="{{vocabularySaving}}" bindchange="onHideBasicWordsChange" />
       </view>
 
       <view class="setting-block">
-        <view class="setting-title">课本 / 基础词库范围</view>
-        <view class="setting-hint">任轩楠可选择译林七至九年级六册；词库版本会单独标注。</view>
+        <view class="setting-title">课本和基础词库</view>
+        <view class="setting-hint">可选择译林七至九年级六册，并显示对应的词库版本。</view>
         <checkbox-group class="level-grid" bindchange="onVocabularyLevelsChange">
           <label class="level-option {{item.checked ? 'level-option-checked' : ''}}" wx:for="{{vocabularyLevels}}" wx:key="id">
             <checkbox value="{{item.id}}" checked="{{item.checked}}" disabled="{{vocabularySaving}}" color="#4f8f73" />
@@ -150,7 +150,7 @@
       <view class="setting-row daily-goal-row">
         <view>
           <view class="setting-title">老师建议数量</view>
-          <view class="setting-hint">孩子每天可在单词页自己选择 5 至 30 个。</view>
+          <view class="setting-hint">学生每天可在单词页自己选择 5～30 个。</view>
         </view>
         <picker mode="selector" range="{{dailyGoalOptions}}" value="{{dailyGoalIndex}}" disabled="{{vocabularySaving}}" bindchange="onVocabularyDailyGoalChange">
           <view class="goal-picker">{{vocabularyForm.dailyGoal}} 个</view>
@@ -158,9 +158,9 @@
       </view>
 
       <view class="student-goal-status">
-        <view class="setting-title">孩子今日目标：{{vocabularyDailyPlan.dailyGoal}} 个</view>
+        <view class="setting-title">学生今日目标：{{vocabularyDailyPlan.dailyGoal}} 个</view>
         <view class="setting-hint">
-          {{vocabularyDailyPlan.hasStudentChoice ? '孩子今天已经自己选择；进入今日学习可查看完成了哪些词。' : '孩子今天尚未主动选择，暂按老师建议安排。'}}
+          {{vocabularyDailyPlan.hasStudentChoice ? '学生今天已选择，可查看完成情况。' : '学生今天还没选择，先按老师建议安排。'}}
         </view>
       </view>
 

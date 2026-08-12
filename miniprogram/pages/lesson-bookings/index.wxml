@@ -2,22 +2,22 @@
   <view class="booking-head">
     <view class="eyebrow">Lesson Booking</view>
     <view class="title">{{isTeacher ? '处理上课预约' : '预约英语课'}}</view>
-    <view class="subtitle" wx:if="{{isTeacher}}">确认家长期望的上课时间，并填写上课会议号。</view>
-    <view class="subtitle" wx:if="{{isStudentView}}">选择期望日期和时间，朱老师确认后会在这里公布会议号。</view>
+    <view class="subtitle" wx:if="{{isTeacher}}">查看提交的时间，确认后填写会议信息。</view>
+    <view class="subtitle" wx:if="{{isStudentView}}">选择想上课的时间，朱老师确认后，会议信息会显示在这里。</view>
   </view>
 
   <view class="card message-card" wx:if="{{message}}">{{message}}</view>
-  <view class="preview-tip" wx:if="{{isTeacherPreview}}">当前是教师代操作模式；你可以为该学生提交或取消预约。</view>
+  <view class="preview-tip" wx:if="{{isTeacherPreview}}">当前由老师代为操作，可以帮学生提交或取消预约。</view>
 
   <view class="card reminder-guide" wx:if="{{isTeacher || isStudentView}}">
-    <view class="reminder-guide-title">当前共有 2 个可选微信提醒</view>
-    <view class="reminder-guide-row">1. 老师第一次确认预约后发送</view>
-    <view class="reminder-guide-row">2. 上课前约 10 分钟发送</view>
-    <view class="reminder-guide-note">家长提交时需允许订阅；提交、改期和取消本身只在页面显示，不另发微信。</view>
+    <view class="reminder-guide-title">可选择两种微信提醒</view>
+    <view class="reminder-guide-row">1. 预约首次确认后提醒</view>
+    <view class="reminder-guide-row">2. 上课前约 10 分钟提醒</view>
+    <view class="reminder-guide-note">提交时需要允许订阅；改期和取消不会另发微信提醒。</view>
   </view>
 
   <view class="card request-form" wx:if="{{isStudentView}}">
-    <view class="form-title">提交期望上课时间</view>
+    <view class="form-title">选择上课时间</view>
     <view class="field">
       <view class="label">日期</view>
       <picker mode="date" value="{{form.requestedDate}}" start="{{minDate}}" bindchange="onRequestDateChange">
@@ -25,28 +25,28 @@
       </picker>
     </view>
     <view class="field">
-      <view class="label">当天时间</view>
+      <view class="label">时间</view>
       <picker mode="time" value="{{form.requestedTime}}" bindchange="onRequestTimeChange">
         <view class="picker-value">{{form.requestedTime || '请选择时间'}}</view>
       </picker>
     </view>
     <view class="field">
-      <view class="label">{{isTeacherPreview ? '预约备注（可不填）' : '给老师的备注（可不填）'}}</view>
+      <view class="label">{{isTeacherPreview ? '备注（可不填）' : '给老师的备注（可不填）'}}</view>
       <textarea class="textarea" maxlength="300" placeholder="例如：当天 19:00 后都可以" value="{{form.parentNote}}" bindinput="onParentNoteInput"></textarea>
     </view>
-    <view class="primary-btn" bindtap="submitBooking">{{isTeacherPreview ? '代家长提交预约' : '提交预约'}}</view>
+    <view class="primary-btn" bindtap="submitBooking">{{isTeacherPreview ? '代学生提交预约' : '提交预约'}}</view>
     <view class="subscribe-tip" wx:if="{{isStudent}}">提交时可选择接收老师确认和上课前 10 分钟提醒；不订阅也能正常预约。</view>
   </view>
 
-  <view class="section-title" wx:if="{{isTeacher}}">家长提交的时间</view>
-  <view class="section-title" wx:if="{{isStudentView}}">我的上课安排</view>
+  <view class="section-title" wx:if="{{isTeacher}}">预约列表</view>
+  <view class="section-title" wx:if="{{isStudentView}}">我的预约</view>
   <view class="booking-filters" wx:if="{{isTeacher}}">
     <view class="filter-btn {{teacherFilter === 'pending' ? 'active' : ''}}" data-filter="pending" bindtap="onTeacherFilterTap">待处理 {{bookingCounts.pending}}</view>
     <view class="filter-btn {{teacherFilter === 'upcoming' ? 'active' : ''}}" data-filter="upcoming" bindtap="onTeacherFilterTap">即将上课 {{bookingCounts.upcoming}}</view>
     <view class="filter-btn {{teacherFilter === 'history' ? 'active' : ''}}" data-filter="history" bindtap="onTeacherFilterTap">历史 {{bookingCounts.history}}</view>
   </view>
-  <view class="empty" wx:if="{{isTeacher && !teacherVisibleCount}}">这个分类里没有预约。</view>
-  <view class="empty" wx:if="{{isStudentView && !bookings.length}}">还没有上课预约。</view>
+  <view class="empty" wx:if="{{isTeacher && !teacherVisibleCount}}">这里暂时没有预约。</view>
+  <view class="empty" wx:if="{{isStudentView && !bookings.length}}">还没有预约。</view>
 
   <block wx:for="{{bookings}}" wx:key="_id" wx:for-index="index">
   <view class="card booking-card" wx:if="{{!isTeacher || item.bucket === teacherFilter}}">
@@ -58,11 +58,11 @@
       <view class="status-tag status-{{item.statusKey}}">{{item.status}}</view>
     </view>
 
-    <view class="parent-note" wx:if="{{item.parentNote}}">家长备注：{{item.parentNote}}</view>
-    <view class="expired-request-tip" wx:if="{{isTeacher && item.requestExpired}}">家长期望时间已过，请改为新的时间后确认，或取消预约。</view>
+    <view class="parent-note" wx:if="{{item.parentNote}}">预约备注：{{item.parentNote}}</view>
+    <view class="expired-request-tip" wx:if="{{isTeacher && item.requestExpired}}">原预约时间已过，请选择新时间后确认，或取消预约。</view>
 
     <view class="notification-box">
-      <view class="notification-title">微信提醒状态</view>
+      <view class="notification-title">微信提醒</view>
       <view class="notification-row">
         <text>老师确认提醒</text>
         <text class="notify-status notify-{{item.confirmationNotifyTone}}">{{item.confirmationNotifyLabel}}</text>
@@ -72,17 +72,17 @@
         <text class="notify-status notify-{{item.reminderNotifyTone}}">{{item.reminderNotifyLabel}}</text>
       </view>
       <view class="notification-action" wx:if="{{isStudent && item.needsSubscriptionAction}}" data-index="{{index}}" bindtap="enableBookingNotifications">{{item.notificationActionLabel}}</view>
-      <view class="notification-preview-note" wx:if="{{isTeacherPreview && item.needsSubscriptionAction}}">教师代操作不能替家长授权微信提醒。</view>
+      <view class="notification-preview-note" wx:if="{{isTeacherPreview && item.needsSubscriptionAction}}">老师无法代学生开启微信提醒。</view>
     </view>
 
     <view class="confirmed-box" wx:if="{{item.status === '已确认'}}">
-      <view class="confirmed-label">已确认上课时间</view>
+      <view class="confirmed-label">上课时间</view>
       <view class="confirmed-time">{{item.confirmedDate}} {{item.confirmedTime}}</view>
       <view class="meeting-row" wx:if="{{item.meetingNo}}">
         <text class="meeting-content" selectable="true">{{item.meetingNo}}</text>
-        <view class="copy-btn" data-value="{{item.meetingNo}}" bindtap="copyMeetingNo">复制全部</view>
+        <view class="copy-btn" data-value="{{item.meetingNo}}" bindtap="copyMeetingNo">复制会议信息</view>
       </view>
-      <view class="meeting-pending" wx:else>会议信息待朱老师发布</view>
+      <view class="meeting-pending" wx:else>朱老师还未发布会议信息</view>
     </view>
 
     <view class="teacher-editor" wx:if="{{isTeacher && item.status !== '已取消' && !item.isLockedHistory}}">
@@ -101,7 +101,7 @@
         </view>
       </view>
       <view class="field">
-        <view class="label">上课会议信息（可以粘贴完整邀请内容）</view>
+        <view class="label">会议信息</view>
         <textarea class="textarea meeting-textarea" maxlength="2000" placeholder="请粘贴腾讯会议的完整邀请信息、入会链接和会议号" value="{{item.meetingNo}}" data-index="{{index}}" bindinput="onMeetingNoInput"></textarea>
       </view>
       <view class="editor-actions">
@@ -110,7 +110,7 @@
       </view>
     </view>
 
-    <view class="cancel-btn parent-cancel" wx:if="{{(isStudent || isTeacherPreview) && item.canCancel}}" data-index="{{index}}" bindtap="cancelBooking">取消这个预约</view>
+    <view class="cancel-btn parent-cancel" wx:if="{{(isStudent || isTeacherPreview) && item.canCancel}}" data-index="{{index}}" bindtap="cancelBooking">取消预约</view>
   </view>
   </block>
 </view>

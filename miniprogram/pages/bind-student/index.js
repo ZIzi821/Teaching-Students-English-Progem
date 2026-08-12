@@ -14,7 +14,7 @@ Page({
     const accessCode = this.data.accessCode.trim();
     if (!accessCode) {
       wx.showToast({
-        title: "请输入 accessCode",
+        title: "请输入访问码",
         icon: "none",
       });
       return;
@@ -54,7 +54,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "请先上传并部署云函数后再绑定",
+          message: "服务暂时不可用，请稍后再试",
         });
       })
       .finally(() => {

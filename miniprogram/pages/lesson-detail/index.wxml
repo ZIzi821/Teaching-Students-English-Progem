@@ -11,8 +11,8 @@
     <view class="summary">{{lesson.summary}}</view>
   </view>
 
-  <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddMistake">添加本节英语错题</view>
-  <view class="ghost-btn add-btn" wx:if="{{isTeacher}}" bindtap="goBatchImportMistakes">粘贴并批量导入错题</view>
+  <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddMistake">记录本节错题</view>
+  <view class="ghost-btn add-btn" wx:if="{{isTeacher}}" bindtap="goBatchImportMistakes">批量导入错题</view>
   <view class="danger-btn delete-lesson-btn" wx:if="{{isTeacher}}" bindtap="deleteLesson">
     {{deletingLesson ? '正在删除…' : '删除本节课'}}
   </view>
@@ -35,13 +35,13 @@
   </view>
 
   <view class="section-title">本节课资料</view>
-  <view class="empty" wx:if="{{!hasPaperArea}}">暂未上传试卷、图片、音频或白板截图。</view>
+  <view class="empty" wx:if="{{!hasPaperArea}}">还没有课程资料。</view>
   <view class="card paper-card" wx:for="{{papers}}" wx:key="_id" bindtap="openMaterial" data-index="{{index}}">
     <view class="paper-title">{{item.displayTitle}}</view>
     <view class="paper-meta">{{item.displayPaperType}} · {{item.displayType}} · {{item.fileName}}</view>
   </view>
 
-  <view class="section-title">英语错题列表</view>
+  <view class="section-title">本节错题</view>
   <view class="empty" wx:if="{{!mistakes.length}}">本节课还没有英语错题。</view>
   <view class="card mistake-card" wx:for="{{mistakes}}" wx:key="_id" bindtap="goMistake" data-id="{{item._id}}">
     <view class="mistake-top">

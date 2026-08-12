@@ -198,7 +198,7 @@ Page({
         timeout: 5000,
         success: (res) => {
           if (!res || res.statusCode < 200 || res.statusCode >= 300) {
-            reject(new Error("电脑本地导入助手响应异常"));
+            reject(new Error("电脑导入助手响应异常"));
             return;
           }
           resolve(res.data || {});
@@ -208,7 +208,7 @@ Page({
           const settingHint = /domain|https|合法域名/i.test(detail)
             ? "。请在开发者工具的本地设置中勾选“不校验合法域名”"
             : "";
-          reject(new Error((detail ? "无法连接电脑本地导入助手：" + detail : "无法连接电脑本地导入助手") + settingHint));
+          reject(new Error((detail ? "无法连接电脑导入助手：" + detail : "无法连接电脑导入助手") + settingHint));
         },
       });
     });
@@ -308,7 +308,7 @@ Page({
 
     this.setData({
       localBridgeLoading: true,
-      localBridgeProgressText: "正在连接电脑本地导入助手",
+      localBridgeProgressText: "正在连接电脑导入助手",
       localBridgeCompletedCount: 0,
       localBridgeTotalCount: 0,
       localBridgeError: "",
@@ -317,10 +317,10 @@ Page({
     try {
       const manifest = await this.requestLocalBridgeManifest();
       if (manifest.success === false) {
-        throw new Error(manifest.message || "电脑本地导入助手读取失败");
+        throw new Error(manifest.message || "电脑导入助手读取失败");
       }
       if (Number(manifest.protocolVersion) !== LOCAL_BRIDGE_PROTOCOL_VERSION) {
-        throw new Error("电脑本地导入助手版本不一致，请关闭旧窗口并重新启动助手");
+        throw new Error("电脑导入助手版本不一致，请关闭旧窗口并重新启动助手");
       }
       if (!manifest.ready) {
         throw new Error("本地导入助手尚未准备文件，请先在电脑端选择 JSON 和图片文件夹");

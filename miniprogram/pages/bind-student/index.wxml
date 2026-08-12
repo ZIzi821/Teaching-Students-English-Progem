@@ -1,14 +1,14 @@
 <view class="page">
   <view class="card bind-card">
-    <view class="title">绑定英语错题本</view>
-    <view class="subtitle">请输入朱老师发给你的专属 accessCode。</view>
+    <view class="title">绑定学习账号</view>
+    <view class="subtitle">请输入朱老师发给你的访问码。</view>
   </view>
 
   <view class="card form-card">
-    <view class="label">专属 accessCode</view>
+    <view class="label">访问码</view>
     <input class="input" placeholder="例如：ANNE-EN-2026" value="{{accessCode}}" bindinput="onInput" />
     <view class="message" wx:if="{{message}}">{{message}}</view>
   </view>
 
-  <view class="primary-btn" bindtap="bindAccessCode">进入英语错题本</view>
+  <view class="primary-btn" bindtap="bindAccessCode">绑定并进入</view>
 </view>

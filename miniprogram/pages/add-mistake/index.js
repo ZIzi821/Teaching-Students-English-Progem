@@ -116,7 +116,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       });
   },
@@ -163,7 +163,7 @@ Page({
         console.error(err);
         this.setData({
           lessons: [],
-          selectedLessonTitle: "请先上传并部署云函数",
+          selectedLessonTitle: "课程暂时无法加载",
         });
       });
   },
@@ -447,7 +447,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "请先上传并部署云函数",
+          message: "服务暂时不可用，请稍后再试",
         });
       })
       .finally(() => {

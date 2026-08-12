@@ -1,7 +1,7 @@
 <view class="page">
   <view class="form-head">
     <view class="title">添加学生</view>
-    <view class="subtitle">先建立英语课学生档案，并给每位学生一个专属 accessCode 用于绑定微信。</view>
+    <view class="subtitle">创建学生档案，并设置用于绑定微信的访问码。</view>
   </view>
 
   <view class="card message-card" wx:if="{{message}}">{{message}}</view>
@@ -23,7 +23,7 @@
     </view>
 
     <view class="field">
-      <view class="label">家长姓名</view>
+      <view class="label">联系人姓名</view>
       <input class="input" placeholder="例如：李女士" value="{{form.parentName}}" data-field="parentName" bindinput="onInput" />
     </view>
 
@@ -33,12 +33,12 @@
     </view>
 
     <view class="field">
-      <view class="label">accessCode</view>
+      <view class="label">访问码</view>
       <input class="input" placeholder="例如：RUIRUI-EN-4829" value="{{form.accessCode}}" data-field="accessCode" bindinput="onInput" />
     </view>
 
     <view class="field">
-      <view class="label">studentOpenId</view>
+      <view class="label">微信绑定信息（一般留空）</view>
       <input class="input" placeholder="默认留空，学生绑定后自动写入" value="{{form.studentOpenId}}" data-field="studentOpenId" bindinput="onInput" />
     </view>
 
@@ -53,16 +53,16 @@
     </view>
 
     <view class="field">
-      <view class="label">总课时 plannedLessonCount</view>
+      <view class="label">计划课时</view>
       <input class="input" type="number" placeholder="例如：17" value="{{form.plannedLessonCount}}" data-field="plannedLessonCount" bindinput="onInput" />
     </view>
 
     <view class="field">
-      <view class="label">已上课时 completedLessonCount</view>
+      <view class="label">已上课时</view>
       <input class="input" type="number" placeholder="例如：3" value="{{form.completedLessonCount}}" data-field="completedLessonCount" bindinput="onInput" />
     </view>
   </view>
 
   <view class="primary-btn {{operationPending ? 'action-disabled' : ''}}" bindtap="submitStudent">{{operationPending ? '处理中…' : '保存学生'}}</view>
-  <view class="ghost-btn seed-btn {{operationPending ? 'action-disabled' : ''}}" bindtap="seedStudents">初始化三个学生</view>
+  <view class="ghost-btn seed-btn {{operationPending ? 'action-disabled' : ''}}" bindtap="seedStudents">导入预设学生</view>
 </view>

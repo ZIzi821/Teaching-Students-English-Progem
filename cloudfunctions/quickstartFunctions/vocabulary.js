@@ -423,7 +423,7 @@ const getSourceLabel = (sources) => {
   const hasTextbook = sources.indexOf("textbook") >= 0;
   if (hasMistake && hasTextbook) return "错题单词 · 课本词库";
   if (hasMistake && hasLibrary) return "错题单词 · 基础词库";
-  if (hasMistake) return "平时错题";
+  if (hasMistake) return "错题单词";
   return hasTextbook ? "课本词库" : "基础词库";
 };
 

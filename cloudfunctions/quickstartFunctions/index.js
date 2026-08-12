@@ -24,8 +24,8 @@ const SHARED_STUDENT_LIMIT = 5;
 const SHARED_STUDENT_ACCESS_CODES = ["RUIRUI-EN-4829", "XUANNAN-EN-7316"];
 const UNLIMITED_STUDENT_ACCESS_CODES = ["JASON-PRC-0001"];
 const UNCATEGORIZED_LABEL = "未分类";
-const CONTENT_RISK_MESSAGE = "内容含违规信息，请修改后再提交";
-const CONTENT_CHECK_UNAVAILABLE_MESSAGE = "内容安全检测暂时不可用，请稍后再试";
+const CONTENT_RISK_MESSAGE = "内容可能不符合规范，请修改后再提交";
+const CONTENT_CHECK_UNAVAILABLE_MESSAGE = "暂时无法检查内容，请稍后再试";
 const TEXT_CHECK_CHUNK_SIZE = 1800;
 const IMPORT_VOCABULARY_CHECK_GROUP_SIZE = 20;
 const SEED_STUDENTS = [
@@ -343,7 +343,7 @@ const checkTeacherImportContent = async (safeItems, importItemOffset) => {
         allowReview: true,
         prefix: lessonPrefix,
         contextLabel: `第 ${importItemOffset + i + 1} 道错题`,
-        riskMessage: `第 ${importItemOffset + i + 1} 道错题未通过内容安全检测，请检查后重试`,
+        riskMessage: `第 ${importItemOffset + i + 1} 道错题可能不符合内容规范，请检查后重试`,
       });
     }
   }
@@ -370,7 +370,7 @@ const checkTeacherImportContent = async (safeItems, importItemOffset) => {
           allowReview: true,
           prefix: vocabularyPrefix,
           contextLabel: `单词 ${entry.word}`,
-          riskMessage: `单词“${entry.word}”未通过内容安全检测，请检查后重试`,
+          riskMessage: `单词“${entry.word}”可能不符合内容规范，请检查后重试`,
         });
       }
     }
@@ -458,8 +458,8 @@ const buildCycleStatus = (student) => {
   return {
     hasPlan,
     isReviewPhase,
-    label: !hasPlan ? "暂未设置课程循环" : isReviewPhase ? "本轮课程已完成，进入期末复习期" : "课程循环进行中",
-    nextAction: !hasPlan ? "先设置总课时" : isReviewPhase ? "开始期末复习" : `继续第 ${progress.completedLessonCount + 1} 节课`,
+    label: !hasPlan ? "还没设置总课时" : isReviewPhase ? "本轮课程已完成，可以开始复习了" : "课程进行中",
+    nextAction: !hasPlan ? "设置总课时" : isReviewPhase ? "开始复习" : `继续第 ${progress.completedLessonCount + 1} 节课`,
   };
 };
 
@@ -685,7 +685,7 @@ const sanitizeStudent = (student, includePrivate) => {
 const ensureTeacher = async () => {
   const identity = await getIdentity();
   if (identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "只有朱老师可以进行此操作");
+    throw createError("PERMISSION_DENIED", "仅教师端可操作");
   }
   return identity;
 };
@@ -694,7 +694,7 @@ const ensureStudentAccess = async (studentId) => {
   const identity = await getIdentity();
   if (identity.role === "teacher") return identity;
   if (identity.role === "student" && identity.student && identity.student._id === studentId) return identity;
-  throw createError("PERMISSION_DENIED", "无权访问该学生的数据");
+  throw createError("PERMISSION_DENIED", "你只能查看自己绑定的学习数据");
 };
 
 const getOpenId = async () => {
@@ -958,7 +958,7 @@ const bindAccessCode = async (event) => {
   const identity = await getIdentity();
   const accessCode = normalizeCode(event.data && event.data.accessCode);
   if (!accessCode) {
-    throw createError("INVALID_ACCESS_CODE", "请输入专属 accessCode");
+    throw createError("INVALID_ACCESS_CODE", "请输入访问码");
   }
 
   if (isTeacherAccessCode(accessCode)) {
@@ -966,7 +966,7 @@ const bindAccessCode = async (event) => {
   }
 
   if (identity.role === "teacher") {
-    throw createError("ALREADY_TEACHER", "朱老师账号不需要绑定学生");
+    throw createError("ALREADY_TEACHER", "当前是教师账号，无需绑定学生");
   }
   if (identity.role === "student") {
     return {
@@ -974,13 +974,13 @@ const bindAccessCode = async (event) => {
       role: "student",
       openid: identity.openid,
       student: sanitizeStudent(identity.student, false),
-      message: "当前微信已经绑定学生",
+      message: "当前微信已绑定学生账号",
     };
   }
 
   const res = await db.collection("students").where({ accessCode }).limit(1).get();
   if (!res.data || !res.data.length) {
-    throw createError("ACCESS_CODE_NOT_FOUND", "accessCode 不正确");
+    throw createError("ACCESS_CODE_NOT_FOUND", "访问码不正确，请检查后重试");
   }
 
   const student = res.data[0];
@@ -996,10 +996,10 @@ const bindAccessCode = async (event) => {
     ]);
     const currentStudent = currentStudentRes && currentStudentRes.data;
     if (!currentStudent || normalizeCode(currentStudent.accessCode) !== accessCode) {
-      throw createError("ACCESS_CODE_NOT_FOUND", "accessCode 不正确");
+      throw createError("ACCESS_CODE_NOT_FOUND", "访问码不正确，请检查后重试");
     }
     if (openIdLock && openIdLock.studentId && openIdLock.studentId !== currentStudent._id) {
-      throw createError("ALREADY_BOUND", "当前微信已经绑定其他学生");
+      throw createError("ALREADY_BOUND", "当前微信已绑定其他学生账号");
     }
 
     const studentOpenIds = getStudentOpenIds(currentStudent);
@@ -1009,7 +1009,7 @@ const bindAccessCode = async (event) => {
       && Number.isFinite(bindLimit)
       && studentOpenIds.length >= bindLimit
     ) {
-      throw createError("ACCESS_CODE_USED", `这个 accessCode 最多只能绑定 ${bindLimit} 个微信`);
+      throw createError("ACCESS_CODE_USED", `这个访问码最多可绑定 ${bindLimit} 个微信账号`);
     }
     const nextStudentOpenIds = uniqueValues(studentOpenIds.concat(identity.openid));
     const nextStudentOpenId = currentStudent.studentOpenId || identity.openid;
@@ -1058,14 +1058,14 @@ const addStudent = async (event) => {
   const data = event.data || {};
   const accessCode = normalizeCode(data.accessCode);
   if (!data.name || !data.grade || !accessCode) {
-    throw createError("INVALID_STUDENT", "请填写学生姓名、年级和 accessCode");
+    throw createError("INVALID_STUDENT", "请填写学生姓名、年级和访问码");
   }
   if (isTeacherAccessCode(accessCode)) {
-    throw createError("ACCESS_CODE_RESERVED", "学生 accessCode 不能与教师 accessCode 相同");
+    throw createError("ACCESS_CODE_RESERVED", "学生访问码不能与老师访问码相同");
   }
   const existing = await db.collection("students").where({ accessCode }).limit(1).get();
   if (existing.data && existing.data.length) {
-    throw createError("ACCESS_CODE_EXISTS", "这个 accessCode 已经存在");
+    throw createError("ACCESS_CODE_EXISTS", "这个访问码已被使用");
   }
   await assertContentSafe({
     texts: [data.name, data.nickname, data.grade, data.parentName, data.status, data.teacherName, data.subject],
@@ -1118,7 +1118,7 @@ const addStudent = async (event) => {
       (accessCodeLock && accessCodeLock.studentId)
       || (currentExisting.data && currentExisting.data.length)
     ) {
-      throw createError("ACCESS_CODE_EXISTS", "这个 accessCode 已经存在");
+      throw createError("ACCESS_CODE_EXISTS", "这个访问码已被使用");
     }
     if (
       initialStudentOpenId
@@ -1128,7 +1128,7 @@ const addStudent = async (event) => {
         || (legacyMultiOwner.data && legacyMultiOwner.data.length)
       )
     ) {
-      throw createError("OPENID_EXISTS", "这个 studentOpenId 已经绑定其他学生");
+      throw createError("OPENID_EXISTS", "这个微信账号已绑定其他学生");
     }
 
     await transaction.collection("students").doc(studentId).set({ data: studentData });
@@ -1156,7 +1156,7 @@ const updateStudentProgress = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
   if (!data.studentId) {
-    throw createError("INVALID_PROGRESS", "缺少学生 ID");
+    throw createError("INVALID_PROGRESS", "学生信息不完整，请返回后重试");
   }
   const plannedLessonCount = toNonNegativeNumber(data.plannedLessonCount, "总课时");
   const completedLessonCount = toNonNegativeNumber(data.completedLessonCount, "已上课时");
@@ -1232,7 +1232,7 @@ const seedStudents = async () => {
     success: true,
     inserted,
     skipped,
-    message: `新增 ${inserted.length} 位学生，跳过 ${skipped.length} 位已存在学生`,
+    message: `已新增 ${inserted.length} 位学生；另有 ${skipped.length} 位已存在，未重复添加`,
   };
 };
 
@@ -1240,11 +1240,11 @@ const getStudentDetail = async (event) => {
   const identity = await getIdentity();
   const data = event.data || {};
   if (data.mode === "teacherPreview" && identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "只有朱老师可以使用学生视角预览");
+    throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
   }
   const requestedId = data.previewStudentId || data.studentId;
   const studentId = identity.role === "student" ? identity.student._id : requestedId;
-  if (!studentId) throw createError("INVALID_STUDENT", "缺少学生 ID");
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
   await ensureStudentAccess(studentId);
 
   const studentRes = await db.collection("students").doc(studentId).get();
@@ -1327,7 +1327,7 @@ const buildStudentAnalytics = async (studentId) => {
     topReasons,
     sectionStats: toRankList(sectionStats, 6),
     reviewStatusStats: toRankList(reviewStatusStats, 4),
-    weakPointSummary: weakPointTexts.length ? weakPointTexts.join("、") : "暂时没有明显薄弱题型",
+    weakPointSummary: weakPointTexts.length ? weakPointTexts.join("、") : "目前没有特别薄弱的题型",
     reviewSuggestions: mistakes
       .filter((mistake) => getReviewStatus(mistake) !== "已掌握")
       .sort((a, b) => {
@@ -1365,7 +1365,7 @@ const getStudentAnalytics = async (event) => {
   const identity = await getIdentity();
   const data = event.data || {};
   const studentId = identity.role === "student" ? identity.student._id : data.studentId;
-  if (!studentId) throw createError("INVALID_STUDENT", "缺少学生 ID");
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
   await ensureStudentAccess(studentId);
   const studentRes = await db.collection("students").doc(studentId).get();
   if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
@@ -1389,7 +1389,7 @@ const getVocabularyLibrary = () => {
 
 const validateVocabularySettings = (data, library, student) => {
   if (typeof data.enabled !== "boolean") {
-    throw createError("INVALID_VOCABULARY_SETTINGS", "请选择是否开启背单词功能");
+    throw createError("INVALID_VOCABULARY_SETTINGS", "请先选择是否开启背单词");
   }
   if (!Array.isArray(data.levelIds)) {
     throw createError("INVALID_VOCABULARY_SETTINGS", "请选择基础词库范围");
@@ -1399,7 +1399,7 @@ const validateVocabularySettings = (data, library, student) => {
   );
   const levelIds = Array.from(new Set(data.levelIds.map((levelId) => String(levelId || "").trim())));
   if (levelIds.some((levelId) => !validLevelIds.has(levelId))) {
-    throw createError("INVALID_VOCABULARY_SETTINGS", "选择的单词组无效，请刷新后重试");
+    throw createError("INVALID_VOCABULARY_SETTINGS", "所选词库已更新，请刷新后重试");
   }
   const dailyGoal = Number(data.dailyGoal);
   if (
@@ -1407,13 +1407,13 @@ const validateVocabularySettings = (data, library, student) => {
     || dailyGoal < vocabulary.MIN_DAILY_GOAL
     || dailyGoal > vocabulary.MAX_DAILY_GOAL
   ) {
-    throw createError("INVALID_VOCABULARY_SETTINGS", "每日单词量应为 5 至 30 个");
+    throw createError("INVALID_VOCABULARY_SETTINGS", "每日目标请设置为 5～30 个单词");
   }
   if (typeof data.includeMistakeWords !== "boolean") {
-    throw createError("INVALID_VOCABULARY_SETTINGS", "请选择是否加入错题单词");
+    throw createError("INVALID_VOCABULARY_SETTINGS", "请选择是否学习错题中的单词");
   }
   if (data.enabled && !levelIds.length && !data.includeMistakeWords) {
-    throw createError("INVALID_VOCABULARY_SETTINGS", "请至少开启错题单词或选择一个基础词库");
+    throw createError("INVALID_VOCABULARY_SETTINGS", "请至少选择一种学习内容：错题单词或基础词库");
   }
   const settings = vocabulary.normalizeVocabularySettings({
     profileVersion: vocabulary.VOCABULARY_PROFILE_VERSION,
@@ -1424,7 +1424,7 @@ const validateVocabularySettings = (data, library, student) => {
     learningOrder: data.learningOrder,
   }, library, student);
   if (data.enabled && !settings.levelIds.length && !settings.includeMistakeWords) {
-    throw createError("INVALID_VOCABULARY_SETTINGS", "请至少开启错题单词或选择一个基础词库");
+    throw createError("INVALID_VOCABULARY_SETTINGS", "请至少选择一种学习内容：错题单词或基础词库");
   }
   return {
     enabled: data.enabled,
@@ -1437,7 +1437,7 @@ const updateVocabularySettings = async (event) => {
   await createOneCollection("vocabularyProgress");
   const data = event.data || {};
   const studentId = String(data.studentId || "").trim();
-  if (!studentId) throw createError("INVALID_STUDENT", "缺少学生 ID");
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
   const studentRes = await db.collection("students").doc(studentId).get();
   if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
   const validated = validateVocabularySettings(data, getVocabularyLibrary(), studentRes.data);
@@ -1463,12 +1463,12 @@ const updateVocabularySettings = async (event) => {
 const setVocabularyDailyGoal = async (event) => {
   const identity = await getIdentity();
   if (identity.role !== "student" || !identity.student) {
-    throw createError("PERMISSION_DENIED", "请使用学生账号选择今日单词数量");
+    throw createError("PERMISSION_DENIED", "请在学生端选择今天的单词数量");
   }
   const data = event.data || {};
   const studentId = String(data.studentId || "").trim();
   if (!studentId || studentId !== identity.student._id) {
-    throw createError("PERMISSION_DENIED", "无权修改该学生的今日目标");
+    throw createError("PERMISSION_DENIED", "只能修改自己的今日目标");
   }
   const dailyGoal = Number(data.dailyGoal);
   if (
@@ -1476,7 +1476,7 @@ const setVocabularyDailyGoal = async (event) => {
     || dailyGoal < vocabulary.MIN_DAILY_GOAL
     || dailyGoal > vocabulary.MAX_DAILY_GOAL
   ) {
-    throw createError("INVALID_VOCABULARY_SETTINGS", "今日目标应为 5 至 30 个");
+    throw createError("INVALID_VOCABULARY_SETTINGS", "今日目标请设置为 5～30 个单词");
   }
   const studentRes = await db.collection("students").doc(studentId).get();
   if (!studentRes.data || studentRes.data.vocabularyEnabled !== true) {
@@ -1512,7 +1512,7 @@ const setVocabularyDailyGoal = async (event) => {
     if (dailyGoal < reviewedCount) {
       throw createError(
         "INVALID_VOCABULARY_SETTINGS",
-        `今天已经完成 ${reviewedCount} 个，目标不能低于已完成数量`
+        `今天已完成 ${reviewedCount} 个，目标不能调到更低`
       );
     }
     await studentRef.update({
@@ -1804,11 +1804,11 @@ const getVocabularyData = async (event) => {
     createOneCollection("vocabularyDailyStats"),
   ]);
   const identity = await getIdentity();
-  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
   const data = event.data || {};
   const requestedStudentId = String(data.previewStudentId || data.studentId || "").trim();
   const studentId = identity.role === "student" ? identity.student._id : requestedStudentId;
-  if (!studentId) throw createError("INVALID_STUDENT", "缺少学生 ID");
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
   await ensureStudentAccess(studentId);
 
   const studentRes = await db.collection("students").doc(studentId).get();
@@ -1904,7 +1904,7 @@ const assertVocabularyWordBelongsToStudent = async ({
     && matchingLibraryWord
     && matchingLibraryWord.isBasic === true
   ) {
-    throw createError("INVALID_VOCABULARY_WORD", "基础词已被隐藏，请刷新后继续学习");
+    throw createError("INVALID_VOCABULARY_WORD", "这个词已不在学习范围内，请刷新列表");
   }
   const progressRes = await db.collection("vocabularyProgress")
     .where({ _id: progressId })
@@ -1912,7 +1912,7 @@ const assertVocabularyWordBelongsToStudent = async ({
     .get();
   const progressItem = progressRes.data && progressRes.data.length ? progressRes.data[0] : null;
   if (progressItem && progressItem.excluded === true) {
-    throw createError("INVALID_VOCABULARY_WORD", "这个单词已被老师移出词库，请刷新后重试");
+    throw createError("INVALID_VOCABULARY_WORD", "这个词已不在学习范围内，请刷新列表");
   }
 
   const selectedLevels = new Set(settings.levelIds || []);
@@ -1943,7 +1943,7 @@ const assertVocabularyWordBelongsToStudent = async ({
 
   confirmedMeaning = String(progressItem && progressItem.customMeaning || "").trim() || confirmedMeaning;
   if (!hasEnabledSource || !confirmedMeaning) {
-    throw createError("INVALID_VOCABULARY_WORD", "这个单词不在当前已启用词库中，请刷新后重试");
+    throw createError("INVALID_VOCABULARY_WORD", "这个词已不在学习范围内，请刷新列表");
   }
 };
 
@@ -1954,15 +1954,15 @@ const reviewVocabularyWord = async (event) => {
   ]);
   const identity = await getIdentity();
   if (identity.role !== "student" || !identity.student) {
-    throw createError("PERMISSION_DENIED", "教师预览为只读，请使用学生账号复习");
+    throw createError("PERMISSION_DENIED", "当前是老师预览，不能记录学习进度");
   }
   const data = event.data || {};
   const studentId = String(data.studentId || "").trim();
   if (!studentId || studentId !== identity.student._id) {
-    throw createError("PERMISSION_DENIED", "无权修改该学生的单词进度");
+    throw createError("PERMISSION_DENIED", "只能记录自己的单词进度");
   }
   if (["forgot", "hard", "known", "easy"].indexOf(data.result) < 0) {
-    throw createError("INVALID_VOCABULARY_REVIEW", "请选择忘记、困难、认识或太简单");
+    throw createError("INVALID_VOCABULARY_REVIEW", "请选择没记住、有点难、记住了或太简单");
   }
   const studentRes = await db.collection("students").doc(studentId).get();
   if (!studentRes.data || studentRes.data.vocabularyEnabled !== true) {
@@ -2014,7 +2014,7 @@ const reviewVocabularyWord = async (event) => {
       nowMs
     );
     if (currentDailyPlan.learningDay !== dailyPlan.learningDay) {
-      throw createError("VOCABULARY_DAY_CHANGED", "学习日期已变化，请刷新后重试");
+      throw createError("VOCABULARY_DAY_CHANGED", "新的一天开始了，请刷新后继续");
     }
     const existing = existingRes.data && existingRes.data.length ? existingRes.data[0] : null;
     const existingDailyStats = dailyStatsRes.data && dailyStatsRes.data.length ? dailyStatsRes.data[0] : null;
@@ -2071,17 +2071,17 @@ const updateVocabularyWord = async (event) => {
   await createOneCollection("vocabularyProgress");
   const data = event.data || {};
   const studentId = String(data.studentId || "").trim();
-  if (!studentId) throw createError("INVALID_STUDENT", "缺少学生 ID");
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
   const studentRes = await db.collection("students").doc(studentId).get();
   if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
   const wordKey = assertVocabularyWordKey(data.wordKey);
   const meaning = String(data.meaning || "").trim();
   const partOfSpeech = String(data.partOfSpeech || "").trim();
   if (meaning.length > 200 || partOfSpeech.length > 50) {
-    throw createError("INVALID_VOCABULARY_WORD", "单词释义或词性过长");
+    throw createError("INVALID_VOCABULARY_WORD", "释义或词性内容太长，请精简后再保存");
   }
   if (typeof data.excluded !== "boolean") {
-    throw createError("INVALID_VOCABULARY_WORD", "请选择保留或忽略这个单词");
+    throw createError("INVALID_VOCABULARY_WORD", "请选择“保留”或“忽略”");
   }
   if (!data.excluded && !meaning) {
     throw createError("INVALID_VOCABULARY_WORD", "请先填写中文释义");
@@ -2139,7 +2139,7 @@ const listLessons = async (event) => {
   let studentId = data.studentId || "";
   if (identity.role === "student") studentId = identity.student._id;
   if (studentId) await ensureStudentAccess(studentId);
-  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
 
   const lessonCollection = db.collection("lessons");
   const res = studentId
@@ -2164,7 +2164,7 @@ const getNextLessonNo = async (event) => {
   const data = event.data || {};
   const studentId = data.studentId;
   if (!studentId) {
-    throw createError("INVALID_STUDENT", "缺少学生 ID");
+    throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
   }
 
   let maxLessonNo = 0;
@@ -2210,7 +2210,8 @@ const getSubscriptionTemplateFields = async (templateId) => {
     return String(item.priTmplId || item.pri_tmpl_id || item.templateId || item.template_id || "") === templateId;
   });
   if (!template) {
-    throw createError("SUBSCRIPTION_TEMPLATE_NOT_FOUND", "订阅消息模板不存在，请重新选用模板");
+    console.error("subscription template not found", { templateId });
+    throw createError("SUBSCRIPTION_TEMPLATE_NOT_FOUND", "微信提醒暂时不可用，请联系老师");
   }
   const fields = Object.create(null);
   String(template.content || template.templateContent || template.template_content || "")
@@ -2228,7 +2229,8 @@ const buildSubscriptionData = (fields, values) => {
   Object.keys(values).forEach((label) => {
     const field = fields[label];
     if (!field) {
-      throw createError("SUBSCRIPTION_FIELD_NOT_FOUND", `订阅消息模板缺少字段：${label}`);
+      console.error("subscription template field not found", { label });
+      throw createError("SUBSCRIPTION_FIELD_NOT_FOUND", "微信提醒暂时不可用，请联系老师");
     }
     data[field] = { value: String(values[label] || "") };
   });
@@ -2346,7 +2348,7 @@ const sendBookingConfirmedNotification = async ({ booking, studentName, expected
         "现时状态": "已确认",
         "备注": claimedBooking.meetingNo
           ? "请打开小程序查看会议信息"
-          : "时间已确认，会议信息稍后发布",
+          : "上课时间已确认，会议信息稍后补充",
         "时间": formatSubscriptionDateTime(claimedBooking.confirmedDate, claimedBooking.confirmedTime),
       }),
     });
@@ -2420,7 +2422,7 @@ const getBookingVersion = (booking) => {
 const assertExpectedBookingVersion = (booking, expectedVersion) => {
   if (expectedVersion === undefined || expectedVersion === null || expectedVersion === "") return;
   if (Number(expectedVersion) !== getBookingVersion(booking)) {
-    throw createError("BOOKING_CHANGED", "预约状态已变化，请刷新后重试");
+    throw createError("BOOKING_CHANGED", "预约状态已更新，请刷新后再试");
   }
 };
 
@@ -2565,12 +2567,12 @@ const submitLessonBooking = async (event) => {
   const data = event.data || {};
   const isTeacherProxy = identity.role === "teacher" && data.mode === "teacherPreview";
   if (identity.role !== "student" && !isTeacherProxy) {
-    throw createError("PERMISSION_DENIED", "请先绑定学生身份后再预约");
+    throw createError("PERMISSION_DENIED", "请先绑定学习账号再预约");
   }
   await createOneCollection("lessonBookings");
   const requested = parseBookingDateTime(data.requestedDate, data.requestedTime);
   if (requested.timestamp < Date.now() - 60 * 1000) {
-    throw createError("INVALID_BOOKING_TIME", "期望上课时间不能早于现在");
+    throw createError("INVALID_BOOKING_TIME", "请选择现在之后的上课时间");
   }
   const parentNote = String(data.parentNote || "").trim();
   if (parentNote.length > BOOKING_NOTE_LIMIT) {
@@ -2581,7 +2583,7 @@ const submitLessonBooking = async (event) => {
   const studentId = identity.role === "student"
     ? identity.student._id
     : String(data.previewStudentId || "").trim();
-  if (!studentId) throw createError("INVALID_STUDENT", "缺少预约学生 ID");
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
   let student = identity.student;
   if (isTeacherProxy) {
     const studentRes = await db.collection("students").doc(studentId).get();
@@ -2597,7 +2599,7 @@ const submitLessonBooking = async (event) => {
     return item.status !== "已取消" && item.requestedDate === requested.date && item.requestedTime === requested.time;
   });
   if (duplicate) {
-    throw createError("BOOKING_EXISTS", "这个日期和时间已经提交过了");
+    throw createError("BOOKING_EXISTS", "这个时间已经预约过了");
   }
 
   const confirmationSubscribed = identity.role === "student" && data.confirmationSubscribed === true;
@@ -2637,7 +2639,7 @@ const submitLessonBooking = async (event) => {
         transaction.collection("lessonBookings").doc(lock.bookingId)
       );
       if (lockedBooking && lockedBooking.status !== "已取消") {
-        throw createError("BOOKING_EXISTS", "这个日期和时间已经提交过了");
+        throw createError("BOOKING_EXISTS", "这个时间已经预约过了");
       }
     }
     await transaction.collection("lessonBookings").doc(bookingId).set({ data: bookingData });
@@ -2660,16 +2662,16 @@ const submitLessonBooking = async (event) => {
 const listLessonBookings = async (event) => {
   const identity = await getIdentity();
   if (identity.role === "guest") {
-    throw createError("PERMISSION_DENIED", "请先绑定身份");
+    throw createError("PERMISSION_DENIED", "请先绑定学习账号");
   }
   const data = event.data || {};
   const isTeacherPreview = data.mode === "teacherPreview";
   if (isTeacherPreview && identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "只有朱老师可以使用学生视角预览");
+    throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
   }
   const previewStudentId = isTeacherPreview ? String(data.previewStudentId || "").trim() : "";
   if (isTeacherPreview && !previewStudentId) {
-    throw createError("INVALID_STUDENT", "缺少预览学生 ID");
+    throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
   }
   await createOneCollection("lessonBookings");
   const collection = db.collection("lessonBookings");
@@ -2699,7 +2701,7 @@ const listLessonBookings = async (event) => {
 const updateLessonBooking = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
-  if (!data.bookingId) throw createError("INVALID_BOOKING", "缺少预约 ID");
+  if (!data.bookingId) throw createError("INVALID_BOOKING", "预约信息不完整，请返回后重试");
   const bookingRes = await db.collection("lessonBookings").doc(data.bookingId).get();
   if (!bookingRes.data) throw createError("BOOKING_NOT_FOUND", "预约不存在或已删除");
   const confirmed = parseBookingDateTime(
@@ -2707,7 +2709,7 @@ const updateLessonBooking = async (event) => {
     data.confirmedTime || bookingRes.data.requestedTime
   );
   if (confirmed.timestamp <= Date.now()) {
-    throw createError("INVALID_BOOKING_TIME", "确认时间必须晚于现在");
+    throw createError("INVALID_BOOKING_TIME", "请选择现在之后的上课时间");
   }
   const meetingNo = String(data.meetingNo || "").trim();
   if (meetingNo.length > MEETING_NO_LIMIT) {
@@ -2741,13 +2743,13 @@ const updateLessonBooking = async (event) => {
     }
     assertExpectedBookingVersion(booking, data.bookingVersion);
     if (booking.status === "已确认" && getBookingStartAtMs(booking) <= Date.now()) {
-      throw createError("BOOKING_STARTED", "已开始或已结束的预约不能再修改");
+      throw createError("BOOKING_STARTED", "课程开始后无法修改预约");
     }
     if (isBookingNotificationSending(booking)) {
-      throw createError("BOOKING_NOTIFICATION_SENDING", "微信提醒正在发送，请稍后再保存");
+      throw createError("BOOKING_NOTIFICATION_SENDING", "正在发送微信提醒，请稍后再试");
     }
     if (confirmed.timestamp <= Date.now()) {
-      throw createError("INVALID_BOOKING_TIME", "确认时间必须晚于现在");
+      throw createError("INVALID_BOOKING_TIME", "请选择现在之后的上课时间");
     }
 
     await acquireBookingSlot(transaction, data.bookingId, confirmed.timestamp);
@@ -2855,15 +2857,15 @@ const updateLessonBooking = async (event) => {
 const subscribeLessonBookingNotifications = async (event) => {
   const identity = await getIdentity();
   if (identity.role !== "student") {
-    throw createError("PERMISSION_DENIED", "请使用家长账号开启微信提醒");
+    throw createError("PERMISSION_DENIED", "请在学生端开启微信提醒");
   }
   const data = event.data || {};
   const bookingId = String(data.bookingId || "").trim();
-  if (!bookingId) throw createError("INVALID_BOOKING", "缺少预约 ID");
+  if (!bookingId) throw createError("INVALID_BOOKING", "预约信息不完整，请返回后重试");
   const confirmationAccepted = data.confirmationSubscribed === true;
   const reminderAccepted = data.reminderSubscribed === true;
   if (!confirmationAccepted && !reminderAccepted) {
-    throw createError("SUBSCRIPTION_NOT_ACCEPTED", "没有开启新的微信提醒");
+    throw createError("SUBSCRIPTION_NOT_ACCEPTED", "请选择要开启的微信提醒");
   }
 
   const saved = await db.runTransaction(async (transaction) => {
@@ -2871,13 +2873,13 @@ const subscribeLessonBookingNotifications = async (event) => {
     const booking = bookingRes.data;
     if (!booking) throw createError("BOOKING_NOT_FOUND", "预约不存在或已删除");
     if (booking.studentId !== identity.student._id) {
-      throw createError("PERMISSION_DENIED", "无权修改这个预约的提醒");
+      throw createError("PERMISSION_DENIED", "只能修改自己的预约提醒");
     }
     if (booking.status === "已取消") {
       throw createError("BOOKING_CANCELLED", "已取消的预约不能开启提醒");
     }
     if (isBookingNotificationSending(booking)) {
-      throw createError("BOOKING_NOTIFICATION_SENDING", "微信提醒正在发送，请稍后重试");
+      throw createError("BOOKING_NOTIFICATION_SENDING", "正在发送微信提醒，请稍后再试");
     }
 
     const startAtMs = getBookingStartAtMs(booking);
@@ -2959,28 +2961,28 @@ const cancelLessonBooking = async (event) => {
   const identity = await getIdentity();
   const data = event.data || {};
   const bookingId = data.bookingId;
-  if (!bookingId) throw createError("INVALID_BOOKING", "缺少预约 ID");
-  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定身份");
+  if (!bookingId) throw createError("INVALID_BOOKING", "预约信息不完整，请返回后重试");
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
   return db.runTransaction(async (transaction) => {
     const bookingRes = await transaction.collection("lessonBookings").doc(bookingId).get();
     const booking = bookingRes.data;
     if (!booking) throw createError("BOOKING_NOT_FOUND", "预约不存在或已删除");
     if (identity.role === "student" && booking.studentId !== identity.student._id) {
-      throw createError("PERMISSION_DENIED", "无权取消这个预约");
+      throw createError("PERMISSION_DENIED", "只能取消自己的预约");
     }
     assertExpectedBookingVersion(booking, data.bookingVersion);
     if (booking.status === "已取消") {
       return { success: true, bookingVersion: getBookingVersion(booking) };
     }
     if (isBookingNotificationSending(booking)) {
-      throw createError("BOOKING_NOTIFICATION_SENDING", "微信提醒正在发送，请稍后再取消");
+      throw createError("BOOKING_NOTIFICATION_SENDING", "正在发送微信提醒，请稍后再试");
     }
     if (
       identity.role === "student"
       && booking.status === "已确认"
       && getBookingStartAtMs(booking) <= Date.now()
     ) {
-      throw createError("BOOKING_STARTED", "已开始或已结束的预约不能取消");
+      throw createError("BOOKING_STARTED", "课程开始后无法取消预约");
     }
     const nextVersion = getBookingVersion(booking) + 1;
     await transaction.collection("lessonBookings").doc(bookingId).update({
@@ -3049,7 +3051,7 @@ const addLesson = async (event) => {
         existingLesson.studentId !== lessonPayload.studentId
         || existingFingerprint !== requestFingerprint
       ) {
-        throw createError("LESSON_CONFLICT", "表单内容已变化，请返回后重新提交课程");
+        throw createError("LESSON_CONFLICT", "课程内容已经修改，请重新提交");
       }
       return { created: false };
     }
@@ -3107,10 +3109,10 @@ const getWritableLessonInTransaction = async (
     transaction.collection("lessons").doc(lessonId)
   );
   if (!lesson || lesson.studentId !== studentId) {
-    throw createError(errorCode, "课程不存在或与学生不匹配");
+    throw createError(errorCode, "课程已删除或不属于这位学生");
   }
   if (lesson.deleting === true) {
-    throw createError(errorCode, "课程正在删除，请刷新后重试");
+    throw createError(errorCode, "课程正在删除，请刷新后再试");
   }
   return lesson;
 };
@@ -3119,7 +3121,7 @@ const deleteLesson = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
   const lessonId = String(data.lessonId || "").trim();
-  if (!lessonId) throw createError("INVALID_LESSON", "缺少课程 ID");
+  if (!lessonId) throw createError("INVALID_LESSON", "课程信息不完整，请返回后重试");
 
   await createOneCollection("systemLocks");
   const deleteLockId = getSystemLockId("lesson_delete", lessonId);
@@ -3137,7 +3139,7 @@ const deleteLesson = async (event) => {
       throw createError("LESSON_NOT_FOUND", "课程不存在或已删除");
     }
     if (data.expectedTitle && String(data.expectedTitle) !== String(currentLesson.title || "")) {
-      throw createError("LESSON_CHANGED", "课程信息已变化，请刷新后重试");
+      throw createError("LESSON_CHANGED", "课程信息已更新，请刷新后重试");
     }
     if (currentLesson.deleting !== true) {
       await lessonRef.update({
@@ -3226,18 +3228,18 @@ const deleteLesson = async (event) => {
 const getLessonDetail = async (event) => {
   const data = event.data || {};
   const lessonId = data.lessonId;
-  if (!lessonId) throw createError("INVALID_LESSON", "缺少课程 ID");
+  if (!lessonId) throw createError("INVALID_LESSON", "课程信息不完整，请返回后重试");
   const identity = await getIdentity();
-  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
   if (data.mode === "teacherPreview" && identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "只有朱老师可以使用学生视角预览");
+    throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
   }
 
   const lessonRes = await db.collection("lessons").doc(lessonId).get();
   const lesson = lessonRes.data;
   if (!lesson) throw createError("LESSON_NOT_FOUND", "课程不存在或已删除");
   if (data.mode === "teacherPreview" && data.previewStudentId && lesson.studentId !== data.previewStudentId) {
-    throw createError("PERMISSION_DENIED", "预览学生和课程不匹配");
+    throw createError("PERMISSION_DENIED", "当前课程不属于这位学生，请刷新后重试");
   }
   await ensureStudentAccess(lesson.studentId);
   const [papers, lessonMistakes] = await Promise.all([
@@ -3267,11 +3269,11 @@ const addPaper = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
   if (!data.studentId || !data.lessonId || !data.fileID || !data.fileName || !data.type) {
-    throw createError("INVALID_PAPER", "请上传资料并填写资料类型");
+    throw createError("INVALID_PAPER", "请先上传资料，并选择资料类型");
   }
   const lessonRes = await db.collection("lessons").doc(data.lessonId).get();
   if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
-    throw createError("INVALID_PAPER", "课程和学生不匹配");
+    throw createError("INVALID_PAPER", "所选课程不属于这位学生，请重新选择");
   }
   try {
     await assertContentSafe({
@@ -3315,7 +3317,7 @@ const checkUploadedImage = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
   const fileID = data.fileID;
-  if (!fileID) throw createError("INVALID_FILE", "缺少图片文件");
+  if (!fileID) throw createError("INVALID_FILE", "图片信息不完整，请重新选择");
   try {
     await assertContentSafe({
       imageFileIds: [fileID],
@@ -3335,7 +3337,7 @@ const listMistakes = async (event) => {
   const identity = await getIdentity();
   const data = event.data || {};
   const query = {};
-  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
   if (identity.role === "student") {
     query.studentId = identity.student._id;
   } else if (data.studentId) {
@@ -3368,10 +3370,10 @@ const addMistake = async (event) => {
   }
   const lessonRes = await db.collection("lessons").doc(data.lessonId).get();
   if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
-    throw createError("INVALID_MISTAKE", "课程和学生不匹配");
+    throw createError("INVALID_MISTAKE", "所选课程不属于这位学生，请重新选择");
   }
   if (!data.questionImageFileId && !data.questionText && !data.studentAnswer && !data.correctAnswer) {
-    throw createError("INVALID_MISTAKE", "请上传题目图片或填写题目、答案");
+    throw createError("INVALID_MISTAKE", "请上传题目图片，或填写题目和答案");
   }
   const skillTags = normalizeTags(data.skillTags && data.skillTags.length ? data.skillTags : data.tags);
   const reviewStatus = data.reviewStatus || data.status || "待复习";
@@ -3443,16 +3445,16 @@ const updateMistake = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
   if (!data.mistakeId || !data.studentId || !data.lessonId) {
-    throw createError("INVALID_MISTAKE", "缺少错题、学生或课程信息");
+    throw createError("INVALID_MISTAKE", "错题信息不完整，请返回后重试");
   }
   if (!data.questionImageFileId && !data.questionText && !data.studentAnswer && !data.correctAnswer) {
-    throw createError("INVALID_MISTAKE", "请上传题目图片或填写题目、答案");
+    throw createError("INVALID_MISTAKE", "请上传题目图片，或填写题目和答案");
   }
   const existingRes = await db.collection("mistakes").doc(data.mistakeId).get();
   if (!existingRes.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
   const lessonRes = await db.collection("lessons").doc(data.lessonId).get();
   if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
-    throw createError("INVALID_MISTAKE", "课程和学生不匹配");
+    throw createError("INVALID_MISTAKE", "所选课程不属于这位学生，请重新选择");
   }
   const previousImageFileId = existingRes.data.questionImageFileId || "";
   const skillTags = normalizeTags(data.skillTags && data.skillTags.length ? data.skillTags : data.tags);
@@ -3532,7 +3534,7 @@ const updateMistake = async (event) => {
         transaction.collection("lessons").doc(currentMistake.lessonId)
       );
       if (sourceLesson && sourceLesson.deleting === true) {
-        throw createError("INVALID_MISTAKE", "原课程正在删除，请刷新后重试");
+        throw createError("INVALID_MISTAKE", "原课程正在删除，请刷新后再试");
       }
     }
     await mistakeRef.update({ data: mistakeUpdateData });
@@ -3551,20 +3553,20 @@ const batchImportMistakes = async (event) => {
   const importBatchId = String(data.importBatchId || "").trim();
   const importItemOffset = Number(data.importItemOffset || 0);
   if (!data.studentId || !data.lessonId) {
-    throw createError("INVALID_MISTAKE", "缺少学生或课程信息");
+    throw createError("INVALID_MISTAKE", "学生或课程信息不完整，请重新选择");
   }
   if (!items.length || items.length > 50) {
-    throw createError("INVALID_IMPORT", "每次请导入 1 至 50 道错题");
+    throw createError("INVALID_IMPORT", "每次可导入 1～50 道错题");
   }
   if (!importBatchId || importBatchId.length > 100) {
-    throw createError("INVALID_IMPORT", "导入批次信息无效，请重新粘贴后再试");
+    throw createError("INVALID_IMPORT", "导入信息已失效，请重新粘贴后再试");
   }
   if (!Number.isInteger(importItemOffset) || importItemOffset < 0 || importItemOffset + items.length > 50) {
-    throw createError("INVALID_IMPORT", "导入分批序号无效，请重新导入");
+    throw createError("INVALID_IMPORT", "导入信息已失效，请重新粘贴后再试");
   }
   const lessonRes = await db.collection("lessons").doc(data.lessonId).get();
   if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
-    throw createError("INVALID_IMPORT", "课程和学生不匹配");
+    throw createError("INVALID_IMPORT", "所选课程不属于这位学生，请重新选择");
   }
   const safeItems = items.map((item) => {
     const source = item || {};
@@ -3595,7 +3597,7 @@ const batchImportMistakes = async (event) => {
   });
   const emptyIndex = safeItems.findIndex((item) => !item.questionText && !item.studentAnswer && !item.correctAnswer);
   if (emptyIndex >= 0) {
-    throw createError("INVALID_IMPORT", `第 ${importItemOffset + emptyIndex + 1} 道错题没有题目或答案内容`);
+    throw createError("INVALID_IMPORT", `第 ${importItemOffset + emptyIndex + 1} 道错题内容为空，请至少填写题目或答案`);
   }
   await checkTeacherImportContent(safeItems, importItemOffset);
   const importImageFileIds = uniqueValues(
@@ -3774,10 +3776,10 @@ const updateMistakeReviewStatus = async (event) => {
   const mistakeId = data.mistakeId;
   const reviewStatus = data.reviewStatus;
   if (!mistakeId || ["待复习", "已复习", "已掌握"].indexOf(reviewStatus) < 0) {
-    throw createError("INVALID_MISTAKE", "请选择有效的复习状态");
+    throw createError("INVALID_MISTAKE", "请选择复习状态");
   }
   const identity = await getIdentity();
-  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
   const res = await db.collection("mistakes").doc(mistakeId).get();
   if (!res.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
   await ensureStudentAccess(res.data.studentId);
@@ -3788,7 +3790,7 @@ const updateMistakeReviewStatus = async (event) => {
     const current = currentRes.data;
     if (!current) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
     if (current.studentId !== authorizedStudentId) {
-      throw createError("PERMISSION_DENIED", "无权修改该错题");
+      throw createError("PERMISSION_DENIED", "错题信息已更新，请刷新后再试");
     }
     if (getReviewStatus(current) === reviewStatus) {
       return Number(current.reviewCount || 0);
@@ -3813,9 +3815,9 @@ const updateMistakeReviewStatus = async (event) => {
 
 const getMistakeDetail = async (event) => {
   const mistakeId = event.data && event.data.mistakeId;
-  if (!mistakeId) throw createError("INVALID_MISTAKE", "缺少错题 ID");
+  if (!mistakeId) throw createError("INVALID_MISTAKE", "错题信息不完整，请返回后重试");
   const identity = await getIdentity();
-  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学生身份");
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
 
   const res = await db.collection("mistakes").doc(mistakeId).get();
   if (!res.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
@@ -3839,7 +3841,7 @@ const getMistakeDetail = async (event) => {
 const deleteMistake = async (event) => {
   await ensureTeacher();
   const mistakeId = event.data && event.data.mistakeId;
-  if (!mistakeId) throw createError("INVALID_MISTAKE", "缺少错题 ID");
+  if (!mistakeId) throw createError("INVALID_MISTAKE", "错题信息不完整，请返回后重试");
   const res = await db.collection("mistakes").doc(mistakeId).get();
   if (!res.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
   await db.collection("mistakes").doc(mistakeId).remove();
@@ -3929,7 +3931,7 @@ exports.main = async (event) => {
         return {
           success: false,
           code: "UNKNOWN_TYPE",
-          message: "Unknown function type",
+          message: "暂不支持该操作，请刷新后重试",
         };
     }
   } catch (err) {

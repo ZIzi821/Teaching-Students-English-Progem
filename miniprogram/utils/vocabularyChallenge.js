@@ -127,7 +127,7 @@ const buildChallengeQuestions = (selectedWords, allWords, random = Math.random) 
       direction: meaningToWord ? "meaningToWord" : "wordToMeaning",
       typeLabel: type === "spelling" ? "拼写回忆" : meaningToWord ? "看义选词" : "看词选义",
       prompt: meaningToWord ? asText(word.meaning) : asText(word.word),
-      promptHint: meaningToWord ? "写出或选出对应英文" : "选择最合适的中文释义",
+      promptHint: type === "spelling" ? "输入对应英文" : meaningToWord ? "选择对应英文" : "选择最合适的中文释义",
       answer,
       options: type === "choice" ? options : [],
     };

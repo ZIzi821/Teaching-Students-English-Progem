@@ -2,9 +2,9 @@
   <view class="hero">
     <view class="eyebrow">{{teacherName}} · English Class</view>
     <view class="title">朱老师英语课堂</view>
-    <view class="subtitle" wx:if="{{isTeacher}}">先选择学生查看学习主页，再处理课程、错题和预约。</view>
-    <view class="subtitle" wx:if="{{isStudent}}">{{currentStudent.name}}，从今天最重要的一项开始。</view>
-    <view class="subtitle" wx:if="{{isGuest}}">请输入朱老师给你的专属 accessCode。</view>
+    <view class="subtitle" wx:if="{{isTeacher}}">先选一位学生，再查看课程、错题和预约。</view>
+    <view class="subtitle" wx:if="{{isStudent}}">{{currentStudent.name}}，今天也来学一点吧。</view>
+    <view class="subtitle" wx:if="{{isGuest}}">请输入朱老师给你的访问码。</view>
   </view>
 
   <view class="error-tip" wx:if="{{errorMessage}}">{{errorMessage}}</view>
@@ -40,7 +40,7 @@
       <view>
         <view class="home-vocabulary-title">今日单词</view>
         <view class="home-vocabulary-hint">
-          {{vocabularyPulse.completed ? '今天的目标已经完成' : '还差 ' + vocabularyPulse.remainingCount + ' 个完成今日目标'}}
+          {{vocabularyPulse.completed ? '今天的单词学完了' : '今天还差 ' + vocabularyPulse.remainingCount + ' 个'}}
         </view>
       </view>
       <view class="home-vocabulary-count">{{vocabularyPulse.reviewedCount}} / {{vocabularyPulse.goal}}</view>
@@ -48,11 +48,11 @@
     <view class="home-vocabulary-progress">
       <view class="home-vocabulary-progress-fill" style="width: {{vocabularyPulse.progressPercent}}%;"></view>
     </view>
-    <view class="home-vocabulary-challenge" bindtap="goVocabularyChallenge">六题巩固挑战 · 约 2 分钟 →</view>
+    <view class="home-vocabulary-challenge" bindtap="goVocabularyChallenge">6 题单词小测 · 约 2 分钟 →</view>
   </view>
 
   <view class="card next-booking-card" wx:if="{{nextLessonBooking}}" bindtap="goNextLessonBooking">
-    <view class="next-booking-eyebrow">下一节已确认课程</view>
+    <view class="next-booking-eyebrow">下一节课</view>
     <view class="next-booking-main">
       <view>
         <view class="next-booking-time">{{nextLessonBooking.confirmedDate}} · {{nextLessonBooking.confirmedTime}}</view>
@@ -64,8 +64,8 @@
   </view>
 
   <view class="actions" wx:if="{{isTeacher}}">
-    <view class="primary-btn" bindtap="goStudents">选择学生 · 查看学习主页</view>
-    <view class="management-title">教师快捷管理</view>
+    <view class="primary-btn" bindtap="goStudents">选择学生</view>
+    <view class="management-title">常用功能</view>
     <view class="management-grid">
       <view class="ghost-btn" bindtap="goLessonBookings">处理预约</view>
       <view class="ghost-btn" bindtap="goAddLesson">记录课程</view>
@@ -76,7 +76,7 @@
 
   <view class="actions" wx:if="{{isStudent}}">
     <view class="primary-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabulary">
-      {{vocabularyPulse.completed ? '查看今日单词成果' : '继续今日单词 · 还差 ' + vocabularyPulse.remainingCount + ' 个'}}
+      {{vocabularyPulse.completed ? '查看今天的单词' : '继续背单词 · 还差 ' + vocabularyPulse.remainingCount + ' 个'}}
     </view>
     <view class="primary-btn" wx:else bindtap="goMyLessons">查看学习主页</view>
     <view class="student-action-grid">
@@ -86,7 +86,7 @@
   </view>
 
   <view class="actions" wx:if="{{isGuest}}">
-    <view class="primary-btn" bindtap="goBind">进入英语错题本</view>
+    <view class="primary-btn" bindtap="goBind">绑定学习账号</view>
   </view>
 
   <view class="teacher-progress-section" wx:if="{{isTeacher}}">
@@ -108,7 +108,7 @@
         <view>
           <view class="student-vocabulary-label">今日单词</view>
           <view class="student-vocabulary-note">
-            {{item.vocabularyPulse.completed ? '已完成目标' : '还差 ' + item.vocabularyPulse.remainingCount + ' 个'}}
+            {{item.vocabularyPulse.completed ? '今天已完成' : '还差 ' + item.vocabularyPulse.remainingCount + ' 个'}}
           </view>
         </view>
         <view class="student-vocabulary-count">{{item.vocabularyPulse.reviewedCount}} / {{item.vocabularyPulse.goal}}</view>
@@ -131,5 +131,4 @@
     <view class="lesson-summary">{{item.summary}}</view>
   </view>
 
-  <view class="env-tip">云环境：{{envId}}</view>
 </view>

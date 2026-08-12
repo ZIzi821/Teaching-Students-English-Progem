@@ -12,7 +12,7 @@
     aria-hidden="true"
   >
     <text class="bar-empty-title">暂无学习记录</text>
-    <text class="bar-empty-hint">完成学习后显示趋势</text>
+    <text class="bar-empty-hint">开始学习后，这里会显示近期趋势</text>
   </view>
   <view class="chart-legend" wx:if="{{type !== 'bar'}}">
     <view class="legend-item" wx:for="{{segments}}" wx:key="label">

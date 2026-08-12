@@ -46,7 +46,7 @@ Page({
 
   loadHomeData() {
     if (!wx.cloud) {
-      this.setFallbackData("当前基础库不支持云开发");
+      this.setFallbackData("微信版本过低，请更新后重试");
       return;
     }
     wx.cloud
@@ -93,7 +93,7 @@ Page({
       })
       .catch((err) => {
         console.error(err);
-        this.setFallbackData("请先上传并部署 quickstartFunctions 云函数");
+        this.setFallbackData("服务暂时不可用，请稍后再试");
       });
   },
 

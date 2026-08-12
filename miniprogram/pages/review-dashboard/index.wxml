@@ -1,12 +1,12 @@
 <view class="page">
   <view class="card no-permission" wx:if="{{message}}">
     <view>{{message}}</view>
-    <view class="review-retry" bindtap="loadAnalytics">重新读取</view>
+    <view class="review-retry" bindtap="loadAnalytics">重新加载</view>
   </view>
 
   <view wx:if="{{analytics}}">
     <view class="card hero-card">
-      <view class="eyebrow">{{student.name}} 的复习工作台</view>
+      <view class="eyebrow">{{student.name}} 的错题复习</view>
       <view class="title">{{cycleStatus.label}}</view>
       <view class="subtitle">{{analytics.weakPointSummary}}</view>
     </view>
@@ -38,7 +38,7 @@
 
     <view class="card">
       <view class="section-title">最需要复习的题型</view>
-      <view class="empty" wx:if="{{!analytics.topQuestionTypes.length}}">还没有足够的错题数据。</view>
+      <view class="empty" wx:if="{{!analytics.topQuestionTypes.length}}">错题较少，暂时无法统计。</view>
       <view class="rank-row" wx:for="{{analytics.topQuestionTypes}}" wx:key="label">
         <view class="rank-name">{{item.label}}</view>
         <view class="rank-bar"><view class="rank-fill" style="width: {{item.percent}}%;"></view></view>
@@ -55,11 +55,11 @@
     </view>
 
     <view class="card">
-      <view class="section-title">优先复习清单</view>
+      <view class="section-title">建议先复习</view>
       <view class="empty" wx:if="{{!analytics.reviewSuggestions.length}}">目前没有待复习错题。</view>
       <view class="suggestion" wx:for="{{analytics.reviewSuggestions}}" wx:key="_id" bindtap="goMistake" data-id="{{item._id}}">
         <view class="suggestion-title">{{item.title}}</view>
-        <view class="suggestion-meta">{{item.paperSection}} · {{item.questionType}} · {{item.reviewPriority}}优先级</view>
+        <view class="suggestion-meta">{{item.paperSection}} · {{item.questionType}} · 优先级：{{item.reviewPriority}}</view>
         <view class="status">{{item.reviewStatus}}</view>
       </view>
     </view>
