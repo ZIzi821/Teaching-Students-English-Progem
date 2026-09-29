@@ -1,3 +1,5 @@
+const { createVocabularyAudioPlayer } = require("../../utils/vocabularyAudio");
+
 const WORD_TABS = [
   { value: "all", label: "全部" },
   { value: "textbook", label: "课本" },
@@ -81,6 +83,7 @@ Page({
     pendingWords: [],
     reviewingWordKey: "",
     playingWordKey: "",
+    audioLoadingWordKey: "",
     pendingSavingKey: "",
     todayChartSegments: [],
     masteryChartSegments: [],
@@ -97,6 +100,7 @@ Page({
   },
 
   onLoad(options) {
+    this.initPronunciationPlayer();
     let savedPreference = {};
     try {
       savedPreference = wx.getStorageSync(VIEW_PREFERENCE_KEY) || {};
@@ -107,7 +111,8 @@ Page({
     const savedTab = WORD_TABS.some((item) => item.value === savedPreference.activeTab)
       ? savedPreference.activeTab
       : "today";
-    const browsePanelOpen = savedPreference.browsePanelOpen === true;
+    // 每次进入都先呈现清晰的今日任务；查词和历史记录由学生主动展开。
+    const browsePanelOpen = false;
     this.setData({
       studentId: options.studentId || "",
       previewStudentId: options.previewStudentId || "",
@@ -133,7 +138,10 @@ Page({
 
   onUnload() {
     this.clearDueRefreshTimer();
-    this.stopPronunciation();
+    if (this.pronunciationPlayer) {
+      this.pronunciationPlayer.destroy();
+      this.pronunciationPlayer = null;
+    }
     if (this.searchTimer) clearTimeout(this.searchTimer);
     this.searchTimer = null;
   },
@@ -438,6 +446,9 @@ Page({
       pronunciationUrl: String(source.pronunciationUrl || ""),
       pronunciationStartMs: Math.max(0, Number(source.pronunciationStartMs) || 0),
       pronunciationDurationMs: Math.max(0, Number(source.pronunciationDurationMs) || 0),
+      pronunciationDirectFileId: String(source.pronunciationDirectFileId || ""),
+      pronunciationDirectUrl: String(source.pronunciationDirectUrl || ""),
+      pronunciationDirectDurationMs: Math.max(0, Number(source.pronunciationDirectDurationMs) || 0),
       progressLabel: source.isEasy === true
         ? "太简单 · 已跳过"
         : source.isBasicHidden === true && Number(source.masteryLevel || 0) < 5
@@ -534,7 +545,19 @@ Page({
   },
 
   continueLearning() {
-    wx.pageScrollTo({ selector: ".word-list-heading", duration: 260 });
+    this.startStudy();
+  },
+
+  startStudy() {
+    if (!this.data.studentId || !this.data.enabled) return;
+    const query = [`studentId=${encodeURIComponent(this.data.studentId)}`];
+    if (this.data.previewStudentId) {
+      query.push(`previewStudentId=${encodeURIComponent(this.data.previewStudentId)}`);
+    }
+    if (this.data.mode) query.push(`mode=${encodeURIComponent(this.data.mode)}`);
+    wx.navigateTo({
+      url: `/pages/vocabulary-study/index?${query.join("&")}`,
+    });
   },
 
   goChallenge(e) {
@@ -713,61 +736,55 @@ Page({
     );
   },
 
+  initPronunciationPlayer() {
+    if (this.pronunciationPlayer) return;
+    this.pronunciationPlayer = createVocabularyAudioPlayer({
+      timeoutMs: 8000,
+      onStateChange: ({ state, wordKey }) => {
+        if (!this.data) return;
+        if (state === "loading" || state === "waiting") {
+          this.setData({ audioLoadingWordKey: wordKey, playingWordKey: "" });
+          return;
+        }
+        if (state === "playing") {
+          this.setData({ audioLoadingWordKey: "", playingWordKey: wordKey });
+          return;
+        }
+        this.setData({ audioLoadingWordKey: "", playingWordKey: "" });
+      },
+      onError: (error) => {
+        console.error("pronunciation playback failed", error);
+        wx.showToast({ title: "发音加载失败，请检查网络后重试", icon: "none" });
+      },
+    });
+  },
+
   stopPronunciation() {
-    this.pronunciationRequestId = (this.pronunciationRequestId || 0) + 1;
-    if (this.pronunciationStopTimer) {
-      clearTimeout(this.pronunciationStopTimer);
-      this.pronunciationStopTimer = null;
-    }
-    if (this.pronunciationAudio) {
-      this.pronunciationAudio.destroy();
-      this.pronunciationAudio = null;
-    }
-    if (this.data && this.data.playingWordKey) {
-      this.setData({ playingWordKey: "" });
-    }
+    if (this.pronunciationPlayer) this.pronunciationPlayer.stop();
   },
 
   playPronunciation(e) {
     const wordKey = String(e.currentTarget.dataset.key || "");
-    const fileId = String(e.currentTarget.dataset.fileid || "");
-    const audioUrl = String(e.currentTarget.dataset.url || fileId || "");
-    const startMs = Math.max(0, Number(e.currentTarget.dataset.startms) || 0);
-    const durationMs = Math.max(0, Number(e.currentTarget.dataset.durationms) || 0);
-    if (!wordKey || !audioUrl || !durationMs) {
+    const word = this.data.visibleWords.find((item) => item.key === wordKey);
+    if (!word) return;
+    const hasDirectAudio = word.pronunciationDirectDurationMs
+      && (word.pronunciationDirectUrl || word.pronunciationDirectFileId);
+    const hasFallbackAudio = word.pronunciationDurationMs
+      && (word.pronunciationUrl || word.pronunciationFileId);
+    if (!hasDirectAudio && !hasFallbackAudio) {
       wx.showToast({ title: "这个词暂时没有可播放的读音", icon: "none" });
       return;
     }
-    this.stopPronunciation();
-    const requestId = (this.pronunciationRequestId || 0) + 1;
-    this.pronunciationRequestId = requestId;
-    this.setData({ playingWordKey: wordKey });
-    const audio = wx.createInnerAudioContext();
-    this.pronunciationAudio = audio;
-    audio.obeyMuteSwitch = false;
-    audio.autoplay = true;
-    audio.startTime = startMs / 1000;
-    audio.src = audioUrl;
-    audio.onPlay(() => {
-      if (requestId !== this.pronunciationRequestId) return;
-      this.pronunciationStopTimer = setTimeout(
-        () => this.stopPronunciation(),
-        durationMs + 160
-      );
-    });
-    audio.onTimeUpdate(() => {
-      if (
-        requestId === this.pronunciationRequestId
-        && audio.currentTime * 1000 >= startMs + durationMs + 60
-      ) {
-        this.stopPronunciation();
-      }
-    });
-    audio.onEnded(() => this.stopPronunciation());
-    audio.onError((err) => {
-      console.error("pronunciation playback failed", err);
-      this.stopPronunciation();
-      wx.showToast({ title: "发音暂时无法播放，请稍后重试", icon: "none" });
+    this.initPronunciationPlayer();
+    this.pronunciationPlayer.play({
+      wordKey,
+      directUrl: word.pronunciationDirectUrl,
+      directFileId: word.pronunciationDirectFileId,
+      directDurationMs: word.pronunciationDirectDurationMs,
+      fallbackUrl: word.pronunciationUrl,
+      fallbackFileId: word.pronunciationFileId,
+      startMs: word.pronunciationStartMs,
+      durationMs: word.pronunciationDurationMs,
     });
   },
 

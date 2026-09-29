@@ -44,9 +44,12 @@ for ($index = 0; $index -lt $manifest.items.Count; $index += 1) {
   $item = $manifest.items[$index]
   $targetPath = Join-Path $resolvedOutput $item.fileName
   $existing = Get-Item -LiteralPath $targetPath -ErrorAction SilentlyContinue
-  if ($existing -and $existing.Length -gt 44) {
+  if ($existing -and $existing.Length -gt 1000) {
     $skipped += 1
     continue
+  }
+  if ($existing) {
+    Remove-Item -LiteralPath $targetPath -Force
   }
 
   $stream = $null
@@ -60,8 +63,8 @@ for ($index = 0; $index -lt $manifest.items.Count; $index += 1) {
     $stream = $null
 
     $created = Get-Item -LiteralPath $targetPath
-    if ($created.Length -le 44) {
-      throw "Generated WAV is empty."
+    if ($created.Length -le 1000) {
+      throw "Generated WAV is empty or too small."
     }
     $generated += 1
   } catch {

@@ -1,0 +1,229 @@
+.french-vocabulary-page {
+  gap: 18rpx;
+}
+
+.difficult-mode-banner {
+  padding: 24rpx;
+  border: 1rpx solid #ead9c1;
+  border-radius: 20rpx;
+  background: linear-gradient(135deg, #fff8ec 0%, #f8eee0 100%);
+}
+
+.difficult-mode-kicker {
+  color: #a06c43;
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.difficult-mode-title {
+  margin-top: 8rpx;
+  color: #5a4331;
+  font-size: 31rpx;
+  font-weight: 700;
+}
+
+.difficult-mode-copy {
+  margin-top: 8rpx;
+  color: #7b6757;
+  font-size: 23rpx;
+  line-height: 1.5;
+}
+
+.level-tabs,.search-row { display:flex; gap:12rpx; }
+.level-tab { flex:1; padding:14rpx; color:#817669; background:#f5ead8; border-radius:14rpx; text-align:center; }
+.level-tab.active { color:#fff; background:#4f8f73; }
+.search-row input { flex:1; min-height:70rpx; padding:0 20rpx; border-radius:14rpx; background:#fffdfa; font-size:25rpx; }
+.search-btn { width:120rpx; margin:0; font-size:24rpx; }
+.recall-hint { margin-top:28rpx; color:#817669; font-size:25rpx; }
+.reveal-btn { margin-top:24rpx; }
+.meaning-en,.meta,.example { margin-top:12rpx; color:#62584d; line-height:1.55; }
+.example { padding:18rpx; border-radius:14rpx; background:#fff8ec; font-size:25rpx; }
+.memory-link { margin-top:24rpx; border:0; color:#526d8c; background:#e4ecf5; font-size:25rpx; }
+
+.loading-card,
+.empty-card,
+.feature-disabled-card {
+  color: #817669;
+  line-height: 1.6;
+}
+
+.message-card {
+  color: #8a6730;
+  background: #fff1cf;
+  line-height: 1.6;
+}
+
+.retry-btn {
+  margin-top: 18rpx;
+  min-height: 68rpx;
+  font-size: 26rpx;
+}
+
+.feature-disabled-title,
+.complete-title {
+  color: #3d352e;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.feature-disabled-hint,
+.complete-hint {
+  margin-top: 10rpx;
+  color: #817669;
+  font-size: 25rpx;
+}
+
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.progress-label {
+  color: #817669;
+  font-size: 24rpx;
+}
+
+.round-hint {
+  margin-top: 8rpx;
+  color: #9b8f81;
+  font-size: 22rpx;
+}
+
+.progress-bar {
+  height: 14rpx;
+  margin: 10rpx 0 20rpx;
+  overflow: hidden;
+  border-radius: 999rpx;
+  background: #eadfcf;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: #4f8f73;
+}
+
+.word-card {
+  min-height: 440rpx;
+  padding: 42rpx 32rpx;
+  text-align: center;
+  background: linear-gradient(150deg, #fffdfa 0%, #eef7f1 100%);
+}
+
+.word-eyebrow {
+  color: #4f8f73;
+  font-size: 23rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.word-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18rpx;
+  margin-top: 38rpx;
+}
+
+.word-text {
+  color: #243f35;
+  font-size: 50rpx;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.audio-btn {
+  display: flex;
+  width: 76rpx;
+  height: 76rpx;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  color: #326d56;
+  background: #dff0e8;
+  font-size: 34rpx;
+  line-height: 76rpx;
+}
+
+.ipa {
+  margin-top: 20rpx;
+  color: #7b8eaa;
+  font-size: 28rpx;
+}
+
+.word-meta {
+  margin-top: 14rpx;
+  color: #817669;
+  font-size: 24rpx;
+}
+
+.meaning {
+  margin-top: 28rpx;
+  color: #3d352e;
+  font-size: 34rpx;
+  font-weight: 600;
+}
+
+.audio-hint {
+  margin-top: 36rpx;
+  color: #9b8f81;
+  font-size: 22rpx;
+}
+
+.rating-title {
+  margin: 8rpx 0 14rpx;
+  color: #62584d;
+  font-size: 26rpx;
+  text-align: center;
+}
+
+.rating-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+}
+
+.rating-btn {
+  min-height: 78rpx;
+  margin: 0;
+  border: 0;
+  border-radius: 16rpx;
+  font-size: 27rpx;
+  font-weight: 600;
+}
+
+.rating-btn[disabled] {
+  opacity: 0.55;
+}
+
+.again-btn {
+  color: #8a6730;
+  background: #fff1cf;
+}
+
+.hard-btn {
+  color: #80644a;
+  background: #f5ead8;
+}
+
+.good-btn {
+  color: #326d56;
+  background: #dff0e8;
+}
+
+.easy-btn {
+  color: #526d8c;
+  background: #e4ecf5;
+}
+
+.complete-card {
+  text-align: center;
+}
+
+.restart-btn {
+  margin-top: 28rpx;
+}

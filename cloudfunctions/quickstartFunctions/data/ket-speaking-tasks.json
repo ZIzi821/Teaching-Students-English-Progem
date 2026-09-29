@@ -1,0 +1,50 @@
+[
+  {
+    "id": "a2-key-schools-2020-part1-basics",
+    "label": "入门 · 个人信息问答",
+    "difficulty": "简单",
+    "sourceYear": 2020,
+    "part": "Speaking Part 1",
+    "phase": "Phase 1",
+    "topic": "Personal information",
+    "prompt": "请依次回答姓名、年龄和居住地问题。每题尽量使用完整句，不只回答一个单词。",
+    "timingLabel": "Part 1 全程 3–4 分钟；本题没有单独准备时间",
+    "preparationSeconds": 0,
+    "suggestedRecordingSeconds": 45,
+    "sourceLabel": "Cambridge A2 Key for Schools 2020 官方口语样题",
+    "sourceReference": "Test 1 · Paired candidate format · 第 15 页",
+    "sourceUrl": "https://www.cambridgeenglish.org/Images/561990-key-for-schools-speaking-sa-sample-test-2020-.pdf"
+  },
+  {
+    "id": "a2-key-schools-2020-part1-school-home",
+    "label": "进阶 · 学校与家庭长回答",
+    "difficulty": "进阶",
+    "sourceYear": 2020,
+    "part": "Speaking Part 1",
+    "phase": "Phase 2",
+    "topic": "School and home",
+    "prompt": "围绕学校生活和在家活动回答问题，并选择一个问题继续说明原因或举例。请尽量说 4–6 个相连的句子。",
+    "timingLabel": "Part 1 全程 3–4 分钟；正式考试直接听题回答",
+    "preparationSeconds": 0,
+    "suggestedRecordingSeconds": 75,
+    "sourceLabel": "Cambridge A2 Key for Schools 2020 官方口语样题",
+    "sourceReference": "Test 1 · Paired candidate format · 第 16 页",
+    "sourceUrl": "https://www.cambridgeenglish.org/Images/561990-key-for-schools-speaking-sa-sample-test-2020-.pdf"
+  },
+  {
+    "id": "a2-key-schools-2020-part2-hobbies",
+    "label": "挑战 · 兴趣爱好讨论",
+    "difficulty": "挑战",
+    "sourceYear": 2020,
+    "part": "Speaking Part 2",
+    "phase": "Phase 1–2",
+    "topic": "Hobbies",
+    "prompt": "围绕电脑游戏、乐器、足球、阅读和绘画表达喜欢或不喜欢，并说明原因；最后说出最喜欢的一项。",
+    "timingLabel": "Part 2 全程 5–6 分钟；双人讨论约 1–2 分钟，官方未规定固定准备秒数",
+    "preparationSeconds": 15,
+    "suggestedRecordingSeconds": 120,
+    "sourceLabel": "Cambridge A2 Key for Schools 2020 官方口语样题",
+    "sourceReference": "Test 1 · Paired candidate format · 第 17–18 页",
+    "sourceUrl": "https://www.cambridgeenglish.org/Images/561990-key-for-schools-speaking-sa-sample-test-2020-.pdf"
+  }
+]

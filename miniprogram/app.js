@@ -14,5 +14,14 @@ App({
         traceUser: true,
       });
     }
+    if (typeof wx.setInnerAudioOption === "function") {
+      wx.setInnerAudioOption({
+        obeyMuteSwitch: false,
+        mixWithOther: true,
+        fail(error) {
+          console.warn("configure mini program audio output failed", error);
+        },
+      });
+    }
   },
 });

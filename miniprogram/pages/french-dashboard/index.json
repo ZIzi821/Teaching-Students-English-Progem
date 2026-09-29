@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "法语学习进度",
+  "usingComponents": {
+    "data-chart": "/components/data-chart/index"
+  }
+}

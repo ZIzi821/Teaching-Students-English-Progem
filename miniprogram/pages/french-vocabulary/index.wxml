@@ -1,0 +1,61 @@
+<view class="page french-vocabulary-page">
+  <teacher-preview-banner wx:if="{{isTeacherPreview}}"></teacher-preview-banner>
+  <view class="difficult-mode-banner" wx:if="{{reviewMode === 'difficult' && !freeBrowse}}">
+    <view class="difficult-mode-kicker">PERSONAL PRACTICE</view>
+    <view class="difficult-mode-title">难词专项复习</view>
+    <view class="difficult-mode-copy">根据你的 Again、Hard 和记忆稳定度排序，先练最需要巩固的词。</view>
+  </view>
+  <view class="level-tabs">
+    <view wx:for="{{levels}}" wx:key="*this" class="level-tab {{level === item ? 'active' : ''}}" data-level="{{item}}" bindtap="switchLevel">{{item}}</view>
+  </view>
+  <view class="search-row">
+    <input placeholder="自由浏览：搜索法语或中文" value="{{query}}" bindinput="onSearch" bindconfirm="searchWords" />
+    <button class="ghost-btn search-btn" bindtap="searchWords">搜索</button>
+  </view>
+
+  <view class="card loading-card" wx:if="{{loading}}">正在准备复习…</view>
+  <view class="card message-card" wx:elif="{{message}}">
+    <view>{{message}}</view>
+    <button class="ghost-btn retry-btn" bindtap="loadQueue">重新加载</button>
+  </view>
+  <view class="card feature-disabled-card" wx:elif="{{!enabled}}">法语学习暂未开启，请联系老师。</view>
+  <view class="card empty-card" wx:elif="{{!currentWord}}">{{freeBrowse ? '没有匹配单词' : reviewMode === 'difficult' ? '目前没有需要专项复习的难词' : '今天这一轮已经完成'}}</view>
+
+  <block wx:else>
+    <view class="progress-row">
+      <text>第 {{currentIndex + 1}} / {{queue.length}} 个</text>
+      <text>{{roundHint}}</text>
+    </view>
+    <view class="progress-bar"><view class="progress-fill" style="width: {{((currentIndex + 1) / queue.length) * 100}}%;"></view></view>
+
+    <view class="card word-card">
+      <view class="word-eyebrow">{{currentWord.cefrLevel}} · {{currentWord.topicLabel || '法语词汇'}}</view>
+      <view class="word-line">
+        <text class="word-text">{{currentWord.display}}</text>
+        <button class="audio-btn" bindtap="playAudio" disabled="{{audioLoading}}" aria-label="播放法语发音">{{audioLoading ? '…' : '🔊'}}</button>
+      </view>
+      <view wx:if="{{!revealed}}" class="recall-hint">先在心里回忆意思，再翻开答案。</view>
+      <button wx:if="{{!revealed}}" class="primary-btn reveal-btn" bindtap="reveal">显示答案</button>
+      <block wx:else>
+        <view class="ipa">{{currentWord.ipa}}</view>
+        <view class="meaning">{{currentWord.meaningCN}}</view>
+        <view class="meaning-en">{{currentWord.meaningEN}}</view>
+        <view class="meta">
+          {{currentWord.posLabel}}
+          <text wx:if="{{currentWord.genderLabel}}"> · {{currentWord.genderLabel}} · {{currentWord.article}}</text>
+          <text wx:if="{{currentWord.plural}}"> · 复数 {{currentWord.plural}}</text>
+        </view>
+        <view class="example">{{currentWord.exampleSentence}}<view>{{currentWord.exampleMeaningCN}}</view></view>
+        <button class="memory-link" bindtap="openMemory">查看记忆曲线</button>
+      </block>
+    </view>
+
+    <view class="card preview-rating-tip" wx:if="{{revealed && isTeacherPreview}}">只读预览：可以查看答案和记忆曲线，但不能替学生评分。</view>
+    <view wx:if="{{revealed && !isTeacherPreview}}" class="rating-grid">
+      <button class="rating-btn again-btn" data-result="again" bindtap="review" disabled="{{submitting}}">再来一次 · Again</button>
+      <button class="rating-btn hard-btn" data-result="hard" bindtap="review" disabled="{{submitting}}">有点难 · Hard</button>
+      <button class="rating-btn good-btn" data-result="good" bindtap="review" disabled="{{submitting}}">记住了 · Good</button>
+      <button class="rating-btn easy-btn" data-result="easy" bindtap="review" disabled="{{submitting}}">太简单 · Easy</button>
+    </view>
+  </block>
+</view>

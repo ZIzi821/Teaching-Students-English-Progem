@@ -759,3 +759,95 @@
   color: #8a5d54;
   background: #f6e9e5;
 }
+.learning-route-card {
+  margin-bottom: 24rpx;
+  padding: 28rpx 24rpx;
+}
+
+.route-head,
+.route-step {
+  display: flex;
+  align-items: center;
+}
+
+.route-head {
+  justify-content: space-between;
+}
+
+.route-head .section-title {
+  margin-bottom: 0;
+}
+
+.route-time {
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  color: #557061;
+  background: #e8f2ed;
+  font-size: 21rpx;
+}
+
+.route-hint {
+  margin: 10rpx 0 24rpx;
+}
+
+.route-step {
+  min-height: 122rpx;
+  gap: 18rpx;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  background: #f8f3eb;
+}
+
+.route-step-primary {
+  background: #e8f3ed;
+}
+
+.route-number {
+  display: flex;
+  width: 58rpx;
+  height: 58rpx;
+  flex: 0 0 58rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #4f8f73;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.route-number-secondary {
+  background: #b78a45;
+}
+
+.route-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.route-title {
+  color: #30473d;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.route-note {
+  margin-top: 7rpx;
+  color: #71675d;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.route-action {
+  flex-shrink: 0;
+  color: #3f765f;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.route-connector {
+  width: 4rpx;
+  height: 18rpx;
+  margin-left: 47rpx;
+  background: #d8cdbc;
+}

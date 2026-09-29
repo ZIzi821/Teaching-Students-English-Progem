@@ -16,6 +16,10 @@
   height: 270rpx;
 }
 
+.line-canvas {
+  height: 290rpx;
+}
+
 .bar-empty-state {
   position: absolute;
   top: 66rpx;

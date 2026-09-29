@@ -1,0 +1,828 @@
+{
+  "schemaVersion": 2,
+  "language": "fr-FR",
+  "level": "A1-A2",
+  "cefrAlignment": "Editorially CEFR-aligned; not an official CEFR list or certification material.",
+  "topics": [
+    "identity",
+    "likes",
+    "food",
+    "places",
+    "time",
+    "needs",
+    "communication",
+    "plans",
+    "travel",
+    "opinions",
+    "services",
+    "problems",
+    "family",
+    "weather",
+    "study",
+    "shopping",
+    "health",
+    "social",
+    "work-study",
+    "money"
+  ],
+  "items": [
+    {
+      "id": "a1-builder-identity",
+      "cefrLevel": "A1",
+      "topic": "identity",
+      "pattern": "Je m'appelle + [name].",
+      "instructionCN": "Use for your name.",
+      "example": "Je m'appelle Mei.",
+      "promptCN": "Use for your name.",
+      "answer": "Je m'appelle Mei.",
+      "meaningCN": "Use for your name.",
+      "scrambledTokens": [
+        "Mei",
+        "m'appelle",
+        "Je"
+      ],
+      "slots": [
+        "name"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-home",
+      "cefrLevel": "A1",
+      "topic": "identity",
+      "pattern": "J'habite à + [city].",
+      "instructionCN": "Use à with a city.",
+      "example": "J'habite à Paris.",
+      "promptCN": "Use à with a city.",
+      "answer": "J'habite à Paris.",
+      "meaningCN": "Use à with a city.",
+      "scrambledTokens": [
+        "Paris",
+        "à",
+        "J'habite"
+      ],
+      "slots": [
+        "city"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-like",
+      "cefrLevel": "A1",
+      "topic": "likes",
+      "pattern": "J'aime + [noun / infinitive].",
+      "instructionCN": "State a simple preference.",
+      "example": "J'aime la musique.",
+      "promptCN": "State a simple preference.",
+      "answer": "J'aime la musique.",
+      "meaningCN": "State a simple preference.",
+      "scrambledTokens": [
+        "musique",
+        "la",
+        "J'aime"
+      ],
+      "slots": [
+        "noun / infinitive"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-order",
+      "cefrLevel": "A1",
+      "topic": "food",
+      "pattern": "Je voudrais + [item], s'il vous plaît.",
+      "instructionCN": "Polite ordering.",
+      "example": "Je voudrais un thé, s'il vous plaît.",
+      "promptCN": "Polite ordering.",
+      "answer": "Je voudrais un thé, s'il vous plaît.",
+      "meaningCN": "Polite ordering.",
+      "scrambledTokens": [
+        "plaît",
+        "vous",
+        "s'il",
+        "thé,",
+        "un",
+        "voudrais",
+        "Je"
+      ],
+      "slots": [
+        "item"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-location",
+      "cefrLevel": "A1",
+      "topic": "places",
+      "pattern": "Où est + [place] ?",
+      "instructionCN": "Ask where a place is.",
+      "example": "Où est la gare ?",
+      "promptCN": "Ask where a place is.",
+      "answer": "Où est la gare ?",
+      "meaningCN": "Ask where a place is.",
+      "scrambledTokens": [
+        "",
+        "gare",
+        "la",
+        "est",
+        "Où"
+      ],
+      "slots": [
+        "place"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-time",
+      "cefrLevel": "A1",
+      "topic": "time",
+      "pattern": "Il est + [number] heure(s).",
+      "instructionCN": "Give the current time.",
+      "example": "Il est deux heures.",
+      "promptCN": "Give the current time.",
+      "answer": "Il est deux heures.",
+      "meaningCN": "Give the current time.",
+      "scrambledTokens": [
+        "heures",
+        "deux",
+        "est",
+        "Il"
+      ],
+      "slots": [
+        "number"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-need",
+      "cefrLevel": "A1",
+      "topic": "needs",
+      "pattern": "J'ai besoin de + [noun].",
+      "instructionCN": "State a need; use d' before a vowel.",
+      "example": "J'ai besoin d'eau.",
+      "promptCN": "State a need; use d' before a vowel.",
+      "answer": "J'ai besoin d'eau.",
+      "meaningCN": "State a need; use d' before a vowel.",
+      "scrambledTokens": [
+        "d'eau",
+        "besoin",
+        "J'ai"
+      ],
+      "slots": [
+        "noun"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-negative",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "pattern": "Je ne + [verb] + pas.",
+      "instructionCN": "Make a present-tense sentence negative.",
+      "example": "Je ne comprends pas.",
+      "promptCN": "Make a present-tense sentence negative.",
+      "answer": "Je ne comprends pas.",
+      "meaningCN": "Make a present-tense sentence negative.",
+      "scrambledTokens": [
+        "pas",
+        "comprends",
+        "ne",
+        "Je"
+      ],
+      "slots": [
+        "verb"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-plan",
+      "cefrLevel": "A2",
+      "topic": "plans",
+      "pattern": "Je vais + [infinitive] + [time].",
+      "instructionCN": "State a near-future plan.",
+      "example": "Je vais visiter le musée samedi.",
+      "promptCN": "State a near-future plan.",
+      "answer": "Je vais visiter le musée samedi.",
+      "meaningCN": "State a near-future plan.",
+      "scrambledTokens": [
+        "samedi",
+        "musée",
+        "le",
+        "visiter",
+        "vais",
+        "Je"
+      ],
+      "slots": [
+        "infinitive",
+        "time"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-past",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "pattern": "J'ai + [past participle] + [detail].",
+      "instructionCN": "Report a completed action with avoir.",
+      "example": "J'ai réservé une chambre.",
+      "promptCN": "Report a completed action with avoir.",
+      "answer": "J'ai réservé une chambre.",
+      "meaningCN": "Report a completed action with avoir.",
+      "scrambledTokens": [
+        "chambre",
+        "une",
+        "réservé",
+        "J'ai"
+      ],
+      "slots": [
+        "past participle",
+        "detail"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-opinion",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "pattern": "Je pense que + [clause].",
+      "instructionCN": "Give a reasoned basic opinion.",
+      "example": "Je pense que le métro est pratique.",
+      "promptCN": "Give a reasoned basic opinion.",
+      "answer": "Je pense que le métro est pratique.",
+      "meaningCN": "Give a reasoned basic opinion.",
+      "scrambledTokens": [
+        "pratique",
+        "est",
+        "métro",
+        "le",
+        "que",
+        "pense",
+        "Je"
+      ],
+      "slots": [
+        "clause"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-compare",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "pattern": "A est plus + [adjective] + que B.",
+      "instructionCN": "Compare two things.",
+      "example": "Le train est plus rapide que le bus.",
+      "promptCN": "Compare two things.",
+      "answer": "Le train est plus rapide que le bus.",
+      "meaningCN": "Compare two things.",
+      "scrambledTokens": [
+        "bus",
+        "le",
+        "que",
+        "rapide",
+        "plus",
+        "est",
+        "train",
+        "Le"
+      ],
+      "slots": [
+        "adjective"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-request",
+      "cefrLevel": "A2",
+      "topic": "services",
+      "pattern": "Pourriez-vous + [infinitive] ?",
+      "instructionCN": "Make a polite formal request.",
+      "example": "Pourriez-vous répéter ?",
+      "promptCN": "Make a polite formal request.",
+      "answer": "Pourriez-vous répéter ?",
+      "meaningCN": "Make a polite formal request.",
+      "scrambledTokens": [
+        "",
+        "répéter",
+        "Pourriez-vous"
+      ],
+      "slots": [
+        "infinitive"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-problem",
+      "cefrLevel": "A2",
+      "topic": "problems",
+      "pattern": "Il y a + [problem].",
+      "instructionCN": "Report a basic issue.",
+      "example": "Il y a un problème avec la porte.",
+      "promptCN": "Report a basic issue.",
+      "answer": "Il y a un problème avec la porte.",
+      "meaningCN": "Report a basic issue.",
+      "scrambledTokens": [
+        "porte",
+        "la",
+        "avec",
+        "problème",
+        "un",
+        "a",
+        "y",
+        "Il"
+      ],
+      "slots": [
+        "problem"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-arrangement",
+      "cefrLevel": "A2",
+      "topic": "plans",
+      "pattern": "On se retrouve à + [place/time].",
+      "instructionCN": "Make an arrangement.",
+      "example": "On se retrouve à la gare à neuf heures.",
+      "promptCN": "Make an arrangement.",
+      "answer": "On se retrouve à la gare à neuf heures.",
+      "meaningCN": "Make an arrangement.",
+      "scrambledTokens": [
+        "heures",
+        "neuf",
+        "à",
+        "gare",
+        "la",
+        "à",
+        "retrouve",
+        "se",
+        "On"
+      ],
+      "slots": [
+        "place/time"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-reason",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "pattern": "... parce que + [clause].",
+      "instructionCN": "Add a short reason.",
+      "example": "Je reste ici parce qu'il pleut.",
+      "promptCN": "Add a short reason.",
+      "answer": "Je reste ici parce qu'il pleut.",
+      "meaningCN": "Add a short reason.",
+      "scrambledTokens": [
+        "pleut",
+        "qu'il",
+        "parce",
+        "ici",
+        "reste",
+        "Je"
+      ],
+      "slots": [
+        "clause"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-possessive",
+      "cefrLevel": "A1",
+      "topic": "family",
+      "pattern": "Voici mon/ma + [family member].",
+      "instructionCN": "介绍一位家人。",
+      "example": "Voici ma grand-mère.",
+      "promptCN": "介绍一位家人。",
+      "answer": "Voici ma grand-mère.",
+      "meaningCN": "介绍一位家人。",
+      "scrambledTokens": [
+        "grand-mère",
+        "ma",
+        "Voici"
+      ],
+      "slots": [
+        "family member"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-weather",
+      "cefrLevel": "A1",
+      "topic": "weather",
+      "pattern": "Il y a + [weather noun] + aujourd’hui.",
+      "instructionCN": "说今天的天气。",
+      "example": "Il y a du vent aujourd’hui.",
+      "promptCN": "说今天的天气。",
+      "answer": "Il y a du vent aujourd’hui.",
+      "meaningCN": "说今天的天气。",
+      "scrambledTokens": [
+        "aujourd’hui",
+        "vent",
+        "du",
+        "a",
+        "y",
+        "Il"
+      ],
+      "slots": [
+        "weather noun"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-classroom",
+      "cefrLevel": "A1",
+      "topic": "study",
+      "pattern": "Ouvrez + [object], s’il vous plaît.",
+      "instructionCN": "给出简单课堂指令。",
+      "example": "Ouvrez le livre, s’il vous plaît.",
+      "promptCN": "给出简单课堂指令。",
+      "answer": "Ouvrez le livre, s’il vous plaît.",
+      "meaningCN": "给出简单课堂指令。",
+      "scrambledTokens": [
+        "plaît",
+        "vous",
+        "s’il",
+        "livre,",
+        "le",
+        "Ouvrez"
+      ],
+      "slots": [
+        "object"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-builder-shopping",
+      "cefrLevel": "A1",
+      "topic": "shopping",
+      "pattern": "Je cherche + [item].",
+      "instructionCN": "说明你在找什么。",
+      "example": "Je cherche des chaussures noires.",
+      "promptCN": "说明你在找什么。",
+      "answer": "Je cherche des chaussures noires.",
+      "meaningCN": "说明你在找什么。",
+      "scrambledTokens": [
+        "noires",
+        "chaussures",
+        "des",
+        "cherche",
+        "Je"
+      ],
+      "slots": [
+        "item"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-delay",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "pattern": "Il y a + [duration] de retard.",
+      "instructionCN": "说明交通延误。",
+      "example": "Il y a quinze minutes de retard.",
+      "promptCN": "说明交通延误。",
+      "answer": "Il y a quinze minutes de retard.",
+      "meaningCN": "说明交通延误。",
+      "scrambledTokens": [
+        "retard",
+        "de",
+        "minutes",
+        "quinze",
+        "a",
+        "y",
+        "Il"
+      ],
+      "slots": [
+        "duration"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-booking",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "pattern": "Je voudrais réserver + [item] pour [duration].",
+      "instructionCN": "预订服务。",
+      "example": "Je voudrais réserver une chambre pour deux nuits.",
+      "promptCN": "预订服务。",
+      "answer": "Je voudrais réserver une chambre pour deux nuits.",
+      "meaningCN": "预订服务。",
+      "scrambledTokens": [
+        "nuits",
+        "deux",
+        "pour",
+        "chambre",
+        "une",
+        "réserver",
+        "voudrais",
+        "Je"
+      ],
+      "slots": [
+        "item",
+        "duration"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-message",
+      "cefrLevel": "A2",
+      "topic": "communication",
+      "pattern": "Je vous envoie + [item] + [time].",
+      "instructionCN": "说明发送安排。",
+      "example": "Je vous envoie le document ce soir.",
+      "promptCN": "说明发送安排。",
+      "answer": "Je vous envoie le document ce soir.",
+      "meaningCN": "说明发送安排。",
+      "scrambledTokens": [
+        "soir",
+        "ce",
+        "document",
+        "le",
+        "envoie",
+        "vous",
+        "Je"
+      ],
+      "slots": [
+        "item",
+        "time"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-health",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "pattern": "J’ai mal à + [body part].",
+      "instructionCN": "描述疼痛部位。",
+      "example": "J’ai mal au ventre.",
+      "promptCN": "描述疼痛部位。",
+      "answer": "J’ai mal au ventre.",
+      "meaningCN": "描述疼痛部位。",
+      "scrambledTokens": [
+        "ventre",
+        "au",
+        "mal",
+        "J’ai"
+      ],
+      "slots": [
+        "body part"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-advice",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "pattern": "Il faut + [infinitive].",
+      "instructionCN": "给出简单建议。",
+      "example": "Il faut se reposer.",
+      "promptCN": "给出简单建议。",
+      "answer": "Il faut se reposer.",
+      "meaningCN": "给出简单建议。",
+      "scrambledTokens": [
+        "reposer",
+        "se",
+        "faut",
+        "Il"
+      ],
+      "slots": [
+        "infinitive"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-invite",
+      "cefrLevel": "A2",
+      "topic": "social",
+      "pattern": "Est-ce que tu peux + [infinitive] ?",
+      "instructionCN": "邀请或请求。",
+      "example": "Est-ce que tu peux venir samedi ?",
+      "promptCN": "邀请或请求。",
+      "answer": "Est-ce que tu peux venir samedi ?",
+      "meaningCN": "邀请或请求。",
+      "scrambledTokens": [
+        "",
+        "samedi",
+        "venir",
+        "peux",
+        "tu",
+        "que",
+        "Est-ce"
+      ],
+      "slots": [
+        "infinitive"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-status",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "pattern": "Je suis + [adjective] + [time].",
+      "instructionCN": "说明当前状态。",
+      "example": "Je suis occupé cet après-midi.",
+      "promptCN": "说明当前状态。",
+      "answer": "Je suis occupé cet après-midi.",
+      "meaningCN": "说明当前状态。",
+      "scrambledTokens": [
+        "après-midi",
+        "cet",
+        "occupé",
+        "suis",
+        "Je"
+      ],
+      "slots": [
+        "adjective",
+        "time"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-builder-money",
+      "cefrLevel": "A2",
+      "topic": "money",
+      "pattern": "Ça coûte + [price].",
+      "instructionCN": "说明价格。",
+      "example": "Ça coûte vingt euros.",
+      "promptCN": "说明价格。",
+      "answer": "Ça coûte vingt euros.",
+      "meaningCN": "说明价格。",
+      "scrambledTokens": [
+        "euros",
+        "vingt",
+        "coûte",
+        "Ça"
+      ],
+      "slots": [
+        "price"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    }
+  ]
+}

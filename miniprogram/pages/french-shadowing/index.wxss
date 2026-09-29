@@ -1,0 +1,145 @@
+.french-shadowing-page {
+  gap: 18rpx;
+}
+
+.level-tabs { display: flex; gap: 12rpx; }
+.level-tab { flex: 1; padding: 16rpx; border-radius: 14rpx; color: #817669; background: #f5ead8; text-align: center; }
+.level-tab.active { color: #fff; background: #7b8eaa; }
+
+.loading-card,
+.empty-card,
+.feature-disabled-card {
+  color: #817669;
+  line-height: 1.6;
+}
+
+.message-card {
+  color: #8a6730;
+  background: #fff1cf;
+  line-height: 1.6;
+}
+
+.retry-btn {
+  margin-top: 18rpx;
+  min-height: 68rpx;
+  font-size: 26rpx;
+}
+
+.feature-disabled-title,
+.complete-title {
+  color: #3d352e;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.feature-disabled-hint,
+.complete-hint {
+  margin-top: 10rpx;
+  color: #817669;
+  font-size: 25rpx;
+}
+
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.progress-label {
+  color: #817669;
+  font-size: 24rpx;
+}
+
+.progress-bar {
+  height: 14rpx;
+  margin: 10rpx 0 20rpx;
+  overflow: hidden;
+  border-radius: 999rpx;
+  background: #eadfcf;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: #7b8eaa;
+}
+
+.sentence-card {
+  padding: 40rpx 30rpx 32rpx;
+  text-align: center;
+  background: linear-gradient(150deg, #fffdfa 0%, #f3f6fb 100%);
+}
+
+.sentence-eyebrow {
+  color: #7b8eaa;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.sentence-text {
+  margin-top: 34rpx;
+  color: #243f35;
+  font-size: 40rpx;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.sentence-translation {
+  margin-top: 20rpx;
+  color: #62584d;
+  font-size: 29rpx;
+  line-height: 1.6;
+}
+
+.sentence-note {
+  margin-top: 16rpx;
+  color: #817669;
+  font-size: 23rpx;
+  line-height: 1.5;
+}
+
+.listen-btn {
+  min-height: 76rpx;
+  margin: 32rpx auto 0;
+  padding: 0 32rpx;
+  border: 0;
+  border-radius: 999rpx;
+  color: #526d8c;
+  background: #e4ecf5;
+  font-size: 27rpx;
+  font-weight: 600;
+  line-height: 76rpx;
+}
+
+.repeat-hint {
+  color: #9b8f81;
+  font-size: 23rpx;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.sentence-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+}
+
+.action-btn,
+.next-btn {
+  width: 100%;
+  min-height: 80rpx;
+  margin: 0;
+  font-size: 27rpx;
+}
+
+.next-btn {
+  grid-column: 1 / -1;
+}
+
+.complete-card {
+  text-align: center;
+}
+
+.restart-btn {
+  margin-top: 28rpx;
+}

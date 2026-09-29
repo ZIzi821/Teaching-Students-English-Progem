@@ -1,10 +1,42 @@
-<view class="page home-page">
+<view class="page home-page {{isTeacher ? 'has-teacher-tabbar' : ''}}">
+  <view class="preview-banner" wx:if="{{isTeacherPreview}}">
+    <view>
+      <view class="preview-banner-title">正在查看 {{currentStudent.name}} 的真实学生首页</view>
+      <view class="preview-banner-hint">页面和学生端一致；可以体验流程，但不会写入学习、作业或录音记录。</view>
+    </view>
+    <view class="preview-banner-action" bindtap="goBackToTeacher">返回教师端</view>
+  </view>
   <view class="hero">
-    <view class="eyebrow">{{teacherName}} · English Class</view>
-    <view class="title">朱老师英语课堂</view>
-    <view class="subtitle" wx:if="{{isTeacher}}">先选一位学生，再查看课程、错题和预约。</view>
-    <view class="subtitle" wx:if="{{isStudent}}">{{currentStudent.name}}，今天也来学一点吧。</view>
+    <view class="hero-topline">
+      <view class="eyebrow">{{teacherName}} · English Class</view>
+      <view class="student-side-entry" wx:if="{{isTeacher}}" bindtap="toggleStudentSwitcher">
+        学生端 <text class="student-side-arrow">{{showStudentSwitcher ? '收起' : '进入'}}</text>
+      </view>
+    </view>
+    <view class="title">{{homeTitle}}</view>
+    <view class="subtitle" wx:if="{{isTeacher}}">先选一位学生，再查看课程、错题和学习情况。</view>
+    <view class="subtitle" wx:if="{{isStudent}}">{{currentStudent.name}}，{{studentHomeSubtitle}}</view>
     <view class="subtitle" wx:if="{{isGuest}}">请输入朱老师给你的访问码。</view>
+  </view>
+
+  <view class="card student-switcher" wx:if="{{isTeacher && showStudentSwitcher}}">
+    <view class="student-switcher-head">
+      <view>
+        <view class="student-switcher-title">选择要查看的学生</view>
+        <view class="student-switcher-hint">进入只读预览，不会改变学生的绑定或学习记录。</view>
+      </view>
+      <view class="student-switcher-close" bindtap="toggleStudentSwitcher">关闭</view>
+    </view>
+    <view class="student-switcher-list">
+      <view class="student-switcher-item" wx:for="{{studentsProgress}}" wx:key="_id" data-id="{{item._id}}" bindtap="openStudentPreview">
+        <view class="student-switcher-avatar">{{item.initial}}</view>
+        <view class="student-switcher-main">
+          <view class="student-switcher-name">{{item.name}}</view>
+          <view class="student-switcher-grade">{{item.grade || '学生学习主页'}}</view>
+        </view>
+        <view class="student-switcher-link">查看界面 →</view>
+      </view>
+    </view>
   </view>
 
   <view class="error-tip" wx:if="{{errorMessage}}">{{errorMessage}}</view>
@@ -20,54 +52,72 @@
     </view>
   </view>
 
-  <view class="stats-row" wx:if="{{isStudent}}">
-    <view class="stat-card">
+  <view class="stats-row" wx:if="{{isStudent && (englishCourseEnabled || mistakeLearningEnabled)}}">
+    <view class="stat-card" wx:if="{{englishCourseEnabled}}">
       <view class="stat-number">{{stats.progress.progressText}}</view>
       <view class="stat-label">我的课程进度</view>
     </view>
-    <view class="stat-card">
+    <view class="stat-card" wx:if="{{mistakeLearningEnabled}}">
       <view class="stat-number">{{stats.mistakeCount}}</view>
       <view class="stat-label">我的错题</view>
     </view>
   </view>
 
-  <view class="home-progress" wx:if="{{isStudent}}">
+  <view class="home-progress" wx:if="{{isStudent && englishCourseEnabled}}">
     <view class="home-progress-fill" style="width: {{stats.progress.progressPercent}}%;"></view>
   </view>
 
-  <view class="card home-vocabulary-card" wx:if="{{isStudent && vocabularyPulse.enabled}}">
-    <view class="home-vocabulary-top">
+  <view class="card today-plan-card" wx:if="{{isStudent && studentPlanSteps.length}}">
+    <view class="today-plan-head">
       <view>
-        <view class="home-vocabulary-title">今日单词</view>
-        <view class="home-vocabulary-hint">
-          {{vocabularyPulse.completed ? '今天的单词学完了' : '今天还差 ' + vocabularyPulse.remainingCount + ' 个'}}
-        </view>
+        <view class="today-plan-title">今天怎么学？</view>
+        <view class="today-plan-hint">按顺序完成，每一步都很清楚</view>
       </view>
-      <view class="home-vocabulary-count">{{vocabularyPulse.reviewedCount}} / {{vocabularyPulse.goal}}</view>
+      <view class="today-plan-time">约 5～15 分钟</view>
     </view>
-    <view class="home-vocabulary-progress">
-      <view class="home-vocabulary-progress-fill" style="width: {{vocabularyPulse.progressPercent}}%;"></view>
+    <view
+      class="today-plan-step plan-step-{{item.tone}}"
+      wx:for="{{studentPlanSteps}}"
+      wx:key="action"
+      data-action="{{item.action}}"
+      bindtap="handlePlanStep"
+    >
+      <view class="today-plan-number">{{item.number}}</view>
+      <view class="today-plan-copy">
+        <view class="today-plan-step-title">{{item.title}}</view>
+        <view class="today-plan-step-hint">{{item.hint}}</view>
+      </view>
+      <view class="today-plan-action">{{item.actionLabel}}</view>
     </view>
-    <view class="home-vocabulary-challenge" bindtap="goVocabularyChallenge">6 题单词小测 · 约 2 分钟 →</view>
   </view>
 
-  <view class="card next-booking-card" wx:if="{{nextLessonBooking}}" bindtap="goNextLessonBooking">
-    <view class="next-booking-eyebrow">下一节课</view>
-    <view class="next-booking-main">
+  <view class="card teacher-homework-notice-card" wx:if="{{isTeacher && homeworkCompletionNotices.length}}">
+    <view class="teacher-homework-notice-head">
       <view>
-        <view class="next-booking-time">{{nextLessonBooking.confirmedDate}} · {{nextLessonBooking.confirmedTime}}</view>
-        <view class="next-booking-student" wx:if="{{isTeacher && nextLessonBooking.studentName}}">{{nextLessonBooking.studentName}}</view>
-        <view class="next-booking-meeting" wx:if="{{nextLessonBooking.meetingNo}}">会议号：{{nextLessonBooking.meetingNo}}</view>
+        <view class="teacher-homework-notice-kicker">课后任务动态</view>
+        <view class="teacher-homework-notice-title">待查看的新动态</view>
       </view>
-      <view class="next-booking-link">查看 →</view>
+      <view class="teacher-homework-notice-actions">
+        <view class="teacher-homework-notice-count">{{homeworkCompletionNotices.length}} 条</view>
+        <view class="teacher-homework-dismiss" catchtap="dismissHomeworkActivities">全部已看</view>
+      </view>
+    </view>
+    <view class="teacher-homework-notice-item" wx:for="{{homeworkCompletionNotices}}" wx:key="_id" data-id="{{item._id}}" data-activity-at="{{item.activityAtMs}}" bindtap="goHomeworkActivity">
+      <view>
+        <view class="teacher-homework-student">{{item.studentName || '学生'}} · {{item.title}}</view>
+        <view class="teacher-homework-time">
+          {{item.activityText}}<text wx:if="{{item.activityType === 'recording' && item.recordingCount > 1}}">（{{item.recordingCount}}份）</text> · {{item.activityLabel}}
+        </view>
+      </view>
+      <view class="teacher-homework-link">查看 →</view>
     </view>
   </view>
 
   <view class="actions" wx:if="{{isTeacher}}">
     <view class="primary-btn" bindtap="goStudents">选择学生</view>
+    <view class="ghost-btn french-entry-btn" bindtap="goFrenchLearning">法语学习</view>
     <view class="management-title">常用功能</view>
     <view class="management-grid">
-      <view class="ghost-btn" bindtap="goLessonBookings">处理预约</view>
       <view class="ghost-btn" bindtap="goAddLesson">记录课程</view>
       <view class="ghost-btn" bindtap="goAddMistake">快速记错题</view>
       <view class="ghost-btn" bindtap="goAddStudent">添加学生</view>
@@ -75,13 +125,19 @@
   </view>
 
   <view class="actions" wx:if="{{isStudent}}">
-    <view class="primary-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabulary">
-      {{vocabularyPulse.completed ? '查看今天的单词' : '继续背单词 · 还差 ' + vocabularyPulse.remainingCount + ' 个'}}
+    <view class="primary-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabularyStudy">
+      {{vocabularyPulse.completed ? '查看今日背词结果' : '① 开始背单词 · 还差 ' + vocabularyPulse.remainingCount + ' 个'}}
     </view>
-    <view class="primary-btn" wx:else bindtap="goMyLessons">查看学习主页</view>
+    <view class="primary-btn" wx:elif="{{englishCourseEnabled}}" bindtap="goMyLessons">查看英语课程与作业</view>
+    <view class="primary-btn" wx:elif="{{mistakeLearningEnabled}}" bindtap="goMyLessons">查看英语错题</view>
+    <view class="primary-btn french-primary-btn" wx:elif="{{currentStudent.frenchLearningEnabled}}" bindtap="goFrenchLearning">进入法语学习</view>
+    <view class="disabled-home-action" wx:else>老师暂时还没有开启学习功能</view>
     <view class="student-action-grid">
-      <view class="ghost-btn" bindtap="goMyLessons">课程与错题</view>
-      <view class="ghost-btn" bindtap="goLessonBookings">预约与会议号</view>
+      <view class="ghost-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabulary">查词与学习记录</view>
+      <view class="ghost-btn" wx:if="{{englishCourseEnabled}}" bindtap="goHomeworkTasks">全部课后任务</view>
+      <view class="ghost-btn" wx:if="{{englishCourseEnabled}}" bindtap="goMyLessons">英语课程与作业</view>
+      <view class="ghost-btn" wx:elif="{{mistakeLearningEnabled}}" bindtap="goMyLessons">英语错题</view>
+      <view class="ghost-btn" wx:if="{{currentStudent.frenchLearningEnabled}}" bindtap="goFrenchLearning">法语学习</view>
     </view>
   </view>
 
@@ -120,15 +176,31 @@
     </view>
   </view>
 
-  <view class="section-title">最近英语课</view>
-  <view class="empty" wx:if="{{!recentLessons.length}}">还没有可以查看的课程。</view>
-  <view class="card lesson-card" wx:for="{{recentLessons}}" wx:key="_id" data-id="{{item._id}}" bindtap="goLessonDetail" hover-class="lesson-card-hover">
-    <view class="lesson-main">
-      <view class="lesson-title">{{item.title}}</view>
-      <view class="lesson-meta">{{item.subject}} · {{item.lessonDate}}</view>
+  <block wx:if="{{!isStudent || englishCourseEnabled}}">
+    <view class="section-title">最近英语课</view>
+    <view class="empty" wx:if="{{!recentLessons.length}}">还没有可以查看的课程。</view>
+    <view class="card lesson-card" wx:for="{{recentLessons}}" wx:key="_id" data-id="{{item._id}}" bindtap="goLessonDetail" hover-class="lesson-card-hover">
+      <view class="lesson-main">
+        <view class="lesson-title">{{item.title}}</view>
+        <view class="lesson-meta">{{item.subject}} · {{item.lessonDate}}</view>
+      </view>
+      <view class="student-line" wx:if="{{isTeacher && item.studentName}}">学生：{{item.studentName}}</view>
+      <view class="lesson-task-row" wx:if="{{item.homeworkTask || item.recordingTaskEnabled}}">
+        <text class="lesson-task-badge" wx:if="{{item.homeworkTask}}">课后任务</text>
+        <text class="lesson-task-badge recording-task-badge" wx:if="{{item.recordingTaskEnabled}}">录音任务</text>
+        <text class="lesson-task-badge {{item.homeworkCompleted ? 'homework-done-badge' : 'homework-waiting-badge'}}">{{item.homeworkCompleted ? '学生已完成' : '等待完成'}}</text>
+      </view>
+      <view class="lesson-summary">{{item.masterySummary || item.summary}}</view>
     </view>
-    <view class="student-line" wx:if="{{isTeacher && item.studentName}}">学生：{{item.studentName}}</view>
-    <view class="lesson-summary">{{item.summary}}</view>
-  </view>
+  </block>
 
+  <view class="card identity-card" wx:if="{{(isTeacher || isStudent) && !isTeacherPreview}}">
+    <view>
+      <view class="identity-title">当前身份</view>
+      <view class="identity-value">{{isTeacher ? '教师端' : currentStudent.name + '的学生端'}}</view>
+      <view class="identity-hint">退出只解除当前微信的身份绑定，不会删除任何学习资料。</view>
+    </view>
+    <view class="identity-exit" bindtap="unbindIdentity">退出绑定</view>
+  </view>
+  <teacher-tabbar wx:if="{{isTeacher}}" current="home"></teacher-tabbar>
 </view>

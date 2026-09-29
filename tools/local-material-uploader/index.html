@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>电脑课程资料上传助手</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5efe4; color: #2f2a24; font-family: "Microsoft YaHei", sans-serif; }
+    main { max-width: 720px; margin: 48px auto; padding: 0 20px; }
+    .card { padding: 30px; border: 1px solid #e5d7c5; border-radius: 18px; background: #fffdf9; box-shadow: 0 12px 34px rgba(73,54,32,.08); }
+    h1 { margin: 0 0 10px; font-size: 28px; }
+    p { color: #756b60; line-height: 1.7; }
+    label { display: block; margin: 24px 0 9px; font-weight: 700; }
+    input[type="text"], input[type="file"] { width: 100%; padding: 13px; border: 1px solid #d8cbbb; border-radius: 10px; background: #fff; }
+    button { width: 100%; margin-top: 22px; padding: 14px; border: 0; border-radius: 10px; background: #4f8f73; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; }
+    button:disabled { opacity: .55; cursor: default; }
+    .summary, #status { margin-top: 18px; padding: 14px; border-radius: 10px; background: #f6f1e9; line-height: 1.6; }
+    #status:empty { display: none; }
+    #status.success { color: #236047; background: #e8f5ee; }
+    #status.error { color: #a43f38; background: #fff0ee; }
+    .progress { height: 8px; margin-top: 14px; overflow: hidden; border-radius: 999px; background: #e8dfd2; }
+    .progress div { width: 0; height: 100%; background: #4f8f73; transition: width .2s; }
+    .note { font-size: 13px; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="card">
+      <h1>电脑课程资料上传助手</h1>
+      <p>先在这里选电脑文件，再回到微信开发者工具的课程页点击“读取电脑资料”。支持 PPT/PPTX、PDF、Word/Excel、图片和音频；不会保存云密钥。</p>
+      <label for="label">这批资料的名称（可选）</label>
+      <input id="label" type="text" maxlength="120" placeholder="例如：冯嘉文第 3 节课资料">
+      <label for="files">选择资料（最多 20 个）</label>
+      <input id="files" type="file" multiple accept=".ppt,.pptx,.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.mp3,.m4a,.wav,.aac">
+      <div id="summary" class="summary">尚未选择资料。</div>
+      <button id="prepare">准备给小程序读取</button>
+      <div class="progress"><div id="bar"></div></div>
+      <div id="status"></div>
+      <p class="note">资料只保存在当前助手的内存中，关闭命令窗口即清除。实际上传仍由微信开发者工具中的教师账号完成。</p>
+    </div>
+  </main>
+  <script>
+    const TOKEN = "__LOCAL_MATERIAL_TOKEN__";
+    const filesInput = document.getElementById("files");
+    const labelInput = document.getElementById("label");
+    const summary = document.getElementById("summary");
+    const prepare = document.getElementById("prepare");
+    const status = document.getElementById("status");
+    const bar = document.getElementById("bar");
+    const allowed = /\.(pptx?|pdf|docx?|xlsx?|jpe?g|png|webp|gif|mp3|m4a|wav|aac)$/i;
+
+    const formatBytes = (size) => size >= 1024 * 1024 ? `${(size / 1024 / 1024).toFixed(1)} MB` : `${Math.ceil(size / 1024)} KB`;
+    const api = (url, options = {}) => fetch(url, Object.assign({}, options, {
+      headers: Object.assign({}, options.headers || {}, { "X-Local-Material-Token": TOKEN }),
+    }));
+
+    function selectedFiles() {
+      return Array.from(filesInput.files || []).filter((file) => allowed.test(file.name || ""));
+    }
+
+    filesInput.addEventListener("change", () => {
+      const files = selectedFiles();
+      const total = files.reduce((sum, file) => sum + file.size, 0);
+      summary.textContent = files.length ? `已选择 ${files.length} 个资料，共 ${formatBytes(total)}。` : "尚未选择支持的资料。";
+      status.textContent = "";
+      status.className = "";
+      bar.style.width = "0%";
+    });
+
+    async function errorMessage(response) {
+      try { const body = await response.json(); return body.message || `请求失败（${response.status}）`; }
+      catch (_) { return `请求失败（${response.status}）`; }
+    }
+
+    prepare.addEventListener("click", async () => {
+      const files = selectedFiles();
+      if (!files.length) {
+        status.textContent = "请先选择 PDF、图片或音频资料。";
+        status.className = "error";
+        return;
+      }
+      prepare.disabled = true;
+      status.className = "";
+      status.textContent = "正在准备资料……";
+      bar.style.width = "0%";
+      try {
+        const createdResponse = await api("/api/material-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ label: labelInput.value, files: files.map((file) => ({ name: file.name, size: file.size, type: file.type })) }),
+        });
+        if (!createdResponse.ok) throw new Error(await errorMessage(createdResponse));
+        const created = await createdResponse.json();
+        for (let index = 0; index < files.length; index++) {
+          status.textContent = `正在准备 ${index + 1}/${files.length}：${files[index].name}`;
+          const response = await api(`/api/material-file?index=${index}&version=${encodeURIComponent(created.version)}`, {
+            method: "PUT", headers: { "Content-Type": files[index].type || "application/octet-stream" }, body: files[index],
+          });
+          if (!response.ok) throw new Error(await errorMessage(response));
+          bar.style.width = `${(index + 1) * 100 / files.length}%`;
+        }
+        const readyResponse = await api("/api/material-ready", {
+          method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ version: created.version }),
+        });
+        if (!readyResponse.ok) throw new Error(await errorMessage(readyResponse));
+        status.textContent = `准备完成：${files.length} 个资料。现在回到微信开发者工具，在对应课程点击“读取电脑资料”。`;
+        status.className = "success";
+      } catch (err) {
+        status.textContent = err.message || "资料准备失败，请重新选择。";
+        status.className = "error";
+      } finally {
+        prepare.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

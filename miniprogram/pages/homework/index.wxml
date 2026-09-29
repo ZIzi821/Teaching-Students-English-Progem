@@ -1,0 +1,67 @@
+<view class="page homework-page">
+  <view class="preview-banner" wx:if="{{isTeacherPreview}}">
+    <view>
+      <view class="preview-title">老师只读预览</view>
+      <view class="preview-hint">这是学生看到的课后任务列表；进入任务后也不会代学生提交。</view>
+    </view>
+    <view class="preview-action" bindtap="goBackToTeacher">返回教师端</view>
+  </view>
+
+  <view class="card state-card" wx:if="{{loading}}">正在整理课后任务…</view>
+  <view class="card error-card" wx:elif="{{message}}">
+    <view>{{message}}</view>
+    <view class="retry" bindtap="loadHomework">重新加载</view>
+  </view>
+
+  <block wx:elif="{{student}}">
+    <view class="homework-head">
+      <view class="eyebrow">{{student.name}} · AFTER CLASS</view>
+      <view class="title">我的课后任务</view>
+      <view class="subtitle">先完成待办，再回看老师已经确认的任务。</view>
+    </view>
+
+    <view class="summary-row">
+      <view class="summary-card summary-pending">
+        <view class="summary-number">{{summary.pendingCount}}</view>
+        <view class="summary-label">待完成</view>
+      </view>
+      <view class="summary-card summary-completed">
+        <view class="summary-number">{{summary.completedCount}}</view>
+        <view class="summary-label">已完成</view>
+      </view>
+    </view>
+
+    <view class="section-title">现在要完成</view>
+    <view class="card empty-card" wx:if="{{!pendingLessons.length}}">
+      <view class="empty-mark">✓</view>
+      <view class="empty-title">目前没有待完成任务</view>
+      <view class="empty-hint">老师布置新任务后会出现在这里。</view>
+    </view>
+    <view class="card task-card task-pending" wx:for="{{pendingLessons}}" wx:key="_id" data-id="{{item._id}}" bindtap="goLesson">
+      <view class="task-top">
+        <view>
+          <view class="task-date">{{item.lessonDate}} · 第 {{item.lessonNo || '—'}} 节</view>
+          <view class="task-title">{{item.title}}</view>
+        </view>
+        <view class="status-pill status-pending">{{item.statusLabel}}</view>
+      </view>
+      <view class="task-copy">{{item.taskPreview}}</view>
+      <view class="task-meta" wx:if="{{item.recordingTaskEnabled}}">🎙 {{item.recordingLabel}}</view>
+      <view class="task-link">查看并完成 →</view>
+    </view>
+
+    <view class="section-title completed-title" wx:if="{{completedLessons.length}}">已经完成</view>
+    <view class="card task-card" wx:for="{{completedLessons}}" wx:key="_id" data-id="{{item._id}}" bindtap="goLesson">
+      <view class="task-top">
+        <view>
+          <view class="task-date">{{item.lessonDate}} · 第 {{item.lessonNo || '—'}} 节</view>
+          <view class="task-title">{{item.title}}</view>
+        </view>
+        <view class="status-pill status-completed">{{item.statusLabel}}</view>
+      </view>
+      <view class="task-copy">{{item.taskPreview}}</view>
+      <view class="task-meta" wx:if="{{item.completedLabel}}">完成于 {{item.completedLabel}}</view>
+      <view class="task-link">查看记录 →</view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,30 @@
+.preview-banner {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 18rpx 20rpx;
+  border: 1rpx solid #d8e3ef;
+  border-radius: 18rpx;
+  color: #315a83;
+  background: #eef4fa;
+}
+
+.preview-dot {
+  flex: 0 0 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  background: #315a83;
+  box-shadow: 0 0 0 7rpx rgba(49, 90, 131, 0.1);
+}
+
+.preview-title {
+  font-size: 25rpx;
+  font-weight: 700;
+}
+
+.preview-hint {
+  margin-top: 3rpx;
+  color: #6d7b8a;
+  font-size: 20rpx;
+  line-height: 1.45;
+}

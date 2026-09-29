@@ -1,0 +1,986 @@
+{
+  "schemaVersion": 2,
+  "language": "fr-FR",
+  "level": "A1-A2",
+  "cefrAlignment": "Editorially CEFR-aligned; not an official CEFR list or certification material.",
+  "topics": [
+    "identity",
+    "needs",
+    "daily-life",
+    "communication",
+    "places",
+    "description",
+    "travel",
+    "plans",
+    "food",
+    "opinions",
+    "services",
+    "family",
+    "numbers",
+    "weather"
+  ],
+  "items": [
+    {
+      "id": "a1-etre-identity",
+      "cefrLevel": "A1",
+      "topic": "identity",
+      "title": "être: identity and description",
+      "titleCN": "être：身份与描述",
+      "outcome": "Say who someone is and give a basic description.",
+      "pattern": "subject + être + noun/adjective",
+      "examples": [
+        {
+          "text": "Je suis étudiant.",
+          "meaningCN": "我是学生。"
+        },
+        {
+          "text": "Nous sommes ici.",
+          "meaningCN": "我们在这里。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + être + noun/adjective”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-avoir-needs",
+      "cefrLevel": "A1",
+      "topic": "needs",
+      "title": "avoir: possession and needs",
+      "titleCN": "avoir：拥有与需要",
+      "outcome": "Use avoir for possession, age and common needs.",
+      "pattern": "subject + avoir + noun",
+      "examples": [
+        {
+          "text": "J'ai un livre.",
+          "meaningCN": "我有一本书。"
+        },
+        {
+          "text": "Elle a faim.",
+          "meaningCN": "她饿了。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + avoir + noun”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-present-er",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "title": "Present tense: regular -er verbs",
+      "titleCN": "现在时：规则 -er 动词",
+      "outcome": "Recognise and build common present-tense forms.",
+      "pattern": "je -e, tu -es, il/elle -e, nous -ons, vous -ez, ils/elles -ent",
+      "examples": [
+        {
+          "text": "Je parle français.",
+          "meaningCN": "我说法语。"
+        },
+        {
+          "text": "Nous regardons un film.",
+          "meaningCN": "我们看一部电影。"
+        }
+      ],
+      "shortExplanationCN": "用“je -e, tu -es, il/elle -e, nous -ons, vous -ez, ils/elles -ent”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-negation",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "title": "Negation with ne...pas",
+      "titleCN": "ne...pas 否定",
+      "outcome": "Put ne before and pas after the conjugated verb.",
+      "pattern": "subject + ne + verb + pas",
+      "examples": [
+        {
+          "text": "Je ne comprends pas.",
+          "meaningCN": "我不明白。"
+        },
+        {
+          "text": "Il n'aime pas le thé.",
+          "meaningCN": "他不喜欢茶。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + ne + verb + pas”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-questions",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "title": "Basic questions",
+      "titleCN": "基础提问",
+      "outcome": "Ask for a name, place, time or quantity.",
+      "pattern": "question word + verb / rising intonation",
+      "examples": [
+        {
+          "text": "Comment tu t'appelles ?",
+          "meaningCN": "你叫什么名字？"
+        },
+        {
+          "text": "Où est la gare ?",
+          "meaningCN": "车站在哪里？"
+        }
+      ],
+      "shortExplanationCN": "用“question word + verb / rising intonation”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-articles",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "title": "Articles and gender",
+      "titleCN": "冠词与性别",
+      "outcome": "Learn nouns together with their article and gender.",
+      "pattern": "le/la/l' + noun; un/une + noun",
+      "examples": [
+        {
+          "text": "la table",
+          "meaningCN": "这张桌子。"
+        },
+        {
+          "text": "un livre",
+          "meaningCN": "一本书。"
+        }
+      ],
+      "shortExplanationCN": "用“le/la/l' + noun; un/une + noun”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-prepositions-place",
+      "cefrLevel": "A1",
+      "topic": "places",
+      "title": "Place: à, dans, sur",
+      "titleCN": "地点：à、dans、sur",
+      "outcome": "Locate people and things with a small reliable set of prepositions.",
+      "pattern": "être + à/dans/sur + place",
+      "examples": [
+        {
+          "text": "Le livre est sur la table.",
+          "meaningCN": "书在桌子上。"
+        }
+      ],
+      "shortExplanationCN": "用“être + à/dans/sur + place”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-adjective-agreement",
+      "cefrLevel": "A1",
+      "topic": "description",
+      "title": "Basic adjective agreement",
+      "titleCN": "基础形容词配合",
+      "outcome": "Notice common feminine endings when describing a noun.",
+      "pattern": "noun + adjective",
+      "examples": [
+        {
+          "text": "une grande ville",
+          "meaningCN": "一座大城市。"
+        },
+        {
+          "text": "un petit café",
+          "meaningCN": "一家小咖啡馆。"
+        }
+      ],
+      "shortExplanationCN": "用“noun + adjective”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-passe-compose",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "title": "Passé composé with avoir",
+      "titleCN": "复合过去时：avoir",
+      "outcome": "Talk about completed events using avoir plus a past participle.",
+      "pattern": "subject + avoir (present) + past participle",
+      "examples": [
+        {
+          "text": "J'ai réservé une chambre.",
+          "meaningCN": "我预订了一间房。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + avoir (present) + past participle”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-passe-compose-etre",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "title": "Passé composé with movement verbs",
+      "titleCN": "复合过去时：移动动词",
+      "outcome": "Use être with a small set of movement and reflexive verbs; agreement matters.",
+      "pattern": "subject + être (present) + past participle",
+      "examples": [
+        {
+          "text": "Nous sommes arrivés tôt.",
+          "meaningCN": "我们很早到了。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + être (present) + past participle”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-future-proche",
+      "cefrLevel": "A2",
+      "topic": "plans",
+      "title": "Near future with aller",
+      "titleCN": "近期将来时：aller",
+      "outcome": "Express a near plan with aller plus an infinitive.",
+      "pattern": "aller (present) + infinitive",
+      "examples": [
+        {
+          "text": "Je vais visiter le musée.",
+          "meaningCN": "我打算参观博物馆。"
+        }
+      ],
+      "shortExplanationCN": "用“aller (present) + infinitive”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-object-pronouns",
+      "cefrLevel": "A2",
+      "topic": "communication",
+      "title": "Direct-object pronouns",
+      "titleCN": "直接宾语代词",
+      "outcome": "Replace a known direct object with le, la or les before the verb.",
+      "pattern": "subject + le/la/les + verb",
+      "examples": [
+        {
+          "text": "Je le prends demain.",
+          "meaningCN": "我明天拿它。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + le/la/les + verb”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-quantity-partitive",
+      "cefrLevel": "A2",
+      "topic": "food",
+      "title": "Partitive articles and quantity",
+      "titleCN": "部分冠词与数量",
+      "outcome": "Use du, de la, de l' and des for an unspecified amount.",
+      "pattern": "verb + du/de la/de l'/des + noun",
+      "examples": [
+        {
+          "text": "Je bois du lait.",
+          "meaningCN": "我喝牛奶。"
+        }
+      ],
+      "shortExplanationCN": "用“verb + du/de la/de l'/des + noun”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-comparison",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "title": "Comparison with plus/moins/aussi",
+      "titleCN": "比较：plus、moins、aussi",
+      "outcome": "Compare two things with a simple adjective pattern.",
+      "pattern": "plus/moins/aussi + adjective + que",
+      "examples": [
+        {
+          "text": "Le métro est plus rapide que le bus.",
+          "meaningCN": "地铁比公交车快。"
+        }
+      ],
+      "shortExplanationCN": "用“plus/moins/aussi + adjective + que”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-relative-qui-que",
+      "cefrLevel": "A2",
+      "topic": "communication",
+      "title": "Relative qui and que",
+      "titleCN": "关系代词 qui 和 que",
+      "outcome": "Connect two short clauses without repeating a noun.",
+      "pattern": "noun + qui/que + clause",
+      "examples": [
+        {
+          "text": "Le livre que je lis est utile.",
+          "meaningCN": "我正在读的书很有用。"
+        }
+      ],
+      "shortExplanationCN": "用“noun + qui/que + clause”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-conditional-polite",
+      "cefrLevel": "A2",
+      "topic": "services",
+      "title": "Polite requests with conditional",
+      "titleCN": "条件式礼貌请求",
+      "outcome": "Use voudrais or pourriez for soft requests.",
+      "pattern": "je voudrais / pourriez-vous + infinitive",
+      "examples": [
+        {
+          "text": "Pourriez-vous répéter ?",
+          "meaningCN": "您可以再说一遍吗？"
+        }
+      ],
+      "shortExplanationCN": "用“je voudrais / pourriez-vous + infinitive”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-pronouns",
+      "cefrLevel": "A1",
+      "topic": "identity",
+      "title": "Subject pronouns",
+      "titleCN": "主语人称代词",
+      "outcome": "Match je, tu, il/elle, nous, vous and ils/elles to the verb.",
+      "pattern": "subject + verb",
+      "examples": [
+        {
+          "text": "Nous parlons.",
+          "meaningCN": "我们说话。"
+        },
+        {
+          "text": "Elles arrivent.",
+          "meaningCN": "她们到了。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + verb”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-possessives",
+      "cefrLevel": "A1",
+      "topic": "family",
+      "title": "Possessives mon/ma/mes",
+      "titleCN": "物主词 mon/ma/mes",
+      "outcome": "Choose a possessive to introduce family and belongings.",
+      "pattern": "mon/ma/mes + noun",
+      "examples": [
+        {
+          "text": "Ma mère est ici.",
+          "meaningCN": "我母亲在这里。"
+        },
+        {
+          "text": "Mes amis arrivent.",
+          "meaningCN": "我的朋友们到了。"
+        }
+      ],
+      "shortExplanationCN": "用“mon/ma/mes + noun”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-demonstratives",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "title": "Demonstratives ce/cette",
+      "titleCN": "指示词 ce/cette",
+      "outcome": "Point to one known item with a basic demonstrative.",
+      "pattern": "ce/cette + noun",
+      "examples": [
+        {
+          "text": "Ce livre est intéressant.",
+          "meaningCN": "这本书很有意思。"
+        },
+        {
+          "text": "Cette table est petite.",
+          "meaningCN": "这张桌子很小。"
+        }
+      ],
+      "shortExplanationCN": "用“ce/cette + noun”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-plural",
+      "cefrLevel": "A1",
+      "topic": "numbers",
+      "title": "Plural nouns and articles",
+      "titleCN": "名词复数与冠词",
+      "outcome": "Recognise common plural -s and the article les.",
+      "pattern": "les + plural noun",
+      "examples": [
+        {
+          "text": "Les chaussures sont noires.",
+          "meaningCN": "这些鞋是黑色的。"
+        }
+      ],
+      "shortExplanationCN": "用“les + plural noun”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-imperative",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "title": "Useful imperative",
+      "titleCN": "常用命令式",
+      "outcome": "Understand short classroom and direction instructions.",
+      "pattern": "verb + complement",
+      "examples": [
+        {
+          "text": "Écoutez bien.",
+          "meaningCN": "请认真听。"
+        },
+        {
+          "text": "Regardez ici.",
+          "meaningCN": "请看这里。"
+        }
+      ],
+      "shortExplanationCN": "用“verb + complement”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-frequency",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "title": "Frequency words",
+      "titleCN": "频率副词",
+      "outcome": "Place simple frequency words in a daily-routine sentence.",
+      "pattern": "subject + verb + souvent/toujours",
+      "examples": [
+        {
+          "text": "Je travaille souvent le samedi.",
+          "meaningCN": "我经常星期六工作。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + verb + souvent/toujours”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-weather",
+      "cefrLevel": "A1",
+      "topic": "weather",
+      "title": "Weather with il y a",
+      "titleCN": "il y a 表达天气",
+      "outcome": "Describe sun, rain and wind with one reliable frame.",
+      "pattern": "Il y a + weather noun",
+      "examples": [
+        {
+          "text": "Il y a du vent aujourd’hui.",
+          "meaningCN": "今天有风。"
+        }
+      ],
+      "shortExplanationCN": "用“Il y a + weather noun”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-linking",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "title": "Simple links et/mais/parce que",
+      "titleCN": "简单连接词",
+      "outcome": "Join two short ideas without making a long sentence.",
+      "pattern": "clause + connector + clause",
+      "examples": [
+        {
+          "text": "J’étudie parce que j’aime le français.",
+          "meaningCN": "我学习，因为我喜欢法语。"
+        }
+      ],
+      "shortExplanationCN": "用“clause + connector + clause”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-imparfait",
+      "cefrLevel": "A2",
+      "topic": "daily-life",
+      "title": "Imparfait for background",
+      "titleCN": "未完成过去时背景描述",
+      "outcome": "Recognise a background habit or description in the past.",
+      "pattern": "stem + -ais/-ait/-ions",
+      "examples": [
+        {
+          "text": "Avant, je travaillais ici.",
+          "meaningCN": "以前，我在这里工作。"
+        }
+      ],
+      "shortExplanationCN": "用“stem + -ais/-ait/-ions”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-future-simple",
+      "cefrLevel": "A2",
+      "topic": "plans",
+      "title": "Simple future recognition",
+      "titleCN": "简单将来时识别",
+      "outcome": "Recognise common future forms for plans and predictions.",
+      "pattern": "infinitive + future ending",
+      "examples": [
+        {
+          "text": "Demain, je partirai tôt.",
+          "meaningCN": "明天我会早些出发。"
+        }
+      ],
+      "shortExplanationCN": "用“infinitive + future ending”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reflexive",
+      "cefrLevel": "A2",
+      "topic": "daily-life",
+      "title": "Reflexive verbs",
+      "titleCN": "自反动词",
+      "outcome": "Use a reflexive pronoun for routine actions.",
+      "pattern": "subject + me/te/se + verb",
+      "examples": [
+        {
+          "text": "Je me repose le soir.",
+          "meaningCN": "我晚上休息。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + me/te/se + verb”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-indirect-object",
+      "cefrLevel": "A2",
+      "topic": "communication",
+      "title": "Indirect object with lui/leur",
+      "titleCN": "间接宾语 lui/leur",
+      "outcome": "Avoid repeating a person after à.",
+      "pattern": "subject + lui/leur + verb",
+      "examples": [
+        {
+          "text": "Je lui réponds demain.",
+          "meaningCN": "我明天回复他/她。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + lui/leur + verb”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-negation-extended",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "title": "More negation",
+      "titleCN": "扩展否定",
+      "outcome": "Recognise jamais, rien and personne in common phrases.",
+      "pattern": "ne + verb + jamais/rien",
+      "examples": [
+        {
+          "text": "Je ne comprends rien.",
+          "meaningCN": "我什么都不明白。"
+        }
+      ],
+      "shortExplanationCN": "用“ne + verb + jamais/rien”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-questions-inversion",
+      "cefrLevel": "A2",
+      "topic": "services",
+      "title": "Formal question forms",
+      "titleCN": "正式疑问句",
+      "outcome": "Recognise inversion in service and written contexts.",
+      "pattern": "verb-subject + question",
+      "examples": [
+        {
+          "text": "Avez-vous une chambre ?",
+          "meaningCN": "您有一间房吗？"
+        }
+      ],
+      "shortExplanationCN": "用“verb-subject + question”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-pronoun-y",
+      "cefrLevel": "A2",
+      "topic": "places",
+      "title": "Pronoun y",
+      "titleCN": "代词 y",
+      "outcome": "Replace a known place introduced by à/dans.",
+      "pattern": "subject + y + verb",
+      "examples": [
+        {
+          "text": "J’y vais demain.",
+          "meaningCN": "我明天去那里。"
+        }
+      ],
+      "shortExplanationCN": "用“subject + y + verb”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-agreement",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "title": "Past-participle agreement",
+      "titleCN": "过去分词配合",
+      "outcome": "Notice gender/number agreement after être.",
+      "pattern": "être + participle agreement",
+      "examples": [
+        {
+          "text": "Elle est arrivée tôt.",
+          "meaningCN": "她很早到了。"
+        }
+      ],
+      "shortExplanationCN": "用“être + participle agreement”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-cause-result",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "title": "Cause and result",
+      "titleCN": "原因与结果",
+      "outcome": "Link an explanation and a consequence.",
+      "pattern": "parce que / donc",
+      "examples": [
+        {
+          "text": "Il pleut, donc je reste ici.",
+          "meaningCN": "下雨了，所以我留在这里。"
+        }
+      ],
+      "shortExplanationCN": "用“parce que / donc”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-time-sequencing",
+      "cefrLevel": "A2",
+      "topic": "plans",
+      "title": "Time sequencing",
+      "titleCN": "时间顺序",
+      "outcome": "Order actions with d’abord, puis and enfin.",
+      "pattern": "d’abord + puis + enfin",
+      "examples": [
+        {
+          "text": "D’abord je travaille, puis je rentre.",
+          "meaningCN": "我先工作，然后回家。"
+        }
+      ],
+      "shortExplanationCN": "用“d’abord + puis + enfin”完成本单元的基础交际任务。",
+      "commonMistakes": [
+        "只背单词而不带入句型。",
+        "忽略主语、动词和否定词的位置。"
+      ],
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    }
+  ]
+}

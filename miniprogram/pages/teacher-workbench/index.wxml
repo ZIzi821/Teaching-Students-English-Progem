@@ -1,0 +1,72 @@
+<view class="page workbench-page {{isTeacher ? 'has-teacher-tabbar' : ''}}">
+  <view class="workbench-hero">
+    <view class="hero-kicker">TEACHER WORKSPACE</view>
+    <view class="title">教师工作台</view>
+    <view class="subtitle">集中管理不常用但需要保留的学生资料。</view>
+  </view>
+
+  <view class="card status-card" wx:if="{{loading}}">正在整理工作台…</view>
+  <view class="card no-permission" wx:elif="{{noPermission}}">{{message}}</view>
+
+  <block wx:elif="{{isTeacher}}">
+    <view class="overview-grid">
+      <view class="overview-card">
+        <view class="overview-number">{{activeCount}}</view>
+        <view class="overview-label">当前学生</view>
+      </view>
+      <view class="overview-card hidden-overview-card">
+        <view class="overview-number">{{hiddenCount}}</view>
+        <view class="overview-label">已隐藏学生</view>
+      </view>
+    </view>
+
+    <view class="section-title">快捷管理</view>
+    <view class="quick-grid">
+      <view class="quick-card" bindtap="goStudents">
+        <view class="quick-mark">生</view>
+        <view><view class="quick-title">管理当前学生</view><view class="quick-hint">查看、设置或隐藏学生</view></view>
+      </view>
+      <view class="quick-card" bindtap="goAddStudent">
+        <view class="quick-mark quick-mark-add">＋</view>
+        <view><view class="quick-title">添加学生</view><view class="quick-hint">建立新的学习账号</view></view>
+      </view>
+      <view class="quick-card" bindtap="goAddLesson">
+        <view class="quick-mark quick-mark-lesson">课</view>
+        <view><view class="quick-title">建立课程记录</view><view class="quick-hint">课后记录、任务与学生录音</view></view>
+      </view>
+    </view>
+
+    <view class="archive-head">
+      <view>
+        <view class="section-title archive-title">已隐藏学生</view>
+        <view class="archive-hint">隐藏不会删除访问码、课程、错题或学习进度，学生端也不会受到影响。</view>
+      </view>
+      <view class="archive-count">{{hiddenCount}}</view>
+    </view>
+
+    <view class="card empty-card" wx:if="{{!hiddenStudents.length}}">
+      <view class="empty-icon">✓</view>
+      <view class="empty-title">目前没有隐藏学生</view>
+      <view class="empty-hint">在“学生”页面点击学生卡片右侧的“隐藏”即可移入这里。</view>
+    </view>
+
+    <view class="card hidden-student-card" wx:for="{{hiddenStudents}}" wx:key="_id">
+      <view class="hidden-student-main">
+        <view class="avatar">{{item.initial}}</view>
+        <view class="student-info">
+          <view class="student-name">{{item.name}} <text class="nickname">{{item.nickname}}</text></view>
+          <view class="student-meta">{{item.grade || '年级未设置'}} · {{item.learningLabel}}</view>
+          <view class="student-note">资料和记录完整保留</view>
+        </view>
+      </view>
+      <view
+        class="restore-btn {{restoringId === item._id ? 'restore-disabled' : ''}}"
+        data-id="{{item._id}}"
+        data-name="{{item.name}}"
+        bindtap="restoreStudent"
+      >{{restoringId === item._id ? '恢复中…' : '恢复到学生列表'}}</view>
+    </view>
+  </block>
+
+  <teacher-tabbar wx:if="{{isTeacher}}" current="workbench"></teacher-tabbar>
+</view>

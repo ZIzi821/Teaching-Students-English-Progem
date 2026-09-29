@@ -56,3 +56,9 @@
 .action-disabled {
   opacity: 0.55;
 }
+.field-hint {
+  margin-top: 10rpx;
+  color: #8a7e70;
+  font-size: 22rpx;
+  line-height: 1.5;
+}

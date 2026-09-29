@@ -1,0 +1,1314 @@
+{
+  "schemaVersion": 2,
+  "language": "fr-FR",
+  "level": "A1-A2",
+  "cefrAlignment": "Editorially CEFR-aligned; not an official CEFR list or certification material.",
+  "topics": [
+    "greetings",
+    "identity",
+    "communication",
+    "places",
+    "food",
+    "time",
+    "shopping",
+    "work-study",
+    "travel",
+    "opinions",
+    "plans",
+    "problems",
+    "health",
+    "study",
+    "daily-life",
+    "social"
+  ],
+  "items": [
+    {
+      "id": "a1-exp-ca-va",
+      "cefrLevel": "A1",
+      "topic": "greetings",
+      "text": "Ça va ?",
+      "meaningCN": "你好吗？",
+      "meaningEN": "How are you?",
+      "usageNote": "informal check-in",
+      "situation": "informal check-in",
+      "example": {
+        "text": "Ça va ?",
+        "meaningCN": "你好吗？"
+      },
+      "audioKey": "a1-exp-ca-va",
+      "audioRef": "french-audio/v2/expressions/a1-exp-ca-va.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-ca-va-bien",
+      "cefrLevel": "A1",
+      "topic": "greetings",
+      "text": "Ça va bien, merci.",
+      "meaningCN": "我很好，谢谢。",
+      "meaningEN": "I am well, thank you.",
+      "usageNote": "reply",
+      "situation": "reply",
+      "example": {
+        "text": "Ça va bien, merci.",
+        "meaningCN": "我很好，谢谢。"
+      },
+      "audioKey": "a1-exp-ca-va-bien",
+      "audioRef": "french-audio/v2/expressions/a1-exp-ca-va-bien.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-enchante",
+      "cefrLevel": "A1",
+      "topic": "identity",
+      "text": "Enchanté(e).",
+      "meaningCN": "很高兴认识你。",
+      "meaningEN": "Nice to meet you.",
+      "usageNote": "meeting; gender ending optional in writing",
+      "situation": "meeting; gender ending optional in writing",
+      "example": {
+        "text": "Enchanté(e).",
+        "meaningCN": "很高兴认识你。"
+      },
+      "audioKey": "a1-exp-enchante",
+      "audioRef": "french-audio/v2/expressions/a1-exp-enchante.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-je-ne-sais-pas",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "text": "Je ne sais pas.",
+      "meaningCN": "我不知道。",
+      "meaningEN": "I do not know.",
+      "usageNote": "useful repair phrase",
+      "situation": "useful repair phrase",
+      "example": {
+        "text": "Je ne sais pas.",
+        "meaningCN": "我不知道。"
+      },
+      "audioKey": "a1-exp-je-ne-sais-pas",
+      "audioRef": "french-audio/v2/expressions/a1-exp-je-ne-sais-pas.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-je-ne-comprends-pas",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "text": "Je ne comprends pas.",
+      "meaningCN": "我不明白。",
+      "meaningEN": "I do not understand.",
+      "usageNote": "useful repair phrase",
+      "situation": "useful repair phrase",
+      "example": {
+        "text": "Je ne comprends pas.",
+        "meaningCN": "我不明白。"
+      },
+      "audioKey": "a1-exp-je-ne-comprends-pas",
+      "audioRef": "french-audio/v2/expressions/a1-exp-je-ne-comprends-pas.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-repetez",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "text": "Répétez, s'il vous plaît.",
+      "meaningCN": "请重复一遍。",
+      "meaningEN": "Please repeat.",
+      "usageNote": "polite request",
+      "situation": "polite request",
+      "example": {
+        "text": "Répétez, s'il vous plaît.",
+        "meaningCN": "请重复一遍。"
+      },
+      "audioKey": "a1-exp-repetez",
+      "audioRef": "french-audio/v2/expressions/a1-exp-repetez.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-ou-est",
+      "cefrLevel": "A1",
+      "topic": "places",
+      "text": "Où est ... ?",
+      "meaningCN": "……在哪里？",
+      "meaningEN": "Where is ...?",
+      "usageNote": "ask for a location",
+      "situation": "ask for a location",
+      "example": {
+        "text": "Où est ... ?",
+        "meaningCN": "……在哪里？"
+      },
+      "audioKey": "a1-exp-ou-est",
+      "audioRef": "french-audio/v2/expressions/a1-exp-ou-est.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-je-voudrais",
+      "cefrLevel": "A1",
+      "topic": "food",
+      "text": "Je voudrais ...",
+      "meaningCN": "我想要……",
+      "meaningEN": "I would like ...",
+      "usageNote": "polite ordering frame",
+      "situation": "polite ordering frame",
+      "example": {
+        "text": "Je voudrais ...",
+        "meaningCN": "我想要……"
+      },
+      "audioKey": "a1-exp-je-voudrais",
+      "audioRef": "french-audio/v2/expressions/a1-exp-je-voudrais.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-quelle-heure",
+      "cefrLevel": "A1",
+      "topic": "time",
+      "text": "Quelle heure est-il ?",
+      "meaningCN": "现在几点？",
+      "meaningEN": "What time is it?",
+      "usageNote": "ask the time",
+      "situation": "ask the time",
+      "example": {
+        "text": "Quelle heure est-il ?",
+        "meaningCN": "现在几点？"
+      },
+      "audioKey": "a1-exp-quelle-heure",
+      "audioRef": "french-audio/v2/expressions/a1-exp-quelle-heure.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-a-tout-a-lheure",
+      "cefrLevel": "A1",
+      "topic": "greetings",
+      "text": "À tout à l'heure !",
+      "meaningCN": "一会儿见！",
+      "meaningEN": "See you later!",
+      "usageNote": "informal farewell",
+      "situation": "informal farewell",
+      "example": {
+        "text": "À tout à l'heure !",
+        "meaningCN": "一会儿见！"
+      },
+      "audioKey": "a1-exp-a-tout-a-lheure",
+      "audioRef": "french-audio/v2/expressions/a1-exp-a-tout-a-lheure.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-bonne-journee",
+      "cefrLevel": "A1",
+      "topic": "greetings",
+      "text": "Bonne journée !",
+      "meaningCN": "祝你今天愉快！",
+      "meaningEN": "Have a good day!",
+      "usageNote": "farewell",
+      "situation": "farewell",
+      "example": {
+        "text": "Bonne journée !",
+        "meaningCN": "祝你今天愉快！"
+      },
+      "audioKey": "a1-exp-bonne-journee",
+      "audioRef": "french-audio/v2/expressions/a1-exp-bonne-journee.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-cest-combien",
+      "cefrLevel": "A1",
+      "topic": "shopping",
+      "text": "C'est combien ?",
+      "meaningCN": "这个多少钱？",
+      "meaningEN": "How much is it?",
+      "usageNote": "informal price question",
+      "situation": "informal price question",
+      "example": {
+        "text": "C'est combien ?",
+        "meaningCN": "这个多少钱？"
+      },
+      "audioKey": "a1-exp-cest-combien",
+      "audioRef": "french-audio/v2/expressions/a1-exp-cest-combien.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-jai-rendez-vous",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "J'ai rendez-vous à ...",
+      "meaningCN": "我……点有预约。",
+      "meaningEN": "I have an appointment at ...",
+      "usageNote": "time arrangement",
+      "situation": "time arrangement",
+      "example": {
+        "text": "J'ai rendez-vous à ...",
+        "meaningCN": "我……点有预约。"
+      },
+      "audioKey": "a2-exp-jai-rendez-vous",
+      "audioRef": "french-audio/v2/expressions/a2-exp-jai-rendez-vous.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-voudrais-reserver",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Je voudrais réserver ...",
+      "meaningCN": "我想预订……",
+      "meaningEN": "I would like to book ...",
+      "usageNote": "service request",
+      "situation": "service request",
+      "example": {
+        "text": "Je voudrais réserver ...",
+        "meaningCN": "我想预订……"
+      },
+      "audioKey": "a2-exp-je-voudrais-reserver",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-voudrais-reserver.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-pourriez-vous",
+      "cefrLevel": "A2",
+      "topic": "communication",
+      "text": "Pourriez-vous m'aider ?",
+      "meaningCN": "您能帮我吗？",
+      "meaningEN": "Could you help me?",
+      "usageNote": "formal polite request",
+      "situation": "formal polite request",
+      "example": {
+        "text": "Pourriez-vous m'aider ?",
+        "meaningCN": "您能帮我吗？"
+      },
+      "audioKey": "a2-exp-pourriez-vous",
+      "audioRef": "french-audio/v2/expressions/a2-exp-pourriez-vous.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-il-y-a-du-retard",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Il y a du retard.",
+      "meaningCN": "有延误。",
+      "meaningEN": "There is a delay.",
+      "usageNote": "transport update",
+      "situation": "transport update",
+      "example": {
+        "text": "Il y a du retard.",
+        "meaningCN": "有延误。"
+      },
+      "audioKey": "a2-exp-il-y-a-du-retard",
+      "audioRef": "french-audio/v2/expressions/a2-exp-il-y-a-du-retard.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-suis-en-retard",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Je suis en retard.",
+      "meaningCN": "我迟到了。",
+      "meaningEN": "I am late.",
+      "usageNote": "apology context",
+      "situation": "apology context",
+      "example": {
+        "text": "Je suis en retard.",
+        "meaningCN": "我迟到了。"
+      },
+      "audioKey": "a2-exp-je-suis-en-retard",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-suis-en-retard.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-quest-ce-que-vous-pensez",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "text": "Qu'est-ce que vous en pensez ?",
+      "meaningCN": "您对此怎么看？",
+      "meaningEN": "What do you think about it?",
+      "usageNote": "ask an opinion",
+      "situation": "ask an opinion",
+      "example": {
+        "text": "Qu'est-ce que vous en pensez ?",
+        "meaningCN": "您对此怎么看？"
+      },
+      "audioKey": "a2-exp-quest-ce-que-vous-pensez",
+      "audioRef": "french-audio/v2/expressions/a2-exp-quest-ce-que-vous-pensez.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-pense-que",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "text": "Je pense que ...",
+      "meaningCN": "我认为……",
+      "meaningEN": "I think that ...",
+      "usageNote": "give an opinion",
+      "situation": "give an opinion",
+      "example": {
+        "text": "Je pense que ...",
+        "meaningCN": "我认为……"
+      },
+      "audioKey": "a2-exp-je-pense-que",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-pense-que.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-ca-me-va",
+      "cefrLevel": "A2",
+      "topic": "plans",
+      "text": "Ça me va.",
+      "meaningCN": "我可以；这对我合适。",
+      "meaningEN": "That works for me.",
+      "usageNote": "agree to a plan",
+      "situation": "agree to a plan",
+      "example": {
+        "text": "Ça me va.",
+        "meaningCN": "我可以；这对我合适。"
+      },
+      "audioKey": "a2-exp-ca-me-va",
+      "audioRef": "french-audio/v2/expressions/a2-exp-ca-me-va.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-ca-ne-marche-pas",
+      "cefrLevel": "A2",
+      "topic": "problems",
+      "text": "Ça ne marche pas.",
+      "meaningCN": "这个不工作了。",
+      "meaningEN": "It does not work.",
+      "usageNote": "report a problem",
+      "situation": "report a problem",
+      "example": {
+        "text": "Ça ne marche pas.",
+        "meaningCN": "这个不工作了。"
+      },
+      "audioKey": "a2-exp-ca-ne-marche-pas",
+      "audioRef": "french-audio/v2/expressions/a2-exp-ca-ne-marche-pas.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-vais-reflechir",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "text": "Je vais y réfléchir.",
+      "meaningCN": "我会考虑一下。",
+      "meaningEN": "I will think about it.",
+      "usageNote": "delay a decision",
+      "situation": "delay a decision",
+      "example": {
+        "text": "Je vais y réfléchir.",
+        "meaningCN": "我会考虑一下。"
+      },
+      "audioKey": "a2-exp-je-vais-reflechir",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-vais-reflechir.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-bon-retablissement",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "text": "Bon rétablissement !",
+      "meaningCN": "祝早日康复！",
+      "meaningEN": "Get well soon!",
+      "usageNote": "health wish",
+      "situation": "health wish",
+      "example": {
+        "text": "Bon rétablissement !",
+        "meaningCN": "祝早日康复！"
+      },
+      "audioKey": "a2-exp-bon-retablissement",
+      "audioRef": "french-audio/v2/expressions/a2-exp-bon-retablissement.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-on-se-tient-au-courant",
+      "cefrLevel": "A2",
+      "topic": "communication",
+      "text": "On se tient au courant.",
+      "meaningCN": "我们保持联系。",
+      "meaningEN": "Let us keep each other posted.",
+      "usageNote": "work-friendly close",
+      "situation": "work-friendly close",
+      "example": {
+        "text": "On se tient au courant.",
+        "meaningCN": "我们保持联系。"
+      },
+      "audioKey": "a2-exp-on-se-tient-au-courant",
+      "audioRef": "french-audio/v2/expressions/a2-exp-on-se-tient-au-courant.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-bonjour-madame",
+      "cefrLevel": "A1",
+      "topic": "greetings",
+      "text": "Bonjour madame/monsieur.",
+      "meaningCN": "您好，女士/先生。",
+      "meaningEN": "Hello ma’am/sir.",
+      "usageNote": "polite service greeting",
+      "situation": "polite service greeting",
+      "example": {
+        "text": "Bonjour madame/monsieur.",
+        "meaningCN": "您好，女士/先生。"
+      },
+      "audioKey": "a1-exp-bonjour-madame",
+      "audioRef": "french-audio/v2/expressions/a1-exp-bonjour-madame.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-comment-dit-on",
+      "cefrLevel": "A1",
+      "topic": "study",
+      "text": "Comment dit-on ... en français ?",
+      "meaningCN": "……用法语怎么说？",
+      "meaningEN": "How do you say ... in French?",
+      "usageNote": "classroom repair",
+      "situation": "classroom repair",
+      "example": {
+        "text": "Comment dit-on ... en français ?",
+        "meaningCN": "……用法语怎么说？"
+      },
+      "audioKey": "a1-exp-comment-dit-on",
+      "audioRef": "french-audio/v2/expressions/a1-exp-comment-dit-on.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-pouvez-vous-parler",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "text": "Pouvez-vous parler lentement ?",
+      "meaningCN": "您能说慢一点吗？",
+      "meaningEN": "Can you speak slowly?",
+      "usageNote": "listening repair",
+      "situation": "listening repair",
+      "example": {
+        "text": "Pouvez-vous parler lentement ?",
+        "meaningCN": "您能说慢一点吗？"
+      },
+      "audioKey": "a1-exp-pouvez-vous-parler",
+      "audioRef": "french-audio/v2/expressions/a1-exp-pouvez-vous-parler.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-je-suis-desole",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "text": "Je suis désolé(e).",
+      "meaningCN": "对不起。",
+      "meaningEN": "I am sorry.",
+      "usageNote": "apology",
+      "situation": "apology",
+      "example": {
+        "text": "Je suis désolé(e).",
+        "meaningCN": "对不起。"
+      },
+      "audioKey": "a1-exp-je-suis-desole",
+      "audioRef": "french-audio/v2/expressions/a1-exp-je-suis-desole.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-pas-de-probleme",
+      "cefrLevel": "A1",
+      "topic": "communication",
+      "text": "Pas de problème.",
+      "meaningCN": "没问题。",
+      "meaningEN": "No problem.",
+      "usageNote": "reassurance",
+      "situation": "reassurance",
+      "example": {
+        "text": "Pas de problème.",
+        "meaningCN": "没问题。"
+      },
+      "audioKey": "a1-exp-pas-de-probleme",
+      "audioRef": "french-audio/v2/expressions/a1-exp-pas-de-probleme.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-de-rien",
+      "cefrLevel": "A1",
+      "topic": "greetings",
+      "text": "De rien.",
+      "meaningCN": "不客气。",
+      "meaningEN": "You are welcome.",
+      "usageNote": "reply to thanks",
+      "situation": "reply to thanks",
+      "example": {
+        "text": "De rien.",
+        "meaningCN": "不客气。"
+      },
+      "audioKey": "a1-exp-de-rien",
+      "audioRef": "french-audio/v2/expressions/a1-exp-de-rien.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-bon-appetit",
+      "cefrLevel": "A1",
+      "topic": "food",
+      "text": "Bon appétit !",
+      "meaningCN": "祝你用餐愉快！",
+      "meaningEN": "Enjoy your meal!",
+      "usageNote": "meal greeting",
+      "situation": "meal greeting",
+      "example": {
+        "text": "Bon appétit !",
+        "meaningCN": "祝你用餐愉快！"
+      },
+      "audioKey": "a1-exp-bon-appetit",
+      "audioRef": "french-audio/v2/expressions/a1-exp-bon-appetit.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-je-regarde",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "text": "Je regarde seulement.",
+      "meaningCN": "我只是看看。",
+      "meaningEN": "I am just looking.",
+      "usageNote": "shopping",
+      "situation": "shopping",
+      "example": {
+        "text": "Je regarde seulement.",
+        "meaningCN": "我只是看看。"
+      },
+      "audioKey": "a1-exp-je-regarde",
+      "audioRef": "french-audio/v2/expressions/a1-exp-je-regarde.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-cest-ouvert",
+      "cefrLevel": "A1",
+      "topic": "places",
+      "text": "C’est ouvert ?",
+      "meaningCN": "开着吗？",
+      "meaningEN": "Is it open?",
+      "usageNote": "shop check",
+      "situation": "shop check",
+      "example": {
+        "text": "C’est ouvert ?",
+        "meaningCN": "开着吗？"
+      },
+      "audioKey": "a1-exp-cest-ouvert",
+      "audioRef": "french-audio/v2/expressions/a1-exp-cest-ouvert.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-a-quelle-heure",
+      "cefrLevel": "A1",
+      "topic": "time",
+      "text": "À quelle heure ?",
+      "meaningCN": "几点？",
+      "meaningEN": "At what time?",
+      "usageNote": "time follow-up",
+      "situation": "time follow-up",
+      "example": {
+        "text": "À quelle heure ?",
+        "meaningCN": "几点？"
+      },
+      "audioKey": "a1-exp-a-quelle-heure",
+      "audioRef": "french-audio/v2/expressions/a1-exp-a-quelle-heure.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-je-suis-pret",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "text": "Je suis prêt(e).",
+      "meaningCN": "我准备好了。",
+      "meaningEN": "I am ready.",
+      "usageNote": "routine",
+      "situation": "routine",
+      "example": {
+        "text": "Je suis prêt(e).",
+        "meaningCN": "我准备好了。"
+      },
+      "audioKey": "a1-exp-je-suis-pret",
+      "audioRef": "french-audio/v2/expressions/a1-exp-je-suis-pret.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-exp-a-plus",
+      "cefrLevel": "A1",
+      "topic": "greetings",
+      "text": "À plus !",
+      "meaningCN": "回头见！",
+      "meaningEN": "See you later!",
+      "usageNote": "informal farewell",
+      "situation": "informal farewell",
+      "example": {
+        "text": "À plus !",
+        "meaningCN": "回头见！"
+      },
+      "audioKey": "a1-exp-a-plus",
+      "audioRef": "french-audio/v2/expressions/a1-exp-a-plus.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-confirme",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Je vous confirme que ...",
+      "meaningCN": "我向您确认……",
+      "meaningEN": "I confirm that ...",
+      "usageNote": "work confirmation",
+      "situation": "work confirmation",
+      "example": {
+        "text": "Je vous confirme que ...",
+        "meaningCN": "我向您确认……"
+      },
+      "audioKey": "a2-exp-je-confirme",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-confirme.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-est-ce-possible",
+      "cefrLevel": "A2",
+      "topic": "plans",
+      "text": "Est-ce possible de ... ?",
+      "meaningCN": "可以……吗？",
+      "meaningEN": "Is it possible to ...?",
+      "usageNote": "polite request",
+      "situation": "polite request",
+      "example": {
+        "text": "Est-ce possible de ... ?",
+        "meaningCN": "可以……吗？"
+      },
+      "audioKey": "a2-exp-est-ce-possible",
+      "audioRef": "french-audio/v2/expressions/a2-exp-est-ce-possible.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-vous-remercie",
+      "cefrLevel": "A2",
+      "topic": "communication",
+      "text": "Je vous remercie pour ...",
+      "meaningCN": "感谢您……",
+      "meaningEN": "I thank you for ...",
+      "usageNote": "formal thanks",
+      "situation": "formal thanks",
+      "example": {
+        "text": "Je vous remercie pour ...",
+        "meaningCN": "感谢您……"
+      },
+      "audioKey": "a2-exp-je-vous-remercie",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-vous-remercie.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-excusez-le-retard",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Excusez-moi pour le retard.",
+      "meaningCN": "抱歉迟到了。",
+      "meaningEN": "Sorry for the delay.",
+      "usageNote": "professional apology",
+      "situation": "professional apology",
+      "example": {
+        "text": "Excusez-moi pour le retard.",
+        "meaningCN": "抱歉迟到了。"
+      },
+      "audioKey": "a2-exp-excusez-le-retard",
+      "audioRef": "french-audio/v2/expressions/a2-exp-excusez-le-retard.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-ne-peux-pas",
+      "cefrLevel": "A2",
+      "topic": "plans",
+      "text": "Je ne peux pas venir.",
+      "meaningCN": "我不能来。",
+      "meaningEN": "I cannot come.",
+      "usageNote": "decline",
+      "situation": "decline",
+      "example": {
+        "text": "Je ne peux pas venir.",
+        "meaningCN": "我不能来。"
+      },
+      "audioKey": "a2-exp-je-ne-peux-pas",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-ne-peux-pas.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-une-autre-fois",
+      "cefrLevel": "A2",
+      "topic": "plans",
+      "text": "Une autre fois, peut-être.",
+      "meaningCN": "也许下次吧。",
+      "meaningEN": "Another time, perhaps.",
+      "usageNote": "soft decline",
+      "situation": "soft decline",
+      "example": {
+        "text": "Une autre fois, peut-être.",
+        "meaningCN": "也许下次吧。"
+      },
+      "audioKey": "a2-exp-une-autre-fois",
+      "audioRef": "french-audio/v2/expressions/a2-exp-une-autre-fois.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-quel-domage",
+      "cefrLevel": "A2",
+      "topic": "social",
+      "text": "Quel dommage !",
+      "meaningCN": "真可惜！",
+      "meaningEN": "What a pity!",
+      "usageNote": "reaction",
+      "situation": "reaction",
+      "example": {
+        "text": "Quel dommage !",
+        "meaningCN": "真可惜！"
+      },
+      "audioKey": "a2-exp-quel-domage",
+      "audioRef": "french-audio/v2/expressions/a2-exp-quel-domage.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-felicitation",
+      "cefrLevel": "A2",
+      "topic": "social",
+      "text": "Félicitations !",
+      "meaningCN": "恭喜！",
+      "meaningEN": "Congratulations!",
+      "usageNote": "reaction",
+      "situation": "reaction",
+      "example": {
+        "text": "Félicitations !",
+        "meaningCN": "恭喜！"
+      },
+      "audioKey": "a2-exp-felicitation",
+      "audioRef": "french-audio/v2/expressions/a2-exp-felicitation.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-bien-sur",
+      "cefrLevel": "A2",
+      "topic": "communication",
+      "text": "Bien sûr.",
+      "meaningCN": "当然。",
+      "meaningEN": "Of course.",
+      "usageNote": "agreement",
+      "situation": "agreement",
+      "example": {
+        "text": "Bien sûr.",
+        "meaningCN": "当然。"
+      },
+      "audioKey": "a2-exp-bien-sur",
+      "audioRef": "french-audio/v2/expressions/a2-exp-bien-sur.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-pas-encore",
+      "cefrLevel": "A2",
+      "topic": "time",
+      "text": "Pas encore.",
+      "meaningCN": "还没有。",
+      "meaningEN": "Not yet.",
+      "usageNote": "status",
+      "situation": "status",
+      "example": {
+        "text": "Pas encore.",
+        "meaningCN": "还没有。"
+      },
+      "audioKey": "a2-exp-pas-encore",
+      "audioRef": "french-audio/v2/expressions/a2-exp-pas-encore.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-tout-de-suite",
+      "cefrLevel": "A2",
+      "topic": "time",
+      "text": "Tout de suite.",
+      "meaningCN": "马上。",
+      "meaningEN": "Right away.",
+      "usageNote": "time",
+      "situation": "time",
+      "example": {
+        "text": "Tout de suite.",
+        "meaningCN": "马上。"
+      },
+      "audioKey": "a2-exp-tout-de-suite",
+      "audioRef": "french-audio/v2/expressions/a2-exp-tout-de-suite.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-ca-depend",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "text": "Ça dépend.",
+      "meaningCN": "这要看情况。",
+      "meaningEN": "It depends.",
+      "usageNote": "opinion",
+      "situation": "opinion",
+      "example": {
+        "text": "Ça dépend.",
+        "meaningCN": "这要看情况。"
+      },
+      "audioKey": "a2-exp-ca-depend",
+      "audioRef": "french-audio/v2/expressions/a2-exp-ca-depend.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-a-mon-avis",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "text": "À mon avis, ...",
+      "meaningCN": "依我看……",
+      "meaningEN": "In my opinion, ...",
+      "usageNote": "opinion",
+      "situation": "opinion",
+      "example": {
+        "text": "À mon avis, ...",
+        "meaningCN": "依我看……"
+      },
+      "audioKey": "a2-exp-a-mon-avis",
+      "audioRef": "french-audio/v2/expressions/a2-exp-a-mon-avis.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-suis-daccord",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "text": "Je suis d’accord.",
+      "meaningCN": "我同意。",
+      "meaningEN": "I agree.",
+      "usageNote": "opinion",
+      "situation": "opinion",
+      "example": {
+        "text": "Je suis d’accord.",
+        "meaningCN": "我同意。"
+      },
+      "audioKey": "a2-exp-je-suis-daccord",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-suis-daccord.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-ne-suis-pas-daccord",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "text": "Je ne suis pas d’accord.",
+      "meaningCN": "我不同意。",
+      "meaningEN": "I do not agree.",
+      "usageNote": "opinion",
+      "situation": "opinion",
+      "example": {
+        "text": "Je ne suis pas d’accord.",
+        "meaningCN": "我不同意。"
+      },
+      "audioKey": "a2-exp-je-ne-suis-pas-daccord",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-ne-suis-pas-daccord.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-quel-est-le-probleme",
+      "cefrLevel": "A2",
+      "topic": "problems",
+      "text": "Quel est le problème ?",
+      "meaningCN": "有什么问题？",
+      "meaningEN": "What is the problem?",
+      "usageNote": "problem solving",
+      "situation": "problem solving",
+      "example": {
+        "text": "Quel est le problème ?",
+        "meaningCN": "有什么问题？"
+      },
+      "audioKey": "a2-exp-quel-est-le-probleme",
+      "audioRef": "french-audio/v2/expressions/a2-exp-quel-est-le-probleme.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-il-faut",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "text": "Il faut consulter un médecin.",
+      "meaningCN": "应该去看医生。",
+      "meaningEN": "You need to see a doctor.",
+      "usageNote": "health advice",
+      "situation": "health advice",
+      "example": {
+        "text": "Il faut consulter un médecin.",
+        "meaningCN": "应该去看医生。"
+      },
+      "audioKey": "a2-exp-il-faut",
+      "audioRef": "french-audio/v2/expressions/a2-exp-il-faut.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-me-sens",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "text": "Je me sens mieux.",
+      "meaningCN": "我感觉好些了。",
+      "meaningEN": "I feel better.",
+      "usageNote": "health status",
+      "situation": "health status",
+      "example": {
+        "text": "Je me sens mieux.",
+        "meaningCN": "我感觉好些了。"
+      },
+      "audioKey": "a2-exp-je-me-sens",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-me-sens.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-je-vous-appelle",
+      "cefrLevel": "A2",
+      "topic": "communication",
+      "text": "Je vous appelle plus tard.",
+      "meaningCN": "我晚点给您打电话。",
+      "meaningEN": "I will call you later.",
+      "usageNote": "follow-up",
+      "situation": "follow-up",
+      "example": {
+        "text": "Je vous appelle plus tard.",
+        "meaningCN": "我晚点给您打电话。"
+      },
+      "audioKey": "a2-exp-je-vous-appelle",
+      "audioRef": "french-audio/v2/expressions/a2-exp-je-vous-appelle.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-exp-bonne-chance",
+      "cefrLevel": "A2",
+      "topic": "social",
+      "text": "Bonne chance !",
+      "meaningCN": "祝你好运！",
+      "meaningEN": "Good luck!",
+      "usageNote": "encouragement",
+      "situation": "encouragement",
+      "example": {
+        "text": "Bonne chance !",
+        "meaningCN": "祝你好运！"
+      },
+      "audioKey": "a2-exp-bonne-chance",
+      "audioRef": "french-audio/v2/expressions/a2-exp-bonne-chance.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    }
+  ]
+}

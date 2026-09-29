@@ -1,0 +1,55 @@
+<view class="page french-memory-page">
+  <teacher-preview-banner wx:if="{{isTeacherPreview}}"></teacher-preview-banner>
+  <view class="card loading-card" wx:if="{{loading}}">正在读取记忆数据…</view>
+  <view class="card message-card" wx:elif="{{message}}">
+    <view>{{message}}</view>
+    <button class="ghost-btn retry-btn" bindtap="loadMemory">重新加载</button>
+  </view>
+
+  <block wx:elif="{{word}}">
+    <view class="card word-card">
+      <view class="level-label">{{word.cefrLevel}} VOCABULARY</view>
+      <view class="word">{{word.displayForm || word.display || word.text}}</view>
+      <view class="meaning">{{word.meaningCN || word.meaning}}</view>
+      <view class="ipa" wx:if="{{word.ipa}}">{{word.ipa}}</view>
+    </view>
+
+    <view class="card" wx:if="{{hasReview}}">
+      <view class="section-title">当前记忆估算</view>
+      <view class="metric-grid">
+        <view class="metric"><view class="metric-value">{{memory.estimatedRetentionPercent}}%</view><view class="metric-label">现在预计保持</view></view>
+        <view class="metric"><view class="metric-value">{{memory.estimatedRetentionInThreeDaysPercent}}%</view><view class="metric-label">再等 3 天</view></view>
+        <view class="metric"><view class="metric-value small-value">{{memory.stabilityLabel}}</view><view class="metric-label">记忆强度</view></view>
+        <view class="metric"><view class="metric-value small-value">{{memory.intervalLabel}}</view><view class="metric-label">当前间隔</view></view>
+      </view>
+    </view>
+
+    <view class="card schedule-card">
+      <view class="section-title">复习安排</view>
+      <view class="detail-row"><text>状态</text><text>{{memory.stateLabel}}</text></view>
+      <view class="detail-row"><text>上次复习</text><text>{{memory.lastReviewedLabel}}</text></view>
+      <view class="detail-row"><text>下次复习</text><text>{{memory.nextReviewLabel}}</text></view>
+      <view class="detail-row"><text>复习次数</text><text>{{memory.reviewCount || 0}}</text></view>
+      <view class="detail-row"><text>Again 次数</text><text>{{memory.lapses || 0}}</text></view>
+    </view>
+
+    <view class="card" wx:if="{{hasCurve}}">
+      <view class="section-title">记忆保持趋势</view>
+      <view class="section-hint">曲线随复习时间、评分和记忆强度动态变化。</view>
+      <data-chart type="line" points="{{points}}" aria-label="单词记忆保持趋势"></data-chart>
+    </view>
+    <view class="card empty-card" wx:else>
+      <view class="section-title">还没有可画出的记忆曲线</view>
+      <view>完成至少一次复习后，这里才会显示基于实际记录的趋势。</view>
+    </view>
+
+    <view class="card" wx:if="{{history.length}}">
+      <view class="section-title">最近复习记录</view>
+      <view class="history-item" wx:for="{{history}}" wx:key="index">
+        <view><view class="history-rating">{{item.ratingLabel}}</view><view class="history-time">{{item.reviewedAt}}</view></view>
+        <view class="history-result">复习前 {{item.retentionBefore}}% · 新间隔 {{item.interval}}</view>
+      </view>
+    </view>
+    <view class="disclaimer">{{disclaimer}}</view>
+  </block>
+</view>

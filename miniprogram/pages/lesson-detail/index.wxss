@@ -1,18 +1,66 @@
-.lesson-head {
-  background: #e9f4ee;
+.lesson-page {
+  padding-top: 24rpx;
 }
 
-.subject {
+.lesson-head {
+  padding: 32rpx;
+  border-color: #d9e8df;
+  background: linear-gradient(145deg, #edf7f2 0%, #fffdfa 100%);
+}
+
+.head-row,
+.section-head,
+.recording-setting,
+.observation-editor-head,
+.observation-editor-top,
+.submission-main,
+.paper-card,
+.mistake-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.subject,
+.section-kicker {
   color: #4f8f73;
-  font-size: 24rpx;
+  font-size: 21rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+}
+
+.lesson-badge,
+.submission-count {
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  color: #6e5b43;
+  background: #f2e6d4;
+  font-size: 21rpx;
   font-weight: 700;
+}
+
+.template-badge {
+  display: inline-block;
+  margin-top: 8rpx;
+  padding: 5rpx 11rpx;
+  border-radius: 999rpx;
+  color: #39765d;
+  background: #e2f0e9;
+  font-size: 19rpx;
+  font-weight: 700;
+}
+
+.template-editor-hint {
+  color: #39765d;
 }
 
 .title {
-  margin-top: 10rpx;
+  margin-top: 14rpx;
   color: #243f35;
   font-size: 40rpx;
-  font-weight: 700;
+  font-weight: 800;
+  line-height: 1.35;
 }
 
 .date {
@@ -21,148 +69,928 @@
   font-size: 24rpx;
 }
 
-.summary,
-.reason {
-  margin-top: 16rpx;
-  color: #62584d;
-  font-size: 26rpx;
-  line-height: 1.6;
-}
-
-.sample-tip {
-  display: inline-flex;
-  margin-top: 16rpx;
-  padding: 6rpx 14rpx;
-  border-radius: 999rpx;
-  color: #8a6730;
-  background: #fff1cf;
-  font-size: 22rpx;
-}
-
-.add-btn {
-  margin-bottom: 32rpx;
-}
-
-.delete-lesson-btn {
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 78rpx;
-  margin-bottom: 32rpx;
-  border: 2rpx solid #d9a29d;
-  border-radius: 16rpx;
-  color: #a43f38;
-  background: #fff5f4;
-  font-size: 28rpx;
-  font-weight: 700;
-  line-height: 74rpx;
-  text-align: center;
-}
-
-.section-title {
-  margin: 14rpx 0 18rpx;
-  color: #2f2a24;
-  font-size: 32rpx;
-  font-weight: 700;
-}
-
-.empty {
-  padding: 30rpx 0;
-  color: #817669;
-  text-align: center;
-}
-
-.paper-title,
-.mistake-title {
-  color: #2f2a24;
-  font-size: 30rpx;
-  font-weight: 700;
-}
-
-.paper-meta {
-  margin-top: 10rpx;
-  color: #817669;
-  font-size: 24rpx;
-}
-
-.upload-card {
-  display: flex;
-  flex-direction: column;
-  gap: 18rpx;
-}
-
-.upload-title {
-  color: #2f2a24;
-  font-size: 30rpx;
-  font-weight: 700;
-}
-
-.input,
-.picker-value {
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 78rpx;
-  padding: 0 22rpx;
+.preview-tip {
+  margin-top: 20rpx;
+  padding: 16rpx 18rpx;
   border-radius: 14rpx;
-  background: #f8f2e8;
-  color: #2f2a24;
-  font-size: 28rpx;
-  line-height: 78rpx;
-}
-
-.upload-btn {
-  min-height: 78rpx;
-}
-
-.upload-hint {
-  color: #817669;
-  font-size: 24rpx;
+  color: #4f6f63;
+  background: #e2f0e9;
+  font-size: 23rpx;
   line-height: 1.5;
 }
 
-.mistake-top {
+.section-head {
+  align-items: flex-end;
+  margin: 36rpx 0 18rpx;
+}
+
+.section-title {
+  margin-top: 5rpx;
+  color: #2f2a24;
+  font-size: 32rpx;
+  font-weight: 800;
+}
+
+.section-hint {
+  max-width: 540rpx;
+  margin-top: 7rpx;
+  color: #817669;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.small-action,
+.advanced-toggle,
+.add-observation {
+  flex-shrink: 0;
+  color: #3f7b63;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.record-card {
+  padding: 24rpx 28rpx;
+}
+
+.record-item {
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #eee5d9;
+}
+
+.record-item:last-child {
+  border-bottom: 0;
+}
+
+.record-label,
+.label,
+.upload-step,
+.recording-task-title,
+.submission-title,
+.material-group-title {
+  color: #655b50;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.record-value,
+.homework-text {
+  margin-top: 9rpx;
+  color: #342f29;
+  font-size: 27rpx;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.homework-copy {
+  padding: 22rpx;
+  border: 1rpx solid #eadfcf;
+  border-radius: 16rpx;
+  background: #fffdfa;
+}
+
+.homework-copy-label,
+.recording-prompt-label {
+  color: #4c806b;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+
+.homework-copy .homework-text {
+  margin-top: 12rpx;
+  color: #302b26;
+  font-size: 32rpx;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.empty-record,
+.submission-empty,
+.empty {
+  padding: 26rpx 12rpx;
+  color: #817669;
+  text-align: center;
+}
+
+.empty-record-title {
+  color: #5d544b;
+  font-size: 27rpx;
+  font-weight: 700;
+}
+
+.empty-record-hint {
+  margin-top: 8rpx;
+  font-size: 23rpx;
+  line-height: 1.55;
+}
+
+.observation-list {
+  margin-top: 8rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #eee5d9;
+}
+
+.observation-title {
+  margin-bottom: 10rpx;
+}
+
+.observation-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 14rpx 0;
+}
+
+.observation-main,
+.paper-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.observation-content {
+  color: #3b352f;
+  font-size: 25rpx;
+  line-height: 1.5;
+}
+
+.observation-note,
+.field-hint,
+.recording-task-prompt,
+.recording-privacy,
+.preview-recording-note,
+.purpose-hint,
+.upload-hint,
+.mistake-action-hint,
+.file-name {
+  margin-top: 6rpx;
+  color: #817669;
+  font-size: 21rpx;
+  line-height: 1.5;
+}
+
+.observation-status,
+.submission-status,
+.mistake-status {
+  flex-shrink: 0;
+  padding: 7rpx 12rpx;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-independent {
+  color: #39765d;
+  background: #e6f3ec;
+}
+
+.status-prompted {
+  color: #8a6730;
+  background: #fff0cf;
+}
+
+.status-pending {
+  color: #a44e47;
+  background: #fae6e4;
+}
+
+.workspace-editor,
+.upload-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.field {
+  margin-bottom: 4rpx;
+}
+
+.label {
+  margin-bottom: 11rpx;
+}
+
+.input,
+.textarea,
+.picker-value,
+.observation-input,
+.observation-note-input {
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 14rpx;
+  color: #2f2a24;
+  background: #f8f2e8;
+  font-size: 26rpx;
+}
+
+.input,
+.picker-value,
+.observation-input,
+.observation-note-input {
+  min-height: 76rpx;
+  padding: 0 20rpx;
+  line-height: 76rpx;
+}
+
+.textarea {
+  min-height: 124rpx;
+  padding: 18rpx 20rpx;
+  line-height: 1.55;
+}
+
+.recording-prompt-textarea {
+  min-height: 150rpx;
+}
+
+.recording-setting {
+  padding: 20rpx 0;
+  border-top: 1rpx solid #eee5d9;
+  border-bottom: 1rpx solid #eee5d9;
+}
+
+.recording-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+}
+
+.recording-option-field {
+  min-width: 0;
+}
+
+.recording-label {
+  margin-bottom: 0;
+}
+
+.observation-editor-head {
+  margin-top: 6rpx;
+  align-items: flex-end;
+}
+
+.observation-editor {
+  padding: 20rpx;
+  border: 1rpx solid #eadfcf;
+  border-radius: 16rpx;
+  background: #fffdfa;
+}
+
+.observation-input {
+  flex: 1;
+}
+
+.remove-observation {
+  flex-shrink: 0;
+  color: #a44e47;
+  font-size: 22rpx;
+}
+
+.observation-editor .picker-value,
+.observation-note-input {
+  margin-top: 14rpx;
+}
+
+.save-record-btn {
+  margin-top: 2rpx;
+}
+
+.homework-card {
+  border-color: #e7dac6;
+  background: linear-gradient(145deg, #fffaf1 0%, #fffdfa 100%);
+}
+
+.recording-task {
+  margin-top: 22rpx;
+  padding-top: 22rpx;
+  border-top: 1rpx solid #eadfcf;
+}
+
+.recording-task-title {
+  color: #3d6f5b;
+  font-size: 28rpx;
+}
+
+.recording-prompt-label {
+  margin-top: 18rpx;
+}
+
+.recording-task-prompt {
+  margin-top: 10rpx;
+  padding: 22rpx;
+  border: 1rpx solid #dfe9e3;
+  border-radius: 16rpx;
+  color: #263b33;
+  background: #f5faf7;
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.recording-task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 15rpx;
+}
+
+.recording-meta-chip {
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  color: #547262;
+  background: #e8f2ed;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
+.record-btn {
+  display: flex;
+  min-height: 82rpx;
+  margin-top: 20rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16rpx;
+  color: #fff;
+  background: #4f8f73;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.record-btn-active {
+  background: #b6534b;
+  box-shadow: 0 0 0 8rpx rgba(182, 83, 75, 0.12);
+}
+
+.homework-progress-card {
+  margin-top: 22rpx;
+  padding: 22rpx;
+  border: 1rpx solid #dfd2bf;
+  border-radius: 16rpx;
+  background: #fffdfa;
+}
+
+.homework-progress-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18rpx;
 }
 
-.status {
+.homework-progress-title,
+.homework-reminder-title {
+  color: #4d453d;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.homework-progress-time,
+.homework-action-hint,
+.homework-completed-copy,
+.homework-reminder-hint {
+  margin-top: 7rpx;
+  color: #817669;
+  font-size: 21rpx;
+  line-height: 1.5;
+}
+
+.homework-status-pill {
+  flex-shrink: 0;
   padding: 8rpx 14rpx;
   border-radius: 999rpx;
-  color: #4f8f73;
+  font-size: 21rpx;
+  font-weight: 800;
+}
+
+.homework-status-completed {
+  color: #39765d;
+  background: #e2f0e9;
+}
+
+.homework-status-pending {
+  color: #94692e;
+  background: #fff0cf;
+}
+
+.homework-complete-btn {
+  margin-top: 18rpx;
+  min-height: 76rpx;
+  font-size: 25rpx;
+}
+
+.student-homework-review-note {
+  margin-top: 16rpx;
+  padding: 18rpx;
+  border-radius: 14rpx;
+  color: #486458;
+  background: #edf6f1;
+  font-size: 24rpx;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.teacher-incomplete-notice {
+  margin-top: 16rpx;
+  padding: 16rpx 18rpx;
+  border: 1rpx solid #edc89f;
+  border-radius: 13rpx;
+  color: #8a522a;
+  background: #fff5e7;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.teacher-homework-review {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #eadfcf;
+}
+
+.teacher-homework-review-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.teacher-homework-review-title {
+  color: #4d453d;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.teacher-homework-review-hint {
+  margin-top: 6rpx;
+  color: #817669;
+  font-size: 20rpx;
+}
+
+.teacher-review-state {
+  flex-shrink: 0;
+  padding: 7rpx 12rpx;
+  border-radius: 999rpx;
+  color: #756756;
+  background: #f1eadf;
+  font-size: 19rpx;
+  font-weight: 700;
+}
+
+.teacher-homework-review-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-top: 17rpx;
+}
+
+.teacher-review-btn {
+  display: flex;
+  min-height: 70rpx;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid;
+  border-radius: 13rpx;
+  background: #fff;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.teacher-review-completed {
+  border-color: #86b29f;
+  color: #39765d;
+}
+
+.teacher-review-incomplete {
+  border-color: #dfb58f;
+  color: #9a5d34;
+}
+
+.teacher-review-completed.teacher-review-btn-active {
+  color: #fff;
+  background: #4f8f73;
+}
+
+.teacher-review-incomplete.teacher-review-btn-active {
+  color: #fff;
+  background: #b36b3f;
+}
+
+.homework-reminder-box {
+  margin-top: 18rpx;
+  padding: 18rpx;
+  border-radius: 14rpx;
+  background: #f2f7f4;
+}
+
+.homework-reminder-btn {
+  display: flex;
+  min-height: 68rpx;
+  margin-top: 15rpx;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid #75a58d;
+  border-radius: 13rpx;
+  color: #39765d;
+  background: #fff;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.submission-list {
+  margin-top: 24rpx;
+  padding-top: 22rpx;
+  border-top: 1rpx solid #eadfcf;
+}
+
+.submission-row {
+  margin-top: 14rpx;
+  padding: 18rpx;
+  border-radius: 15rpx;
+  background: #f8f2e8;
+}
+
+.recording-maintenance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+  margin-top: 20rpx;
+  padding: 18rpx;
+  border: 1rpx dashed #d8c7ad;
+  border-radius: 15rpx;
+  background: #fff8ec;
+}
+
+.recording-maintenance-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.recording-maintenance-title {
+  color: #6d5737;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.recording-maintenance-hint {
+  margin-top: 5rpx;
+  color: #8b7a66;
+  font-size: 20rpx;
+  line-height: 1.45;
+}
+
+.organize-recordings-btn {
+  flex-shrink: 0;
+  padding: 14rpx 17rpx;
+  border-radius: 12rpx;
+  color: #fff;
+  background: #8a6730;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
+.submission-name {
+  color: #3b352f;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.submission-actions,
+.upload-actions,
+.mistake-actions {
+  display: flex;
+  gap: 14rpx;
+  margin-top: 15rpx;
+}
+
+.upload-actions {
+  flex-wrap: wrap;
+}
+
+.submission-actions {
+  flex-wrap: wrap;
+}
+
+.listen-btn,
+.review-btn,
+.delete-recording-btn {
+  flex: 1;
+  padding: 14rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  font-weight: 700;
+  text-align: center;
+}
+
+.listen-btn {
+  color: #fff;
+  background: #4f8f73;
+}
+
+.review-btn {
+  color: #6e5b43;
+  background: #efe2cf;
+}
+
+.delete-recording-btn {
+  color: #a43f38;
+  background: #f8dfdc;
+}
+
+.purpose-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12rpx;
+}
+
+.purpose-option {
+  padding: 18rpx;
+  border: 1rpx solid #eadfcf;
+  border-radius: 15rpx;
+  background: #fbf7f0;
+}
+
+.purpose-option-active {
+  border-color: #75a58d;
+  background: #e9f4ee;
+}
+
+.purpose-label {
+  color: #4d453d;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.purpose-option-active .purpose-label {
+  color: #39765d;
+}
+
+.upload-action,
+.mistake-action {
+  min-width: 0;
+  flex: 1;
+  font-size: 25rpx;
+}
+
+.computer-upload-action {
+  flex-basis: 100%;
+  border-color: #74a58d;
+  color: #39765d;
+  background: #edf7f2;
+}
+
+.advanced-toggle {
+  padding-top: 4rpx;
+  text-align: center;
+}
+
+.advanced-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+}
+
+.danger-text-action {
+  padding: 12rpx 0 2rpx;
+  color: #a44e47;
+  font-size: 22rpx;
+  font-weight: 700;
+  text-align: center;
+}
+
+.material-group-title {
+  margin: 24rpx 0 12rpx;
+}
+
+.paper-card {
+  display: block;
+  padding: 22rpx 24rpx;
+}
+
+.material-image-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  border: 1rpx solid #e7dccd;
+  border-radius: 16rpx;
+  background: #f5f0e7;
+}
+
+.material-image-preview {
+  display: block;
+  width: 100%;
+  height: 380rpx;
+}
+
+.material-image-hint {
+  position: absolute;
+  right: 14rpx;
+  bottom: 14rpx;
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  color: #fff;
+  background: rgba(36, 63, 53, 0.78);
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+.paper-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.paper-title,
+.mistake-title {
+  color: #342f29;
+  font-size: 27rpx;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.paper-meta {
+  margin-top: 8rpx;
+  color: #817669;
+  font-size: 22rpx;
+}
+
+.paper-side {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.material-card-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 9rpx;
+}
+
+.material-action-btn {
+  min-width: 92rpx;
+  padding: 8rpx 15rpx;
+  border-radius: 999rpx;
+  text-align: center;
+}
+
+.open-label {
+  color: #39765d;
   background: #e9f4ee;
   font-size: 22rpx;
-  white-space: nowrap;
+  font-weight: 700;
+}
+
+.save-label {
+  color: #80602c;
+  background: #f4ead8;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.manage-label {
+  color: #8a6730;
+  font-size: 21rpx;
+}
+
+.mistake-actions-card {
+  padding: 22rpx;
+}
+
+.mistake-actions {
+  margin-top: 0;
+}
+
+.mistake-status {
+  color: #4f8f73;
+  background: #e9f4ee;
+}
+
+.reason {
+  margin-top: 14rpx;
+  color: #62584d;
+  font-size: 25rpx;
+  line-height: 1.6;
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
   gap: 10rpx;
-  margin-top: 18rpx;
+  margin-top: 15rpx;
 }
 
 .tag {
-  padding: 8rpx 14rpx;
+  padding: 7rpx 12rpx;
   border-radius: 999rpx;
   color: #6f593d;
   background: #f5ead8;
-  font-size: 22rpx;
+  font-size: 21rpx;
+}
+
+.teacher-danger-zone {
+  margin-top: 56rpx;
+  padding-top: 26rpx;
+  border-top: 1rpx solid #e3d8ca;
+}
+
+.danger-label {
+  margin-bottom: 13rpx;
+  color: #9b8b7d;
+  font-size: 21rpx;
+  text-align: center;
+}
+
+.delete-lesson-btn {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 76rpx;
+  border: 2rpx solid #d9a29d;
+  border-radius: 16rpx;
+  color: #a43f38;
+  background: #fff5f4;
+  font-size: 26rpx;
+  font-weight: 700;
+  line-height: 72rpx;
+  text-align: center;
 }
 
 .no-permission {
   color: #8a6730;
   background: #fff1cf;
-  font-size: 28rpx;
+  font-size: 27rpx;
   line-height: 1.6;
 }
 
-.preview-tip {
-  margin-bottom: 22rpx;
-  padding: 18rpx 22rpx;
+.retry-link {
+  margin-top: 12rpx;
+  color: #39765d;
+  font-weight: 700;
+}
+
+.disabled-action {
+  opacity: 0.55;
+}
+
+.ket-source-card,
+.ket-task-source {
+  margin-top: 14rpx;
+  padding: 17rpx;
+  border: 1rpx solid #c9dfd3;
   border-radius: 14rpx;
-  color: #4f6f63;
-  background: #e9f4ee;
-  font-size: 26rpx;
-  line-height: 1.6;
+  background: #edf7f2;
+}
+
+.ket-source-title {
+  color: #315f4c;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+
+.ket-source-line,
+.ket-source-warning,
+.ket-weekly-hint,
+.ket-recording-meta,
+.ket-timing-note,
+.ket-task-source {
+  color: #66766e;
+  font-size: 21rpx;
+  line-height: 1.5;
+}
+
+.ket-source-line,
+.ket-source-warning,
+.ket-task-source view + view {
+  margin-top: 7rpx;
+}
+
+.ket-source-warning {
+  color: #8a6730;
+}
+
+.ket-source-copy {
+  margin-top: 10rpx;
+  color: #39765d;
+  font-size: 21rpx;
+  font-weight: 800;
+}
+
+.ket-weekly-hint {
+  margin-top: 10rpx;
+  padding: 12rpx 14rpx;
+  border-radius: 12rpx;
+  color: #7c5b28;
+  background: #fff3d7;
+}
+
+.ket-recording-meta,
+.ket-timing-note {
+  margin-top: 10rpx;
+  color: #39765d;
+  font-weight: 700;
+}
+
+.official-prompt {
+  color: #52635b;
+  background: #eef3ef;
 }

@@ -3,6 +3,8 @@ miniprogram_npm/
 .DS_Store
 *.log
 project.private.config.json
+cloudfunctions/quickstartFunctions/config.js
 output/
 tmp/
+tools/french-audio/models/
 HANDOFF-*.md

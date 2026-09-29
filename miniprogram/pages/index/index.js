@@ -1,4 +1,12 @@
 const sampleData = require("../../utils/sampleData");
+const { prefetchVocabularyAudio } = require("../../utils/vocabularyAudio");
+
+const formatHomeworkActivityTime = (timestamp) => {
+  const date = new Date(Number(timestamp || 0));
+  if (Number.isNaN(date.getTime()) || !timestamp) return "刚刚同步";
+  const pad = (value) => String(value).padStart(2, "0");
+  return `${date.getMonth() + 1}月${date.getDate()}日 ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
 
 Page({
   data: {
@@ -6,10 +14,18 @@ Page({
     role: "loading",
     isTeacher: false,
     isStudent: false,
+    isTeacherPreview: false,
     isGuest: false,
+    mode: "",
+    previewStudentId: "",
     openid: "",
     teacherName: "朱老师",
+    homeTitle: "朱老师英语课堂",
+    studentHomeSubtitle: "今天也来学一点吧。",
     currentStudent: null,
+    showEnglishLearning: true,
+    englishCourseEnabled: true,
+    mistakeLearningEnabled: true,
     stats: {
       studentCount: 0,
       mistakeCount: 0,
@@ -23,8 +39,11 @@ Page({
       },
     },
     recentLessons: [],
+    homeworkCompletionNotices: [],
+    pendingHomework: null,
+    homeworkSummary: { pendingCount: 0, completedCount: 0, totalCount: 0 },
+    studentPlanSteps: [],
     studentsProgress: [],
-    nextLessonBooking: null,
     vocabularyPulse: {
       enabled: false,
       goal: 0,
@@ -33,7 +52,15 @@ Page({
       progressPercent: 0,
       completed: false,
     },
+    showStudentSwitcher: false,
     errorMessage: "",
+  },
+
+  onLoad(options) {
+    this.setData({
+      mode: String(options.mode || ""),
+      previewStudentId: String(options.previewStudentId || ""),
+    });
   },
 
   onShow() {
@@ -54,6 +81,10 @@ Page({
         name: "quickstartFunctions",
         data: {
           type: "getHomeData",
+          data: {
+            mode: this.data.mode,
+            previewStudentId: this.data.previewStudentId,
+          },
         },
       })
       .then((res) => {
@@ -63,18 +94,56 @@ Page({
           return;
         }
         const role = result.role || "guest";
+        const isTeacherPreview = result.isTeacherPreview === true;
+        const isStudentSurface = role === "student" || isTeacherPreview;
+        const currentStudent = result.currentStudent || null;
+        const mistakeLearningEnabled = currentStudent
+          ? currentStudent.mistakeLearningEnabled !== false
+          : true;
+        const englishCourseEnabled = currentStudent
+          ? typeof currentStudent.englishCourseEnabled === "boolean"
+            ? currentStudent.englishCourseEnabled
+            : mistakeLearningEnabled
+          : true;
+        const showEnglishLearning = currentStudent
+          ? currentStudent.vocabularyEnabled === true || englishCourseEnabled || mistakeLearningEnabled
+          : true;
+        const isFrenchOnly = isStudentSurface
+          && currentStudent
+          && currentStudent.frenchLearningEnabled === true
+          && !showEnglishLearning;
         this.setData({
           role,
-          isTeacher: role === "teacher",
-          isStudent: role === "student",
-          isGuest: role === "guest",
+          isTeacher: role === "teacher" && !isTeacherPreview,
+          isStudent: isStudentSurface,
+          isTeacherPreview,
+          isGuest: role === "guest" && !isTeacherPreview,
           openid: result.openid || "",
           teacherName: result.teacherName || "朱老师",
-          currentStudent: result.currentStudent || null,
+          homeTitle: isFrenchOnly ? "我的法语学习" : "朱老师英语课堂",
+          studentHomeSubtitle: isFrenchOnly
+            ? "今天从一句法语开始，沿着自己的路线继续学习。"
+            : "今天也来学一点吧。",
+          currentStudent,
+          showEnglishLearning,
+          englishCourseEnabled,
+          mistakeLearningEnabled,
           stats: result.stats || {},
           recentLessons: result.recentLessons || [],
-          studentsProgress: result.studentsProgress || [],
-          nextLessonBooking: result.nextLessonBooking || null,
+          homeworkCompletionNotices: (result.homeworkCompletionNotices || []).map((item) => Object.assign({}, item, {
+            activityLabel: formatHomeworkActivityTime(item.activityAtMs),
+          })),
+          pendingHomework: result.pendingHomework || null,
+          homeworkSummary: result.homeworkSummary || { pendingCount: 0, completedCount: 0, totalCount: 0 },
+          studentPlanSteps: this.buildStudentPlanSteps(
+            currentStudent,
+            result.vocabularyPulse,
+            result.pendingHomework,
+            result.homeworkSummary
+          ),
+          studentsProgress: (result.studentsProgress || []).map((item) => Object.assign({}, item, {
+            initial: String(item && item.name || "学").slice(0, 1),
+          })),
           vocabularyPulse: result.vocabularyPulse || {
             enabled: false,
             goal: 0,
@@ -83,12 +152,15 @@ Page({
             progressPercent: 0,
             completed: false,
           },
+          showStudentSwitcher: role === "teacher" && !isTeacherPreview ? this.data.showStudentSwitcher : false,
           errorMessage: "",
         });
-        if (role === "guest") {
+        if (role === "guest" && !isTeacherPreview) {
           wx.navigateTo({
             url: "/pages/bind-student/index",
           });
+        } else if (role === "student" && currentStudent && currentStudent.vocabularyEnabled === true) {
+          this.prefetchTodayVocabularyAudio(currentStudent._id);
         }
       })
       .catch((err) => {
@@ -102,6 +174,7 @@ Page({
       role: "guest",
       isTeacher: false,
       isStudent: false,
+      isTeacherPreview: false,
       isGuest: true,
       errorMessage: message,
       stats: {
@@ -112,8 +185,16 @@ Page({
         },
       },
       recentLessons: sampleData.lessons.slice(0, 2),
+      homeworkCompletionNotices: [],
+      pendingHomework: null,
+      homeworkSummary: { pendingCount: 0, completedCount: 0, totalCount: 0 },
+      studentPlanSteps: [],
       studentsProgress: [],
-      nextLessonBooking: null,
+      homeTitle: "朱老师英语课堂",
+      studentHomeSubtitle: "今天也来学一点吧。",
+      showEnglishLearning: true,
+      englishCourseEnabled: true,
+      mistakeLearningEnabled: true,
       vocabularyPulse: {
         enabled: false,
         goal: 0,
@@ -122,6 +203,118 @@ Page({
         progressPercent: 0,
         completed: false,
       },
+      showStudentSwitcher: false,
+    });
+  },
+
+  prefetchTodayVocabularyAudio(studentId) {
+    const normalizedStudentId = String(studentId || "").trim();
+    if (!normalizedStudentId || this.prefetchedAudioStudentId === normalizedStudentId) return;
+    this.prefetchedAudioStudentId = normalizedStudentId;
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "getVocabularyData",
+        data: {
+          studentId: normalizedStudentId,
+          browseTab: "today",
+          offset: 0,
+          limit: 30,
+        },
+      },
+    }).then((res) => {
+      const result = res.result || {};
+      if (!result.success) throw new Error(result.message || "今日单词音频准备失败");
+      const todayWords = (result.todayWords || [])
+        .filter((item) => item && item.isDue !== false)
+        .slice(0, 30);
+      return prefetchVocabularyAudio(todayWords, { concurrency: 3 });
+    }).then((summary) => {
+      if (summary && summary.failed) {
+        console.warn("some vocabulary audio prefetches failed", summary);
+      }
+    }).catch((err) => {
+      this.prefetchedAudioStudentId = "";
+      console.warn("prefetch today vocabulary audio failed", err);
+    });
+  },
+
+  buildStudentPlanSteps(student, vocabularyPulse, pendingHomework, homeworkSummary) {
+    if (!student) return [];
+    const steps = [];
+    const pulse = vocabularyPulse || {};
+    if (student.vocabularyEnabled === true) {
+      steps.push({
+        action: "study",
+        tone: "green",
+        title: "先背今天的单词",
+        hint: pulse.completed
+          ? "今天已经完成，可以重新查看背词流程"
+          : `一次一个：先回忆，再看答案；还差 ${Number(pulse.remainingCount) || 0} 个`,
+        actionLabel: pulse.completed ? "查看 →" : "去背词 →",
+      });
+      steps.push({
+        action: "quiz",
+        tone: "sand",
+        title: "背完后做单词小测",
+        hint: "用 6 道题检查是否真的记住，约 2 分钟",
+        actionLabel: "去小测 →",
+      });
+    }
+    const courseEnabled = typeof student.englishCourseEnabled === "boolean"
+      ? student.englishCourseEnabled
+      : student.mistakeLearningEnabled !== false;
+    if (courseEnabled) {
+      const summary = homeworkSummary || {};
+      steps.push({
+        action: "homework",
+        tone: "gold",
+        title: "查看课后任务",
+        hint: pendingHomework
+          ? `${pendingHomework.title || "最近英语课"} · ${pendingHomework.recordingTaskEnabled ? "需要完成任务并提交录音" : "还有任务等待完成"}`
+          : Number(summary.completedCount) > 0
+            ? "目前没有待完成任务，可以查看以前的完成记录"
+            : "老师布置后会显示在这里",
+        actionLabel: pendingHomework ? "去完成 →" : "查看 →",
+      });
+    }
+    return steps.map((item, index) => Object.assign({}, item, { number: index + 1 }));
+  },
+
+  handlePlanStep(e) {
+    const action = String(e.currentTarget.dataset.action || "");
+    if (action === "study") this.goVocabularyStudy();
+    else if (action === "quiz") this.goVocabularyChallenge();
+    else if (action === "homework") this.goHomeworkTasks();
+  },
+
+  toggleStudentSwitcher() {
+    if (!this.data.isTeacher) return;
+    if (!this.data.studentsProgress.length) {
+      wx.showToast({ title: "还没有可预览的学生", icon: "none" });
+      return;
+    }
+    this.setData({ showStudentSwitcher: !this.data.showStudentSwitcher });
+  },
+
+  openStudentPreview(e) {
+    const studentId = String(e.currentTarget.dataset.id || "");
+    if (!studentId || !this.data.isTeacher) return;
+    this.setData({ showStudentSwitcher: false });
+    wx.navigateTo({
+      url: "/pages/index/index?mode=teacherPreview&previewStudentId=" + encodeURIComponent(studentId),
+    });
+  },
+
+  withPreviewParams(url) {
+    if (!this.data.isTeacherPreview || !this.data.previewStudentId) return url;
+    const separator = url.indexOf("?") >= 0 ? "&" : "?";
+    return `${url}${separator}mode=teacherPreview&previewStudentId=${encodeURIComponent(this.data.previewStudentId)}`;
+  },
+
+  goBackToTeacher() {
+    wx.navigateBack({
+      fail() { wx.reLaunch({ url: "/pages/index/index" }); },
     });
   },
 
@@ -143,14 +336,74 @@ Page({
     const lessonId = e.currentTarget.dataset.id;
     if (!lessonId) return;
     wx.navigateTo({
+      url: this.withPreviewParams("/pages/lesson-detail/index?id=" + lessonId),
+    });
+  },
+
+  markHomeworkActivitiesViewed(viewedThroughAtMs) {
+    if (!wx.cloud || !viewedThroughAtMs) return Promise.reject(new Error("云服务暂时不可用"));
+    return wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "markHomeworkActivitiesViewed",
+        data: { viewedThroughAtMs },
+      },
+    }).then((res) => {
+      const result = res.result || {};
+      if (!result.success) throw new Error(result.message || "同步已读状态失败");
+      return result;
+    });
+  },
+
+  goHomeworkActivity(e) {
+    const lessonId = String(e.currentTarget.dataset.id || "");
+    const activityAtMs = Number(e.currentTarget.dataset.activityAt || 0);
+    if (!lessonId || !activityAtMs) return;
+    const notices = this.data.homeworkCompletionNotices || [];
+    this.setData({
+      homeworkCompletionNotices: notices.filter((item) => Number(item.activityAtMs || 0) > activityAtMs),
+    });
+    this.markHomeworkActivitiesViewed(activityAtMs).catch((err) => {
+      console.error("mark homework activity viewed failed", err);
+    });
+    wx.navigateTo({
       url: "/pages/lesson-detail/index?id=" + lessonId,
     });
+  },
+
+  dismissHomeworkActivities() {
+    const notices = this.data.homeworkCompletionNotices || [];
+    const viewedThroughAtMs = notices.reduce(
+      (latest, item) => Math.max(latest, Number(item.activityAtMs || 0)),
+      0
+    );
+    if (!viewedThroughAtMs) return;
+    this.setData({ homeworkCompletionNotices: [] });
+    this.markHomeworkActivitiesViewed(viewedThroughAtMs).catch((err) => {
+      console.error("dismiss homework activities failed", err);
+      this.setData({ homeworkCompletionNotices: notices });
+      wx.showToast({ title: "暂时未同步，请重试", icon: "none" });
+    });
+  },
+
+  goPendingHomework() {
+    const lesson = this.data.pendingHomework;
+    if (!lesson || !lesson._id) return;
+    wx.navigateTo({ url: this.withPreviewParams("/pages/lesson-detail/index?id=" + lesson._id) });
   },
 
   goMyLessons() {
     const studentId = this.data.currentStudent ? this.data.currentStudent._id : "";
     wx.navigateTo({
-      url: "/pages/student-detail/index?id=" + studentId,
+      url: this.withPreviewParams("/pages/student-detail/index?id=" + studentId),
+    });
+  },
+
+  goHomeworkTasks() {
+    const student = this.data.currentStudent;
+    if (!student || !student._id) return;
+    wx.navigateTo({
+      url: this.withPreviewParams("/pages/homework/index?studentId=" + encodeURIComponent(student._id)),
     });
   },
 
@@ -158,7 +411,15 @@ Page({
     const student = this.data.currentStudent;
     if (!student || !student._id || !student.vocabularyEnabled) return;
     wx.navigateTo({
-      url: "/pages/vocabulary/index?studentId=" + student._id,
+      url: this.withPreviewParams("/pages/vocabulary/index?studentId=" + student._id),
+    });
+  },
+
+  goVocabularyStudy() {
+    const student = this.data.currentStudent;
+    if (!student || !student._id || !student.vocabularyEnabled) return;
+    wx.navigateTo({
+      url: this.withPreviewParams("/pages/vocabulary-study/index?studentId=" + encodeURIComponent(student._id)),
     });
   },
 
@@ -166,13 +427,51 @@ Page({
     const student = this.data.currentStudent;
     if (!student || !student._id || !student.vocabularyEnabled) return;
     wx.navigateTo({
-      url: "/pages/vocabulary-challenge/index?studentId=" + encodeURIComponent(student._id),
+      url: this.withPreviewParams("/pages/vocabulary-challenge/index?studentId=" + encodeURIComponent(student._id)),
+    });
+  },
+
+  goFrenchLearning() {
+    if (this.data.isStudent && (!this.data.currentStudent || !this.data.currentStudent.frenchLearningEnabled)) return;
+    wx.navigateTo({
+      url: this.withPreviewParams("/pages/french-learning/index"),
     });
   },
 
   goBind() {
     wx.navigateTo({
       url: "/pages/bind-student/index",
+    });
+  },
+
+  unbindIdentity() {
+    if (this.data.isTeacherPreview) return;
+    if (!this.data.isTeacher && !this.data.isStudent) return;
+    const roleLabel = this.data.isTeacher
+      ? "教师端"
+      : `${this.data.currentStudent && this.data.currentStudent.name || "学生"}的学生端`;
+    wx.showModal({
+      title: "退出当前身份？",
+      content: `即将退出${roleLabel}。课程、错题和学习记录都不会删除，以后可以再次输入访问码进入。`,
+      confirmText: "确认退出",
+      confirmColor: "#a04f43",
+      success: (modalResult) => {
+        if (!modalResult.confirm) return;
+        wx.showLoading({ title: "正在退出", mask: true });
+        wx.cloud.callFunction({
+          name: "quickstartFunctions",
+          data: { type: "unbindIdentity" },
+        }).then((res) => {
+          const result = res.result || {};
+          if (!result.success) throw new Error(result.message || "退出失败");
+          wx.reLaunch({ url: "/pages/bind-student/index?signedOut=1" });
+        }).catch((err) => {
+          console.error(err);
+          wx.showToast({ title: err.message || "退出失败，请重试", icon: "none" });
+        }).finally(() => {
+          wx.hideLoading();
+        });
+      },
     });
   },
 
@@ -194,17 +493,4 @@ Page({
     });
   },
 
-  goLessonBookings() {
-    wx.navigateTo({
-      url: "/pages/lesson-bookings/index",
-    });
-  },
-
-  goNextLessonBooking() {
-    const booking = this.data.nextLessonBooking;
-    const suffix = booking && booking._id ? "?bookingId=" + encodeURIComponent(booking._id) : "";
-    wx.navigateTo({
-      url: "/pages/lesson-bookings/index" + suffix,
-    });
-  },
 });

@@ -1,3 +1,15 @@
+const {
+  LESSON_TEMPLATE_OPTIONS,
+  findTemplate,
+  inferLessonTemplateKey,
+} = require("../../utils/lessonTemplates");
+const { KET_SPEAKING_TASKS } = require("../../utils/ketSpeakingTasks");
+
+const RECORDING_TASK_TYPE_OPTIONS = [
+  { value: "manual", label: "手动口语任务" },
+  { value: "ket_official", label: "KET 官方样题" },
+];
+
 function formatDate(date) {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
@@ -10,15 +22,45 @@ Page({
     students: [],
     studentIndex: 0,
     selectedStudentName: "请选择学生",
+    lessonTemplateOptions: LESSON_TEMPLATE_OPTIONS,
+    lessonTemplateIndex: 0,
+    lessonTemplate: findTemplate("general"),
+    recordingRepeatOptions: [1, 2, 3, 4, 5],
+    recordingPreparationOptions: [0, 3, 5, 10, 15],
+    recordingRepeatIndex: 1,
+    recordingPreparationIndex: 2,
+    recordingTaskTypeOptions: RECORDING_TASK_TYPE_OPTIONS,
+    recordingTaskTypeIndex: 0,
+    ketSpeakingTasks: KET_SPEAKING_TASKS,
+    ketSpeakingTaskIndex: 0,
+    selectedKetSpeakingTask: KET_SPEAKING_TASKS[0],
+    ketWeeklyHint: "",
     lessonNoTip: "",
     message: "",
     saving: false,
+    showLessonRecord: false,
     form: {
       title: "",
       subject: "英语",
       lessonDate: "",
       lessonNo: "",
-      summary: "",
+      lessonTemplateKey: "general",
+      reviewContent: "",
+      taughtContent: "",
+      masterySummary: "",
+      oralTopic: "",
+      targetExpression: "",
+      independentOutput: "",
+      correctionNotes: "",
+      ketSkill: "",
+      nextReview: "",
+      homeworkTask: "",
+      recordingTaskEnabled: false,
+      recordingTaskType: "manual",
+      recordingPrompt: "",
+      recordingRepeatCount: 2,
+      recordingPreparationSeconds: 5,
+      ketSpeakingTaskId: "",
     },
   },
 
@@ -67,7 +109,9 @@ Page({
       studentIndex,
       selectedStudentName: students[studentIndex] ? students[studentIndex].name : "请选择学生",
     }, () => {
+      this.applyLessonTemplate(students[studentIndex]);
       this.updateLessonNoSuggestion();
+      this.checkKetWeeklyStatus();
     });
   },
 
@@ -78,8 +122,34 @@ Page({
       studentIndex,
       selectedStudentName: student ? student.name : "请选择学生",
     }, () => {
+      this.applyLessonTemplate(student);
       this.updateLessonNoSuggestion();
+      this.checkKetWeeklyStatus();
     });
+  },
+
+  applyLessonTemplate(student, explicitKey) {
+    const key = explicitKey || inferLessonTemplateKey(student);
+    const index = Math.max(0, LESSON_TEMPLATE_OPTIONS.findIndex((item) => item.key === key));
+    const updates = {
+      lessonTemplateIndex: index,
+      lessonTemplate: findTemplate(key),
+      "form.lessonTemplateKey": key,
+    };
+    if (key !== "molly_oral_ket") {
+      Object.assign(updates, {
+        recordingTaskTypeIndex: 0,
+        ketWeeklyHint: "",
+        "form.recordingTaskType": "manual",
+        "form.ketSpeakingTaskId": "",
+      });
+    }
+    this.setData(updates);
+  },
+
+  onLessonTemplateChange(e) {
+    const option = LESSON_TEMPLATE_OPTIONS[Number(e.detail.value)] || LESSON_TEMPLATE_OPTIONS[0];
+    this.applyLessonTemplate(null, option.key);
   },
 
   onInput(e) {
@@ -151,6 +221,97 @@ Page({
   onDateChange(e) {
     this.setData({
       "form.lessonDate": e.detail.value,
+    }, () => this.checkKetWeeklyStatus());
+  },
+
+  toggleLessonRecord() {
+    this.setData({ showLessonRecord: !this.data.showLessonRecord });
+  },
+
+  onRecordingTaskChange(e) {
+    this.setData({ "form.recordingTaskEnabled": Boolean(e.detail.value) });
+  },
+
+  onRecordingTaskTypeChange(e) {
+    const index = Number(e.detail.value);
+    const option = RECORDING_TASK_TYPE_OPTIONS[index] || RECORDING_TASK_TYPE_OPTIONS[0];
+    this.setData({
+      recordingTaskTypeIndex: index,
+      "form.recordingTaskType": option.value,
+    }, () => {
+      if (option.value === "ket_official") this.applyKetSpeakingTask(this.data.ketSpeakingTaskIndex);
+      else this.setData({ "form.ketSpeakingTaskId": "", ketWeeklyHint: "" });
+    });
+  },
+
+  onKetSpeakingTaskChange(e) {
+    this.applyKetSpeakingTask(Number(e.detail.value));
+  },
+
+  applyKetSpeakingTask(index) {
+    const safeIndex = Math.max(0, Math.min(KET_SPEAKING_TASKS.length - 1, Number(index) || 0));
+    const task = KET_SPEAKING_TASKS[safeIndex];
+    const preparationIndex = Math.max(0, this.data.recordingPreparationOptions.indexOf(task.preparationSeconds));
+    this.setData({
+      ketSpeakingTaskIndex: safeIndex,
+      selectedKetSpeakingTask: task,
+      recordingRepeatIndex: 0,
+      recordingPreparationIndex: preparationIndex,
+      "form.ketSpeakingTaskId": task.id,
+      "form.recordingPrompt": task.prompt,
+      "form.recordingRepeatCount": 1,
+      "form.recordingPreparationSeconds": task.preparationSeconds,
+      "form.ketSkill": `${task.part} · ${task.topic}`,
+    }, () => this.checkKetWeeklyStatus());
+  },
+
+  checkKetWeeklyStatus() {
+    const student = this.data.students[this.data.studentIndex];
+    if (
+      !student
+      || this.data.form.lessonTemplateKey !== "molly_oral_ket"
+      || this.data.form.recordingTaskType !== "ket_official"
+      || !this.data.form.lessonDate
+    ) {
+      this.setData({ ketWeeklyHint: "" });
+      return;
+    }
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "getKetWeeklyStatus",
+        data: { studentId: student._id, lessonDate: this.data.form.lessonDate },
+      },
+    }).then((res) => {
+      const result = res.result || {};
+      if (!result.success) return;
+      this.setData({
+        ketWeeklyHint: result.alreadyAssigned
+          ? `本周已在 ${result.existingLesson.lessonDate} 的“${result.existingLesson.title}”布置过一次 KET 口语；仍可继续保存。`
+          : "本周还没有布置 KET 口语任务。",
+      });
+    }).catch(() => {});
+  },
+
+  copyKetSource() {
+    const task = this.data.selectedKetSpeakingTask;
+    if (!task || !task.sourceUrl) return;
+    wx.setClipboardData({ data: task.sourceUrl });
+  },
+
+  onRecordingRepeatChange(e) {
+    const index = Number(e.detail.value);
+    this.setData({
+      recordingRepeatIndex: index,
+      "form.recordingRepeatCount": this.data.recordingRepeatOptions[index],
+    });
+  },
+
+  onRecordingPreparationChange(e) {
+    const index = Number(e.detail.value);
+    this.setData({
+      recordingPreparationIndex: index,
+      "form.recordingPreparationSeconds": this.data.recordingPreparationOptions[index],
     });
   },
 
@@ -182,7 +343,25 @@ Page({
             subject: form.subject,
             lessonDate: form.lessonDate,
             lessonNo: form.lessonNo,
-            summary: form.summary,
+            summary: form.masterySummary || form.independentOutput || form.taughtContent || form.oralTopic,
+            lessonTemplateKey: form.lessonTemplateKey,
+            reviewContent: form.reviewContent,
+            taughtContent: form.taughtContent,
+            masterySummary: form.masterySummary,
+            oralTopic: form.oralTopic,
+            targetExpression: form.targetExpression,
+            independentOutput: form.independentOutput,
+            correctionNotes: form.correctionNotes,
+            ketSkill: form.ketSkill,
+            nextReview: form.nextReview,
+            homeworkTask: form.homeworkTask,
+            recordingTaskEnabled: form.recordingTaskEnabled,
+            recordingTaskType: form.recordingTaskType,
+            recordingPrompt: form.recordingPrompt,
+            recordingRepeatCount: form.recordingRepeatCount,
+            recordingPreparationSeconds: form.recordingPreparationSeconds,
+            ketSpeakingTaskId: form.ketSpeakingTaskId,
+            learningObservations: [],
             paperFileIds: [],
             requestId: this.lessonRequestId,
           },
@@ -203,7 +382,9 @@ Page({
         this.lessonRequestId = "";
         wx.showToast({ title: "已保存" });
         setTimeout(() => {
-          wx.navigateBack();
+          wx.redirectTo({
+            url: "/pages/lesson-detail/index?id=" + encodeURIComponent(result._id),
+          });
         }, 500);
       })
       .catch((err) => {

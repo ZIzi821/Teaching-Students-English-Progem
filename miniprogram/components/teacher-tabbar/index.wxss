@@ -1,0 +1,130 @@
+:host {
+  display: block;
+}
+
+.teacher-tabbar {
+  position: fixed;
+  z-index: 90;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1rpx solid #e8ded1;
+  background: rgba(255, 253, 250, 0.97);
+  box-shadow: 0 -8rpx 28rpx rgba(87, 67, 43, 0.08);
+}
+
+.teacher-tabbar-inner {
+  display: flex;
+  height: 104rpx;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.tab-item {
+  position: relative;
+  display: flex;
+  width: 30%;
+  height: 90rpx;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #8c8175;
+}
+
+.tab-item::before {
+  position: absolute;
+  top: 0;
+  width: 32rpx;
+  height: 5rpx;
+  border-radius: 999rpx;
+  background: transparent;
+  content: "";
+}
+
+.tab-active {
+  color: #39765d;
+}
+
+.tab-active::before {
+  background: #4f8f73;
+}
+
+.tab-symbol {
+  position: relative;
+  width: 38rpx;
+  height: 34rpx;
+  color: currentColor;
+}
+
+.tab-label {
+  margin-top: 5rpx;
+  font-size: 21rpx;
+  font-weight: 600;
+}
+
+.home-roof {
+  position: absolute;
+  top: 4rpx;
+  left: 8rpx;
+  box-sizing: border-box;
+  width: 23rpx;
+  height: 23rpx;
+  border-top: 4rpx solid currentColor;
+  border-left: 4rpx solid currentColor;
+  transform: rotate(45deg);
+}
+
+.home-body {
+  position: absolute;
+  bottom: 1rpx;
+  left: 9rpx;
+  box-sizing: border-box;
+  width: 21rpx;
+  height: 19rpx;
+  border: 4rpx solid currentColor;
+  border-top: 0;
+  border-radius: 2rpx;
+}
+
+.student-head {
+  position: absolute;
+  top: 2rpx;
+  width: 14rpx;
+  height: 14rpx;
+  border: 3rpx solid currentColor;
+  border-radius: 50%;
+}
+
+.student-head-one {
+  left: 3rpx;
+}
+
+.student-head-two {
+  right: 3rpx;
+}
+
+.student-body {
+  position: absolute;
+  right: 1rpx;
+  bottom: 1rpx;
+  left: 1rpx;
+  height: 14rpx;
+  border: 3rpx solid currentColor;
+  border-bottom: 0;
+  border-radius: 18rpx 18rpx 0 0;
+}
+
+.tab-symbol-workbench {
+  display: grid;
+  box-sizing: border-box;
+  padding: 3rpx;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rpx;
+}
+
+.workbench-cell {
+  box-sizing: border-box;
+  border: 3rpx solid currentColor;
+  border-radius: 3rpx;
+}

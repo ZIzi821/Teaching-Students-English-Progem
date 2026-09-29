@@ -1,0 +1,197 @@
+.homework-page {
+  gap: 22rpx;
+}
+
+.preview-banner,
+.task-top,
+.summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.preview-banner {
+  padding: 20rpx 22rpx;
+  border: 1rpx solid #b9d8c8;
+  border-radius: 18rpx;
+  background: #edf7f2;
+}
+
+.preview-title {
+  color: #285b47;
+  font-size: 25rpx;
+  font-weight: 800;
+}
+
+.preview-hint {
+  margin-top: 6rpx;
+  color: #668073;
+  font-size: 20rpx;
+  line-height: 1.4;
+}
+
+.preview-action {
+  flex-shrink: 0;
+  color: #39765d;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
+.homework-head {
+  padding: 18rpx 4rpx 6rpx;
+}
+
+.eyebrow {
+  color: #6d8177;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
+.title {
+  margin-top: 8rpx;
+  color: #2d3f37;
+  font-size: 42rpx;
+  font-weight: 800;
+}
+
+.subtitle {
+  margin-top: 10rpx;
+  color: #7a7167;
+  font-size: 24rpx;
+}
+
+.summary-card {
+  flex: 1;
+  padding: 23rpx;
+  border-radius: 18rpx;
+  text-align: center;
+}
+
+.summary-pending {
+  background: #fff1d2;
+}
+
+.summary-completed {
+  background: #e6f2eb;
+}
+
+.summary-number {
+  color: #355d4d;
+  font-size: 38rpx;
+  font-weight: 800;
+}
+
+.summary-label {
+  margin-top: 4rpx;
+  color: #786d61;
+  font-size: 22rpx;
+}
+
+.section-title {
+  margin-top: 10rpx;
+  color: #3d352e;
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.completed-title {
+  margin-top: 28rpx;
+}
+
+.task-card {
+  margin-top: 14rpx;
+  padding: 24rpx;
+}
+
+.task-pending {
+  border-color: #e3cc98;
+  background: #fffaf0;
+}
+
+.task-top {
+  align-items: flex-start;
+}
+
+.task-date {
+  color: #8a7d6e;
+  font-size: 21rpx;
+}
+
+.task-title {
+  margin-top: 7rpx;
+  color: #332f2a;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.status-pill {
+  flex-shrink: 0;
+  padding: 7rpx 12rpx;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+.status-pending {
+  color: #916623;
+  background: #ffedc2;
+}
+
+.status-completed {
+  color: #39765d;
+  background: #dceee5;
+}
+
+.task-copy {
+  margin-top: 16rpx;
+  color: #62584d;
+  font-size: 24rpx;
+  line-height: 1.55;
+}
+
+.task-meta {
+  margin-top: 12rpx;
+  color: #4f7d69;
+  font-size: 22rpx;
+}
+
+.task-link {
+  margin-top: 17rpx;
+  color: #39765d;
+  font-size: 22rpx;
+  font-weight: 800;
+  text-align: right;
+}
+
+.empty-card {
+  margin-top: 14rpx;
+  text-align: center;
+}
+
+.empty-mark {
+  color: #4f8f73;
+  font-size: 44rpx;
+  font-weight: 800;
+}
+
+.empty-title {
+  margin-top: 8rpx;
+  color: #3f554b;
+  font-size: 27rpx;
+  font-weight: 700;
+}
+
+.empty-hint,
+.state-card,
+.error-card {
+  color: #817669;
+  font-size: 23rpx;
+  line-height: 1.5;
+}
+
+.retry {
+  margin-top: 12rpx;
+  color: #39765d;
+  font-weight: 700;
+}

@@ -1,0 +1,97 @@
+<view class="page french-page">
+  <teacher-preview-banner wx:if="{{isTeacherPreview}}"></teacher-preview-banner>
+  <view class="hero french-hero">
+    <view class="hero-glow hero-glow-one"></view>
+    <view class="hero-glow hero-glow-two"></view>
+    <view class="tricolour"><view class="tricolour-blue"></view><view class="tricolour-white"></view><view class="tricolour-red"></view></view>
+    <view class="hero-content">
+      <view class="hero-topline"><view class="eyebrow">MON PARCOURS DE FRANÇAIS</view><view class="level-pill">A1 → A2</view></view>
+      <view class="title">{{welcomeTitle}}</view>
+      <view class="subtitle">每天 10 分钟：记一点、听一句、用一次，让法语慢慢变成自己的语言。</view>
+      <view class="hero-stats" wx:if="{{enabled && !loading}}">
+        <view class="hero-stat"><text class="hero-stat-number">{{overview.wordSummary.reviewedCount}}</text><text>已学单词</text></view>
+        <view class="hero-stat"><text class="hero-stat-number">{{dashboard.streakDays}}</text><text>连续天数</text></view>
+        <view class="hero-stat"><text class="hero-stat-number">{{overview.sentenceSummary.completedCount}}</text><text>完成跟读</text></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card loading-card" wx:if="{{loading}}">正在准备今天的学习…</view>
+  <view class="card message-card" wx:elif="{{message}}"><view>{{message}}</view><view class="ghost-btn retry-btn" bindtap="loadOverview">重新加载</view></view>
+  <view class="card feature-disabled-card" wx:elif="{{!enabled}}"><view class="feature-disabled-title">法语学习暂未开启</view><view class="feature-disabled-hint">请联系老师开启后再进入学习。</view></view>
+
+  <block wx:elif="{{enabled}}">
+    <view class="card today-card">
+      <view class="section-head">
+        <view><view class="section-kicker">AUJOURD'HUI</view><view class="section-title today-title">今天的学习</view></view>
+        <view class="streak-badge">🔥 连续 {{dashboard.streakDays || 0}} 天</view>
+      </view>
+      <view class="today-row">
+        <view class="today-metric"><view class="today-number">{{dashboard.today.dueCount || 0}}</view><view class="today-label">到期复习</view></view>
+        <view class="today-divider"></view>
+        <view class="today-metric"><view class="today-number">{{dashboard.today.newRemainingCount || 0}}</view><view class="today-label">今日可学</view></view>
+        <view class="today-divider"></view>
+        <view class="today-metric"><view class="today-number">{{dashboard.today.activityCount || 0}}</view><view class="today-label">已完成活动</view></view>
+      </view>
+      <view class="goal-row"><view class="goal-track"><view class="goal-fill" style="width: {{dashboard.today.goalPercent}}%;"></view></view><view class="goal-text">{{dashboard.today.activityCount || 0}} / {{dashboard.today.goal || 0}}</view></view>
+    </view>
+
+    <view class="card daily-path-card" wx:if="{{dashboard.dailyPath.steps.length}}">
+      <view class="section-head">
+        <view><view class="section-kicker">DAILY MIX</view><view class="section-title path-title">{{dashboard.dailyPath.title || '10 分钟今日路线'}}</view><view class="section-hint">词汇、听说和理解交替练，比只刷单词更接近真实语言学习。</view></view>
+        <view class="path-summary"><view class="path-summary-number">{{dashboard.dailyPath.completedStepCount}}/{{dashboard.dailyPath.totalStepCount}}</view><view class="path-summary-label">步完成</view></view>
+      </view>
+      <view class="path-progress"><view class="path-progress-fill" style="width: {{dashboard.dailyPath.progressPercent}}%;"></view></view>
+      <view class="path-complete" wx:if="{{dashboard.dailyPath.completed}}">Très bien！今天的路线已经完成。</view>
+      <view class="path-step path-step-{{item.state}}" wx:for="{{dashboard.dailyPath.steps}}" wx:key="key" data-url="{{item.url}}" bindtap="navigate">
+        <view class="path-step-marker"><text wx:if="{{item.completed}}">✓</text><text wx:else>{{item.order}}</text></view>
+        <view class="path-step-main"><view class="path-step-title">{{item.title}}</view><view class="path-step-caption">{{item.caption}}</view></view>
+        <view class="path-step-side"><view class="path-step-count">{{item.progressText}}</view><view class="path-step-arrow">→</view></view>
+      </view>
+      <view class="path-time" wx:if="{{!dashboard.dailyPath.completed}}">预计还需 {{dashboard.dailyPath.estimatedMinutes}} 分钟</view>
+    </view>
+
+    <view class="card spotlight-card" wx:if="{{dailySpotlight}}">
+      <view class="spotlight-top"><view><view class="section-kicker spotlight-kicker">LA PHRASE DU JOUR</view><view class="spotlight-label">每日一句 · {{dailySpotlight.cefrLevel}}</view></view><button class="spotlight-audio" bindtap="playSpotlightAudio" disabled="{{spotlightAudioLoading}}" aria-label="播放每日一句法语发音">{{spotlightAudioLoading ? '…' : '🔊'}}</button></view>
+      <view class="spotlight-text">{{dailySpotlight.text}}</view>
+      <view class="spotlight-translation">{{dailySpotlight.translationCN}}</view>
+      <view class="spotlight-note" wx:if="{{dailySpotlight.noteCN}}">{{dailySpotlight.noteCN}}</view>
+      <view class="spotlight-link" data-url="/pages/french-shadowing/index" bindtap="navigate">去跟读更多句子 →</view>
+    </view>
+
+    <view class="primary-actions">
+      <view class="card primary-action review-action" data-url="/pages/french-vocabulary/index?practice=daily" bindtap="navigate"><view class="action-icon action-icon-green">R</view><view class="action-eyebrow">优先完成</view><view class="action-title">开始复习</view><view class="action-copy">{{dashboard.today.dueCount || 0}} 个到期项目等待你</view></view>
+      <view class="card primary-action difficult-action" data-url="/pages/french-vocabulary/index?practice=difficult" bindtap="navigate"><view class="action-icon action-icon-gold">D</view><view class="action-eyebrow">个性化练习</view><view class="action-title">难词专项</view><view class="action-copy">专练 Again 和 Hard 较多的词</view></view>
+    </view>
+
+    <view class="card memory-card">
+      <view class="section-head">
+        <view class="memory-heading"><view class="section-kicker">MÉMOIRE</view><view class="section-title memory-title">我的记忆曲线</view><view class="section-hint">根据你的复习记录实时估算，每个人都会不同。</view></view>
+        <view class="memory-score" wx:if="{{dashboard.memoryOverview.reviewedWordCount}}"><view class="memory-percent">{{dashboard.memoryOverview.currentRetentionPercent}}%</view><view class="memory-score-label">当前保持率</view></view>
+      </view>
+      <block wx:if="{{dashboard.memoryOverview.reviewedWordCount}}">
+        <data-chart type="line" points="{{dashboard.memoryOverview.points}}" aria-label="我的法语记忆保持率曲线"></data-chart>
+        <view class="memory-meta"><text>已记录 {{dashboard.memoryOverview.reviewedWordCount}} 个词</text><text class="memory-risk" wx:if="{{dashboard.memoryOverview.atRiskCount}}">{{dashboard.memoryOverview.atRiskCount}} 个建议优先复习</text><text wx:else>当前节奏稳定</text></view>
+        <view class="memory-note">{{dashboard.memoryOverview.disclaimer}}</view>
+      </block>
+      <view class="memory-empty" wx:else>完成第一次单词复习后，这里会根据你的记录生成曲线。</view>
+    </view>
+
+    <view class="card level-card" wx:if="{{dashboard.levelProgress.length}}">
+      <view class="section-head"><view><view class="section-kicker">PROGRESSION</view><view class="section-title level-title">A1 / A2 学习进度</view><view class="section-hint">学习记录的估算，不是官方语言认证。</view></view><view class="quiet-link" data-url="/pages/french-dashboard/index" bindtap="navigate">完整报告 →</view></view>
+      <view class="level-item" wx:for="{{dashboard.levelProgress}}" wx:key="cefrLevel"><view class="level-meta"><view><text class="level-name">{{item.cefrLevel || item.label}}</text><text class="level-status">{{item.status || '持续学习中'}}</text></view><view class="level-percent">{{item.overallPercent}}%</view></view><view class="level-track"><view class="level-fill" style="width: {{item.overallPercent}}%;"></view></view></view>
+    </view>
+
+    <view class="module-section">
+      <view class="section-head compact-head"><view><view class="section-kicker">EXPLORER</view><view class="section-title module-heading">语言训练场</view><view class="section-hint">按你的节奏，选一个小模块继续。</view></view></view>
+      <view class="module-grid">
+        <view class="module-card module-blue" data-url="/pages/french-vocabulary/index" bindtap="navigate"><view class="module-icon">Aa</view><view><view class="module-title">词汇</view><view class="module-copy">发音、例句与记忆复习</view></view></view>
+        <view class="module-card module-rose" data-url="/pages/french-grammar/index" bindtap="navigate"><view class="module-icon">G</view><view><view class="module-title">语法</view><view class="module-copy">理解法语句子结构</view></view></view>
+        <view class="module-card module-gold" data-url="/pages/french-expressions/index" bindtap="navigate"><view class="module-icon">“ ”</view><view><view class="module-title">表达</view><view class="module-copy">常用短语与自然回应</view></view></view>
+        <view class="module-card module-mint" data-url="/pages/french-shadowing/index" bindtap="navigate"><view class="module-icon">♫</view><view><view class="module-title">听力跟读</view><view class="module-copy">听一句，再开口说一句</view></view></view>
+        <view class="module-card module-lilac" data-url="/pages/french-reading/index" bindtap="navigate"><view class="module-icon">R</view><view><view class="module-title">阅读</view><view class="module-copy">短文、对话与理解题</view></view></view>
+        <view class="module-card module-peach" data-url="/pages/french-writing/index" bindtap="navigate"><view class="module-icon">✎</view><view><view class="module-title">写作</view><view class="module-copy">把词语组成完整句子</view></view></view>
+      </view>
+    </view>
+  </block>
+</view>

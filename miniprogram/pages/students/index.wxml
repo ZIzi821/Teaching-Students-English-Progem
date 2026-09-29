@@ -1,4 +1,4 @@
-<view class="page">
+<view class="page {{isTeacher ? 'has-teacher-tabbar' : ''}}">
   <view class="page-head">
     <view>
       <view class="title">朱老师的学生</view>
@@ -12,6 +12,14 @@
 
   <view wx:else>
     <view class="primary-btn add-btn" bindtap="goAddStudent">添加学生</view>
+    <view class="hidden-summary" wx:if="{{hiddenCount}}" bindtap="goWorkbench">
+      <view><view class="hidden-summary-title">已隐藏 {{hiddenCount}} 位学生</view><view class="hidden-summary-hint">资料和记录均已保留</view></view>
+      <view class="hidden-summary-link">前往工作台 →</view>
+    </view>
+    <view class="card empty-students" wx:if="{{!students.length}}">
+      <view class="empty-title">当前学生列表为空</view>
+      <view class="empty-hint">可以添加新学生，或前往教师工作台恢复已隐藏学生。</view>
+    </view>
     <view class="card student-card" wx:for="{{students}}" wx:key="_id" bindtap="goStudent" data-id="{{item._id}}">
       <view class="avatar">{{item.initial}}</view>
       <view class="student-info">
@@ -23,7 +31,16 @@
           <view class="mini-progress-fill" style="width: {{item.progressPercent}}%;"></view>
         </view>
       </view>
-      <view class="status">{{item.bindStatus}}</view>
+      <view class="student-card-side">
+        <view class="status">{{item.bindStatus}}</view>
+        <view
+          class="hide-action {{hidingId === item._id ? 'hide-action-disabled' : ''}}"
+          data-id="{{item._id}}"
+          data-name="{{item.name}}"
+          catchtap="hideStudent"
+        >{{hidingId === item._id ? '处理中' : '隐藏'}}</view>
+      </view>
     </view>
   </view>
+  <teacher-tabbar wx:if="{{isTeacher}}" current="students"></teacher-tabbar>
 </view>

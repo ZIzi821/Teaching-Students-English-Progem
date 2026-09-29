@@ -5,6 +5,7 @@ Component({
   data: {
     resolvedAriaLabel: "学习数据图表",
     isBarEmpty: false,
+    isLineEmpty: false,
   },
 
   properties: {
@@ -62,32 +63,42 @@ Component({
       }));
     },
 
+    normalizeLinePoints() {
+      return (this.data.points || []).map((item, index) => ({
+        label: String(item.label || `第${index + 1}点`),
+        value: Math.max(0, Math.min(100, Number(item.value) || 0)),
+      }));
+    },
+
     refreshChartMeta() {
       const baseLabel = String(this.data.ariaLabel || "学习数据图表").trim() || "学习数据图表";
-      if (this.data.type !== "bar") {
-        if (this.data.resolvedAriaLabel !== baseLabel || this.data.isBarEmpty) {
-          this.setData({ resolvedAriaLabel: baseLabel, isBarEmpty: false });
+      if (this.data.type !== "bar" && this.data.type !== "line") {
+        if (this.data.resolvedAriaLabel !== baseLabel || this.data.isBarEmpty || this.data.isLineEmpty) {
+          this.setData({ resolvedAriaLabel: baseLabel, isBarEmpty: false, isLineEmpty: false });
         }
         return;
       }
 
-      const points = this.normalizeBarPoints();
-      const isBarEmpty = !points.some((point) => point.value > 0);
+      const isLine = this.data.type === "line";
+      const points = isLine ? this.normalizeLinePoints() : this.normalizeBarPoints();
+      const isEmpty = !points.some((point) => point.value > 0);
       const pointSummary = points
         .map((point) => {
+          if (isLine) return `${point.label}：记忆保持 ${point.value}%`;
           const goalText = point.goal > 0 ? `，目标 ${point.goal}` : "";
           return `${point.label}：完成 ${point.value}${goalText}`;
         })
         .join("；");
-      const stateText = isBarEmpty ? "暂无学习记录" : "";
+      const stateText = isEmpty ? "暂无学习记录" : "";
       const detailText = pointSummary ? `每日数据：${pointSummary}` : "";
       const resolvedAriaLabel = [baseLabel, stateText, detailText].filter(Boolean).join("。");
 
       if (
         this.data.resolvedAriaLabel !== resolvedAriaLabel ||
-        this.data.isBarEmpty !== isBarEmpty
+        this.data.isBarEmpty !== (!isLine && isEmpty) ||
+        this.data.isLineEmpty !== (isLine && isEmpty)
       ) {
-        this.setData({ resolvedAriaLabel, isBarEmpty });
+        this.setData({ resolvedAriaLabel, isBarEmpty: !isLine && isEmpty, isLineEmpty: isLine && isEmpty });
       }
     },
 
@@ -116,6 +127,8 @@ Component({
           context.clearRect(0, 0, field.width, field.height);
           if (this.data.type === "bar") {
             this.drawBars(context, field.width, field.height);
+          } else if (this.data.type === "line") {
+            this.drawLine(context, field.width, field.height);
           } else {
             this.drawDonut(context, field.width, field.height);
           }
@@ -210,6 +223,61 @@ Component({
         }
         context.fillStyle = "#817669";
         context.font = "11px sans-serif";
+        context.textAlign = "center";
+        context.fillText(point.label, x, height - 10);
+      });
+    },
+
+    drawLine(context, width, height) {
+      const points = this.normalizeLinePoints();
+      const padding = { top: 20, right: 14, bottom: 36, left: 36 };
+      const chartWidth = Math.max(0, width - padding.left - padding.right);
+      const chartHeight = Math.max(0, height - padding.top - padding.bottom);
+      const baseline = padding.top + chartHeight;
+      const xAt = (index) => points.length <= 1
+        ? padding.left + chartWidth / 2
+        : padding.left + chartWidth * index / (points.length - 1);
+      const yAt = (value) => baseline - (value / 100) * chartHeight;
+
+      [0, 50, 100].forEach((value) => {
+        const y = yAt(value);
+        context.strokeStyle = "#e7ded1";
+        context.lineWidth = 1;
+        context.beginPath();
+        context.moveTo(padding.left, y);
+        context.lineTo(width - padding.right, y);
+        context.stroke();
+        context.fillStyle = "#817669";
+        context.font = "10px sans-serif";
+        context.textAlign = "right";
+        context.fillText(`${value}%`, padding.left - 6, y + 3);
+      });
+
+      if (!points.length) return;
+      context.strokeStyle = "#4f8f73";
+      context.lineWidth = 2.5;
+      context.lineJoin = "round";
+      context.lineCap = "round";
+      context.beginPath();
+      points.forEach((point, index) => {
+        const x = xAt(index);
+        const y = yAt(point.value);
+        if (index === 0) context.moveTo(x, y);
+        else context.lineTo(x, y);
+      });
+      context.stroke();
+      points.forEach((point, index) => {
+        const x = xAt(index);
+        const y = yAt(point.value);
+        context.fillStyle = "#fffdfa";
+        context.beginPath();
+        context.arc(x, y, 4.5, 0, Math.PI * 2);
+        context.fill();
+        context.strokeStyle = "#326d56";
+        context.lineWidth = 2;
+        context.stroke();
+        context.fillStyle = "#817669";
+        context.font = "10px sans-serif";
         context.textAlign = "center";
         context.fillText(point.label, x, height - 10);
       });

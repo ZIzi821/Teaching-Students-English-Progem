@@ -1,0 +1,20 @@
+<view class="page">
+  <teacher-preview-banner wx:if="{{isTeacherPreview}}"></teacher-preview-banner>
+  <view class="tabs" aria-label="选择法语等级">
+    <view data-level="A1" class="{{level === 'A1' ? 'on' : ''}}" bindtap="switchLevel">A1</view>
+    <view data-level="A2" class="{{level === 'A2' ? 'on' : ''}}" bindtap="switchLevel">A2</view>
+  </view>
+  <view class="card state-card" wx:if="{{loading}}">正在准备造句…</view>
+  <view class="card state-card error" wx:elif="{{message}}"><view>{{message}}</view><button class="retry" bindtap="load">重试</button></view>
+  <view class="card state-card" wx:elif="{{!current}}">这个等级暂时没有更多造句练习。</view>
+  <view wx:else class="card">
+    <view class="title">{{current.promptCN}}</view><view class="small">{{current.meaningCN}}</view>
+    <view class="completion" wx:if="{{current.completed}}">已完成，可继续复习。</view>
+    <view class="answer">{{answer || '点击词块组合，或直接输入。'}}</view>
+    <view class="tokens"><button wx:for="{{current.scrambledTokens}}" wx:key="index" data-token="{{item}}" data-index="{{index}}" bindtap="add">{{item}}</button></view>
+    <textarea value="{{answer}}" bindinput="input" placeholder="输入法语句子" maxlength="-1"></textarea>
+    <button bindtap="check" disabled="{{saving}}">{{saving ? '保存中…' : '检查答案'}}</button>
+    <block wx:if="{{showAnswer}}"><view class="result">{{result}}</view><view class="reference">参考：{{current.answer}}</view></block>
+    <button bindtap="next">{{current.completed ? '下一题' : '暂时跳过'}}</button>
+  </view>
+</view>

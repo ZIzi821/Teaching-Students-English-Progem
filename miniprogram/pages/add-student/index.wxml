@@ -34,7 +34,8 @@
 
     <view class="field">
       <view class="label">访问码</view>
-      <input class="input" placeholder="例如：RUIRUI-EN-4829" value="{{form.accessCode}}" data-field="accessCode" bindinput="onInput" />
+      <input class="input" placeholder="例如：STUDENT-EN-1234" value="{{form.accessCode}}" data-field="accessCode" bindinput="onInput" />
+      <view class="field-hint">普通学生访问码默认最多可绑定 5 个微信账号，方便老师和家长分别查看。</view>
     </view>
 
     <view class="field">

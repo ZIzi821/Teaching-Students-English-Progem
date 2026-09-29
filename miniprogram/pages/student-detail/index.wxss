@@ -1,3 +1,7 @@
+.has-teacher-tabbar {
+  padding-bottom: 180rpx;
+}
+
 .profile-card {
   display: flex;
   align-items: center;
@@ -277,6 +281,10 @@
   background: #fffdfa;
 }
 
+.french-settings-card {
+  background: linear-gradient(145deg, #fffdfa 0%, #f7f3ea 100%);
+}
+
 .vocabulary-settings-head,
 .setting-row,
 .vocabulary-setting-actions {
@@ -364,6 +372,25 @@
   font-size: 26rpx;
   font-weight: 600;
   text-align: center;
+}
+
+.lesson-template-block {
+  margin-bottom: 22rpx;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  background: #f2f8f4;
+}
+
+.lesson-template-picker {
+  width: auto;
+  margin-top: 14rpx;
+  padding: 0 20rpx;
+  text-align: left;
+}
+
+.template-description {
+  margin-top: 10rpx;
+  color: #39765d;
 }
 
 .student-goal-status {
@@ -533,4 +560,153 @@
 
 .subject {
   margin-top: 10rpx;
+}
+
+.lesson-task-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-top: 12rpx;
+}
+
+.lesson-task-chip {
+  padding: 7rpx 12rpx;
+  border-radius: 999rpx;
+  color: #6e5b43;
+  background: #f2e6d4;
+  font-size: 20rpx;
+}
+
+.recording-task-chip {
+  color: #39765d;
+  background: #e9f4ee;
+}
+
+.homework-done-chip {
+  color: #276a50;
+  background: #dff1e8;
+}
+
+.homework-waiting-chip {
+  color: #94651d;
+  background: #fff0cf;
+}
+.preview-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+  padding: 20rpx 22rpx;
+  border: 1rpx solid #d7e7df;
+  border-radius: 18rpx;
+  color: #2d4f42;
+  background: #edf7f2;
+}
+
+.preview-banner-title {
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.preview-banner-hint {
+  margin-top: 5rpx;
+  color: #65796f;
+  font-size: 21rpx;
+  line-height: 1.45;
+}
+
+.preview-banner-action {
+  flex-shrink: 0;
+  padding: 11rpx 14rpx;
+  border-radius: 999rpx;
+  color: #fff;
+  background: #4f8f73;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+.french-student-entry {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  border-color: #d9e2ef;
+  background: linear-gradient(135deg, #eef3fa 0%, #f7eef1 100%);
+}
+
+.french-student-mark {
+  display: flex;
+  flex: 0 0 64rpx;
+  align-items: center;
+  justify-content: center;
+  height: 64rpx;
+  border-radius: 20rpx;
+  color: #fff;
+  background: linear-gradient(135deg, #315a83, #a65360);
+  font-size: 22rpx;
+  font-weight: 800;
+}
+
+.french-student-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.french-student-title {
+  color: #2e4057;
+  font-size: 29rpx;
+  font-weight: 700;
+}
+
+.french-student-hint {
+  margin-top: 6rpx;
+  color: #6f7480;
+  font-size: 22rpx;
+  line-height: 1.45;
+}
+
+.french-student-link {
+  flex-shrink: 0;
+  color: #315a83;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.course-feature-row,
+.mistake-feature-row,
+.vocabulary-feature-row {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #eee4d6;
+}
+
+.vocabulary-detail-toggle {
+  margin-top: 18rpx;
+  padding: 16rpx;
+  border-radius: 14rpx;
+  color: #39765d;
+  background: #e9f4ee;
+  font-size: 23rpx;
+  font-weight: 700;
+  text-align: center;
+}
+
+.no-learning-card {
+  color: #817669;
+  text-align: center;
+  line-height: 1.6;
+}
+.learning-order-hint {
+  grid-column: 1 / -1;
+  margin-bottom: 4rpx;
+  color: #756a60;
+  font-size: 23rpx;
+  text-align: left;
+}
+
+.vocabulary-record-link {
+  grid-column: 1 / -1;
+  padding-top: 6rpx;
+  color: #4f806a;
+  font-size: 23rpx;
+  font-weight: 700;
+  text-align: center;
 }

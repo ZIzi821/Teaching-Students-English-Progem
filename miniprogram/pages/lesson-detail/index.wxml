@@ -1,58 +1,469 @@
-<view class="page">
+<view class="page lesson-page">
   <view class="card no-permission" wx:if="{{message}}">
     <view>{{message}}</view>
+    <view class="retry-link" bindtap="loadLesson">重新加载</view>
   </view>
 
   <view wx:if="{{lesson}}">
-  <view class="card lesson-head">
-    <view class="subject">{{lesson.subject}}</view>
-    <view class="title">{{lesson.title}}</view>
-    <view class="date">{{lesson.lessonDate}}<text wx:if="{{lesson.lessonNo}}"> · 第 {{lesson.lessonNo}} 节</text></view>
-    <view class="summary">{{lesson.summary}}</view>
-  </view>
-
-  <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddMistake">记录本节错题</view>
-  <view class="ghost-btn add-btn" wx:if="{{isTeacher}}" bindtap="goBatchImportMistakes">批量导入错题</view>
-  <view class="danger-btn delete-lesson-btn" wx:if="{{isTeacher}}" bindtap="deleteLesson">
-    {{deletingLesson ? '正在删除…' : '删除本节课'}}
-  </view>
-
-  <view class="card upload-card" wx:if="{{isTeacher}}">
-    <view class="upload-title">上传课程资料</view>
-    <input class="input" placeholder="资料标题，如 Unit 3 Test" value="{{paperForm.paperTitle}}" data-field="paperTitle" bindinput="onPaperMetaInput" />
-    <input class="input" placeholder="学期，如 2026 Term 1" value="{{paperForm.term}}" data-field="term" bindinput="onPaperMetaInput" />
-    <picker mode="selector" range="{{paperTypes}}" range-key="label" value="{{paperTypeIndex}}" bindchange="onPaperTypeChange">
-      <view class="picker-value">{{selectedPaperTypeLabel}}</view>
-    </picker>
-    <picker mode="selector" range="{{paperSources}}" range-key="label" value="{{paperSourceIndex}}" bindchange="onPaperSourceChange">
-      <view class="picker-value">{{selectedPaperSourceLabel}}</view>
-    </picker>
-    <picker mode="selector" range="{{materialTypes}}" range-key="label" value="{{materialTypeIndex}}" bindchange="onMaterialTypeChange">
-      <view class="picker-value">{{selectedMaterialTypeLabel}}</view>
-    </picker>
-    <view class="upload-hint">可一次选择最多 9 个文件；资料标题留空时自动使用文件名。</view>
-    <view class="ghost-btn upload-btn" bindtap="uploadMaterial">批量选择并上传</view>
-  </view>
-
-  <view class="section-title">本节课资料</view>
-  <view class="empty" wx:if="{{!hasPaperArea}}">还没有课程资料。</view>
-  <view class="card paper-card" wx:for="{{papers}}" wx:key="_id" bindtap="openMaterial" data-index="{{index}}">
-    <view class="paper-title">{{item.displayTitle}}</view>
-    <view class="paper-meta">{{item.displayPaperType}} · {{item.displayType}} · {{item.fileName}}</view>
-  </view>
-
-  <view class="section-title">本节错题</view>
-  <view class="empty" wx:if="{{!mistakes.length}}">本节课还没有英语错题。</view>
-  <view class="card mistake-card" wx:for="{{mistakes}}" wx:key="_id" bindtap="goMistake" data-id="{{item._id}}">
-    <view class="mistake-top">
-      <view class="mistake-title">{{item.displayTitle}}</view>
-      <view class="status">{{item.entryStatus === '待整理' ? '待整理' : item.status}}</view>
+    <view class="card lesson-head">
+      <view class="head-row">
+        <view>
+          <view class="subject">{{lesson.subject}}</view>
+          <view class="template-badge">{{lesson.lessonTemplateLabel}}</view>
+        </view>
+        <view class="lesson-badge">第 {{lesson.lessonNo || '—'}} 节</view>
+      </view>
+      <view class="title">{{lesson.title}}</view>
+      <view class="date">{{lesson.lessonDate}}</view>
+      <view class="preview-tip" wx:if="{{isTeacherPreview}}">教师预览：这里与学生实际看到的课程页面一致，不能提交录音。</view>
     </view>
-    <view class="paper-meta" wx:if="{{item.displayMeta}}">{{item.displayMeta}}</view>
-    <view class="reason">{{item.reason}}</view>
-    <view class="tags">
-      <text class="tag" wx:for="{{item.displayTags}}" wx:key="*this">{{item}}</text>
+
+    <view class="section-head">
+      <view>
+        <view class="section-kicker">LESSON NOTE</view>
+        <view class="section-title">本节课记录</view>
+      </view>
+      <view class="small-action" wx:if="{{isTeacher}}" bindtap="toggleWorkspaceEditor">
+        {{showWorkspaceEditor ? '取消编辑' : '编辑记录'}}
+      </view>
     </view>
-  </view>
+
+    <view class="card record-card" wx:if="{{!showWorkspaceEditor}}">
+      <view class="empty-record" wx:if="{{!lesson.hasStructuredRecord && !lesson.summary}}">
+        <view class="empty-record-title">还没有填写课后记录</view>
+        <view class="empty-record-hint" wx:if="{{isTeacher}}">点击“编辑记录”，两分钟内补完学习内容、掌握情况和下节复习。</view>
+      </view>
+
+      <view class="record-grid" wx:else>
+        <block wx:if="{{lesson.lessonTemplateKey === 'feng_beginner'}}">
+          <view class="record-item" wx:if="{{lesson.reviewContent}}">
+            <view class="record-label">今日复习</view>
+            <view class="record-value">{{lesson.reviewContent}}</view>
+          </view>
+          <view class="record-item" wx:if="{{lesson.taughtContent}}">
+            <view class="record-label">今日新内容</view>
+            <view class="record-value">{{lesson.taughtContent}}</view>
+          </view>
+          <view class="record-item" wx:if="{{lesson.masterySummary || lesson.summary}}">
+            <view class="record-label">掌握情况</view>
+            <view class="record-value">{{lesson.masterySummary || lesson.summary}}</view>
+          </view>
+        </block>
+        <block wx:elif="{{lesson.lessonTemplateKey === 'molly_oral_ket'}}">
+          <view class="record-item" wx:if="{{lesson.oralTopic}}">
+            <view class="record-label">今日口语主题</view>
+            <view class="record-value">{{lesson.oralTopic}}</view>
+          </view>
+          <view class="record-item" wx:if="{{lesson.targetExpression}}">
+            <view class="record-label">目标表达</view>
+            <view class="record-value">{{lesson.targetExpression}}</view>
+          </view>
+          <view class="record-item" wx:if="{{lesson.independentOutput}}">
+            <view class="record-label">独立输出</view>
+            <view class="record-value">{{lesson.independentOutput}}</view>
+          </view>
+          <view class="record-item" wx:if="{{lesson.correctionNotes}}">
+            <view class="record-label">需要纠正</view>
+            <view class="record-value">{{lesson.correctionNotes}}</view>
+          </view>
+          <view class="record-item" wx:if="{{lesson.ketSkill}}">
+            <view class="record-label">本节 KET 技能</view>
+            <view class="record-value">{{lesson.ketSkill}}</view>
+          </view>
+        </block>
+        <block wx:else>
+        <view class="record-item" wx:if="{{lesson.taughtContent}}">
+          <view class="record-label">今天学了什么</view>
+          <view class="record-value">{{lesson.taughtContent}}</view>
+        </view>
+        <view class="record-item" wx:if="{{lesson.masterySummary || lesson.summary}}">
+          <view class="record-label">掌握情况</view>
+          <view class="record-value">{{lesson.masterySummary || lesson.summary}}</view>
+        </view>
+        <view class="record-item" wx:if="{{lesson.nextReview}}">
+          <view class="record-label">下节需要复习</view>
+          <view class="record-value">{{lesson.nextReview}}</view>
+        </view>
+        </block>
+        <view class="record-item" wx:if="{{lesson.lessonTemplateKey !== 'general' && lesson.nextReview}}">
+          <view class="record-label">下节需要复习</view>
+          <view class="record-value">{{lesson.nextReview}}</view>
+        </view>
+      </view>
+
+      <view class="observation-list" wx:if="{{lesson.learningObservations.length}}">
+        <view class="record-label observation-title">学习观察</view>
+        <view class="observation-row" wx:for="{{lesson.learningObservations}}" wx:key="index">
+          <view class="observation-main">
+            <view class="observation-content">{{item.content}}</view>
+            <view class="observation-note" wx:if="{{item.note}}">{{item.note}}</view>
+          </view>
+          <view class="observation-status status-{{item.status === '独立完成' ? 'independent' : item.status === '提示后完成' ? 'prompted' : 'pending'}}">{{item.status}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card workspace-editor" wx:if="{{isTeacher && showWorkspaceEditor}}">
+      <view class="field">
+        <view class="label">本节记录模板</view>
+        <picker mode="selector" range="{{lessonTemplateOptions}}" range-key="label" value="{{lessonTemplateIndex}}" bindchange="onWorkspaceTemplateChange">
+          <view class="picker-value">{{lessonTemplate.label}}</view>
+        </picker>
+        <view class="field-hint template-editor-hint">{{lessonTemplate.description}}</view>
+      </view>
+
+      <block wx:if="{{workspaceForm.lessonTemplateKey === 'feng_beginner'}}">
+      <view class="field">
+        <view class="label">今日复习</view>
+        <textarea class="textarea" placeholder="先记录旧内容，例如 A–I 和数字 1–3" value="{{workspaceForm.reviewContent}}" data-field="reviewContent" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      <view class="field">
+        <view class="label">今日新内容（少量）</view>
+        <textarea class="textarea" placeholder="一次只加入少量新内容" value="{{workspaceForm.taughtContent}}" data-field="taughtContent" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      <view class="field">
+        <view class="label">掌握情况</view>
+        <textarea class="textarea" placeholder="能否独立完成、需要什么提示" value="{{workspaceForm.masterySummary}}" data-field="masterySummary" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      </block>
+
+      <block wx:elif="{{workspaceForm.lessonTemplateKey === 'molly_oral_ket'}}">
+      <view class="field">
+        <view class="label">今日口语主题</view>
+        <textarea class="textarea" placeholder="本节围绕什么情境开口" value="{{workspaceForm.oralTopic}}" data-field="oralTopic" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      <view class="field">
+        <view class="label">目标表达</view>
+        <textarea class="textarea" placeholder="本节真正练习的词块或句型" value="{{workspaceForm.targetExpression}}" data-field="targetExpression" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      <view class="field">
+        <view class="label">独立输出</view>
+        <textarea class="textarea" placeholder="学生不看答案能够说出的内容" value="{{workspaceForm.independentOutput}}" data-field="independentOutput" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      <view class="field">
+        <view class="label">需要纠正</view>
+        <textarea class="textarea" placeholder="下次继续纠正的 1–3 项" value="{{workspaceForm.correctionNotes}}" data-field="correctionNotes" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      <view class="field">
+        <view class="label">本节 KET 技能</view>
+        <input class="input" placeholder="例如：Speaking Part 1；没有可留空" value="{{workspaceForm.ketSkill}}" data-field="ketSkill" bindinput="onWorkspaceInput" />
+      </view>
+      </block>
+
+      <block wx:else>
+      <view class="field">
+        <view class="label">今天学了什么</view>
+        <textarea class="textarea" placeholder="只写本节实际完成的内容" value="{{workspaceForm.taughtContent}}" data-field="taughtContent" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      <view class="field">
+        <view class="label">掌握情况</view>
+        <textarea class="textarea" placeholder="学生最关键的表现" value="{{workspaceForm.masterySummary}}" data-field="masterySummary" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      </block>
+      <view class="field">
+        <view class="label">下节需要复习</view>
+        <textarea class="textarea" placeholder="下次开课先做什么" value="{{workspaceForm.nextReview}}" data-field="nextReview" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      <view class="field">
+        <view class="label">课后任务</view>
+        <textarea class="textarea" placeholder="例如：跟读目标句 3 遍" value="{{workspaceForm.homeworkTask}}" data-field="homeworkTask" bindinput="onWorkspaceInput"></textarea>
+      </view>
+
+      <view class="recording-setting">
+        <view>
+          <view class="label recording-label">需要学生提交录音</view>
+          <view class="field-hint">开启后，学生会在本课程页看到录音按钮。</view>
+        </view>
+        <switch checked="{{workspaceForm.recordingTaskEnabled}}" color="#4f8f73" bindchange="onRecordingTaskChange" />
+      </view>
+      <view class="field" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.lessonTemplateKey === 'molly_oral_ket'}}">
+        <view class="label">Molly 的录音任务类型</view>
+        <picker mode="selector" range="{{recordingTaskTypeOptions}}" range-key="label" value="{{recordingTaskTypeIndex}}" bindchange="onRecordingTaskTypeChange">
+          <view class="picker-value">{{recordingTaskTypeOptions[recordingTaskTypeIndex].label}}</view>
+        </picker>
+        <view class="field-hint">普通口语由你手动输入；KET 模式只使用已核验的 Cambridge 官方样题。</view>
+      </view>
+      <view class="field" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.recordingTaskType === 'ket_official'}}">
+        <view class="label">选择官方口语样题</view>
+        <picker mode="selector" range="{{ketSpeakingTasks}}" range-key="label" value="{{ketSpeakingTaskIndex}}" bindchange="onKetSpeakingTaskChange">
+          <view class="picker-value">{{selectedKetSpeakingTask.label}}</view>
+        </picker>
+        <view class="ket-source-card">
+          <view class="ket-source-title">{{selectedKetSpeakingTask.sourceYear}} · {{selectedKetSpeakingTask.part}} · {{selectedKetSpeakingTask.difficulty}}</view>
+          <view class="ket-source-line">{{selectedKetSpeakingTask.sourceLabel}}</view>
+          <view class="ket-source-line">官方定位：{{selectedKetSpeakingTask.sourceReference}}</view>
+          <view class="ket-source-line">{{selectedKetSpeakingTask.timingLabel}}</view>
+          <view class="ket-source-copy" bindtap="copyKetSource">复制 Cambridge 官方来源</view>
+          <view class="ket-source-warning" wx:if="{{selectedKetSpeakingTask.preparationSeconds}}">本页 {{selectedKetSpeakingTask.preparationSeconds}} 秒仅为练习读题时间，不是官方固定准备时间。</view>
+          <view class="ket-source-warning" wx:else>正式练习按直接听题回答处理，不设置准备倒计时。</view>
+        </view>
+        <view class="ket-weekly-hint" wx:if="{{ketWeeklyHint}}">{{ketWeeklyHint}}</view>
+      </view>
+      <view class="field" wx:if="{{workspaceForm.recordingTaskEnabled}}">
+        <view class="label">录音要求</view>
+        <textarea class="textarea recording-prompt-textarea {{workspaceForm.recordingTaskType === 'ket_official' ? 'official-prompt' : ''}}" maxlength="2000" disabled="{{workspaceForm.recordingTaskType === 'ket_official'}}" placeholder="{{lessonTemplate.recordingPlaceholder}}" value="{{workspaceForm.recordingPrompt}}" data-field="recordingPrompt" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      <view class="recording-options" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.recordingTaskType !== 'ket_official'}}">
+        <view class="field recording-option-field">
+          <view class="label">朗读遍数</view>
+          <picker mode="selector" range="{{recordingRepeatOptions}}" value="{{recordingRepeatIndex}}" bindchange="onRecordingRepeatChange">
+            <view class="picker-value">{{workspaceForm.recordingRepeatCount}} 遍</view>
+          </picker>
+        </view>
+        <view class="field recording-option-field">
+          <view class="label">准备时间</view>
+          <picker mode="selector" range="{{recordingPreparationOptions}}" value="{{recordingPreparationIndex}}" bindchange="onRecordingPreparationChange">
+            <view class="picker-value">{{workspaceForm.recordingPreparationSeconds}} 秒</view>
+          </picker>
+        </view>
+      </view>
+      <view class="ket-recording-meta" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.recordingTaskType === 'ket_official'}}">
+        建议录音约 {{selectedKetSpeakingTask.suggestedRecordingSeconds}} 秒 · 录制 1 次即可
+      </view>
+
+      <view class="observation-editor-head">
+        <view>
+          <view class="label">学习观察</view>
+          <view class="field-hint">记录表现，不会进入英语错题系统。</view>
+        </view>
+        <view class="add-observation" bindtap="addObservation">＋ 添加一项</view>
+      </view>
+
+      <view class="observation-editor" wx:for="{{workspaceForm.learningObservations}}" wx:key="index">
+        <view class="observation-editor-top">
+          <input class="observation-input" placeholder="例如：A–E 大小写对应" value="{{item.content}}" data-index="{{index}}" data-field="content" bindinput="onObservationInput" />
+          <view class="remove-observation" data-index="{{index}}" bindtap="removeObservation">删除</view>
+        </view>
+        <picker mode="selector" range="{{observationStatuses}}" value="{{item.status === '独立完成' ? 0 : item.status === '提示后完成' ? 1 : 2}}" data-index="{{index}}" bindchange="onObservationStatusChange">
+          <view class="picker-value">{{item.status}}</view>
+        </picker>
+        <input class="observation-note-input" placeholder="补充说明（可不填）" value="{{item.note}}" data-index="{{index}}" data-field="note" bindinput="onObservationInput" />
+      </view>
+
+      <view class="primary-btn save-record-btn {{savingWorkspace ? 'disabled-action' : ''}}" bindtap="saveWorkspace">
+        {{savingWorkspace ? '保存中…' : '保存课后记录'}}
+      </view>
+    </view>
+
+    <view class="section-head task-section-head" wx:if="{{lesson.homeworkTask || lesson.recordingTaskEnabled || submissions.length}}">
+      <view>
+        <view class="section-kicker">AFTER CLASS</view>
+        <view class="section-title">课后任务</view>
+      </view>
+      <view class="submission-count" wx:if="{{submissions.length}}">{{submissions.length}} 份录音</view>
+    </view>
+
+    <view class="card homework-card" wx:if="{{lesson.homeworkTask || lesson.recordingTaskEnabled || submissions.length}}">
+      <view class="homework-copy" wx:if="{{lesson.homeworkTask}}">
+        <view class="homework-copy-label">要完成的任务</view>
+        <view class="homework-text">{{lesson.homeworkTask}}</view>
+      </view>
+      <view class="recording-task" wx:if="{{lesson.recordingTaskEnabled}}">
+        <view class="recording-task-title">{{lesson.recordingTaskType === 'ket_official' ? 'KET 口语录音' : '跟读录音'}}</view>
+        <view class="ket-task-source" wx:if="{{lesson.recordingTaskType === 'ket_official' && lesson.ketSpeakingTask}}">
+          <view>{{lesson.ketSpeakingTask.sourceYear}} · {{lesson.ketSpeakingTask.part}} · {{lesson.ketSpeakingTask.difficulty}}</view>
+          <view>{{lesson.ketSpeakingTask.sourceLabel}}</view>
+          <view>{{lesson.ketSpeakingTask.sourceReference}}</view>
+        </view>
+        <view class="recording-prompt-label">{{lesson.recordingTaskType === 'ket_official' ? '口语题目' : '朗读内容'}}</view>
+        <view class="recording-task-prompt">{{lesson.recordingPrompt || '按老师课堂要求完成朗读并提交。'}}</view>
+        <view class="recording-task-meta">
+          <view class="recording-meta-chip">{{lesson.recordingTaskType === 'ket_official' ? '录制 1 次' : '朗读 ' + lesson.recordingRepeatCount + ' 遍'}}</view>
+          <view class="recording-meta-chip">{{lesson.recordingPreparationSeconds ? '练习准备 ' + lesson.recordingPreparationSeconds + ' 秒' : '直接听题回答'}}</view>
+        </view>
+        <view class="ket-timing-note" wx:if="{{lesson.recordingTaskType === 'ket_official' && lesson.ketSpeakingTask}}">{{lesson.ketSpeakingTask.timingLabel}}</view>
+        <view class="recording-privacy" wx:if="{{isStudent}}">录音只用于老师检查本次朗读。</view>
+        <view class="record-btn" wx:if="{{isStudent}}" bindtap="goRecordingPractice">
+          进入录音练习
+        </view>
+        <view class="preview-recording-note" wx:if="{{isTeacherPreview}}">教师预览中不能代学生录音。</view>
+      </view>
+
+      <view class="homework-progress-card" wx:if="{{lesson.hasHomeworkTask}}">
+        <view class="homework-progress-head">
+          <view>
+            <view class="homework-progress-title">任务完成状态</view>
+            <view class="homework-progress-time" wx:if="{{lesson.homeworkCompleted && lesson.homeworkCompletedLabel}}">{{lesson.homeworkCompletedLabel}}</view>
+          </view>
+          <view class="homework-status-pill {{lesson.homeworkCompleted ? 'homework-status-completed' : 'homework-status-pending'}}">
+            {{lesson.homeworkCompleted ? '已完成' : '待完成'}}
+          </view>
+        </view>
+
+        <view class="homework-completed-copy" wx:if="{{lesson.homeworkCompleted}}">
+          <block wx:if="{{isTeacher}}">{{lesson.homeworkTeacherReviewStatus === 'completed' ? '老师已确认：学生完成了本节课后任务。' : '学生已提交完成状态，等待老师核对。'}}</block>
+          <block wx:else>{{lesson.homeworkTeacherReviewStatus === 'completed' ? '老师已经确认你完成了本节课后任务。' : '完成状态已经同步给老师。'}}</block>
+        </view>
+
+        <block wx:elif="{{isStudent}}">
+          <view class="teacher-incomplete-notice" wx:if="{{lesson.homeworkTeacherReviewStatus === 'incomplete'}}">老师已检查：本节课后任务还没有完成，请按要求继续完成。</view>
+          <view class="student-homework-review-note">完成情况由老师检查确认。请按要求完成任务；如果需要录音，请提交后等待老师查看。</view>
+          <view class="homework-reminder-box">
+            <view wx:if="{{lesson.homeworkReminderNotifyStatus === 'pending'}}">
+              <view class="homework-reminder-title">已开启 {{lesson.homeworkReminderTargetDate}} 18:00 微信提醒</view>
+              <view class="homework-reminder-hint">如果提前完成，系统不会再发送这次提醒。</view>
+            </view>
+            <view wx:else>
+              <view class="homework-reminder-title">需要微信在18:00提醒吗？</view>
+              <view class="homework-reminder-hint">微信一次授权只能发送一次；第二天仍未完成时，可再次开启下一次提醒。</view>
+              <view class="homework-reminder-btn {{subscribingHomeworkReminder ? 'disabled-action' : ''}}" bindtap="enableHomeworkReminder">
+                {{subscribingHomeworkReminder ? '正在开启…' : lesson.homeworkReminderNotifyStatus === 'sent' ? '开启下一次18:00提醒' : '开启18:00微信提醒'}}
+              </view>
+            </view>
+          </view>
+        </block>
+
+        <view class="homework-completed-copy" wx:elif="{{isTeacher}}">{{lesson.homeworkTeacherReviewStatus === 'incomplete' ? '老师已批改为未完成，等待学生继续完成。' : '学生还没有确认完成课后任务。'}}</view>
+        <view class="preview-recording-note" wx:elif="{{isTeacherPreview}}">教师预览中不能代学生确认完成或开启提醒。</view>
+
+        <view class="teacher-homework-review" wx:if="{{isTeacher}}">
+          <view class="teacher-homework-review-head">
+            <view>
+              <view class="teacher-homework-review-title">教师批改任务状态</view>
+              <view class="teacher-homework-review-hint" wx:if="{{lesson.homeworkTeacherReviewedLabel}}">上次批改：{{lesson.homeworkTeacherReviewedLabel}}</view>
+              <view class="teacher-homework-review-hint" wx:else>请根据学生实际完成情况选择。</view>
+            </view>
+            <view class="teacher-review-state">
+              {{lesson.homeworkTeacherReviewStatus === 'completed' ? '已确认完成' : lesson.homeworkTeacherReviewStatus === 'incomplete' ? '已确认未完成' : '尚未批改'}}
+            </view>
+          </view>
+          <view class="teacher-homework-review-actions">
+            <view class="teacher-review-btn teacher-review-completed {{lesson.homeworkTeacherReviewStatus === 'completed' ? 'teacher-review-btn-active' : ''}} {{reviewingHomeworkStatus ? 'disabled-action' : ''}}" data-status="completed" bindtap="reviewHomeworkCompletion">
+              {{reviewingHomeworkStatus === 'completed' ? '保存中…' : '学生已完成课后任务'}}
+            </view>
+            <view class="teacher-review-btn teacher-review-incomplete {{lesson.homeworkTeacherReviewStatus === 'incomplete' ? 'teacher-review-btn-active' : ''}} {{reviewingHomeworkStatus ? 'disabled-action' : ''}}" data-status="incomplete" bindtap="reviewHomeworkCompletion">
+              {{reviewingHomeworkStatus === 'incomplete' ? '保存中…' : '学生没有完成课后任务'}}
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="submission-list" wx:if="{{submissions.length}}">
+        <view class="submission-title">学生已提交</view>
+        <view class="submission-row" wx:for="{{submissions}}" wx:key="_id">
+          <view class="submission-main">
+            <view class="submission-name">第 {{item.displayAttemptNo}} 次录音 · {{item.durationLabel}}</view>
+            <view class="submission-status status-{{item.status === '已听' || item.status === '朗读正确' ? 'independent' : item.status === '需要重录' ? 'pending' : 'prompted'}}">{{item.status}}</view>
+          </view>
+          <view class="submission-actions">
+            <view class="listen-btn {{!item.audioAvailable ? 'disabled-action' : ''}}" data-index="{{index}}" bindtap="playSubmission">{{playingSubmissionId === item._id ? '正在播放' : item.audioAvailable ? '播放录音' : '录音暂不可用'}}</view>
+            <view class="review-btn" wx:if="{{isTeacher}}" data-index="{{index}}" bindtap="markRecordingReviewed">检查结果</view>
+            <view class="delete-recording-btn {{deletingSubmissionId === item._id ? 'disabled-action' : ''}}" wx:if="{{isTeacher}}" data-index="{{index}}" bindtap="deleteRecording">{{deletingSubmissionId === item._id ? '删除中…' : '删除录音'}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="submission-empty" wx:elif="{{isTeacher && lesson.recordingTaskEnabled}}">学生还没有提交录音。</view>
+      <view class="recording-maintenance" wx:if="{{isTeacher && hasLegacySubmissions}}">
+        <view class="recording-maintenance-copy">
+          <view class="recording-maintenance-title">发现旧格式录音</view>
+          <view class="recording-maintenance-hint">可按学生、课程和录音次数整理为清晰云存储目录。</view>
+        </view>
+        <view class="organize-recordings-btn {{organizingRecordings ? 'disabled-action' : ''}}" bindtap="organizeLegacyRecordings">
+          {{organizingRecordings ? '整理中…' : '整理旧录音'}}
+        </view>
+      </view>
+    </view>
+
+    <view class="section-head material-section-head" wx:if="{{isTeacher || hasPapers}}">
+      <view>
+        <view class="section-kicker">OPTIONAL</view>
+        <view class="section-title">课件与资料 <text wx:if="{{hasPapers}}">（{{materialCount}}）</text></view>
+        <view class="section-hint">图片直接显示在下方，点击即可全屏放大；也可保存原图或在文档菜单中下载。</view>
+      </view>
+      <view class="small-action" wx:if="{{isTeacher}}" bindtap="toggleMaterialUploader">
+        {{showMaterialUploader ? '收起' : '添加资料'}}
+      </view>
+    </view>
+
+    <view class="card upload-card" wx:if="{{isTeacher && showMaterialUploader}}">
+      <view class="upload-step">1. 这份资料给谁看、用来做什么？</view>
+      <view class="purpose-grid">
+        <view class="purpose-option {{selectedPurpose === item.value ? 'purpose-option-active' : ''}}" wx:for="{{materialPurposes}}" wx:key="value" data-value="{{item.value}}" bindtap="chooseMaterialPurpose">
+          <view class="purpose-label">{{item.label}}</view>
+          <view class="purpose-hint">{{item.hint}}</view>
+        </view>
+      </view>
+      <view class="upload-step">2. 选择文件</view>
+      <view class="upload-actions">
+        <view class="ghost-btn upload-action" bindtap="chooseMaterialFile">从微信聊天选择</view>
+        <view class="ghost-btn upload-action" bindtap="choosePhotoMaterial">拍照／相册</view>
+        <view class="ghost-btn upload-action computer-upload-action {{uploadingMaterial || readingLocalMaterials ? 'disabled-action' : ''}}" wx:if="{{isDevTools}}" bindtap="readComputerMaterials">
+          {{readingLocalMaterials ? '读取中…' : '读取电脑资料'}}
+        </view>
+      </view>
+      <view class="upload-hint">支持 PPT/PPTX、PDF、PNG/JPG 和音频；图片会保留原图，并另生成快速预览图。电脑上传需先启动 tools/local-material-uploader 中的助手。</view>
+      <view class="advanced-toggle" bindtap="toggleMaterialAdvanced">{{showMaterialAdvanced ? '收起更多信息' : '填写标题或学期（可选）'}}</view>
+      <view class="advanced-fields" wx:if="{{showMaterialAdvanced}}">
+        <input class="input" placeholder="课件标题；多文件自动编号，不再显示乱码名" value="{{paperForm.paperTitle}}" data-field="paperTitle" bindinput="onPaperMetaInput" />
+        <input class="input" placeholder="学期，如 2026 Term 1" value="{{paperForm.term}}" data-field="term" bindinput="onPaperMetaInput" />
+      </view>
+      <view class="danger-text-action" wx:if="{{hasPapers}}" bindtap="deleteAllLessonMaterials">删除本节全部 {{materialCount}} 份课件</view>
+    </view>
+
+    <view wx:for="{{materialGroups}}" wx:key="value" wx:for-index="groupIndex">
+      <view class="material-group-title">{{item.label}}</view>
+      <view class="card paper-card" wx:for="{{item.papers}}" wx:key="_id" wx:for-item="paper" wx:for-index="paperIndex">
+        <view class="material-image-wrap" wx:if="{{(paper.type === 'image' || paper.type === 'canva') && (paper.previewUrl || paper.fileUrl)}}">
+          <image
+            class="material-image-preview"
+            src="{{paper.previewUrl || paper.fileUrl}}"
+            mode="aspectFit"
+            lazy-load="{{true}}"
+            show-menu-by-longpress="{{true}}"
+            data-group-index="{{groupIndex}}"
+            data-paper-index="{{paperIndex}}"
+            bindtap="openMaterial"
+          />
+          <view class="material-image-hint">点击图片全屏放大</view>
+        </view>
+        <view class="paper-card-row">
+          <view class="paper-main">
+            <view class="paper-title">{{paper.displayTitle}}</view>
+            <view class="paper-meta">{{paper.displayType}} · {{paper.visibilityLabel}}</view>
+            <view class="file-name" wx:if="{{paper.displayFileName && paper.displayTitle !== paper.displayFileName}}">原文件：{{paper.displayFileName}}</view>
+          </view>
+          <view class="paper-side material-card-actions">
+            <view class="open-label material-action-btn" data-group-index="{{groupIndex}}" data-paper-index="{{paperIndex}}" bindtap="openMaterial">{{playingMaterialId === paper._id ? '播放中' : (paper.type === 'image' || paper.type === 'canva') ? '放大' : '查看'}}</view>
+            <view class="save-label material-action-btn" data-group-index="{{groupIndex}}" data-paper-index="{{paperIndex}}" bindtap="saveMaterial">{{paper.type === 'image' || paper.type === 'canva' ? '保存原图' : '保存'}}</view>
+            <view class="manage-label" wx:if="{{isTeacher}}" data-group-index="{{groupIndex}}" data-paper-index="{{paperIndex}}" catchtap="manageMaterial">管理</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-head mistake-section-head" wx:if="{{isTeacher || mistakeLearningEnabled}}">
+      <view>
+        <view class="section-kicker">REAL QUESTIONS ONLY</view>
+        <view class="section-title">英语错题整理</view>
+        <view class="section-hint">学习表现记录在上方；这里只放真实做错的题。</view>
+      </view>
+      <view class="submission-count">{{mistakes.length}} 题</view>
+    </view>
+
+    <view class="card mistake-actions-card" wx:if="{{isTeacher}}">
+      <view class="mistake-actions">
+        <view class="primary-btn mistake-action" bindtap="goAddMistake">记录一道错题</view>
+        <view class="ghost-btn mistake-action" bindtap="goBatchImportMistakes">批量导入</view>
+      </view>
+      <view class="mistake-action-hint">1–4 题用快速记录；同一张试卷至少 5 题时再批量导入。</view>
+    </view>
+
+    <view class="empty" wx:if="{{(isTeacher || mistakeLearningEnabled) && !mistakes.length}}">本节课没有英语错题。</view>
+    <view class="card mistake-card" wx:for="{{mistakes}}" wx:key="_id" bindtap="goMistake" data-id="{{item._id}}">
+      <view class="mistake-top">
+        <view class="mistake-title">{{item.displayTitle}}</view>
+        <view class="mistake-status">{{item.entryStatus === '待整理' ? '待整理' : item.status}}</view>
+      </view>
+      <view class="paper-meta" wx:if="{{item.displayMeta}}">{{item.displayMeta}}</view>
+      <view class="reason">{{item.reason}}</view>
+      <view class="tags">
+        <text class="tag" wx:for="{{item.displayTags}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+
+    <view class="teacher-danger-zone" wx:if="{{isTeacher}}">
+      <view class="danger-label">课程管理</view>
+      <view class="delete-lesson-btn" bindtap="deleteLesson">{{deletingLesson ? '正在删除…' : '删除本节课'}}</view>
+    </view>
   </view>
 </view>

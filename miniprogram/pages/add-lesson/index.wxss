@@ -37,8 +37,140 @@
   line-height: 1.5;
 }
 
+.template-hint {
+  margin-top: 10rpx;
+  color: #39765d;
+  font-size: 24rpx;
+  line-height: 1.55;
+}
+
 .action-disabled {
   opacity: 0.55;
+}
+
+.optional-card {
+  padding: 24rpx 26rpx;
+}
+
+.optional-head,
+.recording-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22rpx;
+}
+
+.optional-title {
+  color: #342f29;
+  font-size: 29rpx;
+  font-weight: 700;
+}
+
+.optional-hint {
+  margin-top: 7rpx;
+  color: #817669;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.optional-toggle {
+  flex-shrink: 0;
+  padding: 10rpx 16rpx;
+  border-radius: 999rpx;
+  color: #39765d;
+  background: #e9f4ee;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.optional-first-field {
+  margin-top: 28rpx;
+  padding-top: 26rpx;
+  border-top: 1rpx solid #eee4d6;
+}
+
+.compact-textarea {
+  min-height: 126rpx;
+}
+
+.recording-row {
+  padding: 22rpx 0;
+  border-top: 1rpx solid #eee4d6;
+}
+
+.recording-label {
+  margin-bottom: 0;
+}
+
+.recording-prompt-field {
+  margin-top: 8rpx;
+}
+
+.recording-type-field {
+  margin-top: 18rpx;
+}
+
+.ket-source-card {
+  margin-top: 14rpx;
+  padding: 18rpx;
+  border: 1rpx solid #c9dfd3;
+  border-radius: 14rpx;
+  background: #edf7f2;
+}
+
+.ket-source-title {
+  color: #315f4c;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.ket-source-line,
+.ket-source-warning,
+.ket-weekly-hint,
+.ket-recording-meta {
+  margin-top: 8rpx;
+  color: #66766e;
+  font-size: 21rpx;
+  line-height: 1.5;
+}
+
+.ket-source-warning {
+  color: #8a6730;
+}
+
+.ket-source-copy {
+  margin-top: 10rpx;
+  color: #39765d;
+  font-size: 21rpx;
+  font-weight: 800;
+}
+
+.ket-weekly-hint {
+  padding: 12rpx 14rpx;
+  border-radius: 12rpx;
+  color: #7c5b28;
+  background: #fff3d7;
+}
+
+.ket-recording-meta {
+  margin-bottom: 24rpx;
+  color: #39765d;
+  font-weight: 700;
+}
+
+.official-prompt {
+  color: #52635b;
+  background: #eef3ef;
+}
+
+.recording-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+}
+
+.recording-option {
+  min-width: 0;
 }
 
 .input,

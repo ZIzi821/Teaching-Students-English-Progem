@@ -1,0 +1,1384 @@
+{
+  "schemaVersion": 2,
+  "language": "fr-FR",
+  "level": "A1-A2",
+  "cefrAlignment": "Editorially CEFR-aligned; not an official CEFR list or certification material.",
+  "topics": [
+    "greetings",
+    "food",
+    "places",
+    "time",
+    "needs",
+    "daily-life",
+    "likes",
+    "weather",
+    "travel",
+    "work-study",
+    "opinions",
+    "health",
+    "communication",
+    "plans"
+  ],
+  "items": [
+    {
+      "id": "a1-shadow-greeting",
+      "cefrLevel": "A1",
+      "topic": "greetings",
+      "text": "Bonjour, je m'appelle Lina. Enchantée !",
+      "meaningEN": "Hello, my name is Lina. Nice to meet you.",
+      "cue": "Listen once, then repeat in two thought groups.",
+      "meaningCN": "你好，我叫 Lina。很高兴认识你！",
+      "translationCN": "你好，我叫 Lina。很高兴认识你！",
+      "cueCN": "跟读提示：Listen once, then repeat in two thought groups.",
+      "audioKey": "a1-shadow-greeting",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-greeting.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-order",
+      "cefrLevel": "A1",
+      "topic": "food",
+      "text": "Je voudrais un thé avec du lait, s'il vous plaît.",
+      "meaningEN": "I would like a tea with milk, please.",
+      "cue": "Link voudrais un without pausing.",
+      "meaningCN": "我想要一杯加牛奶的茶，谢谢。",
+      "translationCN": "我想要一杯加牛奶的茶，谢谢。",
+      "cueCN": "跟读提示：Link voudrais un without pausing.",
+      "audioKey": "a1-shadow-order",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-order.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-place",
+      "cefrLevel": "A1",
+      "topic": "places",
+      "text": "Pardon, où est la gare ?",
+      "meaningEN": "Excuse me, where is the station?",
+      "cue": "Raise intonation on the question.",
+      "meaningCN": "不好意思，车站在哪里？",
+      "translationCN": "不好意思，车站在哪里？",
+      "cueCN": "跟读提示：Raise intonation on the question.",
+      "audioKey": "a1-shadow-place",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-place.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-time",
+      "cefrLevel": "A1",
+      "topic": "time",
+      "text": "Aujourd'hui, c'est lundi et il est huit heures.",
+      "meaningEN": "Today is Monday and it is eight o'clock.",
+      "cue": "Pause after aujourd'hui.",
+      "meaningCN": "今天是星期一，现在八点。",
+      "translationCN": "今天是星期一，现在八点。",
+      "cueCN": "跟读提示：Pause after aujourd'hui.",
+      "audioKey": "a1-shadow-time",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-time.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-need",
+      "cefrLevel": "A1",
+      "topic": "needs",
+      "text": "Je ne comprends pas. Répétez, s'il vous plaît.",
+      "meaningEN": "I do not understand. Please repeat.",
+      "cue": "Keep ne...pas as one rhythm unit.",
+      "meaningCN": "我不明白。请再说一遍。",
+      "translationCN": "我不明白。请再说一遍。",
+      "cueCN": "跟读提示：Keep ne...pas as one rhythm unit.",
+      "audioKey": "a1-shadow-need",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-need.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-routine",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "text": "Le matin, je travaille, puis je rentre à la maison.",
+      "meaningEN": "In the morning, I work, then I go home.",
+      "cue": "Notice the final consonant is often not released.",
+      "meaningCN": "早上我工作，然后回家。",
+      "translationCN": "早上我工作，然后回家。",
+      "cueCN": "跟读提示：Notice the final consonant is often not released.",
+      "audioKey": "a1-shadow-routine",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-routine.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-like",
+      "cefrLevel": "A1",
+      "topic": "likes",
+      "text": "J'aime la musique, mais je préfère ce film.",
+      "meaningEN": "I like music, but I prefer this film.",
+      "cue": "Stress the contrast after mais.",
+      "meaningCN": "我喜欢音乐，但我更喜欢这部电影。",
+      "translationCN": "我喜欢音乐，但我更喜欢这部电影。",
+      "cueCN": "跟读提示：Stress the contrast after mais.",
+      "audioKey": "a1-shadow-like",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-like.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-weather",
+      "cefrLevel": "A1",
+      "topic": "weather",
+      "text": "Il y a du soleil, alors nous allons au parc.",
+      "meaningEN": "It is sunny, so we are going to the park.",
+      "cue": "Chunk after soleil.",
+      "meaningCN": "有阳光，所以我们去公园。",
+      "translationCN": "有阳光，所以我们去公园。",
+      "cueCN": "跟读提示：Chunk after soleil.",
+      "audioKey": "a1-shadow-weather",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-weather.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-booking",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Je voudrais réserver une chambre pour deux nuits.",
+      "meaningEN": "I would like to reserve a room for two nights.",
+      "cue": "Link réserver une in one smooth group.",
+      "meaningCN": "我想预订一间房住两晚。",
+      "translationCN": "我想预订一间房住两晚。",
+      "cueCN": "跟读提示：Link réserver une in one smooth group.",
+      "audioKey": "a2-shadow-booking",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-booking.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-delay",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Le train a quinze minutes de retard, donc j'arrive plus tard.",
+      "meaningEN": "The train is fifteen minutes late, so I arrive later.",
+      "cue": "Use a short pause before donc.",
+      "meaningCN": "火车晚点十五分钟，所以我晚点到。",
+      "translationCN": "火车晚点十五分钟，所以我晚点到。",
+      "cueCN": "跟读提示：Use a short pause before donc.",
+      "audioKey": "a2-shadow-delay",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-delay.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-meeting",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "La réunion commence à neuf heures, mais je suis encore dans le métro.",
+      "meaningEN": "The meeting starts at nine, but I am still on the metro.",
+      "cue": "Keep commence à connected.",
+      "meaningCN": "会议九点开始，但我还在地铁上。",
+      "translationCN": "会议九点开始，但我还在地铁上。",
+      "cueCN": "跟读提示：Keep commence à connected.",
+      "audioKey": "a2-shadow-meeting",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-meeting.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-opinion",
+      "cefrLevel": "A2",
+      "topic": "opinions",
+      "text": "Je pense que cette application est pratique et très utile.",
+      "meaningEN": "I think this application is practical and very useful.",
+      "cue": "Use a rising then falling information rhythm.",
+      "meaningCN": "我认为这个应用方便又很有用。",
+      "translationCN": "我认为这个应用方便又很有用。",
+      "cueCN": "跟读提示：Use a rising then falling information rhythm.",
+      "audioKey": "a2-shadow-opinion",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-opinion.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-health",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "text": "Le médecin conseille de se reposer et de prendre ce médicament.",
+      "meaningEN": "The doctor advises resting and taking this medicine.",
+      "cue": "Keep de se reposer together.",
+      "meaningCN": "医生建议休息并服用这个药。",
+      "translationCN": "医生建议休息并服用这个药。",
+      "cueCN": "跟读提示：Keep de se reposer together.",
+      "audioKey": "a2-shadow-health",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-health.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-direction",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Continuez tout droit, puis tournez à gauche après la pharmacie.",
+      "meaningEN": "Go straight on, then turn left after the pharmacy.",
+      "cue": "Make a clear break after droit.",
+      "meaningCN": "一直往前走，然后在药店后向左转。",
+      "translationCN": "一直往前走，然后在药店后向左转。",
+      "cueCN": "跟读提示：Make a clear break after droit.",
+      "audioKey": "a2-shadow-direction",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-direction.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-message",
+      "cefrLevel": "A2",
+      "topic": "communication",
+      "text": "Je t'envoie les informations dès que possible.",
+      "meaningEN": "I will send you the information as soon as possible.",
+      "cue": "Link t'envoie and les informations.",
+      "meaningCN": "我会尽快把信息发给你。",
+      "translationCN": "我会尽快把信息发给你。",
+      "cueCN": "跟读提示：Link t'envoie and les informations.",
+      "audioKey": "a2-shadow-message",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-message.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-plan",
+      "cefrLevel": "A2",
+      "topic": "plans",
+      "text": "On se retrouve devant la gare à dix heures quinze ?",
+      "meaningEN": "Shall we meet in front of the station at 10:15?",
+      "cue": "Use rising intonation for confirmation.",
+      "meaningCN": "我们十点十五分在车站前见吗？",
+      "translationCN": "我们十点十五分在车站前见吗？",
+      "cueCN": "跟读提示：Use rising intonation for confirmation.",
+      "audioKey": "a2-shadow-plan",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-plan.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-word-01",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "text": "La maison est petite.",
+      "meaningEN": null,
+      "meaningCN": "这所房子很小。",
+      "translationCN": "这所房子很小。",
+      "cue": "Listen once and repeat in one short breath group.",
+      "cueCN": "先听一遍，再按一个短意群跟读。",
+      "audioKey": "a1-shadow-word-01",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-word-01.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-word-02",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "text": "Mon appartement est près du métro.",
+      "meaningEN": null,
+      "meaningCN": "我的公寓靠近地铁。",
+      "translationCN": "我的公寓靠近地铁。",
+      "cue": "Listen once and repeat in one short breath group.",
+      "cueCN": "先听一遍，再按一个短意群跟读。",
+      "audioKey": "a1-shadow-word-02",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-word-02.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-word-03",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "text": "La chambre est calme.",
+      "meaningEN": null,
+      "meaningCN": "这个房间很安静。",
+      "translationCN": "这个房间很安静。",
+      "cue": "Listen once and repeat in one short breath group.",
+      "cueCN": "先听一遍，再按一个短意群跟读。",
+      "audioKey": "a1-shadow-word-03",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-word-03.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-word-04",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "text": "La porte est ouverte.",
+      "meaningEN": null,
+      "meaningCN": "门开着。",
+      "translationCN": "门开着。",
+      "cue": "Listen once and repeat in one short breath group.",
+      "cueCN": "先听一遍，再按一个短意群跟读。",
+      "audioKey": "a1-shadow-word-04",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-word-04.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-word-05",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "text": "Le livre est sur la table.",
+      "meaningEN": null,
+      "meaningCN": "书在桌子上。",
+      "translationCN": "书在桌子上。",
+      "cue": "Listen once and repeat in one short breath group.",
+      "cueCN": "先听一遍，再按一个短意群跟读。",
+      "audioKey": "a1-shadow-word-05",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-word-05.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-word-06",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "text": "La chaise est près de la fenêtre.",
+      "meaningEN": null,
+      "meaningCN": "椅子靠近窗户。",
+      "translationCN": "椅子靠近窗户。",
+      "cue": "Listen once and repeat in one short breath group.",
+      "cueCN": "先听一遍，再按一个短意群跟读。",
+      "audioKey": "a1-shadow-word-06",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-word-06.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-shadow-word-07",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "text": "La fenêtre est fermée.",
+      "meaningEN": null,
+      "meaningCN": "窗户关着。",
+      "translationCN": "窗户关着。",
+      "cue": "Listen once and repeat in one short breath group.",
+      "cueCN": "先听一遍，再按一个短意群跟读。",
+      "audioKey": "a1-shadow-word-07",
+      "audioRef": "french-audio/v2/shadowing/a1-shadow-word-07.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-01",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Le voyage commence demain.",
+      "meaningEN": null,
+      "meaningCN": "旅行明天开始。",
+      "translationCN": "旅行明天开始。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-01",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-01.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-02",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "J'ai un billet pour Lyon.",
+      "meaningEN": null,
+      "meaningCN": "我有一张去里昂的票。",
+      "translationCN": "我有一张去里昂的票。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-02",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-02.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-03",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Ma valise est lourde.",
+      "meaningEN": null,
+      "meaningCN": "我的行李箱很重。",
+      "translationCN": "我的行李箱很重。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-03",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-03.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-04",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "L'avion part à midi.",
+      "meaningEN": null,
+      "meaningCN": "飞机中午起飞。",
+      "translationCN": "飞机中午起飞。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-04",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-04.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-05",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Le train arrive bientôt.",
+      "meaningEN": null,
+      "meaningCN": "火车很快到。",
+      "translationCN": "火车很快到。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-05",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-05.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-06",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Nous partons demain matin.",
+      "meaningEN": null,
+      "meaningCN": "我们明天早上出发。",
+      "translationCN": "我们明天早上出发。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-06",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-06.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-07",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Je réserve une chambre pour deux nuits.",
+      "meaningEN": null,
+      "meaningCN": "我预订一间房住两晚。",
+      "translationCN": "我预订一间房住两晚。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-07",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-07.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-08",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Nous visitons le musée samedi.",
+      "meaningEN": null,
+      "meaningCN": "我们星期六参观博物馆。",
+      "translationCN": "我们星期六参观博物馆。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-08",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-08.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-09",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Le touriste demande son chemin.",
+      "meaningEN": null,
+      "meaningCN": "游客问路。",
+      "translationCN": "游客问路。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-09",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-09.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-10",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Le plan montre la gare.",
+      "meaningEN": null,
+      "meaningCN": "地图显示车站。",
+      "translationCN": "地图显示车站。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-10",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-10.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-11",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Tournez à gauche après la banque.",
+      "meaningEN": null,
+      "meaningCN": "过了银行向左转。",
+      "translationCN": "过了银行向左转。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-11",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-11.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-12",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "La pharmacie est à droite.",
+      "meaningEN": null,
+      "meaningCN": "药店在右边。",
+      "translationCN": "药店在右边。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-12",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-12.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-13",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Le parc est à gauche.",
+      "meaningEN": null,
+      "meaningCN": "公园在左边。",
+      "translationCN": "公园在左边。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-13",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-13.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-14",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Le train a dix minutes de retard.",
+      "meaningEN": null,
+      "meaningCN": "火车晚点十分钟。",
+      "translationCN": "火车晚点十分钟。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-14",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-14.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-15",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "Continuez tout droit, s'il vous plaît.",
+      "meaningEN": null,
+      "meaningCN": "请一直往前走。",
+      "translationCN": "请一直往前走。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-15",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-15.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-16",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "text": "La pharmacie ferme à dix-neuf heures.",
+      "meaningEN": null,
+      "meaningCN": "药店19点关门。",
+      "translationCN": "药店19点关门。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-16",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-16.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-17",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "J'ai rendez-vous à quatorze heures.",
+      "meaningEN": null,
+      "meaningCN": "我14点有约。",
+      "translationCN": "我14点有约。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-17",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-17.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-18",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "La réunion commence à neuf heures.",
+      "meaningEN": null,
+      "meaningCN": "会议九点开始。",
+      "translationCN": "会议九点开始。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-18",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-18.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-19",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "J'envoie un message à Marie.",
+      "meaningEN": null,
+      "meaningCN": "我给玛丽发一条消息。",
+      "translationCN": "我给玛丽发一条消息。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-19",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-19.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-20",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Le courriel est dans ma boîte.",
+      "meaningEN": null,
+      "meaningCN": "邮件在我的邮箱里。",
+      "translationCN": "邮件在我的邮箱里。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-20",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-20.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-21",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Le projet est important.",
+      "meaningEN": null,
+      "meaningCN": "这个项目很重要。",
+      "translationCN": "这个项目很重要。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-21",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-21.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-22",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Je finis mes devoirs ce soir.",
+      "meaningEN": null,
+      "meaningCN": "我今晚完成作业。",
+      "translationCN": "我今晚完成作业。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-22",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-22.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-23",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "L'examen est vendredi.",
+      "meaningEN": null,
+      "meaningCN": "考试在星期五。",
+      "translationCN": "考试在星期五。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-23",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-23.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-24",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Le cours commence à huit heures.",
+      "meaningEN": null,
+      "meaningCN": "课程八点开始。",
+      "translationCN": "课程八点开始。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-24",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-24.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-25",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Je finis le travail à dix-sept heures.",
+      "meaningEN": null,
+      "meaningCN": "我17点完成工作。",
+      "translationCN": "我17点完成工作。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-25",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-25.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-26",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "J'envoie le document aujourd'hui.",
+      "meaningEN": null,
+      "meaningCN": "我今天发送文件。",
+      "translationCN": "我今天发送文件。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-26",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-26.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-27",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Elle répond au message.",
+      "meaningEN": null,
+      "meaningCN": "她回复消息。",
+      "translationCN": "她回复消息。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-27",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-27.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-28",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Le professeur explique la règle.",
+      "meaningEN": null,
+      "meaningCN": "老师解释规则。",
+      "translationCN": "老师解释规则。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-28",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-28.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-29",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "C'est une question importante.",
+      "meaningEN": null,
+      "meaningCN": "这是一个重要问题。",
+      "translationCN": "这是一个重要问题。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-29",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-29.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-30",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "C'est possible demain ?",
+      "meaningEN": null,
+      "meaningCN": "明天可以吗？",
+      "translationCN": "明天可以吗？",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-30",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-30.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-31",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Je suis occupé cet après-midi.",
+      "meaningEN": null,
+      "meaningCN": "我今天下午很忙。",
+      "translationCN": "我今天下午很忙。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-31",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-31.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-32",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "text": "Nous travaillons ensemble.",
+      "meaningEN": null,
+      "meaningCN": "我们一起工作。",
+      "translationCN": "我们一起工作。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-32",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-32.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-33",
+      "cefrLevel": "A2",
+      "topic": "daily-life",
+      "text": "Mon quartier est animé.",
+      "meaningEN": null,
+      "meaningCN": "我的街区很热闹。",
+      "translationCN": "我的街区很热闹。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-33",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-33.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-34",
+      "cefrLevel": "A2",
+      "topic": "daily-life",
+      "text": "Mon voisin est sympathique.",
+      "meaningEN": null,
+      "meaningCN": "我的邻居很友好。",
+      "translationCN": "我的邻居很友好。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-34",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-34.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-35",
+      "cefrLevel": "A2",
+      "topic": "daily-life",
+      "text": "Je fais le ménage le dimanche.",
+      "meaningEN": null,
+      "meaningCN": "我星期日做家务。",
+      "translationCN": "我星期日做家务。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-35",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-35.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-36",
+      "cefrLevel": "A2",
+      "topic": "daily-life",
+      "text": "La cuisine est propre.",
+      "meaningEN": null,
+      "meaningCN": "厨房很干净。",
+      "translationCN": "厨房很干净。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-36",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-36.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-37",
+      "cefrLevel": "A2",
+      "topic": "daily-life",
+      "text": "La salle de bains est libre.",
+      "meaningEN": null,
+      "meaningCN": "浴室空着。",
+      "translationCN": "浴室空着。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-37",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-37.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-38",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "text": "J'ai une douleur au bras.",
+      "meaningEN": null,
+      "meaningCN": "我的手臂疼。",
+      "translationCN": "我的手臂疼。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-38",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-38.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-39",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "text": "Le médecin arrive bientôt.",
+      "meaningEN": null,
+      "meaningCN": "医生很快到。",
+      "translationCN": "医生很快到。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-39",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-39.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-40",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "text": "Je prends ce médicament le soir.",
+      "meaningEN": null,
+      "meaningCN": "我晚上吃这个药。",
+      "translationCN": "我晚上吃这个药。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-40",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-40.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-41",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "text": "Je suis malade aujourd'hui.",
+      "meaningEN": null,
+      "meaningCN": "我今天生病了。",
+      "translationCN": "我今天生病了。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-41",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-41.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-42",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "text": "Après le voyage, je suis fatigué.",
+      "meaningEN": null,
+      "meaningCN": "旅行后我很累。",
+      "translationCN": "旅行后我很累。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-42",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-42.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-43",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "text": "Je me repose après le travail.",
+      "meaningEN": null,
+      "meaningCN": "工作后我休息。",
+      "translationCN": "工作后我休息。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-43",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-43.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-44",
+      "cefrLevel": "A2",
+      "topic": "daily-life",
+      "text": "Je nettoie la table.",
+      "meaningEN": null,
+      "meaningCN": "我清洁桌子。",
+      "translationCN": "我清洁桌子。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-44",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-44.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-shadow-word-45",
+      "cefrLevel": "A2",
+      "topic": "daily-life",
+      "text": "Il faut réparer la porte.",
+      "meaningEN": null,
+      "meaningCN": "需要修理门。",
+      "translationCN": "需要修理门。",
+      "cue": "Listen once, mark one thought group, then shadow twice.",
+      "cueCN": "先听一遍，划分一个意群，再跟读两遍。",
+      "audioKey": "a2-shadow-word-45",
+      "audioRef": "french-audio/v2/shadowing/a2-shadow-word-45.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    }
+  ]
+}

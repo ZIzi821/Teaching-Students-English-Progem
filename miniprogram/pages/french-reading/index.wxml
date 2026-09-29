@@ -1,0 +1,17 @@
+<view class="page">
+  <teacher-preview-banner wx:if="{{isTeacherPreview}}"></teacher-preview-banner>
+  <view class="tabs" aria-label="选择法语等级">
+    <view data-level="A1" class="{{level === 'A1' ? 'on' : ''}}" bindtap="switchLevel">A1</view>
+    <view data-level="A2" class="{{level === 'A2' ? 'on' : ''}}" bindtap="switchLevel">A2</view>
+  </view>
+  <view class="card state-card" wx:if="{{loading}}">正在准备阅读…</view>
+  <view class="card state-card error" wx:elif="{{message}}"><view>{{message}}</view><button class="retry" bindtap="load">重试</button></view>
+  <view class="card state-card" wx:elif="{{!current}}">这个等级暂时没有更多阅读。</view>
+  <view wx:else class="card">
+    <view class="title">{{current.titleCN}}</view><view class="small">{{current.title}}</view>
+    <view class="completion" wx:if="{{current.completed}}">已完成</view>
+    <view class="text">{{current.text}}</view><button bindtap="toggle">{{showHelp ? '收起辅助' : '显示中译与答案'}}</button>
+    <block wx:if="{{showHelp}}"><view class="translation">{{current.translationCN}}</view><view wx:for="{{current.comprehension}}" wx:key="id" class="q"><view>{{item.question}}</view><view>答案：{{item.answer}}</view><view>{{item.answerCN}} · {{item.explanationCN}}</view></view></block>
+    <button wx:if="{{!isTeacherPreview}}" bindtap="complete" disabled="{{saving}}">{{saving ? '保存中…' : (current.completed ? '下一篇' : '完成阅读')}}</button><button bindtap="next">{{isTeacherPreview ? '查看下一篇' : '暂时跳过'}}</button>
+  </view>
+</view>

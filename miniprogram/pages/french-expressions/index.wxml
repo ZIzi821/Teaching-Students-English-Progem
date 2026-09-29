@@ -1,0 +1,20 @@
+<view class="page">
+  <teacher-preview-banner wx:if="{{isTeacherPreview}}"></teacher-preview-banner>
+  <view class="tabs" aria-label="选择法语等级">
+    <view data-level="A1" class="{{level === 'A1' ? 'on' : ''}}" bindtap="switchLevel">A1</view>
+    <view data-level="A2" class="{{level === 'A2' ? 'on' : ''}}" bindtap="switchLevel">A2</view>
+  </view>
+  <view class="card state-card" wx:if="{{loading}}">正在准备表达…</view>
+  <view class="card state-card error" wx:elif="{{message}}"><view>{{message}}</view><button class="retry" bindtap="load">重试</button></view>
+  <view class="card state-card" wx:elif="{{!items.length}}">这个等级暂时没有表达，稍后再来看看。</view>
+  <view wx:for="{{items}}" wx:key="id" class="card">
+    <view class="situation">{{item.situation}}</view>
+    <view class="french">{{item.text}}</view>
+    <view>{{item.meaningCN}}</view>
+    <view class="en">{{item.meaningEN}}</view>
+    <view class="example">{{item.example.text}}<view>{{item.example.meaningCN}}</view></view>
+    <view class="completion" wx:if="{{item.completed}}">已练过</view>
+    <button data-id="{{item.id}}" data-key="{{item.audioKey}}" bindtap="play" disabled="{{audioLoadingId}}">{{audioLoadingId === item.id ? '准备发音…' : (playingId === item.id ? '■ 停止播放' : '🔊 听一听')}}</button>
+    <button wx:if="{{!isTeacherPreview}}" data-id="{{item.id}}" bindtap="complete" disabled="{{item.completed || savingId === item.id}}">{{item.completed ? '已练过' : (savingId === item.id ? '保存中…' : '练过了')}}</button>
+  </view>
+</view>

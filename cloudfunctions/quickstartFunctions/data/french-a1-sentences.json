@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "language": "fr-FR",
+  "level": "A1",
+  "topics": ["greetings", "identity", "time", "family", "needs", "likes"],
+  "items": [
+    {"id":"sentence-greetings-bonjour-tout-le-monde","text":"Bonjour, tout le monde !","translation":"大家好！","note":"向一群人问好时可以这样说。","topic":"greetings","order":1,"audioKey":"sentence-greetings-bonjour-tout-le-monde"},
+    {"id":"sentence-greetings-salut-ca-va","text":"Salut, ça va ?","translation":"你好，最近好吗？","note":"ça va 是口语中询问近况的表达。","topic":"greetings","order":2,"audioKey":"sentence-greetings-salut-ca-va"},
+    {"id":"sentence-greetings-merci-beaucoup","text":"Merci beaucoup.","translation":"非常感谢。","note":"beaucoup 表示“很多、非常”。","topic":"greetings","order":3,"audioKey":"sentence-greetings-merci-beaucoup"},
+    {"id":"sentence-greetings-sil-vous-plait","text":"S'il vous plaît.","translation":"请。","note":"对陌生人或多人使用 vous。","topic":"greetings","order":4,"audioKey":"sentence-greetings-sil-vous-plait"},
+    {"id":"sentence-greetings-au-revoir-bientot","text":"Au revoir et à bientôt !","translation":"再见，回头见！","note":"et 连接两个简单表达。","topic":"greetings","order":5,"audioKey":"sentence-greetings-au-revoir-bientot"},
+
+    {"id":"sentence-identity-je-mappelle-anna","text":"Je m'appelle Anna.","translation":"我叫 Anna。","note":"s'appeler 用来介绍姓名。","topic":"identity","order":1,"audioKey":"sentence-identity-je-mappelle-anna"},
+    {"id":"sentence-identity-jhabite-a-paris","text":"J'habite à Paris.","translation":"我住在巴黎。","note":"habiter à 后面接城市。","topic":"identity","order":2,"audioKey":"sentence-identity-jhabite-a-paris"},
+    {"id":"sentence-identity-tu-tappelles-comment","text":"Tu t'appelles comment ?","translation":"你叫什么名字？","note":"comment 表示“怎样、什么”。","topic":"identity","order":3,"audioKey":"sentence-identity-tu-tappelles-comment"},
+    {"id":"sentence-identity-vous-etes-francais","text":"Vous êtes français ?","translation":"您是法国人吗？","note":"这是对男性或泛指对象的形式；对女性可说 française。","topic":"identity","order":4,"audioKey":"sentence-identity-vous-etes-francais"},
+    {"id":"sentence-identity-cest-ma-ville","text":"C'est ma ville.","translation":"这是我的城市。","note":"c'est 表示“这是”；ma 表示“我的（阴性名词前）”。","topic":"identity","order":5,"audioKey":"sentence-identity-cest-ma-ville"},
+
+    {"id":"sentence-time-il-est-deux-heures","text":"Il est deux heures.","translation":"现在是两点。","note":"报时间时使用 il est。","topic":"time","order":1,"audioKey":"sentence-time-il-est-deux-heures"},
+    {"id":"sentence-time-aujourdhui-lundi","text":"Aujourd'hui, c'est lundi.","translation":"今天是星期一。","note":"aujourd'hui 表示今天，c'est 后接星期。","topic":"time","order":2,"audioKey":"sentence-time-aujourdhui-lundi"},
+    {"id":"sentence-time-a-demain","text":"À demain !","translation":"明天见！","note":"à demain 是固定告别表达。","topic":"time","order":3,"audioKey":"sentence-time-a-demain"},
+    {"id":"sentence-time-quelle-heure","text":"Quelle heure est-il ?","translation":"现在几点？","note":"quelle heure 是“几点、什么时间”。","topic":"time","order":4,"audioKey":"sentence-time-quelle-heure"},
+    {"id":"sentence-time-libre-maintenant","text":"Je suis libre maintenant.","translation":"我现在有空。","note":"libre 表示有空或自由。","topic":"time","order":5,"audioKey":"sentence-time-libre-maintenant"},
+
+    {"id":"sentence-family-voici-ma-famille","text":"Voici ma famille.","translation":"这是我的家人。","note":"voici 用来介绍眼前的人或物。","topic":"family","order":1,"audioKey":"sentence-family-voici-ma-famille"},
+    {"id":"sentence-family-cest-mon-pere","text":"C'est mon père.","translation":"这是我的父亲。","note":"mon 表示“我的（阳性名词前）”。","topic":"family","order":2,"audioKey":"sentence-family-cest-mon-pere"},
+    {"id":"sentence-family-ma-mere-ici","text":"Ma mère habite ici.","translation":"我妈妈住在这里。","note":"ici 表示这里。","topic":"family","order":3,"audioKey":"sentence-family-ma-mere-ici"},
+    {"id":"sentence-family-jai-un-frere","text":"J'ai un frère.","translation":"我有一个兄弟（哥哥或弟弟）。","note":"j'ai 是 je ai 的省音形式。","topic":"family","order":4,"audioKey":"sentence-family-jai-un-frere"},
+    {"id":"sentence-family-mon-ami-francais","text":"Mon ami est français.","translation":"我的朋友是法国人。","note":"mon 是阳性单数所有格；ami 在这里指男性朋友。","topic":"family","order":5,"audioKey":"sentence-family-mon-ami-francais"},
+
+    {"id":"sentence-needs-jai-besoin-deau","text":"J'ai besoin d'eau.","translation":"我需要水。","note":"avoir besoin de 表示需要；de + eau 缩合为 d'eau。","topic":"needs","order":1,"audioKey":"sentence-needs-jai-besoin-deau"},
+    {"id":"sentence-needs-je-voudrais-cafe","text":"Je voudrais un café.","translation":"我想要一杯咖啡。","note":"je voudrais 是礼貌地表达想要。","topic":"needs","order":2,"audioKey":"sentence-needs-je-voudrais-cafe"},
+    {"id":"sentence-needs-je-peux-avoir-aide","text":"Je peux avoir de l'aide ?","translation":"我可以得到帮助吗？","note":"de l'aide 表示一些帮助。","topic":"needs","order":3,"audioKey":"sentence-needs-je-peux-avoir-aide"},
+    {"id":"sentence-needs-ou-sont-toilettes","text":"Où sont les toilettes ?","translation":"洗手间在哪里？","note":"toilettes 通常用复数；où 表示哪里。","topic":"needs","order":4,"audioKey":"sentence-needs-ou-sont-toilettes"},
+    {"id":"sentence-needs-je-ne-comprends-pas","text":"Je ne comprends pas.","translation":"我不明白。","note":"ne ... pas 构成基础否定。","topic":"needs","order":5,"audioKey":"sentence-needs-je-ne-comprends-pas"},
+
+    {"id":"sentence-likes-jaime-la-musique","text":"J'aime la musique.","translation":"我喜欢音乐。","note":"j'aime 是 je aime 的省音形式。","topic":"likes","order":1,"audioKey":"sentence-likes-jaime-la-musique"},
+    {"id":"sentence-likes-je-prefere-le-the","text":"Je préfère le thé.","translation":"我更喜欢茶。","note":"préférer 后面直接接喜欢的事物。","topic":"likes","order":2,"audioKey":"sentence-likes-je-prefere-le-the"},
+    {"id":"sentence-likes-jadore-ce-film","text":"J'adore ce film.","translation":"我非常喜欢这部电影。","note":"ce 表示这个（阳性名词前）。","topic":"likes","order":3,"audioKey":"sentence-likes-jadore-ce-film"},
+    {"id":"sentence-likes-je-mange-une-pomme","text":"Je mange une pomme.","translation":"我吃一个苹果。","note":"une 用于阴性单数名词。","topic":"likes","order":4,"audioKey":"sentence-likes-je-mange-une-pomme"},
+    {"id":"sentence-likes-nous-aimons-le-francais","text":"Nous aimons le français.","translation":"我们喜欢法语。","note":"nous 表示我们；aimons 是 aimer 的 nous 形式。","topic":"likes","order":5,"audioKey":"sentence-likes-nous-aimons-le-francais"}
+  ]
+}

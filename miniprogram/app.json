@@ -1,12 +1,24 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/french-learning/index",
+    "pages/french-dashboard/index",
+    "pages/french-vocabulary/index",
+    "pages/french-memory/index",
+    "pages/french-grammar/index",
+    "pages/french-expressions/index",
+    "pages/french-shadowing/index",
+    "pages/french-reading/index",
+    "pages/french-writing/index",
+    "pages/teacher-workbench/index",
     "pages/students/index",
     "pages/student-detail/index",
     "pages/vocabulary/index",
+    "pages/vocabulary-study/index",
     "pages/vocabulary-challenge/index",
-    "pages/lesson-bookings/index",
     "pages/lesson-detail/index",
+    "pages/homework/index",
+    "pages/recording-practice/index",
     "pages/review-dashboard/index",
     "pages/mistake-detail/index",
     "pages/bind-student/index",
@@ -21,6 +33,15 @@
     "navigationBarBackgroundColor": "#F7F3EA",
     "navigationBarTitleText": "朱老师英语课堂",
     "navigationBarTextStyle": "black"
+  },
+  "usingComponents": {
+    "teacher-preview-banner": "/components/teacher-preview-banner/index",
+    "teacher-tabbar": "/components/teacher-tabbar/index"
+  },
+  "permission": {
+    "scope.record": {
+      "desc": "用于学生提交英语跟读录音，教师可播放检查朗读情况"
+    }
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2",

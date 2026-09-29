@@ -16,7 +16,9 @@
       <view class="hero-meta">{{summary.todayRemainingCount ? '还差 ' + summary.todayRemainingCount + ' 个' : '今天的单词学完了'}}</view>
       <view class="hero-meta" wx:if="{{settings.includeMistakeWords}}">今天也会复习错题里的单词</view>
       <view class="hero-meta" wx:if="{{settings.hideBasicWords && summary.basicHiddenCount}}">已跳过 {{summary.basicHiddenCount}} 个基础词</view>
-      <view class="hero-action" wx:if="{{canReview && summary.todayRemainingCount}}" bindtap="continueLearning">继续今日学习</view>
+      <view class="hero-action" wx:if="{{enabled}}" bindtap="startStudy">
+        {{readOnly ? '① 预览背词流程' : summary.todayRemainingCount ? '① 开始今日背词' : '查看今日学习结果'}}
+      </view>
     </view>
 
     <view class="card feature-disabled-card" wx:if="{{!enabled}}">
@@ -26,6 +28,31 @@
     </view>
 
     <block wx:if="{{enabled || isTeacherManager}}">
+      <view class="card learning-route-card" wx:if="{{enabled}}">
+        <view class="route-head">
+          <view class="section-title">今天怎么学？</view>
+          <view class="route-time">约 5～10 分钟</view>
+        </view>
+        <view class="section-hint route-hint">按顺序完成，孩子不用在页面里自己找入口。</view>
+        <view class="route-step route-step-primary" bindtap="startStudy">
+          <view class="route-number">1</view>
+          <view class="route-copy">
+            <view class="route-title">先背今天的单词</view>
+            <view class="route-note">一次一个：先回忆，再看答案，再告诉系统记得怎么样。</view>
+          </view>
+          <view class="route-action">{{readOnly ? '预览' : summary.todayRemainingCount ? '开始' : '回顾'}} →</view>
+        </view>
+        <view class="route-connector"></view>
+        <view class="route-step" data-scope="smart" bindtap="goChallenge">
+          <view class="route-number route-number-secondary">2</view>
+          <view class="route-copy">
+            <view class="route-title">背完后做单词小测</view>
+            <view class="route-note">用 6 道选择和拼写题检查是不是真的记住了。</view>
+          </view>
+          <view class="route-action">{{readOnly ? '预览' : '开始'}} →</view>
+        </view>
+      </view>
+
       <view class="insight-grid">
         <view class="card insight-card">
           <view class="insight-title">今日完成</view>
@@ -110,50 +137,37 @@
         {{isTeacherManager ? '老师查看模式，不会改动学生进度。' : '老师预览模式，不会改动学生进度。'}}
       </view>
 
-      <view class="card challenge-entry">
-        <view class="challenge-entry-copy">
-          <view class="section-title">6 题单词小测</view>
-          <view class="section-hint">约 2 分钟，先做选择题，再试试拼写。{{readOnly ? '老师预览不会改动学生进度。' : '答错的词会安排再复习。'}}</view>
-          <view class="challenge-weak-count" wx:if="{{summary.weakCount}}">有 {{summary.weakCount}} 个词还没记牢</view>
-        </view>
-        <view class="challenge-actions">
-          <view class="challenge-primary" data-scope="smart" bindtap="goChallenge">{{readOnly ? '预览小测' : '开始小测'}}</view>
-          <view class="challenge-secondary" wx:if="{{summary.weakCount}}" data-scope="weak" bindtap="goChallenge">只练没记牢的词</view>
-        </view>
-      </view>
-
-      <view class="word-tools card">
-        <view class="search-row">
-          <input
-            class="word-search"
-            value="{{searchKeyword}}"
-            placeholder="搜索英文、中文或词性"
-            confirm-type="search"
-            bindinput="onSearchInput"
-          />
-          <view class="clear-search" wx:if="{{searchKeyword}}" bindtap="clearSearch">清空</view>
-        </view>
-        <view class="search-scope-hint">会同时搜索课本词、错题词和已掌握词</view>
-        <view class="filter-row" wx:if="{{searchActive || browsePanelOpen}}">
-          <picker class="filter-picker" mode="selector" range="{{bookFilterOptions}}" range-key="label" value="{{bookFilterIndex}}" bindchange="onBookFilterChange">
-            <view class="filter-value">{{bookFilterOptions[bookFilterIndex].label}}</view>
-          </picker>
-          <picker class="filter-picker" mode="selector" range="{{unitFilterOptions}}" range-key="label" value="{{unitFilterIndex}}" bindchange="onUnitFilterChange">
-            <view class="filter-value">{{unitFilterOptions[unitFilterIndex].label}}</view>
-          </picker>
-        </view>
-        <view class="result-count" wx:if="{{searchActive || browsePanelOpen}}">共 {{filteredWordCount}} 个单词</view>
-      </view>
-
       <view class="library-toggle card" bindtap="toggleBrowsePanel">
         <view>
-          <view class="library-toggle-title">词库与学习记录</view>
-          <view class="library-toggle-hint">按课本、错题或掌握情况查看</view>
+          <view class="library-toggle-title">查词与学习记录</view>
+          <view class="library-toggle-hint">需要查单词或看记录时再打开</view>
         </view>
         <view class="library-toggle-action">{{browsePanelOpen ? '收起' : '查看'}}</view>
       </view>
 
-      <view class="browse-panel" wx:if="{{browsePanelOpen && !searchActive}}">
+      <view class="browse-panel" wx:if="{{browsePanelOpen}}">
+        <view class="word-tools card">
+          <view class="search-row">
+            <input
+              class="word-search"
+              value="{{searchKeyword}}"
+              placeholder="搜索英文、中文或词性"
+              confirm-type="search"
+              bindinput="onSearchInput"
+            />
+            <view class="clear-search" wx:if="{{searchKeyword}}" bindtap="clearSearch">清空</view>
+          </view>
+          <view class="search-scope-hint">会同时搜索课本词、错题词和已掌握词</view>
+          <view class="filter-row">
+            <picker class="filter-picker" mode="selector" range="{{bookFilterOptions}}" range-key="label" value="{{bookFilterIndex}}" bindchange="onBookFilterChange">
+              <view class="filter-value">{{bookFilterOptions[bookFilterIndex].label}}</view>
+            </picker>
+            <picker class="filter-picker" mode="selector" range="{{unitFilterOptions}}" range-key="label" value="{{unitFilterIndex}}" bindchange="onUnitFilterChange">
+              <view class="filter-value">{{unitFilterOptions[unitFilterIndex].label}}</view>
+            </picker>
+          </view>
+          <view class="result-count">共 {{filteredWordCount}} 个单词</view>
+        </view>
         <view class="tab-bar">
           <view
             class="tab-item {{activeTab === item.value ? 'tab-active' : ''}}"
@@ -165,6 +179,7 @@
         </view>
       </view>
 
+      <block wx:if="{{browsePanelOpen || searchActive}}">
       <view class="word-list-heading">
         <view class="section-title">
           {{searchActive ? '搜索结果' : isStudyMode ? '今天的单词' : activeTab === 'mastered' ? '已掌握的单词' : activeTab === 'weak' ? '还没记牢的单词' : activeTab === 'mistake' ? '错题单词' : activeTab === 'textbook' ? '课本单词' : '全部单词'}}
@@ -184,12 +199,8 @@
             <view
               class="pronunciation-btn {{playingWordKey === item.key ? 'pronunciation-playing' : ''}}"
               data-key="{{item.key}}"
-              data-fileid="{{item.pronunciationFileId}}"
-              data-url="{{item.pronunciationUrl}}"
-              data-startms="{{item.pronunciationStartMs}}"
-              data-durationms="{{item.pronunciationDurationMs}}"
               catchtap="playPronunciation"
-            >{{playingWordKey === item.key ? '播放中' : '听发音'}}</view>
+            >{{audioLoadingWordKey === item.key ? '加载读音…' : (playingWordKey === item.key ? '播放中' : '听发音')}}</view>
           </view>
         </view>
 
@@ -256,6 +267,7 @@
         <text wx:if="{{wordPageLoading}}">读取中…</text>
         <text wx:else>加载更多 · 还剩 {{filteredWordCount - visibleWords.length}} 个</text>
       </view>
+      </block>
 
       <view class="pending-section" wx:if="{{isTeacherManager}}">
         <view class="section-title">待确认释义的单词</view>

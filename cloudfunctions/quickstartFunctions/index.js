@@ -2,6 +2,8 @@ const cloud = require("wx-server-sdk");
 const crypto = require("crypto");
 const appConfig = require("./config");
 const vocabulary = require("./vocabulary");
+const frenchLearning = require("./frenchLearning");
+const KET_SPEAKING_TASKS = require("./data/ket-speaking-tasks.json");
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV,
@@ -12,30 +14,34 @@ const COLLECTIONS = [
   "students",
   "teachers",
   "lessons",
-  "lessonBookings",
   "papers",
   "mistakes",
   "vocabularyProgress",
   "vocabularyDailyStats",
+  "frenchLearningProgress",
+  "lessonSubmissions",
   "systemLocks",
 ];
 const VOCABULARY_DAY_MS = 24 * 60 * 60 * 1000;
+const DEFAULT_STUDENT_BIND_LIMIT = 5;
 const SHARED_STUDENT_LIMIT = 5;
-const SHARED_STUDENT_ACCESS_CODES = ["RUIRUI-EN-4829", "XUANNAN-EN-7316"];
-const UNLIMITED_STUDENT_ACCESS_CODES = ["JASON-PRC-0001"];
+const SHARED_STUDENT_ACCESS_CODES = Array.isArray(appConfig.sharedStudentAccessCodes)
+  ? appConfig.sharedStudentAccessCodes
+  : [];
+const UNLIMITED_STUDENT_ACCESS_CODES = Array.isArray(appConfig.unlimitedStudentAccessCodes)
+  ? appConfig.unlimitedStudentAccessCodes
+  : [];
 const UNCATEGORIZED_LABEL = "未分类";
 const CONTENT_RISK_MESSAGE = "内容可能不符合规范，请修改后再提交";
 const CONTENT_CHECK_UNAVAILABLE_MESSAGE = "暂时无法检查内容，请稍后再试";
 const TEXT_CHECK_CHUNK_SIZE = 1800;
 const IMPORT_VOCABULARY_CHECK_GROUP_SIZE = 20;
-const SEED_STUDENTS = [
-  {
-    name: "芮芮",
+const SEED_STUDENTS = (Array.isArray(appConfig.seedStudents) ? appConfig.seedStudents : []).map((student) => {
+  const seed = Object.assign({
     nickname: "",
-    grade: "三年级",
+    grade: "",
     parentName: "",
     status: "在读",
-    accessCode: "RUIRUI-EN-4829",
     studentOpenId: "",
     studentOpenIds: [],
     teacherName: appConfig.teacherName,
@@ -43,46 +49,32 @@ const SEED_STUDENTS = [
     plannedLessonCount: 0,
     completedLessonCount: 0,
     vocabularyEnabled: false,
-    vocabularySettings: vocabulary.getRecommendedVocabularySettings({ name: "芮芮", accessCode: "RUIRUI-EN-4829" }),
-  },
-  {
-    name: "任轩楠",
-    nickname: "",
-    grade: "初二",
-    parentName: "",
-    status: "在读",
-    accessCode: "XUANNAN-EN-7316",
-    studentOpenId: "",
-    studentOpenIds: [],
-    teacherName: appConfig.teacherName,
-    subject: appConfig.defaultSubject,
-    plannedLessonCount: 0,
-    completedLessonCount: 0,
-    vocabularyEnabled: false,
-    vocabularySettings: vocabulary.getRecommendedVocabularySettings({ name: "任轩楠", accessCode: "XUANNAN-EN-7316" }),
-  },
-  {
-    name: "Jason梁",
-    nickname: "Jason",
-    grade: "大二",
-    parentName: "",
-    status: "在读",
-    accessCode: "JASON-PRC-0001",
-    studentOpenId: "",
-    studentOpenIds: [],
-    teacherName: appConfig.teacherName,
-    subject: appConfig.defaultSubject,
-    plannedLessonCount: 0,
-    completedLessonCount: 0,
-    vocabularyEnabled: false,
-    vocabularySettings: vocabulary.getRecommendedVocabularySettings({ name: "Jason梁", accessCode: "JASON-PRC-0001" }),
-  },
-];
+    englishCourseEnabled: true,
+    mistakeLearningEnabled: true,
+    frenchLearningEnabled: false,
+  }, student || {});
+  seed.vocabularySettings = seed.vocabularySettings
+    || vocabulary.getRecommendedVocabularySettings({ name: seed.name, accessCode: seed.accessCode });
+  return seed;
+});
 
 const createError = (code, message) => {
   const err = new Error(message);
   err.code = code;
   return err;
+};
+
+// 多个事务写入流程都需要把“不存在的文档”当作正常的空结果处理。
+// 这是课程、身份、词汇和错题共用的基础辅助函数，不属于已删除的预约模块。
+const getOptionalTransactionDocument = async (documentRef) => {
+  try {
+    const result = await documentRef.get();
+    return result && result.data ? result.data : null;
+  } catch (err) {
+    const message = String((err && (err.errMsg || err.message)) || err || "");
+    if (/does not exist|not[ _-]?found|不存在/i.test(message)) return null;
+    throw err;
+  }
 };
 
 const isRiskySecurityResult = (res) => {
@@ -385,6 +377,10 @@ const getSystemLockId = (type, value) => {
   return `${lockType}_${lockHash}`;
 };
 
+const getTeacherHomeworkActivityStateId = (openid) => (
+  getSystemLockId("teacher_homework_activity", openid)
+);
+
 const uniqueValues = (values) => {
   const result = [];
   (values || []).forEach((value) => {
@@ -398,11 +394,16 @@ const getStudentOpenIds = (student) => {
   return uniqueValues([student.studentOpenId].concat(student.studentOpenIds || []));
 };
 
-const getStudentBindLimit = (accessCode) => {
-  const normalized = normalizeCode(accessCode);
+const getStudentBindLimit = (studentOrAccessCode) => {
+  const student = studentOrAccessCode && typeof studentOrAccessCode === "object"
+    ? studentOrAccessCode
+    : null;
+  const normalized = normalizeCode(student ? student.accessCode : studentOrAccessCode);
   if (UNLIMITED_STUDENT_ACCESS_CODES.indexOf(normalized) >= 0) return Infinity;
+  const configuredLimit = Number(student && student.studentBindLimit);
+  if (Number.isInteger(configuredLimit) && configuredLimit > 0) return configuredLimit;
   if (SHARED_STUDENT_ACCESS_CODES.indexOf(normalized) >= 0) return SHARED_STUDENT_LIMIT;
-  return 1;
+  return DEFAULT_STUDENT_BIND_LIMIT;
 };
 
 const normalizeTags = (tags) => {
@@ -628,8 +629,76 @@ const getBoundStudent = async (openid) => {
   return (studentsRes.data || []).find((student) => getStudentOpenIds(student).indexOf(openid) >= 0) || null;
 };
 
+const getIdentityModeId = (openid) => getSystemLockId("identity_mode", openid);
+
+const getIdentityMode = async (openid) => {
+  try {
+    const res = await db.collection("systemLocks")
+      .where({ _id: getIdentityModeId(openid) })
+      .limit(1)
+      .get();
+    return res.data && res.data.length ? res.data[0] : null;
+  } catch (err) {
+    return null;
+  }
+};
+
+const setIdentityMode = async (openid, mode, studentId) => {
+  await createOneCollection("systemLocks");
+  await db.collection("systemLocks").doc(getIdentityModeId(openid)).set({
+    data: {
+      recordType: "identityMode",
+      mode,
+      studentId: studentId || "",
+      updatedAt: db.serverDate(),
+    },
+  });
+};
+
 const getIdentity = async () => {
   const openid = getOpenIdFromContext();
+  const identityMode = await getIdentityMode(openid);
+  if (identityMode && identityMode.mode === "signedOut") {
+    return {
+      role: "guest",
+      openid,
+      teacherName: appConfig.teacherName,
+      isTeacher: false,
+      student: null,
+    };
+  }
+  if (identityMode && identityMode.mode === "student" && identityMode.studentId) {
+    const studentRes = await db.collection("students")
+      .where({ _id: identityMode.studentId })
+      .limit(1)
+      .get();
+    const student = studentRes.data && studentRes.data.length ? studentRes.data[0] : null;
+    if (student && getStudentOpenIds(student).indexOf(openid) >= 0) {
+      return {
+        role: "student",
+        openid,
+        teacherName: appConfig.teacherName,
+        isTeacher: false,
+        student,
+      };
+    }
+    return {
+      role: "guest",
+      openid,
+      teacherName: appConfig.teacherName,
+      isTeacher: false,
+      student: null,
+    };
+  }
+  if (identityMode && identityMode.mode === "teacher") {
+    return {
+      role: "teacher",
+      openid,
+      teacherName: appConfig.teacherName,
+      isTeacher: true,
+      student: null,
+    };
+  }
   if (isTeacherOpenId(openid) || (await getBoundTeacher(openid))) {
     return {
       role: "teacher",
@@ -647,6 +716,40 @@ const getIdentity = async () => {
     isTeacher: false,
     student,
   };
+};
+
+const isMistakeLearningEnabled = (student) => {
+  if (student && typeof student.mistakeLearningEnabled === "boolean") {
+    return student.mistakeLearningEnabled;
+  }
+  // Legacy French-only profiles used the vocabulary switch as the only visible
+  // English feature switch. Preserve that intent when the new field is absent.
+  return !(student && student.frenchLearningEnabled === true && student.vocabularyEnabled !== true);
+};
+
+const isEnglishCourseEnabled = (student) => {
+  if (student && typeof student.englishCourseEnabled === "boolean") {
+    return student.englishCourseEnabled;
+  }
+  // Before the course switch existed, lesson visibility followed the mistake
+  // switch. Keep that behaviour for legacy students until the teacher changes it.
+  return isMistakeLearningEnabled(student);
+};
+
+const isStudentHiddenFromTeacher = (student) => Boolean(student && student.teacherHidden === true);
+
+const LESSON_TEMPLATE_KEYS = ["general", "feng_beginner", "molly_oral_ket"];
+
+const getStudentLessonTemplateKey = (student) => {
+  if (student && LESSON_TEMPLATE_KEYS.includes(student.lessonTemplateKey)) {
+    return student.lessonTemplateKey;
+  }
+  const name = `${(student && student.name) || ""} ${(student && student.nickname) || ""}`
+    .trim()
+    .toLowerCase();
+  if (name.includes("冯嘉文")) return "feng_beginner";
+  if (name.includes("molly")) return "molly_oral_ket";
+  return "general";
 };
 
 const sanitizeStudent = (student, includePrivate) => {
@@ -667,6 +770,10 @@ const sanitizeStudent = (student, includePrivate) => {
     subject: student.subject || appConfig.defaultSubject,
     createdAt: student.createdAt || "",
     vocabularyEnabled: student.vocabularyEnabled === true,
+    englishCourseEnabled: isEnglishCourseEnabled(student),
+    mistakeLearningEnabled: isMistakeLearningEnabled(student),
+    frenchLearningEnabled: student.frenchLearningEnabled === true,
+    lessonTemplateKey: getStudentLessonTemplateKey(student),
     vocabularySettings,
     vocabularyDailyPlan: vocabulary.normalizeVocabularyDailyPlan(
       student.vocabularyDailyPlan,
@@ -678,6 +785,10 @@ const sanitizeStudent = (student, includePrivate) => {
     result.accessCode = student.accessCode || "";
     result.studentOpenId = student.studentOpenId || "";
     result.studentOpenIds = getStudentOpenIds(student);
+    const bindLimit = getStudentBindLimit(student);
+    result.studentBindLimit = Number.isFinite(bindLimit) ? bindLimit : 0;
+    result.boundAccountCount = result.studentOpenIds.length;
+    result.teacherHidden = isStudentHiddenFromTeacher(student);
   }
   return result;
 };
@@ -696,6 +807,28 @@ const ensureStudentAccess = async (studentId) => {
   if (identity.role === "student" && identity.student && identity.student._id === studentId) return identity;
   throw createError("PERMISSION_DENIED", "你只能查看自己绑定的学习数据");
 };
+
+const ensureMistakeLearningAccess = (identity, student, data = {}) => {
+  const isStudentSide = identity.role === "student" || data.mode === "teacherPreview";
+  if (isStudentSide && !isMistakeLearningEnabled(student)) {
+    throw createError("MISTAKE_LEARNING_DISABLED", "英语错题整理功能尚未开启");
+  }
+};
+
+const ensureEnglishCourseAccess = (identity, student, data = {}) => {
+  const isStudentSide = identity.role === "student" || data.mode === "teacherPreview";
+  if (isStudentSide && !isEnglishCourseEnabled(student)) {
+    throw createError("ENGLISH_COURSE_DISABLED", "英语课程与作业功能尚未开启");
+  }
+};
+
+const frenchLearningService = frenchLearning.createFrenchLearningService({
+  db,
+  cloud,
+  getIdentity,
+  createError,
+  isPrimaryTeacherOpenId: isTeacherOpenId,
+});
 
 const getOpenId = async () => {
   const wxContext = cloud.getWXContext();
@@ -793,72 +926,121 @@ const attachVocabularyTodayPulses = (students, dailyStats) => {
   }));
 };
 
-const buildNextLessonBooking = (bookings, students) => {
-  const nowMs = Date.now();
-  const next = (bookings || [])
-    .filter((item) => item && item.status === "已确认" && getBookingStartAtMs(item) > nowMs)
-    .sort((a, b) => getBookingStartAtMs(a) - getBookingStartAtMs(b))[0];
-  if (!next) return null;
-  const safe = sanitizeLessonBookingForClient(next);
-  safe.confirmedDate = safe.confirmedDate || safe.requestedDate || "";
-  safe.confirmedTime = safe.confirmedTime || safe.requestedTime || "";
-  if (!safe.studentName && Array.isArray(students)) {
-    const student = students.find((item) => item._id === safe.studentId);
-    safe.studentName = student ? student.name || "" : "";
-  }
-  return safe;
+const buildStudentHomeData = async (student, identity, options = {}) => {
+  const studentId = student._id;
+  const syncedStudent = await attachSyncedLessonCount(student);
+  const mistakeLearningEnabled = isMistakeLearningEnabled(syncedStudent);
+  const englishCourseEnabled = isEnglishCourseEnabled(syncedStudent);
+  const learningDay = vocabulary.getLearningDay();
+  const [mistakeCount, recentLessonRes, todayStats] = await Promise.all([
+    mistakeLearningEnabled
+      ? db.collection("mistakes").where({ studentId }).count()
+      : Promise.resolve({ total: 0 }),
+    englishCourseEnabled
+      ? db.collection("lessons").where({ studentId }).orderBy("lessonDate", "desc").limit(20).get()
+      : Promise.resolve({ data: [] }),
+    syncedStudent.vocabularyEnabled === true
+      ? loadAllVocabularyDocuments("vocabularyDailyStats", { studentId, learningDay })
+      : Promise.resolve([]),
+  ]);
+  const progress = buildProgress(syncedStudent);
+  const studentLessons = (recentLessonRes.data || []).map(withTeacherConfirmedHomeworkState);
+  const homeworkLessons = studentLessons.filter(hasLessonHomework);
+  const pendingHomeworkLessons = homeworkLessons.filter((lesson) => !isLessonHomeworkCompleted(lesson));
+  return {
+    success: true,
+    role: identity.role,
+    isTeacherPreview: options.isTeacherPreview === true,
+    readOnly: options.isTeacherPreview === true,
+    openid: identity.openid,
+    teacherName: appConfig.teacherName,
+    currentStudent: sanitizeStudent(syncedStudent, false),
+    vocabularyPulse: buildVocabularyTodayPulse(syncedStudent, todayStats[0]),
+    canShowStudentCount: false,
+    stats: {
+      mistakeCount: mistakeCount.total,
+      progress,
+    },
+    recentLessons: studentLessons.slice(0, 3),
+    pendingHomework: pendingHomeworkLessons[0] || null,
+    homeworkSummary: {
+      pendingCount: pendingHomeworkLessons.length,
+      completedCount: homeworkLessons.length - pendingHomeworkLessons.length,
+      totalCount: homeworkLessons.length,
+    },
+  };
 };
 
-const loadUpcomingConfirmedBookings = async (studentId) => {
-  const baseCondition = studentId
-    ? { studentId, status: "已确认" }
-    : { status: "已确认" };
-  let indexedBookings = [];
-  try {
-    const indexedRes = await db.collection("lessonBookings")
-      .where(Object.assign({}, baseCondition, {
-        confirmedStartAtMs: db.command.gt(Date.now()),
-      }))
-      .orderBy("confirmedStartAtMs", "asc")
-      .limit(10)
+const loadAllStudentDocuments = async (collectionName, studentId) => {
+  const documents = [];
+  const pageSize = 100;
+  for (let skip = 0; ; skip += pageSize) {
+    const res = await db
+      .collection(collectionName)
+      .where({ studentId })
+      .skip(skip)
+      .limit(pageSize)
       .get();
-    indexedBookings = indexedRes.data || [];
-  } catch (err) {
-    console.warn("load indexed upcoming lesson bookings failed; using bounded fallback", err);
+    const items = res.data || [];
+    documents.push(...items);
+    if (items.length < pageSize) break;
   }
-  const fallbackRes = await db.collection("lessonBookings")
-    .where(baseCondition)
-    .limit(100)
-    .get();
-  const bookingsById = new Map();
-  indexedBookings.concat(fallbackRes.data || []).forEach((booking) => {
-    if (booking && booking._id) bookingsById.set(booking._id, booking);
-  });
-  return Array.from(bookingsById.values());
+  return documents;
 };
 
-const getHomeData = async () => {
+const getHomeData = async (event = {}) => {
   const identity = await getIdentity();
-  if (identity.role !== "guest") {
-    await Promise.all([
-      createOneCollection("vocabularyDailyStats"),
-      createOneCollection("lessonBookings"),
-    ]);
+  if (identity.role !== "guest") await createOneCollection("vocabularyDailyStats");
+  const data = event.data || {};
+  const isTeacherPreview = data.mode === "teacherPreview";
+  if (isTeacherPreview) {
+    if (identity.role !== "teacher") {
+      throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
+    }
+    const previewStudentId = String(data.previewStudentId || "").trim();
+    if (!previewStudentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+    await ensureStudentAccess(previewStudentId);
+    const studentRes = await db.collection("students").doc(previewStudentId).get();
+    if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+    return await buildStudentHomeData(studentRes.data, identity, { isTeacherPreview: true });
   }
+
   const learningDay = vocabulary.getLearningDay();
   if (identity.role === "teacher") {
-    const [studentCount, mistakeCount, studentsRes, recentLessonRes, todayStats, confirmedBookings] = await Promise.all([
-      db.collection("students").count(),
-      db.collection("mistakes").count(),
+    const [studentsRes, todayStats, homeworkActivityState] = await Promise.all([
       db.collection("students").get(),
-      db.collection("lessons").orderBy("lessonDate", "desc").limit(3).get(),
       loadAllVocabularyDocuments("vocabularyDailyStats", { learningDay }),
-      loadUpcomingConfirmedBookings(),
+      getOptionalTransactionDocument(
+        db.collection("systemLocks").doc(getTeacherHomeworkActivityStateId(identity.openid))
+      ),
     ]);
+    const visibleStudents = (studentsRes.data || []).filter((student) => !isStudentHiddenFromTeacher(student));
     const students = attachVocabularyTodayPulses(
-      await attachSyncedLessonCounts(studentsRes.data || []),
+      await attachSyncedLessonCounts(visibleStudents),
       todayStats
     );
+    const [mistakeCounts, lessonResults, submissionResults] = await Promise.all([
+      Promise.all(students.map((student) => db.collection("mistakes").where({ studentId: student._id }).count())),
+      Promise.all(students.map((student) => (
+        loadAllStudentDocuments("lessons", student._id)
+      ))),
+      Promise.all(students.map((student) => (
+        loadAllStudentDocuments("lessonSubmissions", student._id)
+      ))),
+    ]);
+    const allLessons = lessonResults
+      .flatMap((items) => items || [])
+      .map(withTeacherConfirmedHomeworkState);
+    const mistakeCount = mistakeCounts.reduce((total, item) => total + Number(item && item.total || 0), 0);
+    const recentLessons = allLessons
+      .sort((left, right) => String(right.lessonDate || "").localeCompare(String(left.lessonDate || "")))
+      .slice(0, 3);
+    const homeworkCompletionNotices = buildTeacherHomeworkActivities({
+      lessons: allLessons,
+      submissions: submissionResults.flatMap((items) => items || []),
+      students,
+      viewedThroughAtMs: Number(homeworkActivityState && homeworkActivityState.viewedThroughAtMs || 0),
+    });
     const progressOverview = summarizeProgress(students);
     const studentsProgress = students.map((student) => Object.assign(
       buildStudentProgressItem(student),
@@ -871,41 +1053,18 @@ const getHomeData = async () => {
       teacherName: appConfig.teacherName,
       canShowStudentCount: true,
       stats: {
-        studentCount: studentCount.total,
-        mistakeCount: mistakeCount.total,
+        studentCount: students.length,
+        mistakeCount,
         progressOverview,
       },
       studentsProgress,
-      nextLessonBooking: buildNextLessonBooking(confirmedBookings, students),
-      recentLessons: await attachStudentNames(recentLessonRes.data || [], students),
+      recentLessons: await attachStudentNames(recentLessons, students),
+      homeworkCompletionNotices,
     };
   }
 
   if (identity.role === "student") {
-    const studentId = identity.student._id;
-    const [mistakeCount, recentLessonRes, syncedStudent, todayStats, confirmedBookings] = await Promise.all([
-      db.collection("mistakes").where({ studentId }).count(),
-      db.collection("lessons").where({ studentId }).orderBy("lessonDate", "desc").limit(3).get(),
-      attachSyncedLessonCount(identity.student),
-      loadAllVocabularyDocuments("vocabularyDailyStats", { studentId, learningDay }),
-      loadUpcomingConfirmedBookings(studentId),
-    ]);
-    const progress = buildProgress(syncedStudent);
-    return {
-      success: true,
-      role: "student",
-      openid: identity.openid,
-      teacherName: appConfig.teacherName,
-      currentStudent: sanitizeStudent(syncedStudent, false),
-      vocabularyPulse: buildVocabularyTodayPulse(syncedStudent, todayStats[0]),
-      nextLessonBooking: buildNextLessonBooking(confirmedBookings, [syncedStudent]),
-      canShowStudentCount: false,
-      stats: {
-        mistakeCount: mistakeCount.total,
-        progress,
-      },
-      recentLessons: recentLessonRes.data || [],
-    };
+    return await buildStudentHomeData(identity.student, identity);
   }
 
   return {
@@ -924,8 +1083,101 @@ const getHomeData = async () => {
       },
     },
     recentLessons: [],
-    nextLessonBooking: null,
+    homeworkCompletionNotices: [],
   };
+};
+
+const buildTeacherHomeworkActivities = ({ lessons, submissions, students, viewedThroughAtMs }) => {
+  const lessonById = new Map((lessons || []).map((lesson) => [lesson._id, lesson]));
+  const studentById = new Map((students || []).map((student) => [student._id, student]));
+  const recordingCountByLesson = new Map();
+  const latestByLesson = new Map();
+  const cutoffAtMs = Math.max(
+    Number(viewedThroughAtMs || 0),
+    Date.now() - 30 * VOCABULARY_DAY_MS
+  );
+  const keepLatest = (activity) => {
+    if (!activity || !activity._id || Number(activity.activityAtMs || 0) <= cutoffAtMs) return;
+    const current = latestByLesson.get(activity._id);
+    if (!current || Number(activity.activityAtMs || 0) >= Number(current.activityAtMs || 0)) {
+      latestByLesson.set(activity._id, activity);
+    }
+  };
+
+  (lessons || []).filter(hasLessonHomework).forEach((lesson) => {
+    const completedAtMs = Number(lesson.homeworkCompletedAtMs || 0);
+    if (!isLessonHomeworkCompleted(lesson) || !completedAtMs) return;
+    const student = studentById.get(lesson.studentId);
+    keepLatest({
+      _id: lesson._id,
+      studentId: lesson.studentId,
+      studentName: student && student.name || "学生",
+      title: lesson.title || "英语课",
+      activityType: "completed",
+      activityText: "完成了课后任务",
+      activityAtMs: completedAtMs,
+      recordingCount: 0,
+    });
+  });
+
+  (submissions || []).filter(isUsableLessonRecording).forEach((submission) => {
+    const lesson = lessonById.get(submission.lessonId);
+    if (!lesson || !hasLessonHomework(lesson)) return;
+    recordingCountByLesson.set(
+      lesson._id,
+      Number(recordingCountByLesson.get(lesson._id) || 0) + 1
+    );
+    const activityAtMs = Number(submission.createdAtMs || 0) || getCreatedTime(submission);
+    const student = studentById.get(lesson.studentId);
+    keepLatest({
+      _id: lesson._id,
+      studentId: lesson.studentId,
+      studentName: student && student.name || submission.studentNameSnapshot || "学生",
+      title: lesson.title || submission.lessonTitleSnapshot || "英语课",
+      activityType: "recording",
+      activityText: "提交了录音",
+      activityAtMs,
+      recordingCount: 1,
+    });
+  });
+
+  return Array.from(latestByLesson.values())
+    .map((activity) => Object.assign({}, activity, {
+      recordingCount: activity.activityType === "recording"
+        ? Number(recordingCountByLesson.get(activity._id) || activity.recordingCount || 1)
+        : Number(recordingCountByLesson.get(activity._id) || 0),
+    }))
+    .sort((left, right) => Number(right.activityAtMs || 0) - Number(left.activityAtMs || 0))
+    .slice(0, 5);
+};
+
+const markHomeworkActivitiesViewed = async (event = {}) => {
+  const identity = await getIdentity();
+  if (identity.role !== "teacher") {
+    throw createError("PERMISSION_DENIED", "仅教师端可更新课后任务动态");
+  }
+  const requestedAtMs = Math.min(
+    Date.now(),
+    Math.max(0, Number(event.data && event.data.viewedThroughAtMs || 0))
+  );
+  if (!requestedAtMs) return { success: true, viewedThroughAtMs: 0 };
+  await createOneCollection("systemLocks");
+  const stateId = getTeacherHomeworkActivityStateId(identity.openid);
+  const viewedThroughAtMs = await db.runTransaction(async (transaction) => {
+    const stateRef = transaction.collection("systemLocks").doc(stateId);
+    const current = await getOptionalTransactionDocument(stateRef);
+    const nextAtMs = Math.max(Number(current && current.viewedThroughAtMs || 0), requestedAtMs);
+    await stateRef.set({
+      data: {
+        lockType: "teacherHomeworkActivityRead",
+        teacherOpenId: identity.openid,
+        viewedThroughAtMs: nextAtMs,
+        updatedAt: db.serverDate(),
+      },
+    });
+    return nextAtMs;
+  });
+  return { success: true, viewedThroughAtMs };
 };
 
 const bindStudent = async (event) => {
@@ -944,6 +1196,7 @@ const bindTeacher = async (openid) => {
       },
     });
   }
+  await setIdentityMode(openid, "teacher");
 
   return {
     success: true,
@@ -1003,7 +1256,7 @@ const bindAccessCode = async (event) => {
     }
 
     const studentOpenIds = getStudentOpenIds(currentStudent);
-    const bindLimit = getStudentBindLimit(currentStudent.accessCode);
+    const bindLimit = getStudentBindLimit(currentStudent);
     if (
       studentOpenIds.indexOf(identity.openid) < 0
       && Number.isFinite(bindLimit)
@@ -1013,6 +1266,9 @@ const bindAccessCode = async (event) => {
     }
     const nextStudentOpenIds = uniqueValues(studentOpenIds.concat(identity.openid));
     const nextStudentOpenId = currentStudent.studentOpenId || identity.openid;
+    const identityModeRef = transaction
+      .collection("systemLocks")
+      .doc(getIdentityModeId(identity.openid));
 
     await studentRef.update({
       data: {
@@ -1023,6 +1279,14 @@ const bindAccessCode = async (event) => {
     await openIdLockRef.set({
       data: {
         recordType: "studentOpenIdLock",
+        studentId: currentStudent._id,
+        updatedAt: db.serverDate(),
+      },
+    });
+    await identityModeRef.set({
+      data: {
+        recordType: "identityMode",
+        mode: "student",
         studentId: currentStudent._id,
         updatedAt: db.serverDate(),
       },
@@ -1042,19 +1306,102 @@ const bindAccessCode = async (event) => {
   };
 };
 
-const listStudents = async () => {
+const unbindIdentity = async () => {
+  await createOneCollection("systemLocks");
+  const identity = await getIdentity();
+  const openid = identity.openid || getOpenIdFromContext();
+  if (identity.role === "student" && identity.student) {
+    await db.runTransaction(async (transaction) => {
+      const studentRef = transaction.collection("students").doc(identity.student._id);
+      const currentStudentRes = await studentRef.get();
+      const currentStudent = currentStudentRes && currentStudentRes.data;
+      if (currentStudent) {
+        const nextStudentOpenIds = getStudentOpenIds(currentStudent).filter((item) => item !== openid);
+        const nextStudentOpenId = currentStudent.studentOpenId === openid
+          ? (nextStudentOpenIds[0] || "")
+          : currentStudent.studentOpenId || "";
+        await studentRef.update({
+          data: {
+            studentOpenId: nextStudentOpenId,
+            studentOpenIds: nextStudentOpenIds,
+          },
+        });
+      }
+      await transaction.collection("systemLocks")
+        .doc(getSystemLockId("student_openid", openid))
+        .set({
+          data: {
+            recordType: "studentOpenIdLock",
+            studentId: "",
+            releasedAt: db.serverDate(),
+            updatedAt: db.serverDate(),
+          },
+        });
+      await transaction.collection("systemLocks")
+        .doc(getIdentityModeId(openid))
+        .set({
+          data: {
+            recordType: "identityMode",
+            mode: "signedOut",
+            studentId: "",
+            updatedAt: db.serverDate(),
+          },
+        });
+    });
+  } else {
+    await setIdentityMode(openid, "signedOut");
+  }
+  return {
+    success: true,
+    previousRole: identity.role,
+    message: "已退出当前身份，学习资料和记录均已保留",
+  };
+};
+
+const listStudents = async (event) => {
   await ensureTeacher();
+  const data = event.data || {};
   const res = await db.collection("students").orderBy("createdAt", "desc").get();
   const students = await attachSyncedLessonCounts(res.data || []);
+  const hiddenCount = students.filter(isStudentHiddenFromTeacher).length;
+  const visibleStudents = data.includeHidden === true
+    ? students
+    : students.filter((student) => !isStudentHiddenFromTeacher(student));
   return {
     success: true,
     role: "teacher",
-    data: students.map((student) => sanitizeStudent(student, true)),
+    activeCount: students.length - hiddenCount,
+    hiddenCount,
+    data: visibleStudents.map((student) => sanitizeStudent(student, true)),
+  };
+};
+
+const setStudentVisibility = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  if (typeof data.hidden !== "boolean") {
+    throw createError("INVALID_VISIBILITY", "请选择隐藏或恢复该学生");
+  }
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  await db.collection("students").doc(studentId).update({
+    data: {
+      teacherHidden: data.hidden,
+      teacherHiddenUpdatedAt: db.serverDate(),
+    },
+  });
+  return {
+    success: true,
+    studentId,
+    hidden: data.hidden,
+    message: data.hidden ? "学生已移入教师工作台" : "学生已恢复到学生列表",
   };
 };
 
 const addStudent = async (event) => {
-  await ensureTeacher();
+  const teacherIdentity = await ensureTeacher();
   const data = event.data || {};
   const accessCode = normalizeCode(data.accessCode);
   if (!data.name || !data.grade || !accessCode) {
@@ -1087,12 +1434,18 @@ const addStudent = async (event) => {
     accessCode,
     studentOpenId: initialStudentOpenId,
     studentOpenIds: getStudentOpenIds({ studentOpenId: initialStudentOpenId }),
+    studentBindLimit: DEFAULT_STUDENT_BIND_LIMIT,
+    teacherOpenId: teacherIdentity.openid,
     teacherName: data.teacherName || appConfig.teacherName,
     subject: data.subject || appConfig.defaultSubject,
     plannedLessonCount,
     completedLessonCount,
     recordedLessonCount: 0,
     vocabularyEnabled: false,
+    englishCourseEnabled: true,
+    mistakeLearningEnabled: true,
+    frenchLearningEnabled: false,
+    teacherHidden: false,
     vocabularySettings: vocabulary.getDefaultVocabularySettings(),
     createdAt: db.serverDate(),
   };
@@ -1180,7 +1533,7 @@ const updateStudentProgress = async (event) => {
 };
 
 const seedStudents = async () => {
-  await ensureTeacher();
+  const teacherIdentity = await ensureTeacher();
   await createOneCollection("systemLocks");
   const inserted = [];
   const skipped = [];
@@ -1188,6 +1541,7 @@ const seedStudents = async () => {
     const student = Object.assign({}, SEED_STUDENTS[i], {
       accessCode: normalizeCode(SEED_STUDENTS[i].accessCode),
       recordedLessonCount: 0,
+      teacherOpenId: teacherIdentity.openid,
     });
     const studentId = `seed_${crypto.createHash("sha1").update(student.accessCode).digest("hex")}`;
     const created = await db.runTransaction(async (transaction) => {
@@ -1250,9 +1604,19 @@ const getStudentDetail = async (event) => {
   const studentRes = await db.collection("students").doc(studentId).get();
   if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
   const student = await attachSyncedLessonCount(studentRes.data);
+  const isTeacherPreview = identity.role === "teacher" && data.mode === "teacherPreview";
+  const isFullTeacherView = identity.role === "teacher" && !isTeacherPreview;
+  const canReadCourses = isFullTeacherView
+    ? true
+    : isEnglishCourseEnabled(student);
+  const canReadMistakeLearning = isFullTeacherView
+    ? true
+    : isMistakeLearningEnabled(student);
   const [lessons, analytics, vocabularyOverview] = await Promise.all([
-    loadAllVocabularyDocuments("lessons", { studentId }, "lessonDate", "desc"),
-    buildStudentAnalytics(studentId),
+    canReadCourses
+      ? loadAllVocabularyDocuments("lessons", { studentId }, "lessonDate", "desc")
+      : Promise.resolve([]),
+    canReadMistakeLearning ? buildStudentAnalytics(studentId) : Promise.resolve(null),
     buildStudentVocabularyOverview(student),
   ]);
   return {
@@ -1260,10 +1624,92 @@ const getStudentDetail = async (event) => {
     role: identity.role,
     student: sanitizeStudent(student, identity.role === "teacher"),
     vocabularyLevels: getVocabularyLibrary().levels.filter((level) => !level.isReferenceOnly),
-    lessons,
-    cycleStatus: buildCycleStatus(student),
+    lessons: lessons.map(withTeacherConfirmedHomeworkState),
+    cycleStatus: canReadMistakeLearning ? buildCycleStatus(student) : null,
     analytics,
     vocabularyOverview,
+  };
+};
+
+const listStudentHomework = async (event) => {
+  const identity = await getIdentity();
+  const data = event.data || {};
+  const isTeacherPreview = data.mode === "teacherPreview";
+  if (isTeacherPreview && identity.role !== "teacher") {
+    throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
+  }
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
+  const requestedStudentId = String(data.previewStudentId || data.studentId || "").trim();
+  const studentId = identity.role === "student" ? identity.student._id : requestedStudentId;
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  await ensureStudentAccess(studentId);
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  ensureEnglishCourseAccess(identity, studentRes.data, data);
+  const lessons = (await loadAllVocabularyDocuments("lessons", { studentId }, "lessonDate", "desc"))
+    .map(withTeacherConfirmedHomeworkState);
+  const homeworkLessons = lessons.filter(hasLessonHomework);
+  const pendingLessons = homeworkLessons.filter((lesson) => !isLessonHomeworkCompleted(lesson));
+  const completedLessons = homeworkLessons.filter(isLessonHomeworkCompleted);
+  return {
+    success: true,
+    role: identity.role,
+    readOnly: isTeacherPreview,
+    student: sanitizeStudent(studentRes.data, false),
+    pendingLessons,
+    completedLessons,
+    summary: {
+      pendingCount: pendingLessons.length,
+      completedCount: completedLessons.length,
+      totalCount: homeworkLessons.length,
+    },
+  };
+};
+
+const listKetSpeakingTasks = async () => {
+  await ensureTeacher();
+  return { success: true, tasks: KET_SPEAKING_TASKS };
+};
+
+const getWeekRangeForLessonDay = (lessonDay) => {
+  const matched = String(lessonDay || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!matched) return null;
+  const base = new Date(Date.UTC(Number(matched[1]), Number(matched[2]) - 1, Number(matched[3])));
+  const weekday = base.getUTCDay() || 7;
+  const start = new Date(base.getTime() - (weekday - 1) * VOCABULARY_DAY_MS);
+  const end = new Date(start.getTime() + 6 * VOCABULARY_DAY_MS);
+  const format = (date) => date.toISOString().slice(0, 10);
+  return { start: format(start), end: format(end) };
+};
+
+const getKetWeeklyStatus = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  const lessonDate = String(data.lessonDate || "").trim();
+  const excludeLessonId = String(data.lessonId || "").trim();
+  const week = getWeekRangeForLessonDay(lessonDate);
+  if (!studentId || !week) {
+    throw createError("INVALID_LESSON", "请先选择学生和正确的课程日期");
+  }
+  await ensureStudentAccess(studentId);
+  const lessons = await loadAllVocabularyDocuments("lessons", { studentId }, "lessonDate", "desc");
+  const existing = lessons.find((lesson) => (
+    lesson._id !== excludeLessonId
+    && lesson.recordingTaskType === "ket_official"
+    && String(lesson.lessonDate || "") >= week.start
+    && String(lesson.lessonDate || "") <= week.end
+  )) || null;
+  return {
+    success: true,
+    alreadyAssigned: Boolean(existing),
+    weekStart: week.start,
+    weekEnd: week.end,
+    existingLesson: existing ? {
+      _id: existing._id,
+      title: existing.title || "英语课",
+      lessonDate: existing.lessonDate || "",
+    } : null,
   };
 };
 
@@ -1369,6 +1815,7 @@ const getStudentAnalytics = async (event) => {
   await ensureStudentAccess(studentId);
   const studentRes = await db.collection("students").doc(studentId).get();
   if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  ensureMistakeLearningAccess(identity, studentRes.data, data);
   const student = await attachSyncedLessonCount(studentRes.data);
   return {
     success: true,
@@ -1389,7 +1836,7 @@ const getVocabularyLibrary = () => {
 
 const validateVocabularySettings = (data, library, student) => {
   if (typeof data.enabled !== "boolean") {
-    throw createError("INVALID_VOCABULARY_SETTINGS", "请先选择是否开启背单词");
+    throw createError("INVALID_VOCABULARY_SETTINGS", "请先选择是否开启英语背单词");
   }
   if (!Array.isArray(data.levelIds)) {
     throw createError("INVALID_VOCABULARY_SETTINGS", "请选择基础词库范围");
@@ -1458,6 +1905,72 @@ const updateVocabularySettings = async (event) => {
     settings: validated.settings,
     student: sanitizeStudent(student, true),
   };
+};
+
+const setMistakeLearningSettings = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  if (typeof data.enabled !== "boolean") {
+    throw createError("INVALID_MISTAKE_SETTINGS", "请选择是否开启英语错题整理功能");
+  }
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  await db.collection("students").doc(studentId).update({
+    data: {
+      mistakeLearningEnabled: data.enabled,
+      mistakeLearningUpdatedAt: db.serverDate(),
+    },
+  });
+  return {
+    success: true,
+    studentId,
+    enabled: data.enabled,
+  };
+};
+
+const setEnglishCourseSettings = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  if (typeof data.enabled !== "boolean") {
+    throw createError("INVALID_COURSE_SETTINGS", "请选择是否开启英语课程与作业功能");
+  }
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  await db.collection("students").doc(studentId).update({
+    data: {
+      englishCourseEnabled: data.enabled,
+      englishCourseUpdatedAt: db.serverDate(),
+    },
+  });
+  return {
+    success: true,
+    studentId,
+    enabled: data.enabled,
+  };
+};
+
+const setStudentLessonTemplate = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  const lessonTemplateKey = String(data.lessonTemplateKey || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  if (!LESSON_TEMPLATE_KEYS.includes(lessonTemplateKey)) {
+    throw createError("INVALID_LESSON_TEMPLATE", "请选择有效的英语课程模板");
+  }
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  await db.collection("students").doc(studentId).update({
+    data: {
+      lessonTemplateKey,
+      lessonTemplateUpdatedAt: db.serverDate(),
+    },
+  });
+  return { success: true, studentId, lessonTemplateKey };
 };
 
 const setVocabularyDailyGoal = async (event) => {
@@ -1770,26 +2283,37 @@ const buildVocabularyBrowsePage = (view, data) => {
 const attachVocabularyAudioUrls = async (response) => {
   const result = response || {};
   const listNames = ["todayWords", "todayReviewedWords", "words"];
+  const audioFileFields = ["pronunciationFileId", "pronunciationDirectFileId"];
   const fileIds = Array.from(new Set(
     listNames.flatMap((name) => (
       Array.isArray(result[name])
-        ? result[name].map((word) => String(word.pronunciationFileId || "")).filter(Boolean)
+        ? result[name].flatMap((word) => (
+          audioFileFields.map((field) => String(word[field] || "")).filter(Boolean)
+        ))
         : []
     ))
   ));
   if (!fileIds.length) return result;
 
   try {
-    const res = await cloud.getTempFileURL({ fileList: fileIds });
-    const urlByFileId = new Map(
-      (res.fileList || [])
-        .filter((item) => item && item.status === 0 && item.fileID && item.tempFileURL)
-        .map((item) => [String(item.fileID), String(item.tempFileURL)])
-    );
+    const urlByFileId = new Map();
+    const batchSize = 50;
+    for (let offset = 0; offset < fileIds.length; offset += batchSize) {
+      const batch = fileIds.slice(offset, offset + batchSize);
+      try {
+        const res = await cloud.getTempFileURL({ fileList: batch });
+        (res.fileList || [])
+          .filter((item) => item && item.status === 0 && item.fileID && item.tempFileURL)
+          .forEach((item) => urlByFileId.set(String(item.fileID), String(item.tempFileURL)));
+      } catch (err) {
+        console.error("get vocabulary audio temp url batch failed", err);
+      }
+    }
     listNames.forEach((name) => {
       if (!Array.isArray(result[name])) return;
       result[name] = result[name].map((word) => Object.assign({}, word, {
         pronunciationUrl: urlByFileId.get(String(word.pronunciationFileId || "")) || "",
+        pronunciationDirectUrl: urlByFileId.get(String(word.pronunciationDirectFileId || "")) || "",
       }));
     });
   } catch (err) {
@@ -1884,7 +2408,7 @@ const getVocabularyData = async (event) => {
 
 const assertVocabularyWordKey = (value) => {
   const wordKey = vocabulary.normalizeWordKey(value);
-  if (!wordKey || !/^[a-z]+(?:['-][a-z]+)*(?: [a-z]+(?:['-][a-z]+)*)*$/.test(wordKey)) {
+  if (!wordKey || !/^[a-z0-9]+(?:['-][a-z0-9]+)*(?: [a-z0-9]+(?:['-][a-z0-9]+)*)*$/.test(wordKey)) {
     throw createError("INVALID_VOCABULARY_WORD", "单词信息无效，请刷新后重试");
   }
   return wordKey;
@@ -2140,6 +2664,11 @@ const listLessons = async (event) => {
   if (identity.role === "student") studentId = identity.student._id;
   if (studentId) await ensureStudentAccess(studentId);
   if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
+  if (studentId && (identity.role === "student" || data.mode === "teacherPreview")) {
+    const studentRes = await db.collection("students").doc(studentId).get();
+    if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+    ensureEnglishCourseAccess(identity, studentRes.data, data);
+  }
 
   const lessonCollection = db.collection("lessons");
   const res = studentId
@@ -2148,7 +2677,7 @@ const listLessons = async (event) => {
   return {
     success: true,
     role: identity.role,
-    data: res.data || [],
+    data: (res.data || []).map(withTeacherConfirmedHomeworkState),
   };
 };
 
@@ -2189,815 +2718,160 @@ const getNextLessonNo = async (event) => {
   };
 };
 
-const BOOKING_STATUSES = ["待确认", "已确认", "已取消"];
-const BOOKING_NOTE_LIMIT = 300;
-const MEETING_NO_LIMIT = 2000;
-const LESSON_BOOKING_PAGE = "pages/lesson-bookings/index";
-const LESSON_BOOKING_LIST_LIMIT = 100;
-const LESSON_BOOKING_HISTORY_LIMIT = 30;
-const NOTIFICATION_SENDING_LEASE_MS = 2 * 60 * 1000;
-const subscriptionTemplateFieldCache = Object.create(null);
+const LESSON_OBSERVATION_STATUSES = ["独立完成", "提示后完成", "暂未掌握"];
+const RECORDING_PREPARATION_OPTIONS = [0, 3, 5, 10, 15];
+const HONG_KONG_OFFSET_MS = 8 * 60 * 60 * 1000;
+const HOMEWORK_REMINDER_HOUR = 18;
 
-const getSubscriptionTemplateFields = async (templateId) => {
-  if (subscriptionTemplateFieldCache[templateId]) {
-    return subscriptionTemplateFieldCache[templateId];
-  }
-  const result = await cloud.openapi.subscribeMessage.getTemplateList({});
-  const templates = Array.isArray(result)
-    ? result
-    : (result && (result.data || result.templateList || result.template_list || result.list)) || [];
-  const template = templates.find((item) => {
-    return String(item.priTmplId || item.pri_tmpl_id || item.templateId || item.template_id || "") === templateId;
-  });
-  if (!template) {
-    console.error("subscription template not found", { templateId });
-    throw createError("SUBSCRIPTION_TEMPLATE_NOT_FOUND", "微信提醒暂时不可用，请联系老师");
-  }
-  const fields = Object.create(null);
-  String(template.content || template.templateContent || template.template_content || "")
-    .split(/\r?\n/)
-    .forEach((line) => {
-      const match = line.match(/^\s*([^:：{]+?)\s*[:：]?\s*\{\{\s*([0-9A-Za-z_]+)\.DATA\s*\}\}/);
-      if (match) fields[match[1].trim()] = match[2];
-    });
-  subscriptionTemplateFieldCache[templateId] = fields;
-  return fields;
+const normalizeLessonText = (value, limit = 1200) => String(value || "").trim().slice(0, limit);
+
+const normalizeRecordingRepeatCount = (value) => {
+  const count = Math.trunc(Number(value));
+  return Number.isFinite(count) ? Math.max(1, Math.min(5, count)) : 2;
 };
 
-const buildSubscriptionData = (fields, values) => {
-  const data = {};
-  Object.keys(values).forEach((label) => {
-    const field = fields[label];
-    if (!field) {
-      console.error("subscription template field not found", { label });
-      throw createError("SUBSCRIPTION_FIELD_NOT_FOUND", "微信提醒暂时不可用，请联系老师");
-    }
-    data[field] = { value: String(values[label] || "") };
-  });
-  return data;
+const normalizeRecordingPreparationSeconds = (value) => {
+  const seconds = Math.trunc(Number(value));
+  return RECORDING_PREPARATION_OPTIONS.includes(seconds) ? seconds : 5;
 };
 
-const formatSubscriptionDateTime = (dateValue, timeValue) => {
-  const parts = String(dateValue || "").split("-").map(Number);
-  if (parts.length !== 3 || parts.some((part) => !Number.isFinite(part))) {
-    return `${dateValue || ""} ${timeValue || ""}`.trim();
-  }
-  return `${parts[0]}年${parts[1]}月${parts[2]}日 ${timeValue || ""}`.trim();
-};
+const normalizeLearningObservations = (items) => (Array.isArray(items) ? items : [])
+  .slice(0, 20)
+  .map((item) => ({
+    content: normalizeLessonText(item && item.content, 200),
+    status: LESSON_OBSERVATION_STATUSES.includes(item && item.status)
+      ? item.status
+      : LESSON_OBSERVATION_STATUSES[0],
+    note: normalizeLessonText(item && item.note, 300),
+  }))
+  .filter((item) => item.content);
 
-const getNotificationErrorText = (err) => {
-  return String((err && (err.errMsg || err.message)) || "发送失败").slice(0, 180);
-};
+const findOfficialKetSpeakingTask = (taskId) => KET_SPEAKING_TASKS.find((item) => item.id === taskId) || null;
 
-const getStoredTimestampMs = (numericValue, dateValue) => {
-  const numeric = Number(numericValue);
-  if (Number.isFinite(numeric) && numeric > 0) return numeric;
-  if (dateValue && typeof dateValue.getTime === "function") return dateValue.getTime();
-  const parsed = Date.parse(dateValue);
-  return Number.isFinite(parsed) ? parsed : 0;
-};
-
-const isStaleNotificationClaim = (booking, prefix) => {
-  const attemptedAtMs = getStoredTimestampMs(
-    booking[`${prefix}NotifyAttemptedAtMs`],
-    booking[`${prefix}NotifyAttemptedAt`]
-  );
-  return attemptedAtMs <= Date.now() - NOTIFICATION_SENDING_LEASE_MS;
-};
-
-const claimBookingConfirmationNotification = async (bookingId, expectedStartAtMs) => {
-  const claimId = crypto.randomBytes(16).toString("hex");
-  return db.runTransaction(async (transaction) => {
-    const result = await transaction.collection("lessonBookings").doc(bookingId).get();
-    const booking = result.data;
-    const canClaim = booking && (
-      booking.confirmationNotifyStatus === "pending"
-      || (booking.confirmationNotifyStatus === "sending" && isStaleNotificationClaim(booking, "confirmation"))
-    );
-    if (
-      !booking
-      || booking.status !== "已确认"
-      || Number(booking.confirmedStartAtMs) !== Number(expectedStartAtMs)
-      || !canClaim
-    ) {
-      return null;
-    }
-    await transaction.collection("lessonBookings").doc(bookingId).update({
-      data: {
-        confirmationNotifyStatus: "sending",
-        confirmationNotifyClaimId: claimId,
-        confirmationNotifyAttemptedAt: db.serverDate(),
-        confirmationNotifyAttemptedAtMs: Date.now(),
-        confirmationNotifyAttemptCount: Number(booking.confirmationNotifyAttemptCount || 0) + 1,
-        updatedAt: db.serverDate(),
-      },
-    });
-    return Object.assign({}, booking, {
-      _id: bookingId,
-      confirmationNotifyClaimId: claimId,
-    });
-  });
-};
-
-const updateClaimedConfirmationNotification = async (bookingId, claimedBooking, data) => {
-  return db.runTransaction(async (transaction) => {
-    const result = await transaction.collection("lessonBookings").doc(bookingId).get();
-    const booking = result.data;
-    if (
-      !booking
-      || booking.confirmationNotifyStatus !== "sending"
-      || !claimedBooking
-      || !claimedBooking.confirmationNotifyClaimId
-      || booking.confirmationNotifyClaimId !== claimedBooking.confirmationNotifyClaimId
-      || Number(booking.confirmedStartAtMs) !== Number(claimedBooking.confirmedStartAtMs)
-      || getBookingVersion(booking) !== getBookingVersion(claimedBooking)
-    ) {
-      return false;
-    }
-    await transaction.collection("lessonBookings").doc(bookingId).update({ data });
-    return true;
-  });
-};
-
-const sendBookingConfirmedNotification = async ({ booking, studentName, expectedStartAtMs }) => {
-  const confirmationOpenId = booking.confirmationNotifyOpenId || booking.notifyOpenId;
-  if (!booking.confirmationSubscribed || !confirmationOpenId) {
-    return { status: "not_subscribed" };
-  }
-  const templateId = appConfig.subscriptionTemplates.lessonBookingConfirmed;
-  let fields;
-  try {
-    fields = await getSubscriptionTemplateFields(templateId);
-  } catch (err) {
-    console.error("load booking notification template failed", err);
-    return { status: "failed" };
-  }
-  const claimedBooking = await claimBookingConfirmationNotification(booking._id, expectedStartAtMs);
-  if (!claimedBooking) {
-    return { status: "skipped" };
-  }
-
-  try {
-    await cloud.openapi.subscribeMessage.send({
-      touser: claimedBooking.confirmationNotifyOpenId || claimedBooking.notifyOpenId,
-      page: `${LESSON_BOOKING_PAGE}?bookingId=${encodeURIComponent(claimedBooking._id)}`,
-      lang: "zh_CN",
-      templateId,
-      data: buildSubscriptionData(fields, {
-        "预约名称": `${String(studentName || "学生").slice(0, 12)}英语课`,
-        "现时状态": "已确认",
-        "备注": claimedBooking.meetingNo
-          ? "请打开小程序查看会议信息"
-          : "上课时间已确认，会议信息稍后补充",
-        "时间": formatSubscriptionDateTime(claimedBooking.confirmedDate, claimedBooking.confirmedTime),
-      }),
-    });
-  } catch (err) {
-    console.error("send booking confirmed notification failed", err);
-    try {
-      await updateClaimedConfirmationNotification(booking._id, claimedBooking, {
-        confirmationNotifyStatus: "failed",
-        confirmationNotifyClaimId: "",
-        confirmationNotifyError: getNotificationErrorText(err),
-        updatedAt: db.serverDate(),
-      });
-    } catch (updateErr) {
-      console.error("record booking notification failure failed", updateErr);
-    }
-    return { status: "failed" };
-  }
-
-  try {
-    await updateClaimedConfirmationNotification(booking._id, claimedBooking, {
-      confirmationNotifyStatus: "sent",
-      confirmationNotifyClaimId: "",
-      confirmationNotifySentAt: db.serverDate(),
-      confirmationNotifyError: "",
-      confirmationNotifyOutdated: false,
-      updatedAt: db.serverDate(),
-    });
-  } catch (err) {
-    console.error("booking notification sent but status update failed", err);
-  }
-  return { status: "sent" };
-};
-
-const parseBookingDateTime = (dateValue, timeValue) => {
-  const date = String(dateValue || "").trim();
-  const time = String(timeValue || "").trim();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) {
-    throw createError("INVALID_BOOKING_TIME", "请选择正确的上课日期和时间");
-  }
-  const dateParts = date.split("-").map(Number);
-  const timeParts = time.split(":").map(Number);
-  const year = dateParts[0];
-  const month = dateParts[1];
-  const day = dateParts[2];
-  const hour = timeParts[0];
-  const minute = timeParts[1];
-  const dateCheck = new Date(Date.UTC(year, month - 1, day));
-  if (
-    dateCheck.getUTCFullYear() !== year ||
-    dateCheck.getUTCMonth() !== month - 1 ||
-    dateCheck.getUTCDate() !== day ||
-    hour < 0 ||
-    hour > 23 ||
-    minute < 0 ||
-    minute > 59
-  ) {
-    throw createError("INVALID_BOOKING_TIME", "请选择正确的上课日期和时间");
-  }
+const normalizeLessonWorkspacePayload = (data = {}) => {
+  const lessonTemplateKey = LESSON_TEMPLATE_KEYS.includes(data.lessonTemplateKey)
+    ? data.lessonTemplateKey
+    : "general";
+  const recordingTaskEnabled = data.recordingTaskEnabled === true;
+  const requestedTaskType = data.recordingTaskType === "ket_official" ? "ket_official" : "manual";
+  const officialTask = lessonTemplateKey === "molly_oral_ket" && recordingTaskEnabled
+    ? findOfficialKetSpeakingTask(String(data.ketSpeakingTaskId || "").trim())
+    : null;
+  const recordingTaskType = requestedTaskType === "ket_official" && officialTask
+    ? "ket_official"
+    : "manual";
   return {
-    date,
-    time,
-    timestamp: Date.UTC(year, month - 1, day, hour - 8, minute),
+    lessonTemplateKey,
+    reviewContent: normalizeLessonText(data.reviewContent),
+    taughtContent: normalizeLessonText(data.taughtContent),
+    masterySummary: normalizeLessonText(data.masterySummary),
+    oralTopic: normalizeLessonText(data.oralTopic),
+    targetExpression: normalizeLessonText(data.targetExpression),
+    independentOutput: normalizeLessonText(data.independentOutput),
+    correctionNotes: normalizeLessonText(data.correctionNotes),
+    ketSkill: normalizeLessonText(data.ketSkill, 300),
+    nextReview: normalizeLessonText(data.nextReview),
+    homeworkTask: normalizeLessonText(data.homeworkTask),
+    recordingTaskEnabled,
+    recordingTaskType,
+    recordingPrompt: recordingTaskType === "ket_official"
+      ? officialTask.prompt
+      : normalizeLessonText(data.recordingPrompt, 2000),
+    recordingRepeatCount: recordingTaskType === "ket_official"
+      ? 1
+      : normalizeRecordingRepeatCount(data.recordingRepeatCount),
+    recordingPreparationSeconds: recordingTaskType === "ket_official"
+      ? officialTask.preparationSeconds
+      : normalizeRecordingPreparationSeconds(data.recordingPreparationSeconds),
+    recordingSuggestedSeconds: recordingTaskType === "ket_official"
+      ? officialTask.suggestedRecordingSeconds
+      : 0,
+    ketSpeakingTaskId: recordingTaskType === "ket_official" ? officialTask.id : "",
+    ketSpeakingTask: recordingTaskType === "ket_official" ? officialTask : null,
+    learningObservations: normalizeLearningObservations(data.learningObservations),
   };
 };
 
-const getBookingVersion = (booking) => {
-  const version = Number(booking && booking.bookingVersion);
-  return Number.isFinite(version) && version >= 0 ? version : 0;
-};
+const hasLessonHomework = (lesson) => Boolean(
+  lesson && (String(lesson.homeworkTask || "").trim() || lesson.recordingTaskEnabled === true)
+);
 
-const assertExpectedBookingVersion = (booking, expectedVersion) => {
-  if (expectedVersion === undefined || expectedVersion === null || expectedVersion === "") return;
-  if (Number(expectedVersion) !== getBookingVersion(booking)) {
-    throw createError("BOOKING_CHANGED", "预约状态已更新，请刷新后再试");
-  }
-};
+const isLessonHomeworkCompleted = (lesson) => Boolean(
+  lesson
+  && (
+    lesson.homeworkTeacherReviewStatus === "completed"
+    || (
+      lesson.homeworkCompletedFrom === "teacher"
+      && (lesson.homeworkCompleted === true || Number(lesson.homeworkCompletedAtMs) > 0)
+    )
+  )
+);
 
-const isBookingNotificationSending = (booking) => {
-  const confirmationSending = booking.confirmationNotifyStatus === "sending"
-    && !isStaleNotificationClaim(booking, "confirmation");
-  const reminderSending = booking.reminder10mNotifyStatus === "sending"
-    && !isStaleNotificationClaim(booking, "reminder10m");
-  return confirmationSending || reminderSending;
-};
-
-const getBookingStartAtMs = (booking) => {
-  const stored = Number(booking && booking.confirmedStartAtMs);
-  if (Number.isFinite(stored) && stored > 0) return stored;
-  try {
-    return parseBookingDateTime(
-      (booking && (booking.confirmedDate || booking.requestedDate)) || "",
-      (booking && (booking.confirmedTime || booking.requestedTime)) || ""
-    ).timestamp;
-  } catch (err) {
-    return 0;
-  }
-};
-
-const getBookingSlotId = (startAtMs) => `teacher_${Number(startAtMs)}`;
-
-const getBookingRequestLockId = (studentId, dateValue, timeValue) => {
-  const key = `${studentId}|${dateValue}|${timeValue}`;
-  return `request_${crypto.createHash("sha1").update(key).digest("hex")}`;
-};
-
-const getOptionalTransactionDocument = async (documentRef) => {
-  try {
-    const result = await documentRef.get();
-    return result && result.data ? result.data : null;
-  } catch (err) {
-    const message = String((err && (err.errMsg || err.message)) || err || "");
-    if (/does not exist|not[ _-]?found|不存在/i.test(message)) return null;
-    throw err;
-  }
-};
-
-const acquireBookingSlot = async (transaction, bookingId, startAtMs) => {
-  const slotRef = transaction
-    .collection("lessonBookings")
-    .doc(getBookingSlotId(startAtMs));
-  const slot = await getOptionalTransactionDocument(slotRef);
-  if (slot && slot.bookingId && slot.bookingId !== bookingId) {
-    const owner = await getOptionalTransactionDocument(
-      transaction.collection("lessonBookings").doc(slot.bookingId)
-    );
-    if (
-      owner
-      && owner.status === "已确认"
-      && Number(owner.confirmedStartAtMs) === Number(startAtMs)
-    ) {
-      throw createError("BOOKING_TIME_CONFLICT", "这个时间已有其他学生上课，请选择其他时间");
-    }
-  }
-  await slotRef.set({
-    data: {
-      recordType: "bookingTimeSlot",
-      bookingId,
-      confirmedStartAtMs: Number(startAtMs),
-      updatedAt: db.serverDate(),
-    },
+const withTeacherConfirmedHomeworkState = (lesson) => {
+  if (!lesson || !hasLessonHomework(lesson)) return lesson;
+  const teacherConfirmed = isLessonHomeworkCompleted(lesson);
+  return Object.assign({}, lesson, {
+    homeworkCompleted: teacherConfirmed,
+    homeworkCompletedAt: teacherConfirmed ? lesson.homeworkCompletedAt || null : null,
+    homeworkCompletedAtMs: teacherConfirmed ? Number(lesson.homeworkCompletedAtMs || 0) : 0,
+    homeworkCompletedFrom: teacherConfirmed ? "teacher" : "",
   });
 };
 
-const prepareLessonBooking = (booking) => {
-  const status = BOOKING_STATUSES.indexOf(booking.status) >= 0 ? booking.status : "待确认";
-  const startAtMs = getBookingStartAtMs(booking);
-  const isPast = startAtMs > 0 && startAtMs <= Date.now();
-  const bucket = status === "待确认"
-    ? "pending"
-    : status === "已确认" && !isPast
-      ? "upcoming"
-      : "history";
-  return Object.assign({}, booking, {
-    status,
-    confirmedDate: booking.confirmedDate || booking.requestedDate || "",
-    confirmedTime: booking.confirmedTime || booking.requestedTime || "",
-    meetingNo: String(booking.meetingNo || ""),
-    confirmedStartAtMs: startAtMs,
-    bookingVersion: getBookingVersion(booking),
-    isPast,
-    bucket,
-  });
+const getHomeworkTaskSignature = (lesson = {}) => JSON.stringify({
+  homeworkTask: String(lesson.homeworkTask || "").trim(),
+  recordingTaskEnabled: lesson.recordingTaskEnabled === true,
+  recordingPrompt: String(lesson.recordingPrompt || "").trim(),
+  recordingRepeatCount: normalizeRecordingRepeatCount(lesson.recordingRepeatCount),
+  recordingPreparationSeconds: normalizeRecordingPreparationSeconds(lesson.recordingPreparationSeconds),
+  recordingTaskType: lesson.recordingTaskType === "ket_official" ? "ket_official" : "manual",
+  ketSpeakingTaskId: String(lesson.ketSpeakingTaskId || ""),
+});
+
+const buildHomeworkResetFields = (taskVersion) => ({
+  homeworkTaskVersion: Math.max(1, Number(taskVersion) || 1),
+  homeworkCompleted: false,
+  homeworkCompletedAt: null,
+  homeworkCompletedAtMs: 0,
+  homeworkCompletedFrom: "",
+  homeworkTeacherReviewStatus: "unreviewed",
+  homeworkTeacherReviewedAt: null,
+  homeworkTeacherReviewedAtMs: 0,
+  homeworkReminderSubscribed: false,
+  homeworkReminderNotifyOpenId: "",
+  homeworkReminderNotifyStatus: "not_subscribed",
+  homeworkReminderTargetAtMs: 0,
+  homeworkReminderTargetDate: "",
+  homeworkReminderTaskVersion: 0,
+  homeworkReminderNotifyClaimId: "",
+  homeworkReminderNotifyAttemptCount: 0,
+  homeworkReminderNotifyNextAttemptAtMs: 0,
+  homeworkReminderNotifyError: "",
+  homeworkReminderNotifySentAt: null,
+});
+
+const formatHongKongDay = (timestamp) => {
+  const date = new Date(Number(timestamp) + HONG_KONG_OFFSET_MS);
+  const pad = (value) => String(value).padStart(2, "0");
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
 };
 
-const sortLessonBookings = (bookings) => {
-  return (bookings || []).map(prepareLessonBooking).sort((a, b) => {
-    const bucketRank = { pending: 0, upcoming: 1, history: 2 };
-    const rankDiff = bucketRank[a.bucket] - bucketRank[b.bucket];
-    if (rankDiff) return rankDiff;
-    const timeA = getBookingStartAtMs(a);
-    const timeB = getBookingStartAtMs(b);
-    return a.bucket === "history" ? timeB - timeA : timeA - timeB;
-  });
+const parseHongKongDayAtHour = (day, hour) => {
+  const matched = String(day || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!matched) return 0;
+  return Date.UTC(Number(matched[1]), Number(matched[2]) - 1, Number(matched[3]), Number(hour) - 8, 0, 0, 0);
 };
 
-const sanitizeLessonBookingForClient = (booking) => {
-  const safe = Object.assign({}, booking);
-  [
-    "notifyOpenId",
-    "confirmationNotifyOpenId",
-    "reminderNotifyOpenId",
-    "createdByOpenId",
-    "confirmationNotifyError",
-    "confirmationNotifyClaimId",
-    "confirmationNotifyAttemptedAt",
-    "confirmationNotifyAttemptedAtMs",
-    "confirmationNotifyAttemptCount",
-    "reminder10mNotifyError",
-    "reminder10mNotifyClaimId",
-    "reminder10mNotifyAttemptedAt",
-    "reminder10mNotifyAttemptedAtMs",
-    "reminder10mNotifyAttemptCount",
-    "reminder10mNotifyNextAttemptAtMs",
-    "reminder10mNotifyDispatchStartedAtMs",
-  ].forEach((field) => delete safe[field]);
-  return safe;
-};
-
-const loadLessonBookingList = async (collection, studentId) => {
-  const conditionFor = (status) => {
-    return studentId ? { studentId, status } : { status };
-  };
-  const [pendingRes, confirmedRes, cancelledRes] = await Promise.all([
-    collection.where(conditionFor("待确认")).limit(LESSON_BOOKING_LIST_LIMIT).get(),
-    collection.where(conditionFor("已确认")).limit(LESSON_BOOKING_LIST_LIMIT).get(),
-    collection.where(conditionFor("已取消")).limit(LESSON_BOOKING_HISTORY_LIMIT).get(),
-  ]);
-  return []
-    .concat(pendingRes.data || [])
-    .concat(confirmedRes.data || [])
-    .concat(cancelledRes.data || []);
-};
-
-const submitLessonBooking = async (event) => {
-  const identity = await getIdentity();
-  const data = event.data || {};
-  const isTeacherProxy = identity.role === "teacher" && data.mode === "teacherPreview";
-  if (identity.role !== "student" && !isTeacherProxy) {
-    throw createError("PERMISSION_DENIED", "请先绑定学习账号再预约");
-  }
-  await createOneCollection("lessonBookings");
-  const requested = parseBookingDateTime(data.requestedDate, data.requestedTime);
-  if (requested.timestamp < Date.now() - 60 * 1000) {
-    throw createError("INVALID_BOOKING_TIME", "请选择现在之后的上课时间");
-  }
-  const parentNote = String(data.parentNote || "").trim();
-  if (parentNote.length > BOOKING_NOTE_LIMIT) {
-    throw createError("INVALID_BOOKING_NOTE", `备注不能超过 ${BOOKING_NOTE_LIMIT} 个字`);
-  }
-  await assertContentSafe({ texts: [parentNote] });
-
-  const studentId = identity.role === "student"
-    ? identity.student._id
-    : String(data.previewStudentId || "").trim();
-  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
-  let student = identity.student;
-  if (isTeacherProxy) {
-    const studentRes = await db.collection("students").doc(studentId).get();
-    if (!studentRes.data) throw createError("INVALID_STUDENT", "预约学生不存在");
-    student = studentRes.data;
-  }
-  const existingRes = await db.collection("lessonBookings").where({
-    studentId,
-    requestedDate: requested.date,
-    requestedTime: requested.time,
-  }).limit(20).get();
-  const duplicate = (existingRes.data || []).find((item) => {
-    return item.status !== "已取消" && item.requestedDate === requested.date && item.requestedTime === requested.time;
-  });
-  if (duplicate) {
-    throw createError("BOOKING_EXISTS", "这个时间已经预约过了");
-  }
-
-  const confirmationSubscribed = identity.role === "student" && data.confirmationSubscribed === true;
-  const reminderSubscribed = identity.role === "student" && data.reminderSubscribed === true;
-  const notifyOpenId = confirmationSubscribed || reminderSubscribed ? identity.openid : "";
-  const bookingId = `booking_${Date.now()}_${crypto.randomBytes(6).toString("hex")}`;
-  const requestLockId = getBookingRequestLockId(studentId, requested.date, requested.time);
-  const bookingData = {
-    studentId,
-    studentNameSnapshot: String((student && student.name) || ""),
-    requestedDate: requested.date,
-    requestedTime: requested.time,
-    confirmedDate: "",
-    confirmedTime: "",
-    parentNote,
-    meetingNo: "",
-    status: "待确认",
-    createdByOpenId: identity.openid,
-    createdByRole: identity.role,
-    notifyOpenId,
-    confirmationNotifyOpenId: confirmationSubscribed ? identity.openid : "",
-    reminderNotifyOpenId: reminderSubscribed ? identity.openid : "",
-    confirmationSubscribed,
-    reminderSubscribed,
-    confirmationNotifyStatus: confirmationSubscribed ? "pending" : "not_subscribed",
-    reminder10mNotifyStatus: reminderSubscribed ? "waiting_confirmation" : "not_subscribed",
-    confirmedStartAtMs: 0,
-    bookingVersion: 1,
-    createdAt: db.serverDate(),
-    updatedAt: db.serverDate(),
-  };
-  const addRes = await db.runTransaction(async (transaction) => {
-    const lockRef = transaction.collection("lessonBookings").doc(requestLockId);
-    const lock = await getOptionalTransactionDocument(lockRef);
-    if (lock && lock.bookingId) {
-      const lockedBooking = await getOptionalTransactionDocument(
-        transaction.collection("lessonBookings").doc(lock.bookingId)
-      );
-      if (lockedBooking && lockedBooking.status !== "已取消") {
-        throw createError("BOOKING_EXISTS", "这个时间已经预约过了");
-      }
-    }
-    await transaction.collection("lessonBookings").doc(bookingId).set({ data: bookingData });
-    await lockRef.set({
-      data: {
-        recordType: "bookingRequestLock",
-        bookingId,
-        updatedAt: db.serverDate(),
-      },
-    });
-    return { _id: bookingId };
-  });
-  return Object.assign({}, addRes, {
-    success: true,
-    confirmationSubscribed,
-    reminderSubscribed,
-  });
-};
-
-const listLessonBookings = async (event) => {
-  const identity = await getIdentity();
-  if (identity.role === "guest") {
-    throw createError("PERMISSION_DENIED", "请先绑定学习账号");
-  }
-  const data = event.data || {};
-  const isTeacherPreview = data.mode === "teacherPreview";
-  if (isTeacherPreview && identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
-  }
-  const previewStudentId = isTeacherPreview ? String(data.previewStudentId || "").trim() : "";
-  if (isTeacherPreview && !previewStudentId) {
-    throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
-  }
-  await createOneCollection("lessonBookings");
-  const collection = db.collection("lessonBookings");
-  const targetStudentId = identity.role === "student" ? identity.student._id : previewStudentId;
-  const bookingDocuments = await loadLessonBookingList(collection, targetStudentId);
-  const bookings = identity.role === "teacher" && !isTeacherPreview
-    ? await attachStudentNames(bookingDocuments)
-    : bookingDocuments;
-  let student = identity.role === "student" ? identity.student : null;
-  if (isTeacherPreview) {
-    const studentRes = await db.collection("students").doc(previewStudentId).get();
-    if (!studentRes.data) throw createError("INVALID_STUDENT", "预览学生不存在");
-    student = studentRes.data;
-  }
-  const namedBookings = student
-    ? bookings.map((item) => Object.assign({}, item, { studentName: student.name || "" }))
-    : bookings;
+const getNextHomeworkReminderTarget = (lesson, now = Date.now()) => {
+  const today = formatHongKongDay(now);
+  let targetAtMs = parseHongKongDayAtHour(today, HOMEWORK_REMINDER_HOUR);
+  if (targetAtMs <= now) targetAtMs += VOCABULARY_DAY_MS;
+  const lessonDayAtSix = parseHongKongDayAtHour(lesson && lesson.lessonDate, HOMEWORK_REMINDER_HOUR);
+  if (lessonDayAtSix > targetAtMs) targetAtMs = lessonDayAtSix;
   return {
-    success: true,
-    role: identity.role,
-    isTeacherPreview,
-    student: student ? sanitizeStudent(student, false) : null,
-    data: sortLessonBookings(namedBookings).map(sanitizeLessonBookingForClient),
+    targetAtMs,
+    targetDate: formatHongKongDay(targetAtMs),
   };
-};
-
-const updateLessonBooking = async (event) => {
-  await ensureTeacher();
-  const data = event.data || {};
-  if (!data.bookingId) throw createError("INVALID_BOOKING", "预约信息不完整，请返回后重试");
-  const bookingRes = await db.collection("lessonBookings").doc(data.bookingId).get();
-  if (!bookingRes.data) throw createError("BOOKING_NOT_FOUND", "预约不存在或已删除");
-  const confirmed = parseBookingDateTime(
-    data.confirmedDate || bookingRes.data.requestedDate,
-    data.confirmedTime || bookingRes.data.requestedTime
-  );
-  if (confirmed.timestamp <= Date.now()) {
-    throw createError("INVALID_BOOKING_TIME", "请选择现在之后的上课时间");
-  }
-  const meetingNo = String(data.meetingNo || "").trim();
-  if (meetingNo.length > MEETING_NO_LIMIT) {
-    throw createError("INVALID_MEETING_NO", `会议信息不能超过 ${MEETING_NO_LIMIT} 个字`);
-  }
-  await assertContentSafe({ texts: [meetingNo] });
-  // This query catches older confirmed bookings created before slot locks were introduced.
-  const [timestampConflictRes, dateTimeConflictRes] = await Promise.all([
-    db.collection("lessonBookings").where({ confirmedStartAtMs: confirmed.timestamp }).limit(20).get(),
-    db.collection("lessonBookings").where({
-      confirmedDate: confirmed.date,
-      confirmedTime: confirmed.time,
-    }).limit(20).get(),
-  ]);
-  const legacyConflict = []
-    .concat(timestampConflictRes.data || [])
-    .concat(dateTimeConflictRes.data || [])
-    .find((item) => {
-    return item._id !== data.bookingId && item.status === "已确认";
-  });
-  if (legacyConflict) {
-    throw createError("BOOKING_TIME_CONFLICT", "这个时间已有其他学生上课，请选择其他时间");
-  }
-
-  const saved = await db.runTransaction(async (transaction) => {
-    const currentRes = await transaction.collection("lessonBookings").doc(data.bookingId).get();
-    const booking = currentRes.data;
-    if (!booking) throw createError("BOOKING_NOT_FOUND", "预约不存在或已删除");
-    if (booking.status === "已取消") {
-      throw createError("BOOKING_CANCELLED", "预约已被取消，请刷新列表");
-    }
-    assertExpectedBookingVersion(booking, data.bookingVersion);
-    if (booking.status === "已确认" && getBookingStartAtMs(booking) <= Date.now()) {
-      throw createError("BOOKING_STARTED", "课程开始后无法修改预约");
-    }
-    if (isBookingNotificationSending(booking)) {
-      throw createError("BOOKING_NOTIFICATION_SENDING", "正在发送微信提醒，请稍后再试");
-    }
-    if (confirmed.timestamp <= Date.now()) {
-      throw createError("INVALID_BOOKING_TIME", "请选择现在之后的上课时间");
-    }
-
-    await acquireBookingSlot(transaction, data.bookingId, confirmed.timestamp);
-
-    const wasConfirmed = booking.status === "已确认";
-    const previousStartAtMs = getBookingStartAtMs(booking);
-    const scheduleChanged = wasConfirmed && previousStartAtMs !== confirmed.timestamp;
-    const previousReminderStatus = booking.reminder10mNotifyStatus || "not_subscribed";
-    const reminderWasSentBeforeChange = scheduleChanged && previousReminderStatus === "sent";
-    const reminderDeliveryUnknown = previousReminderStatus === "delivery_unknown";
-    const schedulingStatus = previousReminderStatus === "sending"
-      && isStaleNotificationClaim(booking, "reminder10m")
-      ? "failed"
-      : previousReminderStatus;
-    const reminderCanBeScheduled = booking.reminderSubscribed
-      && (booking.reminderNotifyOpenId || booking.notifyOpenId);
-    const nextReminderStatus = reminderWasSentBeforeChange
-      ? "reauthorization_required"
-      : schedulingStatus === "reauthorization_required" || reminderDeliveryUnknown
-        ? "reauthorization_required"
-        : !reminderCanBeScheduled
-          ? "not_subscribed"
-          : !wasConfirmed || schedulingStatus === "expired" || schedulingStatus === "failed"
-            ? "pending"
-            : schedulingStatus;
-    const startsNewReminderCycle = nextReminderStatus === "pending" && (
-      !wasConfirmed || scheduleChanged || previousReminderStatus !== "pending"
-    );
-    const nextVersion = getBookingVersion(booking) + 1;
-    const updateData = {
-      confirmedDate: confirmed.date,
-      confirmedTime: confirmed.time,
-      confirmedStartAtMs: confirmed.timestamp,
-      meetingNo,
-      status: "已确认",
-      reminderSubscribed: reminderWasSentBeforeChange || reminderDeliveryUnknown
-        ? false
-        : booking.reminderSubscribed === true,
-      reminder10mNotifyStatus: nextReminderStatus,
-      confirmationNotifyOutdated: booking.confirmationNotifyOutdated === true
-        || (scheduleChanged && booking.confirmationNotifyStatus === "sent"),
-      bookingVersion: nextVersion,
-      updatedAt: db.serverDate(),
-    };
-    if (startsNewReminderCycle) {
-      updateData.reminder10mNotifyAttemptCount = 0;
-      updateData.reminder10mNotifyNextAttemptAtMs = 0;
-      updateData.reminder10mNotifyClaimId = "";
-      updateData.reminder10mNotifyError = "";
-      updateData.reminder10mNotifyDispatchStartedAtMs = 0;
-      updateData.reminder10mNotifyFailedAt = null;
-      updateData.reminder10mNotifyExpiredAt = null;
-      updateData.reminder10mNotifySentAt = null;
-    }
-    if (!wasConfirmed) updateData.confirmedAt = db.serverDate();
-    if (scheduleChanged) updateData.scheduleChangedAt = db.serverDate();
-    await transaction.collection("lessonBookings").doc(data.bookingId).update({ data: updateData });
-    return {
-      booking: Object.assign({}, booking, updateData, { _id: data.bookingId }),
-      wasConfirmed,
-      scheduleChanged,
-      reminderReauthorizationRequired: nextReminderStatus === "reauthorization_required",
-      bookingVersion: nextVersion,
-    };
-  });
-
-  const booking = saved.booking;
-  const confirmationNeedsRetry = booking.confirmationNotifyStatus === "pending"
-    || (booking.confirmationNotifyStatus === "sending" && isStaleNotificationClaim(booking, "confirmation"));
-  if (saved.wasConfirmed && !confirmationNeedsRetry) {
-    return {
-      success: true,
-      notificationStatus: "unchanged",
-      reminderStatus: booking.reminder10mNotifyStatus,
-      scheduleChanged: saved.scheduleChanged,
-      reminderReauthorizationRequired: saved.reminderReauthorizationRequired,
-      bookingVersion: saved.bookingVersion,
-    };
-  }
-  let studentName = String(booking.studentNameSnapshot || "");
-  if (!studentName) {
-    const studentRes = await db.collection("students").doc(booking.studentId).get();
-    studentName = String((studentRes.data && studentRes.data.name) || "学生");
-  }
-  let notification = { status: "failed" };
-  try {
-    notification = await sendBookingConfirmedNotification({
-      booking,
-      studentName,
-      expectedStartAtMs: confirmed.timestamp,
-    });
-  } catch (err) {
-    console.error("booking saved but notification processing failed", err);
-  }
-  return {
-    success: true,
-    notificationStatus: notification.status,
-    reminderStatus: booking.reminder10mNotifyStatus,
-    scheduleChanged: saved.scheduleChanged,
-    reminderReauthorizationRequired: saved.reminderReauthorizationRequired,
-    bookingVersion: saved.bookingVersion,
-  };
-};
-
-const subscribeLessonBookingNotifications = async (event) => {
-  const identity = await getIdentity();
-  if (identity.role !== "student") {
-    throw createError("PERMISSION_DENIED", "请在学生端开启微信提醒");
-  }
-  const data = event.data || {};
-  const bookingId = String(data.bookingId || "").trim();
-  if (!bookingId) throw createError("INVALID_BOOKING", "预约信息不完整，请返回后重试");
-  const confirmationAccepted = data.confirmationSubscribed === true;
-  const reminderAccepted = data.reminderSubscribed === true;
-  if (!confirmationAccepted && !reminderAccepted) {
-    throw createError("SUBSCRIPTION_NOT_ACCEPTED", "请选择要开启的微信提醒");
-  }
-
-  const saved = await db.runTransaction(async (transaction) => {
-    const bookingRes = await transaction.collection("lessonBookings").doc(bookingId).get();
-    const booking = bookingRes.data;
-    if (!booking) throw createError("BOOKING_NOT_FOUND", "预约不存在或已删除");
-    if (booking.studentId !== identity.student._id) {
-      throw createError("PERMISSION_DENIED", "只能修改自己的预约提醒");
-    }
-    if (booking.status === "已取消") {
-      throw createError("BOOKING_CANCELLED", "已取消的预约不能开启提醒");
-    }
-    if (isBookingNotificationSending(booking)) {
-      throw createError("BOOKING_NOTIFICATION_SENDING", "正在发送微信提醒，请稍后再试");
-    }
-
-    const startAtMs = getBookingStartAtMs(booking);
-    if (reminderAccepted && booking.status === "已确认" && startAtMs <= Date.now()) {
-      throw createError("BOOKING_STARTED", "课程已经开始，不能再开启课前提醒");
-    }
-    // Subscription grants are monotonic. Do not reject a freshly granted one
-    // just because the booking version changed while the WeChat dialog was open.
-    const confirmationApplied = confirmationAccepted && booking.confirmationNotifyStatus !== "sent";
-    const reminderApplied = reminderAccepted && booking.reminder10mNotifyStatus !== "sent";
-    const nextVersion = getBookingVersion(booking) + 1;
-    const updateData = {
-      notifyOpenId: booking.notifyOpenId || identity.openid,
-      confirmationNotifyOpenId: confirmationApplied
-        ? identity.openid
-        : booking.confirmationNotifyOpenId || "",
-      reminderNotifyOpenId: reminderApplied
-        ? identity.openid
-        : booking.reminderNotifyOpenId || "",
-      confirmationSubscribed: booking.confirmationSubscribed === true || confirmationApplied,
-      reminderSubscribed: booking.reminderSubscribed === true || reminderApplied,
-      confirmationNotifyStatus: confirmationApplied
-        ? "pending"
-        : booking.confirmationNotifyStatus || "not_subscribed",
-      reminder10mNotifyStatus: reminderApplied
-        ? booking.status === "已确认" ? "pending" : "waiting_confirmation"
-        : booking.reminder10mNotifyStatus || "not_subscribed",
-      bookingVersion: nextVersion,
-      updatedAt: db.serverDate(),
-    };
-    if (reminderApplied) {
-      updateData.reminder10mNotifyAttemptCount = 0;
-      updateData.reminder10mNotifyNextAttemptAtMs = 0;
-      updateData.reminder10mNotifyClaimId = "";
-      updateData.reminder10mNotifyError = "";
-      updateData.reminder10mNotifyDispatchStartedAtMs = 0;
-      updateData.reminder10mNotifyFailedAt = null;
-      updateData.reminder10mNotifyExpiredAt = null;
-      updateData.reminder10mNotifySentAt = null;
-    }
-    await transaction.collection("lessonBookings").doc(bookingId).update({ data: updateData });
-    return {
-      booking: Object.assign({}, booking, updateData, { _id: bookingId }),
-      confirmationAccepted: confirmationApplied,
-      reminderAccepted: reminderApplied,
-      bookingVersion: nextVersion,
-    };
-  });
-
-  let confirmationStatus = saved.booking.confirmationNotifyStatus;
-  if (
-    saved.confirmationAccepted
-    && saved.booking.status === "已确认"
-    && saved.booking.confirmationNotifyStatus !== "sent"
-  ) {
-    let studentName = String(saved.booking.studentNameSnapshot || "");
-    if (!studentName) {
-      const studentRes = await db.collection("students").doc(saved.booking.studentId).get();
-      studentName = String((studentRes.data && studentRes.data.name) || "学生");
-    }
-    const notification = await sendBookingConfirmedNotification({
-      booking: saved.booking,
-      studentName,
-      expectedStartAtMs: saved.booking.confirmedStartAtMs,
-    });
-    confirmationStatus = notification.status;
-  }
-  return {
-    success: true,
-    confirmationSubscribed: saved.confirmationAccepted,
-    reminderSubscribed: saved.reminderAccepted,
-    confirmationStatus,
-    reminderStatus: saved.booking.reminder10mNotifyStatus,
-    bookingVersion: saved.bookingVersion,
-  };
-};
-
-const cancelLessonBooking = async (event) => {
-  const identity = await getIdentity();
-  const data = event.data || {};
-  const bookingId = data.bookingId;
-  if (!bookingId) throw createError("INVALID_BOOKING", "预约信息不完整，请返回后重试");
-  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
-  return db.runTransaction(async (transaction) => {
-    const bookingRes = await transaction.collection("lessonBookings").doc(bookingId).get();
-    const booking = bookingRes.data;
-    if (!booking) throw createError("BOOKING_NOT_FOUND", "预约不存在或已删除");
-    if (identity.role === "student" && booking.studentId !== identity.student._id) {
-      throw createError("PERMISSION_DENIED", "只能取消自己的预约");
-    }
-    assertExpectedBookingVersion(booking, data.bookingVersion);
-    if (booking.status === "已取消") {
-      return { success: true, bookingVersion: getBookingVersion(booking) };
-    }
-    if (isBookingNotificationSending(booking)) {
-      throw createError("BOOKING_NOTIFICATION_SENDING", "正在发送微信提醒，请稍后再试");
-    }
-    if (
-      identity.role === "student"
-      && booking.status === "已确认"
-      && getBookingStartAtMs(booking) <= Date.now()
-    ) {
-      throw createError("BOOKING_STARTED", "课程开始后无法取消预约");
-    }
-    const nextVersion = getBookingVersion(booking) + 1;
-    await transaction.collection("lessonBookings").doc(bookingId).update({
-      data: {
-        status: "已取消",
-        confirmationNotifyStatus: booking.confirmationNotifyStatus === "sent" ? "sent" : "cancelled",
-        reminder10mNotifyStatus: booking.reminder10mNotifyStatus === "sent" ? "sent" : "cancelled",
-        bookingVersion: nextVersion,
-        cancelledBy: identity.role,
-        cancelledAt: db.serverDate(),
-        updatedAt: db.serverDate(),
-      },
-    });
-    return { success: true, bookingVersion: nextVersion };
-  });
 };
 
 const normalizeLessonRequestPayload = (data = {}) => ({
@@ -3007,6 +2881,7 @@ const normalizeLessonRequestPayload = (data = {}) => ({
   lessonDate: String(data.lessonDate || "").trim(),
   lessonNo: String(data.lessonNo || "").trim(),
   summary: String(data.summary || "").trim(),
+  ...normalizeLessonWorkspacePayload(data),
   paperFileIds: Array.isArray(data.paperFileIds)
     ? data.paperFileIds.map((fileId) => String(fileId || "").trim()).filter(Boolean)
     : [],
@@ -3025,7 +2900,24 @@ const addLesson = async (event) => {
     throw createError("INVALID_LESSON", "请填写学生、课程标题和日期");
   }
   await assertContentSafe({
-    texts: [lessonPayload.title, lessonPayload.subject, lessonPayload.lessonNo, lessonPayload.summary],
+    texts: [
+      lessonPayload.title,
+      lessonPayload.subject,
+      lessonPayload.lessonNo,
+      lessonPayload.summary,
+      lessonPayload.reviewContent,
+      lessonPayload.taughtContent,
+      lessonPayload.masterySummary,
+      lessonPayload.oralTopic,
+      lessonPayload.targetExpression,
+      lessonPayload.independentOutput,
+      lessonPayload.correctionNotes,
+      lessonPayload.ketSkill,
+      lessonPayload.nextReview,
+      lessonPayload.homeworkTask,
+      lessonPayload.recordingPrompt,
+      ...lessonPayload.learningObservations.map((item) => [item.content, item.note]),
+    ],
   });
   await ensureStudentLessonCountSnapshot(lessonPayload.studentId);
   const requestId = String(data.requestId || "").trim().slice(0, 100);
@@ -3035,6 +2927,7 @@ const addLesson = async (event) => {
   const requestFingerprint = getLessonRequestFingerprint(lessonPayload);
   const lessonData = {
     ...lessonPayload,
+    ...buildHomeworkResetFields(1),
     requestFingerprint,
     createdAt: db.serverDate(),
   };
@@ -3070,6 +2963,52 @@ const addLesson = async (event) => {
     created: saved.created,
     completedLessonCount,
   };
+};
+
+const updateLessonWorkspace = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const lessonId = String(data.lessonId || "").trim();
+  if (!lessonId) throw createError("INVALID_LESSON", "课程信息不完整，请返回后重试");
+  const workspace = normalizeLessonWorkspacePayload(data);
+  await assertContentSafe({
+    texts: [
+      workspace.reviewContent,
+      workspace.taughtContent,
+      workspace.masterySummary,
+      workspace.oralTopic,
+      workspace.targetExpression,
+      workspace.independentOutput,
+      workspace.correctionNotes,
+      workspace.ketSkill,
+      workspace.nextReview,
+      workspace.homeworkTask,
+      workspace.recordingPrompt,
+      ...workspace.learningObservations.map((item) => [item.content, item.note]),
+    ],
+  });
+  const saved = await db.runTransaction(async (transaction) => {
+    const lessonRef = transaction.collection("lessons").doc(lessonId);
+    const lesson = await getOptionalTransactionDocument(lessonRef);
+    if (!lesson || lesson.deleting === true) {
+      throw createError("LESSON_NOT_FOUND", "课程不存在或已删除");
+    }
+    const taskChanged = getHomeworkTaskSignature(lesson) !== getHomeworkTaskSignature(workspace);
+    const updateData = {
+      ...workspace,
+      summary: workspace.masterySummary
+        || workspace.independentOutput
+        || workspace.taughtContent
+        || workspace.oralTopic,
+      workspaceUpdatedAt: db.serverDate(),
+    };
+    if (taskChanged) {
+      Object.assign(updateData, buildHomeworkResetFields(Number(lesson.homeworkTaskVersion || 0) + 1));
+    }
+    await lessonRef.update({ data: updateData });
+    return { taskChanged, homeworkTaskVersion: updateData.homeworkTaskVersion || lesson.homeworkTaskVersion || 1 };
+  });
+  return { success: true, lessonId, workspace, ...saved };
 };
 
 const loadAllLessonDocuments = async (collectionName, lessonId) => {
@@ -3168,14 +3107,17 @@ const deleteLesson = async (event) => {
       deletedLessonId: lessonId,
       deletedPaperCount: 0,
       deletedMistakeCount: 0,
+      deletedSubmissionCount: 0,
     };
   }
   const lesson = deleteState.lesson;
   await ensureStudentLessonCountSnapshot(lesson.studentId);
+  await createOneCollection("lessonSubmissions");
 
-  const [papers, lessonMistakes] = await Promise.all([
+  const [papers, lessonMistakes, lessonSubmissions] = await Promise.all([
     loadAllLessonDocuments("papers", lessonId),
     loadAllLessonDocuments("mistakes", lessonId),
+    loadAllLessonDocuments("lessonSubmissions", lessonId),
   ]);
   const mistakes = lessonMistakes;
   const mismatchedMistakeCount = mistakes.filter((mistake) => mistake.studentId !== lesson.studentId).length;
@@ -3196,11 +3138,15 @@ const deleteLesson = async (event) => {
   const mistakeImageFileIDs = mistakes
     .map((mistake) => mistake.questionImageFileId)
     .filter((fileID) => fileID);
+  const submissionFileIDs = lessonSubmissions
+    .map((submission) => submission.fileID)
+    .filter((fileID) => fileID);
 
   await removeDocumentsById("mistakes", mistakes);
   await removeDocumentsById("papers", papers);
+  await removeDocumentsById("lessonSubmissions", lessonSubmissions);
   await db.collection("lessons").doc(lessonId).remove();
-  await deleteUnsafeFiles(paperFileIDs);
+  await deleteUnsafeFiles(paperFileIDs.concat(submissionFileIDs));
   await deleteUnreferencedMistakeFiles(mistakeImageFileIDs);
   await db.collection("systemLocks").doc(deleteLockId).update({
     data: {
@@ -3221,8 +3167,60 @@ const deleteLesson = async (event) => {
     deletedLessonId: lessonId,
     deletedPaperCount: papers.length,
     deletedMistakeCount: mistakes.length,
+    deletedSubmissionCount: lessonSubmissions.length,
     completedLessonCount,
   };
+};
+
+const attachLessonSubmissionAudioUrls = async (submissions) => {
+  const items = Array.isArray(submissions) ? submissions : [];
+  const fileIDs = uniqueValues(items.map((item) => item.fileID).filter(Boolean));
+  if (!fileIDs.length) return items;
+  const urlByFileID = new Map();
+  for (let offset = 0; offset < fileIDs.length; offset += 50) {
+    try {
+      const res = await cloud.getTempFileURL({ fileList: fileIDs.slice(offset, offset + 50) });
+      (res.fileList || [])
+        .filter((item) => item && item.status === 0 && item.fileID && item.tempFileURL)
+        .forEach((item) => urlByFileID.set(String(item.fileID), String(item.tempFileURL)));
+    } catch (err) {
+      console.error("get lesson recording temp urls failed", err);
+    }
+  }
+  return items.map((item) => Object.assign({}, item, {
+    audioUrl: urlByFileID.get(String(item.fileID || "")) || "",
+    audioAvailable: urlByFileID.has(String(item.fileID || "")),
+  }));
+};
+
+const attachLessonPaperUrls = async (papers) => {
+  const items = Array.isArray(papers) ? papers : [];
+  const fileIDs = uniqueValues(items.reduce((result, item) => (
+    result.concat(item && item.fileID || [], item && item.previewFileID || [])
+  ), []).filter(Boolean));
+  if (!fileIDs.length) return items;
+  const urlByFileID = new Map();
+  for (let offset = 0; offset < fileIDs.length; offset += 50) {
+    try {
+      const res = await cloud.getTempFileURL({ fileList: fileIDs.slice(offset, offset + 50) });
+      (res.fileList || [])
+        .filter((item) => item && item.status === 0 && item.fileID && item.tempFileURL)
+        .forEach((item) => urlByFileID.set(String(item.fileID), String(item.tempFileURL)));
+    } catch (err) {
+      console.error("get lesson paper temp urls failed", err);
+    }
+  }
+  return items.map((item) => {
+    const fileUrl = urlByFileID.get(String(item.fileID || "")) || "";
+    const previewUrl = urlByFileID.get(String(item.previewFileID || item.fileID || "")) || fileUrl;
+    return Object.assign({}, item, {
+      fileUrl,
+      previewUrl,
+      fileAvailable: Boolean(fileUrl),
+      audioUrl: item.type === "audio" ? fileUrl : "",
+      audioAvailable: item.type === "audio" && Boolean(fileUrl),
+    });
+  });
 };
 
 const getLessonDetail = async (event) => {
@@ -3242,28 +3240,69 @@ const getLessonDetail = async (event) => {
     throw createError("PERMISSION_DENIED", "当前课程不属于这位学生，请刷新后重试");
   }
   await ensureStudentAccess(lesson.studentId);
-  const [papers, lessonMistakes] = await Promise.all([
+  await createOneCollection("lessonSubmissions");
+  const studentRes = await db.collection("students").doc(lesson.studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const student = studentRes.data;
+  let canReadMistakes = true;
+  if (identity.role === "student" || data.mode === "teacherPreview") {
+    ensureEnglishCourseAccess(identity, student, data);
+    canReadMistakes = isMistakeLearningEnabled(student);
+  }
+  const [lessonPapers, lessonMistakes, lessonSubmissions] = await Promise.all([
     loadAllLessonDocuments("papers", lessonId),
     loadAllLessonDocuments("mistakes", lessonId),
+    loadAllLessonDocuments("lessonSubmissions", lessonId),
   ]);
-  const mistakes = lessonMistakes.filter((item) => item.studentId === lesson.studentId);
-  if (mistakes.length !== lessonMistakes.length) {
+  const isStudentView = identity.role === "student" || data.mode === "teacherPreview";
+  const papers = lessonPapers.filter((item) => (
+    item.studentId === lesson.studentId
+    && (!isStudentView || item.studentVisible !== false)
+  ));
+  const mistakes = canReadMistakes
+    ? lessonMistakes.filter((item) => item.studentId === lesson.studentId)
+    : [];
+  const submissions = lessonSubmissions.filter((item) => item.studentId === lesson.studentId);
+  const mismatchedMistakeCount = lessonMistakes.filter((item) => item.studentId !== lesson.studentId).length;
+  if (mismatchedMistakeCount) {
     console.warn("发现课程错题归属不一致，读取时已隔离", {
       lessonId,
       studentId: lesson.studentId,
-      ignoredCount: lessonMistakes.length - mistakes.length,
+      ignoredCount: mismatchedMistakeCount,
     });
   }
-  papers.sort((a, b) => getCreatedTime(b) - getCreatedTime(a));
+  papers.sort((a, b) => {
+    if (a.uploadBatchId && a.uploadBatchId === b.uploadBatchId) {
+      return (Number(a.batchIndex) || 0) - (Number(b.batchIndex) || 0);
+    }
+    return (Number(b.uploadedAtMs) || getCreatedTime(b)) - (Number(a.uploadedAtMs) || getCreatedTime(a));
+  });
   mistakes.sort((a, b) => getCreatedTime(b) - getCreatedTime(a));
+  submissions.sort((a, b) => getCreatedTime(b) - getCreatedTime(a));
+  const [papersWithUrls, submissionsWithAudioUrls] = await Promise.all([
+    attachLessonPaperUrls(papers),
+    attachLessonSubmissionAudioUrls(submissions),
+  ]);
   return {
     success: true,
     role: identity.role,
-    lesson,
-    papers,
+    lesson: withTeacherConfirmedHomeworkState(lesson),
+    student: {
+      _id: student._id,
+      name: student.name || "学生",
+    },
+    papers: papersWithUrls,
     mistakes,
+    submissions: submissionsWithAudioUrls,
+    mistakeLearningEnabled: canReadMistakes,
   };
 };
+
+const MATERIAL_PURPOSES = ["student_reference", "listening", "school_exam", "board_photo", "teacher_only"];
+
+const normalizeMaterialPurpose = (value) => (
+  MATERIAL_PURPOSES.includes(value) ? value : "student_reference"
+);
 
 const addPaper = async (event) => {
   await ensureTeacher();
@@ -3281,9 +3320,7 @@ const addPaper = async (event) => {
       imageFileIds: data.type === "image" || data.type === "canva" ? [data.fileID] : [],
     });
   } catch (err) {
-    if (err.code === "CONTENT_RISK") {
-      await deleteUnsafeFiles([data.fileID]);
-    }
+    await deleteUnsafeFiles([data.fileID, data.previewFileID]);
     throw err;
   }
   const paperId = `paper_${Date.now()}_${crypto.randomBytes(8).toString("hex")}`;
@@ -3296,9 +3333,19 @@ const addPaper = async (event) => {
     paperTitle: data.paperTitle || data.title || data.fileName,
     term: data.term || "",
     source: data.source || "practice",
+    purpose: normalizeMaterialPurpose(data.purpose),
+    studentVisible: typeof data.studentVisible === "boolean"
+      ? data.studentVisible
+      : data.purpose !== "teacher_only",
     fileID: data.fileID,
+    previewFileID: data.previewFileID || data.fileID,
     fileName: data.fileName,
+    originalFileName: data.originalFileName || data.fileName,
+    fileExtension: normalizeLessonText(data.fileExtension, 12).toLowerCase(),
     fileSize: data.fileSize || 0,
+    uploadBatchId: normalizeLessonText(data.uploadBatchId, 80),
+    batchIndex: Math.max(0, Number(data.batchIndex) || 0),
+    uploadedAtMs: Math.max(0, Number(data.uploadedAtMs) || Date.now()),
     createdAt: db.serverDate(),
   };
   return await db.runTransaction(async (transaction) => {
@@ -3311,6 +3358,481 @@ const addPaper = async (event) => {
     await transaction.collection("papers").doc(paperId).set({ data: paperData });
     return { _id: paperId };
   });
+};
+
+const updatePaper = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const paperId = String(data.paperId || "").trim();
+  if (!paperId) throw createError("INVALID_PAPER", "资料信息不完整，请刷新后重试");
+  const paperRes = await db.collection("papers").doc(paperId).get();
+  if (!paperRes.data) throw createError("PAPER_NOT_FOUND", "资料不存在或已删除");
+  const updates = {};
+  if (Object.prototype.hasOwnProperty.call(data, "paperTitle")) {
+    const paperTitle = normalizeLessonText(data.paperTitle, 200);
+    if (!paperTitle) throw createError("INVALID_PAPER", "资料标题不能为空");
+    updates.paperTitle = paperTitle;
+  }
+  if (Object.prototype.hasOwnProperty.call(data, "purpose")) {
+    updates.purpose = normalizeMaterialPurpose(data.purpose);
+  }
+  if (typeof data.studentVisible === "boolean") {
+    updates.studentVisible = data.studentVisible;
+  }
+  if (!Object.keys(updates).length) {
+    return { success: true, paperId, unchanged: true };
+  }
+  await assertContentSafe({ texts: [updates.paperTitle] });
+  await db.collection("papers").doc(paperId).update({
+    data: {
+      ...updates,
+      updatedAt: db.serverDate(),
+    },
+  });
+  return { success: true, paperId, updates };
+};
+
+const deletePaper = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const paperId = String(data.paperId || "").trim();
+  if (!paperId) throw createError("INVALID_PAPER", "资料信息不完整，请刷新后重试");
+  const paperRes = await db.collection("papers").doc(paperId).get();
+  if (!paperRes.data) return { success: true, paperId, alreadyDeleted: true };
+  const paper = paperRes.data;
+  if (data.lessonId && paper.lessonId !== data.lessonId) {
+    throw createError("INVALID_PAPER", "资料所属课程已变化，请刷新后重试");
+  }
+  await db.collection("papers").doc(paperId).remove();
+  await deleteUnsafeFiles([paper.fileID, paper.previewFileID].concat(paper.fileIds || []).filter(Boolean));
+  return { success: true, paperId };
+};
+
+const replacePaperFile = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const paperId = String(data.paperId || "").trim();
+  const fileID = String(data.fileID || "").trim();
+  const fileName = normalizeLessonText(data.fileName, 200);
+  const type = ["pdf", "document", "image", "audio", "canva"].includes(data.type) ? data.type : "";
+  if (!paperId || !fileID || !fileName || !type) {
+    throw createError("INVALID_PAPER", "新文件信息不完整，请重新选择");
+  }
+  const paperRes = await db.collection("papers").doc(paperId).get();
+  if (!paperRes.data) {
+    await deleteUnsafeFiles([fileID]);
+    throw createError("PAPER_NOT_FOUND", "资料不存在或已删除");
+  }
+  const paper = paperRes.data;
+  if (data.expectedOldFileID && paper.fileID !== data.expectedOldFileID) {
+    await deleteUnsafeFiles([fileID]);
+    throw createError("PAPER_CHANGED", "资料已被更新，请刷新后重试");
+  }
+  try {
+    await assertContentSafe({
+      texts: [fileName],
+      imageFileIds: type === "image" || type === "canva" ? [fileID] : [],
+    });
+    await db.collection("papers").doc(paperId).update({
+      data: {
+        fileID,
+        previewFileID: fileID,
+        fileName,
+        originalFileName: fileName,
+        fileExtension: normalizeLessonText(data.fileExtension, 12).toLowerCase(),
+        fileSize: Math.max(0, Number(data.fileSize) || 0),
+        type,
+        updatedAt: db.serverDate(),
+      },
+    });
+  } catch (err) {
+    await deleteUnsafeFiles([fileID]);
+    throw err;
+  }
+  if (paper.fileID && paper.fileID !== fileID) await deleteUnsafeFiles([paper.fileID, paper.previewFileID]);
+  return { success: true, paperId, fileID, type };
+};
+
+const deleteLessonPapers = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const lessonId = String(data.lessonId || "").trim();
+  if (!lessonId) throw createError("INVALID_LESSON", "课程信息不完整，请刷新后重试");
+  const lessonRes = await db.collection("lessons").doc(lessonId).get();
+  if (!lessonRes.data) throw createError("LESSON_NOT_FOUND", "课程不存在或已删除");
+  const papers = (await loadAllLessonDocuments("papers", lessonId))
+    .filter((paper) => paper.studentId === lessonRes.data.studentId);
+  const fileIDs = papers.reduce((result, paper) => result.concat(
+    paper.fileID || [],
+    paper.previewFileID || [],
+    paper.fileIds || []
+  ), []);
+  await removeDocumentsById("papers", papers);
+  await deleteUnsafeFiles(fileIDs.filter(Boolean));
+  return { success: true, lessonId, deletedPaperCount: papers.length };
+};
+
+const normalizeCloudPathSegment = (value, fallback, limit = 32) => {
+  const segment = String(value || "")
+    .trim()
+    .replace(/[\\/:*?"<>|\s]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, limit);
+  return segment || fallback;
+};
+
+const shortRecordId = (value) => normalizeCloudPathSegment(String(value || "").replace(/^lesson_|^submission_/, ""), "record", 10);
+
+const formatRecordingPathTime = (value) => {
+  const date = new Date(value || Date.now());
+  if (Number.isNaN(date.getTime())) return "未标时间";
+  const chinaTime = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+  const pad = (part) => String(part).padStart(2, "0");
+  return [
+    chinaTime.getUTCFullYear(),
+    pad(chinaTime.getUTCMonth() + 1),
+    pad(chinaTime.getUTCDate()),
+    pad(chinaTime.getUTCHours()),
+    pad(chinaTime.getUTCMinutes()),
+    pad(chinaTime.getUTCSeconds()),
+  ].join("-");
+};
+
+const buildReadableRecordingCloudPath = ({ student, lesson, submission, attemptNo }) => {
+  const studentFolder = `${normalizeCloudPathSegment(student && student.name, "学生", 20)}-${shortRecordId(student && student._id)}`;
+  const lessonDate = normalizeCloudPathSegment(lesson && lesson.lessonDate, "未标日期", 16);
+  const lessonNo = normalizeCloudPathSegment(lesson && lesson.lessonNo, "未编号", 10);
+  const lessonTitle = normalizeCloudPathSegment(lesson && lesson.title, "英语课", 28);
+  const lessonFolder = `${lessonDate}-第${lessonNo}节-${lessonTitle}-${shortRecordId(lesson && lesson._id)}`;
+  const durationSeconds = Math.max(0, Math.round((Number(submission && submission.duration) || 0) / 1000));
+  const recordedAt = formatRecordingPathTime(getCreatedTime(submission) || Date.now());
+  return `lesson-submissions/${studentFolder}/${lessonFolder}/第${attemptNo}次-${recordedAt}-${durationSeconds}秒-reading.mp3`;
+};
+
+const buildHomeworkCompletedFields = (source) => {
+  const completionSource = source || "student";
+  const teacherConfirmed = completionSource === "teacher";
+  return {
+    homeworkCompleted: true,
+    homeworkCompletedAt: db.serverDate(),
+    homeworkCompletedAtMs: Date.now(),
+    homeworkCompletedFrom: completionSource,
+    homeworkTeacherReviewStatus: teacherConfirmed ? "completed" : "unreviewed",
+    homeworkTeacherReviewedAt: teacherConfirmed ? db.serverDate() : null,
+    homeworkTeacherReviewedAtMs: teacherConfirmed ? Date.now() : 0,
+    homeworkReminderSubscribed: false,
+    homeworkReminderNotifyStatus: "cancelled_completed",
+    homeworkReminderNotifyClaimId: "",
+    homeworkReminderNotifyNextAttemptAtMs: 0,
+    homeworkReminderNotifyError: "",
+    updatedAt: db.serverDate(),
+  };
+};
+
+const isUsableLessonRecording = (submission) => Boolean(
+  submission && submission.kind === "audio" && submission.status !== "需要重录"
+);
+
+const resetCompletedHomeworkWhenNoUsableRecording = async (lessonId, invalidatedAtMs) => {
+  const submissions = await loadAllLessonDocuments("lessonSubmissions", lessonId);
+  const usableSubmissionIds = submissions
+    .filter(isUsableLessonRecording)
+    .map((item) => item._id)
+    .filter(Boolean);
+  return db.runTransaction(async (transaction) => {
+    const lessonRef = transaction.collection("lessons").doc(lessonId);
+    const lesson = await getOptionalTransactionDocument(lessonRef);
+    if (!lesson || lesson.deleting === true || lesson.recordingTaskEnabled !== true) return false;
+    if (!isLessonHomeworkCompleted(lesson)) return false;
+    if (Number(lesson.homeworkCompletedAtMs || 0) > Number(invalidatedAtMs || 0)) return false;
+    for (let i = 0; i < usableSubmissionIds.length; i += 1) {
+      const current = await getOptionalTransactionDocument(
+        transaction.collection("lessonSubmissions").doc(usableSubmissionIds[i])
+      );
+      if (current && current.lessonId === lessonId && isUsableLessonRecording(current)) return false;
+    }
+    await lessonRef.update({
+      data: buildHomeworkResetFields(lesson.homeworkTaskVersion || 1),
+    });
+    return true;
+  });
+};
+
+const submitLessonRecording = async (event) => {
+  const identity = await getIdentity();
+  if (identity.role !== "student" || !identity.student) {
+    throw createError("PERMISSION_DENIED", "请在学生端提交跟读录音");
+  }
+  const data = event.data || {};
+  const lessonId = String(data.lessonId || "").trim();
+  const fileID = String(data.fileID || "").trim();
+  const duration = Math.max(0, Math.min(300000, Number(data.duration) || 0));
+  if (!lessonId || !fileID) throw createError("INVALID_RECORDING", "录音信息不完整，请重新录制");
+  const lessonRes = await db.collection("lessons").doc(lessonId).get();
+  const lesson = lessonRes.data;
+  if (!lesson || lesson.studentId !== identity.student._id) {
+    throw createError("INVALID_RECORDING", "这份录音不属于当前学生或课程");
+  }
+  ensureEnglishCourseAccess(identity, identity.student);
+  if (lesson.recordingTaskEnabled !== true) {
+    throw createError("RECORDING_NOT_ASSIGNED", "老师尚未为这节课布置录音任务");
+  }
+  await createOneCollection("lessonSubmissions");
+  const submissionId = `submission_${Date.now()}_${crypto.randomBytes(8).toString("hex")}`;
+  const cloudPath = normalizeLessonText(data.cloudPath, 500);
+  await db.runTransaction(async (transaction) => {
+    const lessonRef = transaction.collection("lessons").doc(lessonId);
+    const currentLesson = await getOptionalTransactionDocument(lessonRef);
+    if (
+      !currentLesson
+      || currentLesson.deleting === true
+      || currentLesson.studentId !== identity.student._id
+      || currentLesson.recordingTaskEnabled !== true
+    ) throw createError("RECORDING_NOT_ASSIGNED", "录音任务已经变化，请刷新后重新录制");
+    const submission = {
+      studentId: identity.student._id,
+      lessonId,
+      kind: "audio",
+      fileID,
+      fileName: normalizeLessonText(data.fileName || "student-recording.mp3", 200),
+      fileSize: Math.max(0, Number(data.fileSize) || 0),
+      duration,
+      cloudPath: cloudPath.startsWith("lesson-submissions/") ? cloudPath : "",
+      organizedVersion: cloudPath.startsWith("lesson-submissions/") ? 2 : 1,
+      studentNameSnapshot: normalizeLessonText(identity.student.name || "学生", 100),
+      lessonTitleSnapshot: normalizeLessonText(currentLesson.title || "英语课", 200),
+      lessonDateSnapshot: normalizeLessonText(currentLesson.lessonDate, 30),
+      lessonNoSnapshot: normalizeLessonText(currentLesson.lessonNo, 30),
+      attemptNo: Math.max(1, Math.min(99, Math.trunc(Number(data.attemptNo)) || 1)),
+      status: "待检查",
+      teacherFeedback: "",
+      createdAt: db.serverDate(),
+      createdAtMs: Date.now(),
+    };
+    await transaction.collection("lessonSubmissions").doc(submissionId).set({ data: submission });
+  });
+  return { success: true, _id: submissionId, homeworkAutoCompleted: false };
+};
+
+const organizeLessonRecordingFiles = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const lessonId = String(data.lessonId || "").trim();
+  if (!lessonId) throw createError("INVALID_LESSON", "课程信息不完整，请返回后重试");
+  await createOneCollection("lessonSubmissions");
+  const lessonRes = await db.collection("lessons").doc(lessonId).get();
+  const lesson = lessonRes.data;
+  if (!lesson) throw createError("LESSON_NOT_FOUND", "课程不存在或已删除");
+  const studentRes = await db.collection("students").doc(lesson.studentId).get();
+  const student = studentRes.data;
+  if (!student) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const submissions = await loadAllLessonDocuments("lessonSubmissions", lessonId);
+  submissions.sort((a, b) => getCreatedTime(a) - getCreatedTime(b));
+  let organizedCount = 0;
+  const failures = [];
+  for (let index = 0; index < submissions.length; index += 1) {
+    const submission = submissions[index];
+    if (!submission.fileID || submission.organizedVersion === 2) continue;
+    const attemptNo = index + 1;
+    const cloudPath = buildReadableRecordingCloudPath({ student, lesson, submission, attemptNo });
+    let newFileID = "";
+    try {
+      const download = await cloud.downloadFile({ fileID: submission.fileID });
+      if (!download.fileContent) throw new Error("云端录音内容为空");
+      const upload = await cloud.uploadFile({ cloudPath, fileContent: download.fileContent });
+      newFileID = upload.fileID;
+      await db.collection("lessonSubmissions").doc(submission._id).update({
+        data: {
+          fileID: newFileID,
+          cloudPath,
+          organizedVersion: 2,
+          studentNameSnapshot: normalizeLessonText(student.name || "学生", 100),
+          lessonTitleSnapshot: normalizeLessonText(lesson.title || "英语课", 200),
+          lessonDateSnapshot: normalizeLessonText(lesson.lessonDate, 30),
+          lessonNoSnapshot: normalizeLessonText(lesson.lessonNo, 30),
+          attemptNo,
+          organizedAt: db.serverDate(),
+        },
+      });
+      if (newFileID !== submission.fileID) await deleteUnsafeFiles([submission.fileID]);
+      organizedCount += 1;
+    } catch (err) {
+      console.error("organize lesson recording failed", submission._id, err);
+      if (newFileID) await deleteUnsafeFiles([newFileID]);
+      failures.push(submission._id);
+    }
+  }
+  return {
+    success: failures.length === 0,
+    organizedCount,
+    skippedCount: submissions.length - organizedCount - failures.length,
+    failedCount: failures.length,
+    message: failures.length ? `已整理 ${organizedCount} 条，${failures.length} 条失败` : `已整理 ${organizedCount} 条旧录音`,
+  };
+};
+
+const reviewLessonRecording = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const submissionId = String(data.submissionId || "").trim();
+  const status = data.status === "需要重录" ? "需要重录" : "朗读正确";
+  const teacherFeedback = normalizeLessonText(data.teacherFeedback, 500);
+  if (!submissionId) throw createError("INVALID_RECORDING", "录音信息不完整，请刷新后重试");
+  await assertContentSafe({ texts: [teacherFeedback] });
+  const reviewStartedAtMs = Date.now();
+  const submission = await db.runTransaction(async (transaction) => {
+    const submissionRef = transaction.collection("lessonSubmissions").doc(submissionId);
+    const current = await getOptionalTransactionDocument(submissionRef);
+    if (!current) throw createError("RECORDING_NOT_FOUND", "录音不存在或已删除");
+    await submissionRef.update({
+      data: {
+        status,
+        teacherFeedback,
+        reviewedAt: db.serverDate(),
+      },
+    });
+    return current;
+  });
+  if (status === "需要重录") {
+    await resetCompletedHomeworkWhenNoUsableRecording(submission.lessonId, reviewStartedAtMs);
+  }
+  return { success: true, submissionId, status, teacherFeedback };
+};
+
+const deleteLessonRecording = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const submissionId = String(data.submissionId || "").trim();
+  const lessonId = String(data.lessonId || "").trim();
+  if (!submissionId || !lessonId) {
+    throw createError("INVALID_RECORDING", "录音信息不完整，请刷新后重试");
+  }
+  const deletionStartedAtMs = Date.now();
+  const deleted = await db.runTransaction(async (transaction) => {
+    const submissionRef = transaction.collection("lessonSubmissions").doc(submissionId);
+    const [submission, lesson] = await Promise.all([
+      getOptionalTransactionDocument(submissionRef),
+      getOptionalTransactionDocument(transaction.collection("lessons").doc(lessonId)),
+    ]);
+    if (!submission) return null;
+    if (!lesson || lesson.deleting === true || submission.lessonId !== lessonId || submission.studentId !== lesson.studentId) {
+      throw createError("INVALID_RECORDING", "录音所属课程已经变化，请刷新后重试");
+    }
+    await submissionRef.remove();
+    return submission;
+  });
+  if (!deleted) return { success: true, submissionId, alreadyDeleted: true };
+  await deleteUnsafeFiles([deleted.fileID]);
+  const homeworkReset = await resetCompletedHomeworkWhenNoUsableRecording(lessonId, deletionStartedAtMs);
+  return { success: true, submissionId, homeworkReset };
+};
+
+const reviewLessonHomeworkCompletion = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const lessonId = String(data.lessonId || "").trim();
+  const status = data.status === "completed"
+    ? "completed"
+    : data.status === "incomplete" ? "incomplete" : "";
+  if (!lessonId || !status) {
+    throw createError("INVALID_HOMEWORK_REVIEW", "课后任务批改信息不完整，请刷新后重试");
+  }
+  const reviewedAtMs = Date.now();
+  const result = await db.runTransaction(async (transaction) => {
+    const lessonRef = transaction.collection("lessons").doc(lessonId);
+    const lesson = await getOptionalTransactionDocument(lessonRef);
+    if (!lesson || lesson.deleting === true) {
+      throw createError("LESSON_NOT_FOUND", "课程不存在或已删除");
+    }
+    if (!hasLessonHomework(lesson)) {
+      throw createError("HOMEWORK_NOT_ASSIGNED", "这节课没有需要批改的课后任务");
+    }
+    if (status === "completed") {
+      await lessonRef.update({
+        data: Object.assign(buildHomeworkCompletedFields("teacher"), {
+          homeworkCompletedAtMs: reviewedAtMs,
+          homeworkTeacherReviewedAtMs: reviewedAtMs,
+        }),
+      });
+      return { status, homeworkCompleted: true, reviewedAtMs };
+    }
+
+    const updateData = {
+      homeworkCompleted: false,
+      homeworkCompletedAt: null,
+      homeworkCompletedAtMs: 0,
+      homeworkCompletedFrom: "teacher",
+      homeworkTeacherReviewStatus: "incomplete",
+      homeworkTeacherReviewedAt: db.serverDate(),
+      homeworkTeacherReviewedAtMs: reviewedAtMs,
+      updatedAt: db.serverDate(),
+    };
+    if (lesson.homeworkReminderNotifyStatus === "cancelled_completed") {
+      Object.assign(updateData, {
+        homeworkReminderSubscribed: false,
+        homeworkReminderNotifyOpenId: "",
+        homeworkReminderNotifyStatus: "not_subscribed",
+        homeworkReminderTargetAtMs: 0,
+        homeworkReminderTargetDate: "",
+        homeworkReminderTaskVersion: 0,
+        homeworkReminderNotifyClaimId: "",
+        homeworkReminderNotifyAttemptCount: 0,
+        homeworkReminderNotifyNextAttemptAtMs: 0,
+        homeworkReminderNotifyError: "",
+        homeworkReminderNotifySentAt: null,
+      });
+    }
+    await lessonRef.update({ data: updateData });
+    return { status, homeworkCompleted: false, reviewedAtMs };
+  });
+  return { success: true, lessonId, ...result };
+};
+
+const subscribeHomeworkReminder = async (event) => {
+  const identity = await getIdentity();
+  if (identity.role !== "student" || !identity.student) {
+    throw createError("PERMISSION_DENIED", "请在学生端开启课后任务提醒");
+  }
+  const data = event.data || {};
+  const lessonId = String(data.lessonId || "").trim();
+  if (!lessonId || data.subscribed !== true) {
+    throw createError("SUBSCRIPTION_NOT_ACCEPTED", "请先允许微信课后任务提醒");
+  }
+  ensureEnglishCourseAccess(identity, identity.student);
+  const saved = await db.runTransaction(async (transaction) => {
+    const lessonRef = transaction.collection("lessons").doc(lessonId);
+    const lesson = await getOptionalTransactionDocument(lessonRef);
+    if (!lesson || lesson.studentId !== identity.student._id || lesson.deleting === true) {
+      throw createError("INVALID_LESSON", "这份课后任务不属于当前学生或已删除");
+    }
+    if (!hasLessonHomework(lesson)) {
+      throw createError("HOMEWORK_NOT_ASSIGNED", "老师尚未为这节课布置课后任务");
+    }
+    if (isLessonHomeworkCompleted(lesson)) {
+      throw createError("HOMEWORK_COMPLETED", "课后任务已经完成，不需要再开启提醒");
+    }
+    const target = getNextHomeworkReminderTarget(lesson);
+    const homeworkTaskVersion = Math.max(1, Number(lesson.homeworkTaskVersion) || 1);
+    await lessonRef.update({
+      data: {
+        homeworkReminderSubscribed: true,
+        homeworkReminderNotifyOpenId: identity.openid,
+        homeworkReminderNotifyStatus: "pending",
+        homeworkReminderTargetAtMs: target.targetAtMs,
+        homeworkReminderTargetDate: target.targetDate,
+        homeworkReminderTaskVersion: homeworkTaskVersion,
+        homeworkReminderNotifyClaimId: "",
+        homeworkReminderNotifyAttemptCount: 0,
+        homeworkReminderNotifyNextAttemptAtMs: 0,
+        homeworkReminderNotifyError: "",
+        homeworkReminderNotifySentAt: null,
+        updatedAt: db.serverDate(),
+      },
+    });
+    return { ...target, homeworkTaskVersion };
+  });
+  return { success: true, ...saved };
 };
 
 const checkUploadedImage = async (event) => {
@@ -3345,6 +3867,11 @@ const listMistakes = async (event) => {
   }
   if (data.lessonId) query.lessonId = data.lessonId;
   if (query.studentId) await ensureStudentAccess(query.studentId);
+  if (query.studentId && (identity.role === "student" || data.mode === "teacherPreview")) {
+    const studentRes = await db.collection("students").doc(query.studentId).get();
+    if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+    ensureMistakeLearningAccess(identity, studentRes.data, data);
+  }
 
   const mistakeCollection = db.collection("mistakes");
   const res = Object.keys(query).length
@@ -3783,6 +4310,11 @@ const updateMistakeReviewStatus = async (event) => {
   const res = await db.collection("mistakes").doc(mistakeId).get();
   if (!res.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
   await ensureStudentAccess(res.data.studentId);
+  if (identity.role === "student") {
+    const studentRes = await db.collection("students").doc(res.data.studentId).get();
+    if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+    ensureMistakeLearningAccess(identity, studentRes.data, data);
+  }
   const authorizedStudentId = res.data.studentId;
   const reviewCount = await db.runTransaction(async (transaction) => {
     const ref = transaction.collection("mistakes").doc(mistakeId);
@@ -3822,6 +4354,11 @@ const getMistakeDetail = async (event) => {
   const res = await db.collection("mistakes").doc(mistakeId).get();
   if (!res.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
   await ensureStudentAccess(res.data.studentId);
+  if (identity.role === "student") {
+    const studentRes = await db.collection("students").doc(res.data.studentId).get();
+    if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+    ensureMistakeLearningAccess(identity, studentRes.data, event.data || {});
+  }
   const hydratedMistake = Object.assign({}, res.data, {
     reviewStatus: getReviewStatus(res.data),
     status: getReviewStatus(res.data),
@@ -3862,13 +4399,19 @@ exports.main = async (event) => {
       case "createCollection":
         return await initCollections();
       case "getHomeData":
-        return await getHomeData();
+        return await getHomeData(event);
+      case "markHomeworkActivitiesViewed":
+        return await markHomeworkActivitiesViewed(event);
       case "bindStudent":
       case "bindAccessCode":
         return await bindAccessCode(event);
+      case "unbindIdentity":
+        return await unbindIdentity();
       case "listStudents":
       case "selectRecord":
-        return await listStudents();
+        return await listStudents(event);
+      case "setStudentVisibility":
+        return await setStudentVisibility(event);
       case "addStudent":
         return await addStudent(event);
       case "seedStudents":
@@ -3877,6 +4420,12 @@ exports.main = async (event) => {
         return await updateStudentProgress(event);
       case "updateVocabularySettings":
         return await updateVocabularySettings(event);
+      case "setMistakeLearningSettings":
+        return await setMistakeLearningSettings(event);
+      case "setEnglishCourseSettings":
+        return await setEnglishCourseSettings(event);
+      case "setStudentLessonTemplate":
+        return await setStudentLessonTemplate(event);
       case "setVocabularyDailyGoal":
         return await setVocabularyDailyGoal(event);
       case "getVocabularyData":
@@ -3885,32 +4434,82 @@ exports.main = async (event) => {
         return await reviewVocabularyWord(event);
       case "updateVocabularyWord":
         return await updateVocabularyWord(event);
+      case "getFrenchLearningOverview":
+        return await frenchLearningService.getOverview(event);
+      case "getFrenchWords":
+        return await frenchLearningService.getWords(event);
+      case "getFrenchReviewQueue":
+        return await frenchLearningService.getReviewQueue(event);
+      case "reviewFrenchWord":
+        return await frenchLearningService.reviewWord(event);
+      case "getFrenchWordMemory":
+        return await frenchLearningService.getWordMemory(event);
+      case "getFrenchDashboard":
+        return await frenchLearningService.getDashboard(event);
+      case "getFrenchGrammar":
+        return await frenchLearningService.getGrammar(event);
+      case "getFrenchExpressions":
+        return await frenchLearningService.getExpressions(event);
+      case "getFrenchReadings":
+        return await frenchLearningService.getReadings(event);
+      case "getFrenchWritingActivities":
+        return await frenchLearningService.getWritingActivities(event);
+      case "completeFrenchActivity":
+        return await frenchLearningService.completeActivity(event);
+      case "getFrenchSentences":
+        return await frenchLearningService.getSentences(event);
+      case "completeFrenchSentence":
+        return await frenchLearningService.completeSentence(event);
+      case "getFrenchAudioUrl":
+        return await frenchLearningService.getAudioUrl(event);
+      case "setFrenchLearningSettings":
+        return await frenchLearningService.setSettings(event);
+      case "updateFrenchLearningPreferences":
+        return await frenchLearningService.updatePreferences(event);
       case "getStudentDetail":
         return await getStudentDetail(event);
+      case "listStudentHomework":
+        return await listStudentHomework(event);
+      case "listKetSpeakingTasks":
+        return await listKetSpeakingTasks();
+      case "getKetWeeklyStatus":
+        return await getKetWeeklyStatus(event);
       case "getStudentAnalytics":
         return await getStudentAnalytics(event);
       case "listLessons":
         return await listLessons(event);
       case "getNextLessonNo":
         return await getNextLessonNo(event);
-      case "submitLessonBooking":
-        return await submitLessonBooking(event);
-      case "listLessonBookings":
-        return await listLessonBookings(event);
-      case "updateLessonBooking":
-        return await updateLessonBooking(event);
-      case "subscribeLessonBookingNotifications":
-        return await subscribeLessonBookingNotifications(event);
-      case "cancelLessonBooking":
-        return await cancelLessonBooking(event);
       case "addLesson":
         return await addLesson(event);
+      case "updateLessonWorkspace":
+        return await updateLessonWorkspace(event);
       case "deleteLesson":
         return await deleteLesson(event);
       case "getLessonDetail":
         return await getLessonDetail(event);
       case "addPaper":
         return await addPaper(event);
+      case "updatePaper":
+        return await updatePaper(event);
+      case "deletePaper":
+        return await deletePaper(event);
+      case "deleteLessonPapers":
+        return await deleteLessonPapers(event);
+      case "replacePaperFile":
+        return await replacePaperFile(event);
+      case "submitLessonRecording":
+        return await submitLessonRecording(event);
+      case "organizeLessonRecordingFiles":
+        return await organizeLessonRecordingFiles(event);
+      case "reviewLessonRecording":
+        return await reviewLessonRecording(event);
+      case "deleteLessonRecording":
+        return await deleteLessonRecording(event);
+      case "reviewLessonHomeworkCompletion":
+        return await reviewLessonHomeworkCompletion(event);
+      case "subscribeHomeworkReminder":
+        return await subscribeHomeworkReminder(event);
       case "checkUploadedImage":
         return await checkUploadedImage(event);
       case "listMistakes":

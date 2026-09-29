@@ -1,0 +1,637 @@
+{
+  "schemaVersion": 2,
+  "language": "fr-FR",
+  "level": "A1-A2",
+  "cefrAlignment": "Editorially CEFR-aligned; not an official CEFR list or certification material.",
+  "topics": [
+    "food",
+    "identity",
+    "places",
+    "daily-life",
+    "travel",
+    "work-study",
+    "health",
+    "study",
+    "weather",
+    "family",
+    "shopping",
+    "social",
+    "home",
+    "money",
+    "city"
+  ],
+  "items": [
+    {
+      "id": "a1-reading-cafe",
+      "cefrLevel": "A1",
+      "topic": "food",
+      "title": "Au café",
+      "titleCN": "在咖啡馆",
+      "text": "Bonjour. Je voudrais un café et un pain, s'il vous plaît. — Voilà. C'est trois euros. — Merci beaucoup.",
+      "translationCN": "你好。我想要一杯咖啡和一块面包，谢谢。——给您。一共三欧元。——非常感谢。",
+      "comprehension": [
+        {
+          "id": "a1-reading-cafe-q1",
+          "question": "What does the customer order?",
+          "answer": "Bonjour",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a1-reading-cafe-q2",
+          "question": "How much is it?",
+          "answer": "Je voudrais un café et un pain, s'il vous plaît",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a1-reading-cafe",
+      "audioRef": "french-audio/v2/readings/a1-reading-cafe.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-reading-introduction",
+      "cefrLevel": "A1",
+      "topic": "identity",
+      "title": "Une nouvelle amie",
+      "titleCN": "一位新朋友",
+      "text": "Salut ! Je m'appelle Lina. J'habite à Lyon et j'étudie le français. J'aime la musique et les films.",
+      "translationCN": "你好！我叫Lina。我住在里昂，学习法语。我喜欢音乐和电影。",
+      "comprehension": [
+        {
+          "id": "a1-reading-introduction-q1",
+          "question": "What is her name?",
+          "answer": "Salut",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a1-reading-introduction-q2",
+          "question": "Where does she live?",
+          "answer": "Je m'appelle Lina",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a1-reading-introduction",
+      "audioRef": "french-audio/v2/readings/a1-reading-introduction.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-reading-station",
+      "cefrLevel": "A1",
+      "topic": "places",
+      "title": "À la gare",
+      "titleCN": "在车站",
+      "text": "Pardon, où est la gare ? — La gare est là-bas, près du parc. — Merci ! — De rien.",
+      "translationCN": "不好意思，车站在哪里？——车站在那边，靠近公园。——谢谢！——不客气。",
+      "comprehension": [
+        {
+          "id": "a1-reading-station-q1",
+          "question": "Where is the station?",
+          "answer": "Pardon, où est la gare",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a1-reading-station-q2",
+          "question": "What is near the station?",
+          "answer": "— La gare est là-bas, près du parc",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a1-reading-station",
+      "audioRef": "french-audio/v2/readings/a1-reading-station.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-reading-routine",
+      "cefrLevel": "A1",
+      "topic": "daily-life",
+      "title": "Une journée simple",
+      "titleCN": "简单的一天",
+      "text": "Le matin, Paul travaille. À midi, il mange au restaurant. Le soir, il écoute de la musique à la maison.",
+      "translationCN": "早上，Paul工作。中午，他在餐馆吃饭。晚上，他在家听音乐。",
+      "comprehension": [
+        {
+          "id": "a1-reading-routine-q1",
+          "question": "When does Paul work?",
+          "answer": "Le matin, Paul travaille",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a1-reading-routine-q2",
+          "question": "Where does he listen to music?",
+          "answer": "À midi, il mange au restaurant",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a1-reading-routine",
+      "audioRef": "french-audio/v2/readings/a1-reading-routine.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reading-hotel",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "title": "Réserver une chambre",
+      "titleCN": "预订房间",
+      "text": "Bonjour, je voudrais réserver une chambre pour deux nuits, du vendredi au dimanche. — Oui, nous avons une chambre calme près de la gare. — Parfait, merci.",
+      "translationCN": "你好，我想从周五到周日预订一间房，两晚。——可以，我们有一间靠近车站的安静房间。——太好了，谢谢。",
+      "comprehension": [
+        {
+          "id": "a2-reading-hotel-q1",
+          "question": "How many nights?",
+          "answer": "Bonjour, je voudrais réserver une chambre pour deux nuits, du vendredi au dimanche",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a2-reading-hotel-q2",
+          "question": "Where is the room?",
+          "answer": "— Oui, nous avons une chambre calme près de la gare",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a2-reading-hotel",
+      "audioRef": "french-audio/v2/readings/a2-reading-hotel.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reading-delay",
+      "cefrLevel": "A2",
+      "topic": "travel",
+      "title": "Un train en retard",
+      "titleCN": "火车晚点",
+      "text": "Le train pour Marseille a quinze minutes de retard. Marie envoie un message : « J'arrive un peu plus tard. Rendez-vous devant la gare à dix heures quinze. »",
+      "translationCN": "去马赛的火车晚点15分钟。Marie发消息：“我会晚一点到。10点15分在车站前见。”",
+      "comprehension": [
+        {
+          "id": "a2-reading-delay-q1",
+          "question": "Why is Marie late?",
+          "answer": "Le train pour Marseille a quinze minutes de retard",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a2-reading-delay-q2",
+          "question": "Where do they meet?",
+          "answer": "Marie envoie un message : « J'arrive un peu plus tard",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a2-reading-delay",
+      "audioRef": "french-audio/v2/readings/a2-reading-delay.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reading-work",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "title": "Un message de travail",
+      "titleCN": "一条工作消息",
+      "text": "Bonjour Sami, la réunion commence à neuf heures, mais je suis encore dans le métro. Peux-tu préparer le document ? Je t'envoie les informations dans cinq minutes.",
+      "translationCN": "你好Sami，会议九点开始，但我还在地铁上。你能准备文件吗？我五分钟后把信息发给你。",
+      "comprehension": [
+        {
+          "id": "a2-reading-work-q1",
+          "question": "Where is the writer?",
+          "answer": "Bonjour Sami, la réunion commence à neuf heures, mais je suis encore dans le métro",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a2-reading-work-q2",
+          "question": "What will arrive in five minutes?",
+          "answer": "Peux-tu préparer le document",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a2-reading-work",
+      "audioRef": "french-audio/v2/readings/a2-reading-work.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reading-health",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "title": "Après le médecin",
+      "titleCN": "看医生后",
+      "text": "Le médecin conseille à Nora de se reposer et de prendre ce médicament le soir. Elle ne travaille pas demain parce qu'elle est encore fatiguée.",
+      "translationCN": "医生建议Nora休息并在晚上服用这个药。她明天不工作，因为还很累。",
+      "comprehension": [
+        {
+          "id": "a2-reading-health-q1",
+          "question": "What does the doctor advise?",
+          "answer": "Le médecin conseille à Nora de se reposer et de prendre ce médicament le soir",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a2-reading-health-q2",
+          "question": "Why does Nora not work tomorrow?",
+          "answer": "Elle ne travaille pas demain parce qu'elle est encore fatiguée",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a2-reading-health",
+      "audioRef": "french-audio/v2/readings/a2-reading-health.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-reading-class",
+      "cefrLevel": "A1",
+      "topic": "study",
+      "title": "En classe",
+      "titleCN": "在课堂上",
+      "text": "Le professeur dit : « Ouvrez le livre, s’il vous plaît. » Les étudiants lisent une question, puis écrivent une réponse.",
+      "translationCN": "老师说：“请打开书。”学生读一个问题，然后写一个答案。",
+      "comprehension": [
+        {
+          "id": "a1-reading-class-q1",
+          "question": "What do students open?",
+          "answer": "Le professeur dit : « Ouvrez le livre, s’il vous plaît",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a1-reading-class-q2",
+          "question": "What do they write?",
+          "answer": "» Les étudiants lisent une question, puis écrivent une réponse",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a1-reading-class",
+      "audioRef": "french-audio/v2/readings/a1-reading-class.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-reading-weather",
+      "cefrLevel": "A1",
+      "topic": "weather",
+      "title": "Le temps",
+      "titleCN": "天气",
+      "text": "Aujourd’hui, il y a du soleil, mais le vent est froid. Paul prend son manteau avant d’aller au parc.",
+      "translationCN": "今天有阳光，但风很冷。Paul去公园前带上外套。",
+      "comprehension": [
+        {
+          "id": "a1-reading-weather-q1",
+          "question": "What is the weather like?",
+          "answer": "Aujourd’hui, il y a du soleil, mais le vent est froid",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a1-reading-weather-q2",
+          "question": "What does Paul take?",
+          "answer": "Paul prend son manteau avant d’aller au parc",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a1-reading-weather",
+      "audioRef": "french-audio/v2/readings/a1-reading-weather.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-reading-family",
+      "cefrLevel": "A1",
+      "topic": "family",
+      "title": "Le dimanche",
+      "titleCN": "星期日",
+      "text": "Le dimanche, ma grand-mère vient à la maison. Nous mangeons ensemble et nous regardons des photos.",
+      "translationCN": "星期日，我的祖母来家里。我们一起吃饭和看照片。",
+      "comprehension": [
+        {
+          "id": "a1-reading-family-q1",
+          "question": "Who visits?",
+          "answer": "Le dimanche, ma grand-mère vient à la maison",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a1-reading-family-q2",
+          "question": "What do they look at?",
+          "answer": "Nous mangeons ensemble et nous regardons des photos",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a1-reading-family",
+      "audioRef": "french-audio/v2/readings/a1-reading-family.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a1-reading-shopping",
+      "cefrLevel": "A1",
+      "topic": "shopping",
+      "title": "Au magasin",
+      "titleCN": "在商店",
+      "text": "La robe rouge est jolie, mais elle est chère. Emma choisit une robe bleue parce qu’elle est moins chère.",
+      "translationCN": "红裙子漂亮，但很贵。Emma选了一条蓝裙子，因为它更便宜。",
+      "comprehension": [
+        {
+          "id": "a1-reading-shopping-q1",
+          "question": "Which dress is expensive?",
+          "answer": "La robe rouge est jolie, mais elle est chère",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a1-reading-shopping-q2",
+          "question": "Why does Emma choose blue?",
+          "answer": "Emma choisit une robe bleue parce qu’elle est moins chère",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a1-reading-shopping",
+      "audioRef": "french-audio/v2/readings/a1-reading-shopping.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reading-invitation",
+      "cefrLevel": "A2",
+      "topic": "social",
+      "title": "Une invitation",
+      "titleCN": "一份邀请",
+      "text": "Salut Ana, samedi je fais une petite fête pour mon anniversaire. Est-ce que tu peux venir vers dix-neuf heures ? Apporte seulement ta bonne humeur !",
+      "translationCN": "你好Ana，周六我为生日办一个小聚会。你能19点左右来吗？只要带着好心情就行！",
+      "comprehension": [
+        {
+          "id": "a2-reading-invitation-q1",
+          "question": "What is the event?",
+          "answer": "Salut Ana, samedi je fais une petite fête pour mon anniversaire",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a2-reading-invitation-q2",
+          "question": "When should Ana come?",
+          "answer": "Est-ce que tu peux venir vers dix-neuf heures",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a2-reading-invitation",
+      "audioRef": "french-audio/v2/readings/a2-reading-invitation.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reading-apartment",
+      "cefrLevel": "A2",
+      "topic": "home",
+      "title": "Un appartement à louer",
+      "titleCN": "出租公寓",
+      "text": "Appartement lumineux avec un balcon, près du métro. Le loyer est de huit cents euros par mois. La cuisine est équipée, mais la chambre est petite.",
+      "translationCN": "明亮公寓带阳台，靠近地铁。月租800欧元。厨房配套齐全，但卧室较小。",
+      "comprehension": [
+        {
+          "id": "a2-reading-apartment-q1",
+          "question": "How much is the rent?",
+          "answer": "Appartement lumineux avec un balcon, près du métro",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a2-reading-apartment-q2",
+          "question": "What is small?",
+          "answer": "Le loyer est de huit cents euros par mois",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a2-reading-apartment",
+      "audioRef": "french-audio/v2/readings/a2-reading-apartment.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reading-pharmacy",
+      "cefrLevel": "A2",
+      "topic": "health",
+      "title": "À la pharmacie",
+      "titleCN": "在药店",
+      "text": "Bonjour, j’ai un rhume et je tousse beaucoup. — Prenez ce médicament trois fois par jour et reposez-vous. Si la fièvre continue, consultez un médecin.",
+      "translationCN": "你好，我感冒了而且咳得厉害。——每天吃三次这个药并休息。如果持续发烧，请去看医生。",
+      "comprehension": [
+        {
+          "id": "a2-reading-pharmacy-q1",
+          "question": "What symptoms are mentioned?",
+          "answer": "Bonjour, j’ai un rhume et je tousse beaucoup",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a2-reading-pharmacy-q2",
+          "question": "When should the person see a doctor?",
+          "answer": "— Prenez ce médicament trois fois par jour et reposez-vous",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a2-reading-pharmacy",
+      "audioRef": "french-audio/v2/readings/a2-reading-pharmacy.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reading-budget",
+      "cefrLevel": "A2",
+      "topic": "money",
+      "title": "Un budget simple",
+      "titleCN": "简单预算",
+      "text": "Ce mois-ci, Léa veut économiser. Elle compare les prix au supermarché et paie en espèces pour mieux contrôler ses dépenses.",
+      "translationCN": "这个月Léa想省钱。她在超市比较价格并用现金付款，以便更好控制开支。",
+      "comprehension": [
+        {
+          "id": "a2-reading-budget-q1",
+          "question": "What does Léa want to do?",
+          "answer": "Ce mois-ci, Léa veut économiser",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a2-reading-budget-q2",
+          "question": "Why does she pay cash?",
+          "answer": "Elle compare les prix au supermarché et paie en espèces pour mieux contrôler ses dépenses",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a2-reading-budget",
+      "audioRef": "french-audio/v2/readings/a2-reading-budget.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reading-directions",
+      "cefrLevel": "A2",
+      "topic": "city",
+      "title": "Trouver la bibliothèque",
+      "titleCN": "寻找图书馆",
+      "text": "Pour aller à la bibliothèque, continuez tout droit jusqu’au carrefour. Tournez à droite, traversez le pont et la bibliothèque est en face de la mairie.",
+      "translationCN": "去图书馆，请一直走到十字路口。右转，过桥，图书馆就在市政厅对面。",
+      "comprehension": [
+        {
+          "id": "a2-reading-directions-q1",
+          "question": "Where do you turn?",
+          "answer": "Pour aller à la bibliothèque, continuez tout droit jusqu’au carrefour",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a2-reading-directions-q2",
+          "question": "What is opposite the library?",
+          "answer": "Tournez à droite, traversez le pont et la bibliothèque est en face de la mairie",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a2-reading-directions",
+      "audioRef": "french-audio/v2/readings/a2-reading-directions.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    },
+    {
+      "id": "a2-reading-project",
+      "cefrLevel": "A2",
+      "topic": "work-study",
+      "title": "Un petit projet",
+      "titleCN": "一个小项目",
+      "text": "Notre équipe prépare un projet pour vendredi. Sami organise les documents, Nora contacte le client et moi, j’imprime les photos. Ensuite, nous vérifions le budget ensemble.",
+      "translationCN": "我们团队准备周五的项目。Sami整理文件，Nora联系客户，我打印照片。然后我们一起核查预算。",
+      "comprehension": [
+        {
+          "id": "a2-reading-project-q1",
+          "question": "Who contacts the client?",
+          "answer": "Notre équipe prépare un projet pour vendredi",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        },
+        {
+          "id": "a2-reading-project-q2",
+          "question": "What does the team check together?",
+          "answer": "Sami organise les documents, Nora contacte le client et moi, j’imprime les photos",
+          "answerCN": "答案可在原文对应句中找到。",
+          "explanationCN": "回到原文，圈出人物、时间、地点或动作信息。"
+        }
+      ],
+      "audioKey": "a2-reading-project",
+      "audioRef": "french-audio/v2/readings/a2-reading-project.mp3",
+      "source": {
+        "kind": "editorial",
+        "title": "Original CEFR-aligned French learner content",
+        "license": "Original content for this mini-program",
+        "url": null
+      },
+      "provenance": "CEFR-aligned editorial selection; not an official CEFR word list or certification material."
+    }
+  ]
+}

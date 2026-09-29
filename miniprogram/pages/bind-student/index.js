@@ -4,6 +4,12 @@ Page({
     message: "",
   },
 
+  onLoad(options) {
+    if (options && options.signedOut === "1") {
+      this.setData({ message: "已退出原身份，请输入要进入账号的访问码。" });
+    }
+  },
+
   onInput(e) {
     this.setData({
       accessCode: e.detail.value,

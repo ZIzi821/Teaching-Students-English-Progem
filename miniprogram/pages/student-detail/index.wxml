@@ -1,20 +1,39 @@
-<view class="page">
+<view class="page {{isTeacher ? 'has-teacher-tabbar' : ''}}">
   <view class="card no-permission" wx:if="{{message}}">
     <view>{{message}}</view>
     <view class="detail-retry" bindtap="loadStudent">重新加载</view>
   </view>
 
   <view wx:if="{{student}}">
+    <view class="preview-banner" wx:if="{{isTeacherPreview}}">
+      <view>
+        <view class="preview-banner-title">正在查看 {{student.name}} 的学生端</view>
+        <view class="preview-banner-hint">这是只读预览，学习记录和账号绑定都不会改变。</view>
+      </view>
+      <view class="preview-banner-action" bindtap="goBackToTeacher">返回教师端</view>
+    </view>
     <view class="card profile-card">
       <view class="avatar">{{student.initial}}</view>
       <view class="profile-main">
         <view class="name">{{student.name}}</view>
         <view class="meta">{{student.grade}} · {{student.subject}} · {{student.teacherName}}</view>
         <view class="meta" wx:if="{{isTeacher}}">联系人：{{student.parentName}} · 访问码：{{student.accessCode}}</view>
+        <view class="meta" wx:if="{{isTeacher}}">
+          已绑定 {{student.boundAccountCount || 0}} / {{student.studentBindLimit || '不限'}} 个微信账号
+        </view>
       </view>
     </view>
 
-    <view class="card progress-card">
+    <view class="card french-student-entry" wx:if="{{!isTeacher && frenchLearningForm.enabled}}" bindtap="goFrenchLearning">
+      <view class="french-student-mark">FR</view>
+      <view class="french-student-main">
+        <view class="french-student-title">法语学习</view>
+        <view class="french-student-hint">A1/A2 词汇、语法、听力、跟读与阅读</view>
+      </view>
+      <view class="french-student-link">进入 →</view>
+    </view>
+
+    <view class="card progress-card" wx:if="{{isTeacher || showEnglishLearning}}">
       <view class="progress-top">
         <view>
           <view class="progress-title">课程进度</view>
@@ -87,54 +106,79 @@
         </view>
       </view>
       <view class="overview-actions">
-        <view class="primary-btn overview-action" bindtap="goVocabulary">
-          {{isTeacher ? '查看学生学习明细' : isTeacherPreview ? '查看学生单词页' : '继续今日学习'}}
+        <view class="learning-order-hint">建议顺序：先背单词，再做小测</view>
+        <view class="primary-btn overview-action" bindtap="goVocabularyStudy">
+          ① {{isTeacher || isTeacherPreview ? '查看学生背词流程' : '开始今日背词'}}
         </view>
-        <view class="ghost-btn overview-challenge" bindtap="goVocabularyChallenge">6 题单词小测</view>
+        <view class="ghost-btn overview-challenge" bindtap="goVocabularyChallenge">② 背完后做 6 题小测</view>
+        <view class="vocabulary-record-link" bindtap="goVocabulary">查词与查看学习记录 →</view>
       </view>
     </view>
 
     <view class="card vocabulary-settings-card" wx:if="{{isTeacher}}">
-      <view class="vocabulary-settings-head" bindtap="toggleVocabularySettings">
+      <view class="vocabulary-settings-head">
         <view>
-          <view class="progress-title">背单词功能</view>
-          <view class="progress-label">设置词库范围和每天的单词数量</view>
-        </view>
-        <view class="settings-head-actions">
-          <view class="feature-status {{vocabularyForm.enabled ? 'feature-on' : 'feature-off'}}">
-            {{vocabularyForm.enabled ? '已开启' : '未开启'}}
-          </view>
-          <view class="settings-toggle">{{showVocabularySettings ? '收起' : '管理'}}</view>
+          <view class="progress-title">英语学习功能</view>
+          <view class="progress-label">课程与作业、错题整理、背单词分别控制</view>
         </view>
       </view>
 
-      <block wx:if="{{showVocabularySettings}}">
-      <view class="setting-row settings-first-row">
+      <view class="setting-block lesson-template-block">
+        <view class="setting-title">英语课程记录模板</view>
+        <view class="setting-hint">为这名学生设置专属课后记录结构；每一节课仍可临时切换。</view>
+        <picker mode="selector" range="{{lessonTemplateOptions}}" range-key="label" value="{{lessonTemplateIndex}}" disabled="{{lessonTemplateSaving}}" bindchange="onStudentLessonTemplateChange">
+          <view class="goal-picker lesson-template-picker">{{lessonTemplateOptions[lessonTemplateIndex].label}}</view>
+        </picker>
+        <view class="setting-hint template-description">{{lessonTemplateOptions[lessonTemplateIndex].description}}</view>
+      </view>
+
+      <view class="setting-row course-feature-row">
         <view>
-          <view class="setting-title">允许学生背单词</view>
-          <view class="setting-hint">关闭后学生端不显示入口，原学习记录会保留。</view>
+          <view class="setting-title">英语课程与作业功能</view>
+          <view class="setting-hint">控制学生是否看到英语课记录、课后任务和录音提交；与错题、背单词互不影响。</view>
+        </view>
+        <switch checked="{{courseLearningForm.enabled}}" color="#4f8f73" disabled="{{courseSaving}}" bindchange="onCourseLearningChange" />
+      </view>
+
+      <view class="setting-row mistake-feature-row">
+        <view>
+          <view class="setting-title">英语错题整理功能</view>
+          <view class="setting-hint">只控制英语错题和复习入口；关闭后课程、作业和历史错题仍会保留。</view>
+        </view>
+        <switch checked="{{mistakeLearningForm.enabled}}" color="#4f8f73" disabled="{{mistakeSaving}}" bindchange="onMistakeLearningChange" />
+      </view>
+
+      <view class="setting-row vocabulary-feature-row">
+        <view>
+          <view class="setting-title">英语背单词功能</view>
+          <view class="setting-hint">只控制英语词汇入口；切换后立即保存，关闭后原来的单词学习记录会保留。</view>
         </view>
         <switch checked="{{vocabularyForm.enabled}}" color="#4f8f73" disabled="{{vocabularySaving}}" bindchange="onVocabularyEnabledChange" />
       </view>
 
+      <view class="vocabulary-detail-toggle" bindtap="toggleVocabularySettings">
+        {{showVocabularySettings ? '收起背词详细设置' : '设置词库、每日数量与错题单词'}}
+      </view>
+
+      <block wx:if="{{showVocabularySettings}}">
       <view class="setting-row">
         <view>
-          <view class="setting-title">加入错题单词</view>
-          <view class="setting-hint">从已经整理过的错题文字中收集单词。</view>
+          <view class="setting-title">加入英语错题单词</view>
+          <view class="setting-hint">从已经整理过的英语错题文字中收集单词。</view>
         </view>
         <switch checked="{{vocabularyForm.includeMistakeWords}}" color="#4f8f73" disabled="{{vocabularySaving}}" bindchange="onIncludeMistakeWordsChange" />
       </view>
 
       <view class="setting-row">
         <view>
-          <view class="setting-title">每天跳过基础词</view>
-          <view class="setting-hint">基础词仍可搜索，但不计入每天的学习任务。</view>
+          <view class="setting-title">每天跳过英语基础词</view>
+          <view class="setting-hint">英语基础词仍可搜索，但不计入每天的学习任务。</view>
         </view>
         <switch checked="{{vocabularyForm.hideBasicWords}}" color="#4f8f73" disabled="{{vocabularySaving}}" bindchange="onHideBasicWordsChange" />
       </view>
 
       <view class="setting-block">
-        <view class="setting-title">课本和基础词库</view>
+        <view class="setting-title">英语课本和基础词库</view>
         <view class="setting-hint">可选择译林七至九年级六册，并显示对应的词库版本。</view>
         <checkbox-group class="level-grid" bindchange="onVocabularyLevelsChange">
           <label class="level-option {{item.checked ? 'level-option-checked' : ''}}" wx:for="{{vocabularyLevels}}" wx:key="id">
@@ -167,13 +211,32 @@
       <view class="vocabulary-setting-actions">
         <view class="ghost-btn setting-action-btn" bindtap="goVocabulary">查看今日学习</view>
         <view class="primary-btn setting-action-btn {{vocabularySaving ? 'disabled-action' : ''}}" bindtap="saveVocabularySettings">
-          {{vocabularySaving ? '保存中…' : '保存单词设置'}}
+          {{vocabularySaving ? '保存中…' : '保存英语单词设置'}}
         </view>
       </view>
       </block>
     </view>
 
-    <view class="card analytics-card" wx:if="{{analytics}}">
+    <view class="card vocabulary-settings-card french-settings-card" wx:if="{{isTeacher}}">
+      <view class="vocabulary-settings-head">
+        <view>
+          <view class="progress-title">法语功能</view>
+          <view class="progress-label">A1/A2 词汇、语法、跟读与阅读，不请求录音权限。</view>
+        </view>
+        <view class="feature-status {{frenchLearningForm.enabled ? 'feature-on' : 'feature-off'}}">
+          {{frenchLearningForm.enabled ? '已开启' : '未开启'}}
+        </view>
+      </view>
+      <view class="setting-row settings-first-row">
+        <view>
+          <view class="setting-title">允许学生学习法语</view>
+          <view class="setting-hint">关闭后学生端不显示法语入口，已有学习记录会保留。</view>
+        </view>
+        <switch checked="{{frenchLearningForm.enabled}}" color="#4f8f73" disabled="{{frenchSaving}}" bindchange="onFrenchLearningChange" />
+      </view>
+    </view>
+
+    <view class="card analytics-card" wx:if="{{analytics && (isTeacher || mistakeLearningForm.enabled)}}">
       <view class="analytics-head">
         <view>
           <view class="progress-title">错题分析</view>
@@ -217,17 +280,25 @@
     </view>
 
     <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddLesson">添加英语课记录</view>
-    <view class="primary-btn add-btn" wx:if="{{!isTeacher}}" bindtap="goLessonBookings">预约上课 / 查看会议号</view>
-
-    <view class="section-title">英语课记录</view>
-    <view class="empty" wx:if="{{!lessons.length}}">还没有英语课记录。</view>
-    <view class="card lesson-card" wx:for="{{lessons}}" wx:key="_id" bindtap="goLesson" data-id="{{item._id}}">
-      <view class="lesson-top">
-        <view class="lesson-title">{{item.title}}</view>
-        <view class="date">{{item.lessonDate}}</view>
+    <block wx:if="{{isTeacher || courseLearningForm.enabled}}">
+      <view class="section-title">英语课记录</view>
+      <view class="empty" wx:if="{{!lessons.length}}">还没有英语课记录。</view>
+      <view class="card lesson-card" wx:for="{{lessons}}" wx:key="_id" bindtap="goLesson" data-id="{{item._id}}">
+        <view class="lesson-top">
+          <view class="lesson-title">{{item.title}}</view>
+          <view class="date">{{item.lessonDate}}</view>
+        </view>
+        <view class="subject">{{item.subject}}<text wx:if="{{item.lessonNo}}"> · 第 {{item.lessonNo}} 节</text></view>
+        <view class="lesson-task-chips" wx:if="{{item.homeworkTask || item.recordingTaskEnabled}}">
+          <text class="lesson-task-chip" wx:if="{{item.homeworkTask}}">有课后任务</text>
+          <text class="lesson-task-chip recording-task-chip" wx:if="{{item.recordingTaskEnabled}}">需要提交录音</text>
+          <text class="lesson-task-chip {{item.homeworkCompleted ? 'homework-done-chip' : 'homework-waiting-chip'}}">{{item.homeworkCompleted ? '学生已完成' : '等待完成'}}</text>
+        </view>
+        <view class="summary">{{item.masterySummary || item.summary}}</view>
       </view>
-      <view class="subject">{{item.subject}}<text wx:if="{{item.lessonNo}}"> · 第 {{item.lessonNo}} 节</text></view>
-      <view class="summary">{{item.summary}}</view>
-    </view>
+    </block>
+
+    <view class="card no-learning-card" wx:if="{{!isTeacher && !showEnglishLearning && !frenchLearningForm.enabled}}">老师暂时还没有为这个账号开启学习功能。</view>
   </view>
+  <teacher-tabbar wx:if="{{isTeacher}}" current="students"></teacher-tabbar>
 </view>

@@ -1,4 +1,10 @@
+const {
+  LESSON_TEMPLATE_OPTIONS,
+  inferLessonTemplateKey,
+} = require("../../utils/lessonTemplates");
+
 const FALLBACK_VOCABULARY_LEVELS = [
+  { id: "0A", label: "英语启蒙（零基础）" },
   { id: "1A", label: "一年级上" },
   { id: "1B", label: "一年级下" },
   { id: "2A", label: "二年级上" },
@@ -43,6 +49,22 @@ Page({
       hasStudentChoice: false,
     },
     vocabularySaving: false,
+    courseSaving: false,
+    mistakeSaving: false,
+    frenchSaving: false,
+    lessonTemplateSaving: false,
+    lessonTemplateOptions: LESSON_TEMPLATE_OPTIONS,
+    lessonTemplateIndex: 0,
+    mistakeLearningForm: {
+      enabled: true,
+    },
+    courseLearningForm: {
+      enabled: true,
+    },
+    frenchLearningForm: {
+      enabled: false,
+    },
+    showEnglishLearning: true,
     showVocabularySettings: false,
     vocabularyOverview: {
       enabled: false,
@@ -107,6 +129,12 @@ Page({
         const vocabularyState = this.prepareVocabularyState(student, result.vocabularyLevels || []);
         const overviewState = this.prepareVocabularyOverview(result.vocabularyOverview, vocabularyState.dailyPlan);
         const analytics = this.prepareAnalytics(result.analytics);
+        const mistakeLearningEnabled = student.mistakeLearningEnabled !== false;
+        const englishCourseEnabled = typeof student.englishCourseEnabled === "boolean"
+          ? student.englishCourseEnabled
+          : mistakeLearningEnabled;
+        const lessonTemplateKey = inferLessonTemplateKey(student);
+        const lessonTemplateIndex = Math.max(0, LESSON_TEMPLATE_OPTIONS.findIndex((item) => item.key === lessonTemplateKey));
         this.setData({
           role: result.role,
           isTeacher: result.role === "teacher" && !isTeacherPreview,
@@ -118,6 +146,17 @@ Page({
           vocabularyLevels: vocabularyState.levels,
           dailyGoalIndex: vocabularyState.dailyGoalIndex,
           vocabularyForm: vocabularyState.form,
+          mistakeLearningForm: {
+            enabled: mistakeLearningEnabled,
+          },
+          courseLearningForm: {
+            enabled: englishCourseEnabled,
+          },
+          frenchLearningForm: {
+            enabled: student.frenchLearningEnabled === true,
+          },
+          lessonTemplateIndex,
+          showEnglishLearning: student.vocabularyEnabled === true || englishCourseEnabled || mistakeLearningEnabled,
           vocabularyDailyPlan: vocabularyState.dailyPlan,
           vocabularyOverview: overviewState.overview,
           vocabularyTodaySegments: overviewState.todaySegments,
@@ -281,7 +320,15 @@ Page({
 
   goTeacherPreview() {
     wx.navigateTo({
-      url: "/pages/student-detail/index?mode=teacherPreview&previewStudentId=" + this.data.student._id,
+      url: "/pages/index/index?mode=teacherPreview&previewStudentId=" + this.data.student._id,
+    });
+  },
+
+  goBackToTeacher() {
+    wx.navigateBack({
+      fail() {
+        wx.reLaunch({ url: "/pages/index/index" });
+      },
     });
   },
 
@@ -293,16 +340,6 @@ Page({
     wx.navigateTo({ url });
   },
 
-  goLessonBookings() {
-    const studentId = this.data.student ? this.data.student._id : "";
-    if (!studentId) return;
-    const url = this.data.isTeacherPreview
-      ? "/pages/lesson-bookings/index?mode=teacherPreview&previewStudentId=" + encodeURIComponent(studentId)
-      : "/pages/lesson-bookings/index";
-    wx.navigateTo({
-      url,
-    });
-  },
 
   goVocabulary() {
     const student = this.data.student;
@@ -313,6 +350,18 @@ Page({
     }
     wx.navigateTo({
       url: "/pages/vocabulary/index?" + params.join("&"),
+    });
+  },
+
+  goVocabularyStudy() {
+    const student = this.data.student;
+    if (!student || !student._id || !student.vocabularyEnabled) return;
+    const params = ["studentId=" + encodeURIComponent(student._id)];
+    if (this.data.isTeacherPreview) {
+      params.push("mode=teacherPreview", "previewStudentId=" + encodeURIComponent(student._id));
+    }
+    wx.navigateTo({
+      url: "/pages/vocabulary-study/index?" + params.join("&"),
     });
   },
 
@@ -328,13 +377,36 @@ Page({
     });
   },
 
+  goFrenchLearning() {
+    const student = this.data.student;
+    if (!student || !student.frenchLearningEnabled) return;
+    const params = [];
+    if (this.data.isTeacherPreview) {
+      params.push(
+        "mode=teacherPreview",
+        "previewStudentId=" + encodeURIComponent(student._id)
+      );
+    }
+    wx.navigateTo({
+      url: "/pages/french-learning/index" + (params.length ? "?" + params.join("&") : ""),
+    });
+  },
+
   toggleVocabularySettings() {
     this.setData({ showVocabularySettings: !this.data.showVocabularySettings });
   },
 
   onVocabularyEnabledChange(e) {
+    if (!this.data.isTeacher || this.data.vocabularySaving || !this.data.student) return;
+    const enabled = Boolean(e.detail.value);
+    const previousEnabled = this.data.vocabularyForm.enabled === true;
     this.setData({
-      "vocabularyForm.enabled": Boolean(e.detail.value),
+      "vocabularyForm.enabled": enabled,
+    }, () => {
+      this.saveVocabularySettings({
+        rollbackEnabled: previousEnabled,
+        successTitle: enabled ? "英语背单词已开启" : "英语背单词已关闭",
+      });
     });
   },
 
@@ -368,7 +440,7 @@ Page({
     });
   },
 
-  saveVocabularySettings() {
+  saveVocabularySettings(options = {}) {
     if (!this.data.isTeacher || this.data.vocabularySaving || !this.data.student) return;
     const form = this.data.vocabularyForm;
     this.setData({ vocabularySaving: true });
@@ -394,11 +466,14 @@ Page({
         if (!result.success) {
           throw new Error(result.message || "单词设置保存失败");
         }
-        wx.showToast({ title: "单词设置已保存" });
+        wx.showToast({ title: options.successTitle || "英语单词设置已保存" });
         this.loadStudent();
       })
       .catch((err) => {
         console.error(err);
+        if (typeof options.rollbackEnabled === "boolean") {
+          this.setData({ "vocabularyForm.enabled": options.rollbackEnabled });
+        }
         wx.showToast({
           title: err.message || "保存失败",
           icon: "none",
@@ -408,6 +483,139 @@ Page({
         wx.hideLoading();
         this.setData({ vocabularySaving: false });
       });
+  },
+
+  onFrenchLearningChange(e) {
+    if (!this.data.isTeacher || this.data.frenchSaving || !this.data.student) return;
+    const enabled = Boolean(e.detail.value);
+    this.setData({
+      "frenchLearningForm.enabled": enabled,
+      frenchSaving: true,
+    });
+    wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "setFrenchLearningSettings",
+          data: {
+            studentId: this.data.student._id,
+            enabled,
+          },
+        },
+      })
+      .then((res) => {
+        const result = res.result || {};
+        if (!result.success) throw new Error(result.message || "法语设置保存失败");
+        wx.showToast({ title: enabled ? "法语学习已开启" : "法语学习已关闭" });
+        this.loadStudent();
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setData({
+          "frenchLearningForm.enabled": !enabled,
+          message: err.message || "法语设置保存失败",
+        });
+        wx.showToast({ title: err.message || "保存失败", icon: "none" });
+      })
+      .finally(() => {
+        this.setData({ frenchSaving: false });
+      });
+  },
+
+  onMistakeLearningChange(e) {
+    if (!this.data.isTeacher || this.data.mistakeSaving || !this.data.student) return;
+    const enabled = Boolean(e.detail.value);
+    this.setData({
+      "mistakeLearningForm.enabled": enabled,
+      mistakeSaving: true,
+    });
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "setMistakeLearningSettings",
+        data: {
+          studentId: this.data.student._id,
+          enabled,
+        },
+      },
+    }).then((res) => {
+      const result = res.result || {};
+      if (!result.success) throw new Error(result.message || "错题功能设置保存失败");
+      wx.showToast({ title: enabled ? "英语错题功能已开启" : "英语错题功能已关闭" });
+      this.loadStudent();
+    }).catch((err) => {
+      console.error(err);
+      this.setData({
+        "mistakeLearningForm.enabled": !enabled,
+        message: err.message || "错题功能设置保存失败",
+      });
+      wx.showToast({ title: err.message || "保存失败", icon: "none" });
+    }).finally(() => {
+      this.setData({ mistakeSaving: false });
+    });
+  },
+
+  onCourseLearningChange(e) {
+    if (!this.data.isTeacher || this.data.courseSaving || !this.data.student) return;
+    const enabled = Boolean(e.detail.value);
+    this.setData({
+      "courseLearningForm.enabled": enabled,
+      courseSaving: true,
+    });
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "setEnglishCourseSettings",
+        data: {
+          studentId: this.data.student._id,
+          enabled,
+        },
+      },
+    }).then((res) => {
+      const result = res.result || {};
+      if (!result.success) throw new Error(result.message || "课程功能设置保存失败");
+      wx.showToast({ title: enabled ? "英语课程与作业已开启" : "英语课程与作业已关闭", icon: "none" });
+      this.loadStudent();
+    }).catch((err) => {
+      console.error(err);
+      this.setData({
+        "courseLearningForm.enabled": !enabled,
+        message: err.message || "课程功能设置保存失败",
+      });
+      wx.showToast({ title: err.message || "保存失败", icon: "none" });
+    }).finally(() => {
+      this.setData({ courseSaving: false });
+    });
+  },
+
+  onStudentLessonTemplateChange(e) {
+    if (!this.data.isTeacher || this.data.lessonTemplateSaving || !this.data.student) return;
+    const previousIndex = this.data.lessonTemplateIndex;
+    const nextIndex = Number(e.detail.value);
+    const option = LESSON_TEMPLATE_OPTIONS[nextIndex];
+    if (!option || nextIndex === previousIndex) return;
+    this.setData({ lessonTemplateIndex: nextIndex, lessonTemplateSaving: true });
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "setStudentLessonTemplate",
+        data: {
+          studentId: this.data.student._id,
+          lessonTemplateKey: option.key,
+        },
+      },
+    }).then((res) => {
+      const result = res.result || {};
+      if (!result.success) throw new Error(result.message || "课程模板保存失败");
+      wx.showToast({ title: "课程模板已保存", icon: "none" });
+      this.loadStudent();
+    }).catch((err) => {
+      console.error(err);
+      this.setData({ lessonTemplateIndex: previousIndex });
+      wx.showToast({ title: err.message || "保存失败", icon: "none" });
+    }).finally(() => {
+      this.setData({ lessonTemplateSaving: false });
+    });
   },
 
   showProgressEditor() {

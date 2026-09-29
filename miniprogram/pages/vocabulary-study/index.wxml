@@ -1,0 +1,87 @@
+<view class="page study-page">
+  <view class="card status-card" wx:if="{{message}}">
+    <view>{{message}}</view>
+    <view class="status-action" bindtap="loadSession">重新加载</view>
+  </view>
+  <view class="card loading-card" wx:elif="{{loading}}">正在准备今天的单词…</view>
+
+  <block wx:elif="{{student}}">
+    <view class="study-header">
+      <view>
+        <view class="study-eyebrow">{{student.name}} · 今日背词</view>
+        <view class="study-title">一次只记一个</view>
+      </view>
+      <view class="preview-badge" wx:if="{{readOnly}}">老师预览</view>
+    </view>
+
+    <view class="preview-tip" wx:if="{{readOnly}}">这是孩子会看到的完整背词流程。你可以翻答案和切换单词，但不会写入学生进度。</view>
+
+    <view class="session-progress" wx:if="{{!sessionDone}}">
+      <view class="session-progress-meta">
+        <text>第 {{sessionPosition}} 个</text>
+        <text>本轮 {{sessionTotal}} 个</text>
+      </view>
+      <view class="session-progress-track">
+        <view class="session-progress-fill" style="width: {{progressPercent}}%;"></view>
+      </view>
+    </view>
+
+    <view class="card memory-card" wx:if="{{!sessionDone && currentWord}}">
+      <view class="memory-stage">{{answerShown ? '核对答案' : '先自己想一想'}}</view>
+      <view class="retry-badge" wx:if="{{currentWord.isRetry}}">本轮再练一次</view>
+      <view class="memory-word">{{currentWord.word}}</view>
+      <view class="memory-source">
+        {{currentWord.levelLabel || currentWord.sourceLabel}}<text wx:if="{{currentWord.unitLabel}}"> · {{currentWord.unitLabel}}</text>
+      </view>
+
+      <view class="pronunciation-action {{playingWordKey === currentWord.key ? 'pronunciation-playing' : ''}}" bindtap="playPronunciation">
+        {{audioLoadingWordKey === currentWord.key ? '正在加载读音…' : (playingWordKey === currentWord.key ? '正在播放…' : '🔊 听发音')}}
+      </view>
+      <view class="audio-output-hint">显示播放但没听到时，请按手机音量＋，并确认声音没有连接到蓝牙耳机。</view>
+
+      <view class="memory-prompt" wx:if="{{!answerShown}}">{{currentWord.memoryPrompt}}</view>
+      <view class="reveal-action" wx:if="{{!answerShown}}" bindtap="revealAnswer">想好了，查看答案</view>
+
+      <view class="answer-panel" wx:else>
+        <view class="answer-label">中文意思</view>
+        <view class="answer-meaning">{{currentWord.meaning}}</view>
+        <view class="answer-pos" wx:if="{{currentWord.partOfSpeech}}">{{currentWord.partOfSpeech}}</view>
+        <view class="rating-guide">刚才是不看答案想出来的吗？诚实选择，系统才会安排合适的复习时间。</view>
+        <view class="rating-grid">
+          <view class="rating-button rating-forgot {{reviewing ? 'rating-disabled' : ''}}" data-result="forgot" bindtap="rateWord">
+            <view class="rating-title">没记住</view>
+            <view class="rating-note">本轮再出现</view>
+          </view>
+          <view class="rating-button rating-hard {{reviewing ? 'rating-disabled' : ''}}" data-result="hard" bindtap="rateWord">
+            <view class="rating-title">有点难</view>
+            <view class="rating-note">很快再练</view>
+          </view>
+          <view class="rating-button rating-known {{reviewing ? 'rating-disabled' : ''}}" data-result="known" bindtap="rateWord">
+            <view class="rating-title">记住了</view>
+            <view class="rating-note">之后复习</view>
+          </view>
+          <view class="rating-button rating-easy {{reviewing ? 'rating-disabled' : ''}}" data-result="easy" bindtap="rateWord">
+            <view class="rating-title">太简单</view>
+            <view class="rating-note">减少出现</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card completion-card" wx:if="{{sessionDone}}">
+      <view class="completion-mark">✓</view>
+      <view class="completion-title">这一轮背完了</view>
+      <view class="completion-hint" wx:if="{{readOnly}}">老师预览已结束，没有修改学生记录。</view>
+      <view class="completion-hint" wx:else>没记牢的词已经重新安排，接下来用小测检查一下。</view>
+      <view class="result-summary">
+        <view><text class="result-number">{{resultCounts.forgot}}</text><text>没记住</text></view>
+        <view><text class="result-number">{{resultCounts.hard}}</text><text>有点难</text></view>
+        <view><text class="result-number">{{resultCounts.known + resultCounts.easy}}</text><text>已记住</text></view>
+      </view>
+      <view class="completion-primary" bindtap="goChallenge">② 去做单词小测</view>
+      <view class="completion-secondary" bindtap="goVocabularyHome">查看单词记录与词库</view>
+    </view>
+
+    <view class="study-tip" wx:if="{{!sessionDone}}">没记住并不是失败，它会在本轮后面再出现一次。</view>
+  </block>
+</view>

@@ -1,0 +1,92 @@
+<view class="page practice-page">
+  <view class="loading-card card" wx:if="{{state === 'loading'}}">
+    <view class="loading-dot"></view>
+    <view>正在读取朗读任务…</view>
+  </view>
+
+  <view class="card error-card" wx:elif="{{state === 'error'}}">
+    <view class="error-title">录音练习暂时无法打开</view>
+    <view class="error-message">{{message}}</view>
+    <view class="primary-btn error-action" bindtap="loadPractice">重新加载</view>
+  </view>
+
+  <block wx:else>
+    <view class="practice-head">
+      <view class="eyebrow">{{isKetTask ? 'KET SPEAKING PRACTICE' : 'READING PRACTICE'}}</view>
+      <view class="practice-title">{{isKetTask ? '像考试一样，听清再回答' : '先看清，再开口'}}</view>
+      <view class="lesson-name">{{lesson.title}} · 第 {{lesson.lessonNo || '—'}} 节</view>
+    </view>
+
+    <view class="card prompt-card">
+      <view class="prompt-label">{{isKetTask ? '口语任务' : '请朗读'}}</view>
+      <view class="ket-source" wx:if="{{isKetTask && ketSpeakingTask}}">
+        {{ketSpeakingTask.sourceYear}} · {{ketSpeakingTask.part}} · {{ketSpeakingTask.difficulty}}
+        <view>{{ketSpeakingTask.sourceReference}}</view>
+      </view>
+      <view class="prompt-text">{{prompt}}</view>
+      <view class="task-chips">
+        <view class="task-chip">{{isKetTask ? '录制 1 次' : '朗读 ' + repeatCount + ' 遍'}}</view>
+        <view class="task-chip">{{preparationSeconds ? (isKetTask ? '练习读题 ' : '准备 ') + preparationSeconds + ' 秒' : '直接听题回答'}}</view>
+        <view class="task-chip task-chip-light">最长 3 分钟</view>
+      </view>
+      <view class="ket-timing" wx:if="{{isKetTask && ketSpeakingTask}}">{{ketSpeakingTask.timingLabel}}</view>
+      <view class="ket-timing" wx:if="{{isKetTask && suggestedRecordingSeconds}}">本次建议录音约 {{suggestedRecordingSeconds}} 秒。</view>
+    </view>
+
+    <view class="card action-card">
+      <block wx:if="{{state === 'ready'}}">
+        <view class="step-title">开始前</view>
+        <view class="step-row"><text class="step-no">1</text><text>{{isKetTask ? '看清任务要求，想好要表达的重点' : '先默读一遍上面的内容'}}</text></view>
+        <view class="step-row" wx:if="{{preparationSeconds}}"><text class="step-no">2</text><text>点击开始后，会有 {{preparationSeconds}} 秒{{isKetTask ? '练习读题' : '准备'}}</text></view>
+        <view class="step-row"><text class="step-no">{{preparationSeconds ? 3 : 2}}</text><text>{{isKetTask ? '看到“开始回答”后，连续完成整段口语' : '看到“开始朗读”后，连续读 ' + repeatCount + ' 遍'}}</text></view>
+        <view class="primary-btn main-action" bindtap="beginPreparation">{{preparationSeconds ? '开始准备' : '开始回答'}}</view>
+      </block>
+
+      <block wx:elif="{{state === 'countdown'}}">
+        <view class="countdown-caption">准备好，马上开始</view>
+        <view class="countdown-number">{{countdown}}</view>
+        <view class="countdown-hint">把眼睛放在朗读内容上</view>
+        <view class="ghost-btn cancel-action" bindtap="cancelPreparation">取消本次</view>
+      </block>
+
+      <block wx:elif="{{state === 'starting'}}">
+        <view class="state-icon microphone-icon">●</view>
+        <view class="state-title">正在打开麦克风…</view>
+        <view class="state-hint">请稍等，不要离开本页</view>
+      </block>
+
+      <block wx:elif="{{state === 'recording'}}">
+        <view class="recording-indicator"><view class="recording-core"></view></view>
+        <view class="recording-title">{{isKetTask ? '开始回答' : '开始朗读'}}</view>
+        <view class="recording-timer">{{elapsedLabel}}</view>
+        <view class="recording-reminder">{{isKetTask ? '请完整表达，并尽量说明原因或举例' : '请把上面的内容完整读 ' + repeatCount + ' 遍'}}</view>
+        <view class="stop-action" bindtap="stopRecording">读完了，结束并提交</view>
+      </block>
+
+      <block wx:elif="{{state === 'stopping'}}">
+        <view class="state-icon">✓</view>
+        <view class="state-title">正在结束录音…</view>
+        <view class="state-hint">马上为你提交</view>
+      </block>
+
+      <block wx:elif="{{state === 'uploading'}}">
+        <view class="upload-spinner"></view>
+        <view class="state-title">正在提交第 {{nextAttemptNo}} 次录音</view>
+        <view class="state-hint">请不要关闭小程序</view>
+      </block>
+
+      <block wx:elif="{{state === 'success'}}">
+        <view class="success-mark">✓</view>
+        <view class="success-title">录音提交成功</view>
+        <view class="success-detail">第 {{submittedAttemptNo}} 次 · {{submittedDurationLabel}} · 等待老师检查</view>
+        <view class="success-actions">
+          <view class="ghost-btn success-action" bindtap="resetPractice">再录一次</view>
+          <view class="primary-btn success-action" bindtap="goBack">返回课程</view>
+        </view>
+      </block>
+    </view>
+
+    <view class="submission-note" wx:if="{{previousSubmissionCount}}">本节课已成功提交 {{previousSubmissionCount}} 次录音</view>
+    <view class="privacy-note">录音只用于老师检查本次朗读，不会保存到手机相册或音乐播放器。</view>
+  </block>
+</view>
