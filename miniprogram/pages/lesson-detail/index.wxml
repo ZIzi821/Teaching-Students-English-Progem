@@ -24,14 +24,14 @@
         <view class="section-title">本节课记录</view>
       </view>
       <view class="small-action" wx:if="{{isTeacher}}" bindtap="toggleWorkspaceEditor">
-        {{showWorkspaceEditor ? '取消编辑' : '编辑记录'}}
+        {{showWorkspaceEditor ? '取消编辑' : '编辑课程'}}
       </view>
     </view>
 
     <view class="card record-card" wx:if="{{!showWorkspaceEditor}}">
       <view class="empty-record" wx:if="{{!lesson.hasStructuredRecord && !lesson.summary}}">
         <view class="empty-record-title">还没有填写课后记录</view>
-        <view class="empty-record-hint" wx:if="{{isTeacher}}">点击“编辑记录”，两分钟内补完学习内容、掌握情况和下节复习。</view>
+        <view class="empty-record-hint" wx:if="{{isTeacher}}">点击“编辑课程”，可以修改课程名称并补充学习内容、掌握情况和下节复习。</view>
       </view>
 
       <view class="record-grid" wx:else>
@@ -104,6 +104,15 @@
     </view>
 
     <view class="card workspace-editor" wx:if="{{isTeacher && showWorkspaceEditor}}">
+      <view class="field">
+        <view class="label">课程名称</view>
+        <input class="input" maxlength="100" placeholder="例如：基础句型与个人表达-1" value="{{workspaceForm.title}}" data-field="title" bindinput="onWorkspaceInput" />
+        <view class="field-hint">修改后，教师端和学生端都会显示新名称。</view>
+        <view class="lesson-title-suggestions" wx:if="{{student.name === 'Molly'}}">
+          <view class="lesson-title-suggestion" data-title="基础句型与个人表达-1" bindtap="applyLessonTitleSuggestion">基础句型与个人表达-1</view>
+          <view class="lesson-title-suggestion" data-title="基础句型与个人表达-2" bindtap="applyLessonTitleSuggestion">基础句型与个人表达-2</view>
+        </view>
+      </view>
       <view class="field">
         <view class="label">本节记录模板</view>
         <picker mode="selector" range="{{lessonTemplateOptions}}" range-key="label" value="{{lessonTemplateIndex}}" bindchange="onWorkspaceTemplateChange">

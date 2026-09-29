@@ -2782,6 +2782,7 @@ const normalizeLessonWorkspacePayload = (data = {}) => {
     ? "ket_official"
     : "manual";
   return {
+    title: normalizeLessonText(data.title, 100),
     lessonTemplateKey,
     reviewContent: normalizeLessonText(data.reviewContent),
     taughtContent: normalizeLessonText(data.taughtContent),
@@ -2992,8 +2993,10 @@ const updateLessonWorkspace = async (event) => {
   const lessonId = String(data.lessonId || "").trim();
   if (!lessonId) throw createError("INVALID_LESSON", "课程信息不完整，请返回后重试");
   const workspace = normalizeLessonWorkspacePayload(data);
+  if (!workspace.title) throw createError("INVALID_LESSON_TITLE", "请填写课程名称");
   await assertContentSafe({
     texts: [
+      workspace.title,
       workspace.reviewContent,
       workspace.taughtContent,
       workspace.masterySummary,

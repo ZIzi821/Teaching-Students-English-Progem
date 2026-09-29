@@ -136,6 +136,12 @@ assert(addLessonWxml.includes("Molly 的录音任务类型") && addLessonWxml.in
 assert(addLessonWxml.includes('maxlength="2000"'), "New-lesson recording prompt limit is too short");
 assert(lessonWxml.includes('maxlength="2000"'), "Lesson-edit recording prompt limit is too short");
 assert(backend.includes("normalizeLessonText(data.recordingPrompt, 2000)"), "Cloud recording prompt limit is too short");
+assert(lessonWxml.includes('data-field="title"'), "Teacher course editor cannot change the lesson title");
+assert(lessonWxml.includes("基础句型与个人表达-1") && lessonWxml.includes("基础句型与个人表达-2"), "Molly title shortcuts are missing");
+assert(lessonJs.includes('"workspaceForm.title": title'), "Molly title shortcut does not update the course form");
+assert(lessonJs.includes("title: lesson.title || \"\""), "Existing course title is not loaded into the teacher editor");
+assert(backend.includes("title: normalizeLessonText(data.title, 100)"), "Updated course title is not normalized server-side");
+assert(backend.includes('if (!workspace.title) throw createError("INVALID_LESSON_TITLE"'), "Blank course titles are not rejected");
 assert(lessonWxml.includes("KET 口语录音"), "KET speaking metadata is missing from lesson detail");
 assert(!appJson.pages.includes("pages/lesson-bookings/index"), "Removed booking page is still registered");
 assert(!homeWxml.includes("goLessonBookings") && !studentWxml.includes("goLessonBookings"), "Removed booking entry is still visible");

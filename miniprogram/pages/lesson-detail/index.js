@@ -98,6 +98,7 @@ Page({
     lessonTemplateIndex: 0,
     lessonTemplate: findTemplate("general"),
     workspaceForm: {
+      title: "",
       lessonTemplateKey: "general",
       reviewContent: "",
       taughtContent: "",
@@ -297,6 +298,7 @@ Page({
 
   createWorkspaceForm(lesson) {
     return {
+      title: lesson.title || "",
       lessonTemplateKey: lesson.lessonTemplateKey || "general",
       reviewContent: lesson.reviewContent || "",
       taughtContent: lesson.taughtContent || "",
@@ -384,6 +386,11 @@ Page({
 
   onWorkspaceInput(e) {
     this.setData({ [`workspaceForm.${e.currentTarget.dataset.field}`]: e.detail.value });
+  },
+
+  applyLessonTitleSuggestion(e) {
+    const title = String(e.currentTarget.dataset.title || "").trim();
+    if (title) this.setData({ "workspaceForm.title": title });
   },
 
   onWorkspaceTemplateChange(e) {
@@ -522,6 +529,10 @@ Page({
   saveWorkspace() {
     if (!this.data.isTeacher || this.data.savingWorkspace) return;
     const form = this.data.workspaceForm;
+    if (!String(form.title || "").trim()) {
+      wx.showToast({ title: "请填写课程名称", icon: "none" });
+      return;
+    }
     this.setData({ savingWorkspace: true });
     wx.showLoading({ title: "保存中", mask: true });
     wx.cloud.callFunction({
@@ -535,7 +546,7 @@ Page({
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "课后记录保存失败");
-      wx.showToast({ title: "课后记录已保存" });
+      wx.showToast({ title: "课程已保存" });
       this.setData({ showWorkspaceEditor: false });
       this.loadLesson();
     }).catch((err) => {
