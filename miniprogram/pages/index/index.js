@@ -493,4 +493,10 @@ Page({
     });
   },
 
+  goVocabularyDetail() {
+    wx.navigateTo({
+      url: "/pages/teacher-vocabulary-detail/index",
+    });
+  },
+
 });

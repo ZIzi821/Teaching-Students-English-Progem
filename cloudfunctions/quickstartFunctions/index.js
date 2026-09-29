@@ -2257,6 +2257,26 @@ const buildVocabularyBrowsePage = (view, data) => {
   if (!keyword && browseTab === "mastered") {
     words = view.words.filter((word) => word.masteryLevel >= 5 || word.isEasy);
   }
+  const masteryFilter = ["all", "unlearned", "learning", "due", "mastered", "easy"].indexOf(data.masteryFilter) >= 0
+    ? data.masteryFilter
+    : "all";
+  if (masteryFilter === "unlearned") {
+    words = words.filter((word) => word.masteryLevel <= 0 && !word.isEasy && word.reviewCount <= 0);
+  }
+  if (masteryFilter === "learning") {
+    words = words.filter((word) => (
+      word.reviewCount > 0 && !word.isDue && word.masteryLevel < 5 && !word.isEasy
+    ));
+  }
+  if (masteryFilter === "due") {
+    words = words.filter((word) => word.reviewCount > 0 && word.isDue && word.masteryLevel < 5 && !word.isEasy);
+  }
+  if (masteryFilter === "mastered") {
+    words = words.filter((word) => word.masteryLevel >= 5 && !word.isEasy);
+  }
+  if (masteryFilter === "easy") {
+    words = words.filter((word) => word.isEasy);
+  }
   const levelId = String(data.levelId || "").trim();
   const unitId = String(data.unitId || "").trim();
   words = words.filter((word) => {
@@ -2272,6 +2292,7 @@ const buildVocabularyBrowsePage = (view, data) => {
   const limit = Math.max(10, Math.min(60, requestedLimit || 40));
   return {
     browseTab,
+    masteryFilter,
     browseTotal: words.length,
     browseOffset: offset,
     browseLimit: limit,

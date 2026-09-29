@@ -13,6 +13,7 @@
     "pages/teacher-workbench/index",
     "pages/students/index",
     "pages/student-detail/index",
+    "pages/teacher-vocabulary-detail/index",
     "pages/vocabulary/index",
     "pages/vocabulary-study/index",
     "pages/vocabulary-challenge/index",

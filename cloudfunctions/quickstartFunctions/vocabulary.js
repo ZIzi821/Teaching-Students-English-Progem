@@ -685,7 +685,15 @@ const buildVocabularyView = ({
     mistakeWordCount: confirmedWords.filter((item) => item.sources.indexOf("mistake") >= 0).length,
     weakCount: confirmedWords.filter((item) => isVocabularyWeakWord(item)).length,
     masteredCount: confirmedWords.filter((item) => item.masteryLevel >= 5).length,
+    strictMasteredCount: confirmedWords.filter((item) => item.masteryLevel >= 5 && !item.isEasy).length,
     learningCount: confirmedWords.filter((item) => item.masteryLevel > 0 && item.masteryLevel < 5).length,
+    activeLearningCount: confirmedWords.filter((item) => (
+      item.reviewCount > 0 && !item.isDue && item.masteryLevel < 5 && !item.isEasy
+    )).length,
+    unlearnedCount: confirmedWords.filter((item) => item.masteryLevel <= 0 && !item.isEasy && item.reviewCount <= 0).length,
+    reviewDueCount: confirmedWords.filter((item) => (
+      item.reviewCount > 0 && item.isDue && item.masteryLevel < 5 && !item.isEasy
+    )).length,
     dueCount: dueWords.length,
     pendingCount: isTeacher ? pendingWords.length : 0,
     easyCount: confirmedWords.filter((item) => item.isEasy).length,

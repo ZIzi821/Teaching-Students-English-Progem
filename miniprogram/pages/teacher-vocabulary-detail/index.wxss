@@ -1,0 +1,294 @@
+.vocabulary-detail-page {
+  padding-bottom: 100rpx;
+}
+
+.page-head {
+  margin-bottom: 24rpx;
+}
+
+.eyebrow {
+  color: #4f8f73;
+  font-size: 23rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.title {
+  margin-top: 8rpx;
+  color: #243f35;
+  font-size: 43rpx;
+  font-weight: 800;
+}
+
+.subtitle {
+  margin-top: 10rpx;
+  color: #7b7064;
+  font-size: 24rpx;
+  line-height: 1.55;
+}
+
+.state-card {
+  color: #766b60;
+  font-size: 25rpx;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.state-error {
+  color: #8a6730;
+  background: #fff7e7;
+}
+
+.retry-link {
+  margin-top: 12rpx;
+  color: #36795e;
+  font-weight: 700;
+}
+
+.student-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  border-color: #cfe2d8;
+  background: linear-gradient(145deg, #fffdfa 0%, #eef7f2 100%);
+}
+
+.picker-label {
+  color: #708378;
+  font-size: 21rpx;
+}
+
+.picker-name {
+  margin-top: 5rpx;
+  color: #244c3d;
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.picker-meta {
+  margin-top: 7rpx;
+  color: #7b7064;
+  font-size: 22rpx;
+}
+
+.picker-action {
+  flex-shrink: 0;
+  padding: 12rpx 16rpx;
+  border-radius: 999rpx;
+  color: #36795e;
+  background: #e2f1e9;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.disabled-tip {
+  margin: -4rpx 0 22rpx;
+  padding: 18rpx 20rpx;
+  border-radius: 14rpx;
+  color: #88652f;
+  background: #fff0cf;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+}
+
+.summary-card {
+  padding: 20rpx 8rpx;
+  border: 1rpx solid #e9dfd2;
+  border-radius: 16rpx;
+  background: #fffdfa;
+  text-align: center;
+}
+
+.summary-total {
+  background: #edf7f2;
+}
+
+.summary-due {
+  background: #fff4de;
+}
+
+.summary-number {
+  color: #326d56;
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.summary-label {
+  margin-top: 4rpx;
+  color: #7d7266;
+  font-size: 21rpx;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.search-input {
+  box-sizing: border-box;
+  flex: 1;
+  height: 78rpx;
+  padding: 0 24rpx;
+  border: 1rpx solid #e1d7ca;
+  border-radius: 16rpx;
+  background: #fffdfa;
+  font-size: 25rpx;
+}
+
+.clear-search {
+  flex-shrink: 0;
+  padding: 18rpx 8rpx;
+  color: #4f8f73;
+  font-size: 23rpx;
+}
+
+.filter-scroll {
+  width: 100%;
+  margin-bottom: 10rpx;
+  white-space: nowrap;
+}
+
+.filter-row {
+  display: inline-flex;
+  gap: 12rpx;
+  padding: 2rpx 2rpx 8rpx;
+}
+
+.filter-chip {
+  padding: 13rpx 20rpx;
+  border: 1rpx solid #ded4c7;
+  border-radius: 999rpx;
+  color: #776c61;
+  background: #fffdfa;
+  font-size: 23rpx;
+}
+
+.filter-chip-active {
+  border-color: #4f8f73;
+  color: #fff;
+  background: #4f8f73;
+  font-weight: 700;
+}
+
+.result-line {
+  margin: 8rpx 2rpx 18rpx;
+  color: #8a7f73;
+  font-size: 22rpx;
+}
+
+.word-card {
+  padding: 24rpx;
+}
+
+.word-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.word-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.word-text {
+  color: #243f35;
+  font-size: 36rpx;
+  font-weight: 800;
+}
+
+.part-of-speech {
+  margin-left: 12rpx;
+  color: #8b7e70;
+  font-size: 21rpx;
+}
+
+.status-pill {
+  flex-shrink: 0;
+  padding: 8rpx 13rpx;
+  border-radius: 999rpx;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
+.status-unlearned {
+  color: #7c7166;
+  background: #f0ece5;
+}
+
+.status-learning {
+  color: #8d652d;
+  background: #fff0d4;
+}
+
+.status-due {
+  color: #a0533f;
+  background: #fce7df;
+}
+
+.status-mastered {
+  color: #327258;
+  background: #e1f1e9;
+}
+
+.status-easy {
+  color: #55708c;
+  background: #e6eff8;
+}
+
+.meaning {
+  margin-top: 10rpx;
+  color: #423a32;
+  font-size: 27rpx;
+  line-height: 1.5;
+}
+
+.source-line {
+  margin-top: 10rpx;
+  padding-bottom: 18rpx;
+  border-bottom: 1rpx solid #eee4d7;
+  color: #8a7d70;
+  font-size: 21rpx;
+  line-height: 1.45;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15rpx 20rpx;
+  margin-top: 18rpx;
+}
+
+.detail-item {
+  min-width: 0;
+}
+
+.detail-label {
+  color: #9a8d80;
+  font-size: 20rpx;
+}
+
+.detail-value {
+  margin-top: 5rpx;
+  color: #4a423a;
+  font-size: 23rpx;
+  line-height: 1.4;
+}
+
+.load-more {
+  padding: 14rpx 0 26rpx;
+  color: #8a7f73;
+  font-size: 22rpx;
+  text-align: center;
+}

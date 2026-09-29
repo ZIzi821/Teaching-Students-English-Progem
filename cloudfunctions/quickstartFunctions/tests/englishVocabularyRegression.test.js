@@ -51,6 +51,42 @@ assert.deepStrictEqual(
 assert(beginnerView.todayWords.every((word) => word.pronunciationDirectFileId));
 assert(beginnerView.todayWords.every((word) => word.pronunciationDirectDurationMs > 0));
 
+const teacherDetailNow = Date.UTC(2026, 8, 15, 12);
+const teacherDetailView = vocabulary.buildVocabularyView({
+  library,
+  settings: {
+    levelIds: ["0A"],
+    dailyGoal: 5,
+    includeMistakeWords: false,
+    hideBasicWords: false,
+    learningOrder: "smart",
+  },
+  mistakes: [],
+  progressItems: [
+    { wordKey: beginnerWords[1].key, stage: 2, reviewCount: 2, nextReviewAtMs: teacherDetailNow + 3600000 },
+    { wordKey: beginnerWords[2].key, stage: 2, reviewCount: 2, nextReviewAtMs: teacherDetailNow - 3600000 },
+    { wordKey: beginnerWords[3].key, stage: 5, reviewCount: 5, nextReviewAtMs: teacherDetailNow + 86400000 },
+    { wordKey: beginnerWords[4].key, stage: 5, reviewCount: 1, isEasy: true, nextReviewAtMs: teacherDetailNow + 86400000 },
+  ],
+  isTeacher: true,
+  nowMs: teacherDetailNow,
+  student: { name: "明细测试学生" },
+});
+assert.strictEqual(teacherDetailView.summary.unlearnedCount, 85);
+assert.strictEqual(teacherDetailView.summary.activeLearningCount, 1);
+assert.strictEqual(teacherDetailView.summary.reviewDueCount, 1);
+assert.strictEqual(teacherDetailView.summary.strictMasteredCount, 1);
+assert.strictEqual(teacherDetailView.summary.easyCount, 1);
+assert.strictEqual(
+  teacherDetailView.summary.unlearnedCount
+    + teacherDetailView.summary.activeLearningCount
+    + teacherDetailView.summary.reviewDueCount
+    + teacherDetailView.summary.strictMasteredCount
+    + teacherDetailView.summary.easyCount,
+  teacherDetailView.summary.totalCount,
+  "Teacher mastery groups must cover every word exactly once"
+);
+
 const now = Date.UTC(2026, 8, 10);
 const results = ["forgot", "hard", "known", "easy"].map((rating) => (
   vocabulary.buildReviewProgress({ stage: 2, reviewCount: 3 }, rating, now)
