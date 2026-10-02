@@ -52,6 +52,84 @@
   padding: 24rpx 26rpx;
 }
 
+.previous-reference-card {
+  padding: 24rpx 26rpx;
+  border-color: #d9d2c8;
+  background: #fbfaf7;
+}
+
+.previous-reference-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.previous-reference-kicker {
+  color: #6b8377;
+  font-size: 20rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+}
+
+.previous-reference-title {
+  margin-top: 7rpx;
+  color: #342f29;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.previous-reference-meta,
+.previous-reference-note,
+.previous-reference-empty {
+  margin-top: 7rpx;
+  color: #817669;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.previous-reference-note {
+  margin-top: 13rpx;
+  color: #6f7f76;
+}
+
+.previous-reference-toggle {
+  flex-shrink: 0;
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  color: #506d60;
+  background: #edf2ee;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
+.previous-reference-body {
+  margin-top: 18rpx;
+  padding-top: 6rpx;
+  border-top: 1rpx solid #ece6dd;
+}
+
+.previous-reference-row {
+  padding: 14rpx 0;
+  border-bottom: 1rpx solid #eee9e1;
+  color: #554e46;
+  font-size: 24rpx;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.previous-reference-row:last-child {
+  border-bottom: 0;
+}
+
+.previous-reference-row text {
+  display: block;
+  margin-bottom: 4rpx;
+  color: #7d705f;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
 .optional-head,
 .recording-row {
   display: flex;
@@ -107,6 +185,10 @@
 }
 
 .recording-type-field {
+  margin-top: 18rpx;
+}
+
+.recording-due-field {
   margin-top: 18rpx;
 }
 

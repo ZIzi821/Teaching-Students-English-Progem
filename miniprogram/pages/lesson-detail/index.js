@@ -15,6 +15,17 @@ const RECORDING_TASK_TYPE_OPTIONS = [
   { value: "manual", label: "手动口语任务" },
   { value: "ket_official", label: "KET 官方样题" },
 ];
+const HOMEWORK_DUE_OPTIONS = [
+  { value: -1, label: "暂不设置" },
+  { value: 0, label: "当天截止" },
+  { value: 1, label: "1 天后截止" },
+  { value: 2, label: "2 天后截止" },
+  { value: 3, label: "3 天后截止" },
+  { value: 4, label: "4 天后截止" },
+  { value: 5, label: "5 天后截止" },
+  { value: 6, label: "6 天后截止" },
+  { value: 7, label: "7 天后截止" },
+];
 const MATERIAL_PURPOSES = [
   { label: "学生参考", value: "student_reference", hint: "学生端可以打开" },
   { label: "听力／跟读", value: "listening", hint: "听力或示范音频" },
@@ -85,6 +96,8 @@ Page({
     deletingLesson: false,
     savingWorkspace: false,
     showWorkspaceEditor: false,
+    previousLessonReference: null,
+    showPreviousLessonReference: true,
     showMaterialUploader: false,
     showMaterialAdvanced: false,
     uploadingMaterial: false,
@@ -111,6 +124,7 @@ Page({
       nextReview: "",
       homeworkTask: "",
       recordingTaskEnabled: false,
+      homeworkDueDays: -1,
       recordingTaskType: "manual",
       recordingPrompt: "",
       recordingRepeatCount: 2,
@@ -125,6 +139,8 @@ Page({
     recordingPreparationIndex: 2,
     recordingTaskTypeOptions: RECORDING_TASK_TYPE_OPTIONS,
     recordingTaskTypeIndex: 0,
+    homeworkDueOptions: HOMEWORK_DUE_OPTIONS,
+    homeworkDueIndex: 0,
     ketSpeakingTasks: KET_SPEAKING_TASKS,
     ketSpeakingTaskIndex: 0,
     selectedKetSpeakingTask: KET_SPEAKING_TASKS[0],
@@ -211,6 +227,9 @@ Page({
       const recordingRepeatIndex = Math.max(0, this.data.recordingRepeatOptions.indexOf(lesson.recordingRepeatCount));
       const recordingPreparationIndex = Math.max(0, this.data.recordingPreparationOptions.indexOf(lesson.recordingPreparationSeconds));
       const recordingTaskTypeIndex = lesson.recordingTaskType === "ket_official" ? 1 : 0;
+      const homeworkDueIndex = Math.max(0, HOMEWORK_DUE_OPTIONS.findIndex((item) => (
+        item.value === Number(lesson.homeworkDueDays)
+      )));
       const selectedKetSpeakingTask = findKetSpeakingTask(lesson.ketSpeakingTaskId) || KET_SPEAKING_TASKS[0];
       const ketSpeakingTaskIndex = Math.max(0, KET_SPEAKING_TASKS.findIndex((item) => item.id === selectedKetSpeakingTask.id));
       this.setData({
@@ -220,6 +239,8 @@ Page({
         isStudent: result.role === "student",
         mistakeLearningEnabled: result.mistakeLearningEnabled !== false,
         lesson,
+        previousLessonReference: result.previousLesson || null,
+        showPreviousLessonReference: Boolean(result.previousLesson),
         student: result.student || null,
         materialGroups: this.groupPapers(papers),
         hasPapers: papers.length > 0,
@@ -233,6 +254,7 @@ Page({
         recordingRepeatIndex,
         recordingPreparationIndex,
         recordingTaskTypeIndex,
+        homeworkDueIndex,
         selectedKetSpeakingTask,
         ketSpeakingTaskIndex,
         message: "",
@@ -272,6 +294,9 @@ Page({
       nextReview: lesson.nextReview || "",
       homeworkTask: lesson.homeworkTask || "",
       recordingTaskEnabled: lesson.recordingTaskEnabled === true,
+      homeworkDueDays: Number.isInteger(Number(lesson.homeworkDueDays))
+        ? Number(lesson.homeworkDueDays)
+        : -1,
       recordingTaskType: lesson.recordingTaskType === "ket_official" ? "ket_official" : "manual",
       recordingPrompt: lesson.recordingPrompt || "",
       recordingRepeatCount: Math.max(1, Math.min(5, Number(lesson.recordingRepeatCount) || 2)),
@@ -291,6 +316,13 @@ Page({
       homeworkTeacherReviewedLabel: formatDateTime(lesson.homeworkTeacherReviewedAtMs),
       homeworkReminderNotifyStatus: lesson.homeworkReminderNotifyStatus || "not_subscribed",
       homeworkReminderTargetDate: lesson.homeworkReminderTargetDate || "",
+      homeworkDueDate: lesson.homeworkDueDate || "",
+      homeworkDueStatus: lesson.homeworkDueStatus || "none",
+      homeworkDueLabel: lesson.homeworkDueLabel || "",
+      homeworkHasSubmission: lesson.homeworkHasSubmission === true,
+      homeworkSubmittedOnTime: lesson.homeworkSubmittedOnTime === true,
+      homeworkSubmittedLate: lesson.homeworkSubmittedLate === true,
+      homeworkSubmissionTimingLabel: lesson.homeworkSubmissionTimingLabel || "",
       learningObservations: Array.isArray(lesson.learningObservations) ? lesson.learningObservations : [],
       hasStructuredRecord,
     });
@@ -311,6 +343,9 @@ Page({
       nextReview: lesson.nextReview || "",
       homeworkTask: lesson.homeworkTask || "",
       recordingTaskEnabled: lesson.recordingTaskEnabled === true,
+      homeworkDueDays: Number.isInteger(Number(lesson.homeworkDueDays))
+        ? Number(lesson.homeworkDueDays)
+        : -1,
       recordingTaskType: lesson.recordingTaskType === "ket_official" ? "ket_official" : "manual",
       recordingPrompt: lesson.recordingPrompt || "",
       recordingRepeatCount: lesson.recordingRepeatCount || 2,
@@ -370,18 +405,27 @@ Page({
       displayAttemptNo: Number(item.attemptNo) || submissions.length - index,
       status: item.status || "待检查",
       teacherFeedback: item.teacherFeedback || "",
+      submittedLate: item.submittedLate === true,
     }));
   },
 
   toggleWorkspaceEditor() {
     if (!this.data.isTeacher) return;
     const opening = !this.data.showWorkspaceEditor;
+    const homeworkDueIndex = Math.max(0, HOMEWORK_DUE_OPTIONS.findIndex((item) => (
+      item.value === Number(this.data.lesson.homeworkDueDays)
+    )));
     this.setData({
       showWorkspaceEditor: opening,
       workspaceForm: this.createWorkspaceForm(this.data.lesson),
+      homeworkDueIndex,
     }, () => {
       if (opening) this.checkKetWeeklyStatus();
     });
+  },
+
+  togglePreviousLessonReference() {
+    this.setData({ showPreviousLessonReference: !this.data.showPreviousLessonReference });
   },
 
   onWorkspaceInput(e) {
@@ -412,7 +456,22 @@ Page({
   },
 
   onRecordingTaskChange(e) {
-    this.setData({ "workspaceForm.recordingTaskEnabled": Boolean(e.detail.value) });
+    const enabled = Boolean(e.detail.value);
+    const updates = { "workspaceForm.recordingTaskEnabled": enabled };
+    if (enabled && Number(this.data.workspaceForm.homeworkDueDays) < 0) {
+      updates.homeworkDueIndex = 8;
+      updates["workspaceForm.homeworkDueDays"] = 7;
+    }
+    this.setData(updates);
+  },
+
+  onHomeworkDueChange(e) {
+    const index = Number(e.detail.value);
+    const option = HOMEWORK_DUE_OPTIONS[index] || HOMEWORK_DUE_OPTIONS[0];
+    this.setData({
+      homeworkDueIndex: index,
+      "workspaceForm.homeworkDueDays": option.value,
+    });
   },
 
   onRecordingTaskTypeChange(e) {

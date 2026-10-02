@@ -42,8 +42,9 @@
         </view>
         <view class="ghost-small" wx:if="{{isTeacher}}" bindtap="showProgressEditor">编辑课程进度</view>
       </view>
-      <view class="progress-bar">
+      <view class="progress-bar progress-tone-{{student.progressTone}}">
         <view class="progress-fill" style="width: {{student.progressPercent}}%;"></view>
+        <view class="progress-marker" wx:if="{{student.showProgressMarker}}" style="left: {{student.progressMarkerPercent}}%;"></view>
       </view>
     </view>
 
@@ -55,6 +56,11 @@
       <view class="field">
         <view class="label">已上课时</view>
         <input class="input" type="number" value="{{progressForm.completedLessonCount}}" data-field="completedLessonCount" bindinput="onProgressInput" />
+      </view>
+      <view class="field">
+        <view class="label">常用加课数量</view>
+        <input class="input" type="number" value="{{progressForm.lessonPackageSize}}" data-field="lessonPackageSize" bindinput="onProgressInput" />
+        <view class="progress-editor-hint">只用于进度条的末段提示；Molly 默认 5 节，冯嘉文默认 3 节。填 0 可关闭。</view>
       </view>
       <view class="editor-actions">
         <view class="ghost-btn editor-btn" bindtap="hideProgressEditor">取消</view>
@@ -293,6 +299,7 @@
           <text class="lesson-task-chip" wx:if="{{item.homeworkTask}}">有课后任务</text>
           <text class="lesson-task-chip recording-task-chip" wx:if="{{item.recordingTaskEnabled}}">需要提交录音</text>
           <text class="lesson-task-chip {{item.homeworkCompleted ? 'homework-done-chip' : 'homework-waiting-chip'}}">{{item.homeworkCompleted ? '学生已完成' : '等待完成'}}</text>
+          <text class="lesson-task-chip deadline-{{item.homeworkSubmittedLate ? 'late' : item.homeworkDueStatus}}" wx:if="{{item.recordingTaskEnabled && (item.homeworkSubmittedLate || (!item.homeworkCompleted && !item.homeworkHasSubmission && item.homeworkDueLabel))}}">{{item.homeworkSubmittedLate ? '逾期提交' : item.homeworkDueLabel}}</text>
         </view>
         <view class="summary">{{item.masterySummary || item.summary}}</view>
       </view>

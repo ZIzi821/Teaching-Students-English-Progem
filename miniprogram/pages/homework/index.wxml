@@ -47,6 +47,7 @@
       </view>
       <view class="task-copy">{{item.taskPreview}}</view>
       <view class="task-meta" wx:if="{{item.recordingTaskEnabled}}">🎙 {{item.recordingLabel}}</view>
+      <view class="task-deadline deadline-{{item.deadlineTone}}" wx:if="{{item.deadlineLabel}}">{{item.deadlineLabel}}</view>
       <view class="task-link">查看并完成 →</view>
     </view>
 
@@ -60,6 +61,7 @@
         <view class="status-pill status-completed">{{item.statusLabel}}</view>
       </view>
       <view class="task-copy">{{item.taskPreview}}</view>
+      <view class="task-deadline deadline-{{item.deadlineTone}}" wx:if="{{item.deadlineLabel}}">{{item.deadlineLabel}}</view>
       <view class="task-meta" wx:if="{{item.completedLabel}}">完成于 {{item.completedLabel}}</view>
       <view class="task-link">查看记录 →</view>
     </view>

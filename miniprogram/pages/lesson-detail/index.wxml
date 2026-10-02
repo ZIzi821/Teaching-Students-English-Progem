@@ -121,6 +121,32 @@
         <view class="field-hint template-editor-hint">{{lessonTemplate.description}}</view>
       </view>
 
+      <view class="previous-lesson-reference" wx:if="{{previousLessonReference}}">
+        <view class="previous-lesson-reference-head" bindtap="togglePreviousLessonReference">
+          <view>
+            <view class="previous-lesson-reference-kicker">上一节课对照</view>
+            <view class="previous-lesson-reference-title">{{previousLessonReference.title || '上一节英语课'}}</view>
+            <view class="previous-lesson-reference-meta">{{previousLessonReference.lessonDate}} · 第 {{previousLessonReference.lessonNo || '—'}} 节</view>
+          </view>
+          <view class="previous-lesson-reference-toggle">{{showPreviousLessonReference ? '收起' : '展开'}}</view>
+        </view>
+        <view class="previous-lesson-reference-note">只读对照，不会覆盖本节课已经填写的内容。</view>
+        <view class="previous-lesson-reference-body" wx:if="{{showPreviousLessonReference}}">
+          <view class="previous-lesson-reference-empty" wx:if="{{!previousLessonReference.hasReferenceContent}}">上一节课没有填写课后整理内容。</view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.reviewContent}}"><text>复习</text><view>{{previousLessonReference.reviewContent}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.taughtContent}}"><text>新内容</text><view>{{previousLessonReference.taughtContent}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.oralTopic}}"><text>口语主题</text><view>{{previousLessonReference.oralTopic}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.targetExpression}}"><text>目标表达</text><view>{{previousLessonReference.targetExpression}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.independentOutput}}"><text>独立输出</text><view>{{previousLessonReference.independentOutput}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.masterySummary}}"><text>掌握情况</text><view>{{previousLessonReference.masterySummary}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.correctionNotes}}"><text>需要纠正</text><view>{{previousLessonReference.correctionNotes}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.ketSkill}}"><text>KET 技能</text><view>{{previousLessonReference.ketSkill}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.nextReview}}"><text>下节复习</text><view>{{previousLessonReference.nextReview}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.homeworkTask}}"><text>课后任务</text><view>{{previousLessonReference.homeworkTask}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.recordingPrompt}}"><text>录音要求</text><view>{{previousLessonReference.recordingPrompt}}</view></view>
+        </view>
+      </view>
+
       <block wx:if="{{workspaceForm.lessonTemplateKey === 'feng_beginner'}}">
       <view class="field">
         <view class="label">今日复习</view>
@@ -184,6 +210,13 @@
           <view class="field-hint">开启后，学生会在本课程页看到录音按钮。</view>
         </view>
         <switch checked="{{workspaceForm.recordingTaskEnabled}}" color="#4f8f73" bindchange="onRecordingTaskChange" />
+      </view>
+      <view class="field recording-due-field" wx:if="{{workspaceForm.recordingTaskEnabled}}">
+        <view class="label">录音作业期限</view>
+        <picker mode="selector" range="{{homeworkDueOptions}}" range-key="label" value="{{homeworkDueIndex}}" bindchange="onHomeworkDueChange">
+          <view class="picker-value">{{homeworkDueOptions[homeworkDueIndex].label}}</view>
+        </picker>
+        <view class="field-hint">以课程日期为当天，最多设置到 7 天后；历史任务未设置时可继续保持不变。</view>
       </view>
       <view class="field" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.lessonTemplateKey === 'molly_oral_ket'}}">
         <view class="label">Molly 的录音任务类型</view>
@@ -279,6 +312,9 @@
         <view class="recording-task-meta">
           <view class="recording-meta-chip">{{lesson.recordingTaskType === 'ket_official' ? '录制 1 次' : '朗读 ' + lesson.recordingRepeatCount + ' 遍'}}</view>
           <view class="recording-meta-chip">{{lesson.recordingPreparationSeconds ? '练习准备 ' + lesson.recordingPreparationSeconds + ' 秒' : '直接听题回答'}}</view>
+          <view class="recording-meta-chip deadline-chip deadline-{{lesson.homeworkSubmittedLate ? 'late' : lesson.homeworkDueStatus}}" wx:if="{{lesson.homeworkSubmittedLate || (!lesson.homeworkCompleted && !lesson.homeworkHasSubmission && lesson.homeworkDueLabel)}}">
+            {{lesson.homeworkSubmittedLate ? '逾期提交' : lesson.homeworkDueLabel}}
+          </view>
         </view>
         <view class="ket-timing-note" wx:if="{{lesson.recordingTaskType === 'ket_official' && lesson.ketSpeakingTask}}">{{lesson.ketSpeakingTask.timingLabel}}</view>
         <view class="recording-privacy" wx:if="{{isStudent}}">录音只用于老师检查本次朗读。</view>
@@ -352,7 +388,10 @@
         <view class="submission-row" wx:for="{{submissions}}" wx:key="_id">
           <view class="submission-main">
             <view class="submission-name">第 {{item.displayAttemptNo}} 次录音 · {{item.durationLabel}}</view>
-            <view class="submission-status status-{{item.status === '已听' || item.status === '朗读正确' ? 'independent' : item.status === '需要重录' ? 'pending' : 'prompted'}}">{{item.status}}</view>
+            <view class="submission-status-wrap">
+              <view class="submission-status status-{{item.status === '已听' || item.status === '朗读正确' ? 'independent' : item.status === '需要重录' ? 'pending' : 'prompted'}}">{{item.status}}</view>
+              <view class="submission-late-status" wx:if="{{item.submittedLate}}">逾期提交</view>
+            </view>
           </view>
           <view class="submission-actions">
             <view class="listen-btn {{!item.audioAvailable ? 'disabled-action' : ''}}" data-index="{{index}}" bindtap="playSubmission">{{playingSubmissionId === item._id ? '正在播放' : item.audioAvailable ? '播放录音' : '录音暂不可用'}}</view>

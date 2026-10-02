@@ -4,6 +4,7 @@ const appConfig = require("./config");
 const vocabulary = require("./vocabulary");
 const vocabularyQuiz = require("./vocabularyQuiz");
 const frenchLearning = require("./frenchLearning");
+const courseWorkflow = require("./courseWorkflow");
 const KET_SPEAKING_TASKS = require("./data/ket-speaking-tasks.json");
 
 cloud.init({
@@ -57,6 +58,7 @@ const SEED_STUDENTS = (Array.isArray(appConfig.seedStudents) ? appConfig.seedStu
   }, student || {});
   seed.vocabularySettings = seed.vocabularySettings
     || vocabulary.getRecommendedVocabularySettings({ name: seed.name, accessCode: seed.accessCode });
+  seed.lessonPackageSize = courseWorkflow.getLessonPackageSize(seed);
   return seed;
 });
 
@@ -478,6 +480,14 @@ const toNonNegativeNumber = (value, fieldName) => {
   return num;
 };
 
+const toLessonPackageSize = (value) => {
+  const number = Number(value || 0);
+  if (!Number.isInteger(number) || number < 0 || number > 100) {
+    throw createError("INVALID_PROGRESS", "常用加课数量必须是 0–100 的整数");
+  }
+  return number;
+};
+
 const attachQuestionImageUrl = async (mistake) => {
   if (!mistake || !mistake.questionImageFileId) return mistake;
   try {
@@ -495,19 +505,7 @@ const attachQuestionImageUrl = async (mistake) => {
   }
 };
 
-const buildProgress = (student) => {
-  const plannedRaw = Number(student.plannedLessonCount || 0);
-  const completedRaw = Number(student.completedLessonCount || 0);
-  const plannedLessonCount = Number.isFinite(plannedRaw) && plannedRaw > 0 ? plannedRaw : 0;
-  const completedLessonCount = Number.isFinite(completedRaw) && completedRaw > 0 ? completedRaw : 0;
-  const progressPercent = plannedLessonCount ? Math.min(100, Math.round((completedLessonCount / plannedLessonCount) * 100)) : 0;
-  return {
-    plannedLessonCount,
-    completedLessonCount,
-    progressPercent,
-    progressText: `${completedLessonCount} / ${plannedLessonCount}`,
-  };
-};
+const buildProgress = (student) => courseWorkflow.buildLessonProgress(student);
 
 const summarizeProgress = (students) => {
   let plannedLessonCount = 0;
@@ -536,6 +534,12 @@ const buildStudentProgressItem = (student) => {
     plannedLessonCount: safeStudent.plannedLessonCount,
     completedLessonCount: safeStudent.completedLessonCount,
     progressPercent: safeStudent.progressPercent,
+    lessonPackageSize: safeStudent.lessonPackageSize,
+    remainingLessonCount: safeStudent.remainingLessonCount,
+    lessonReminderThreshold: safeStudent.lessonReminderThreshold,
+    showProgressMarker: safeStudent.showProgressMarker,
+    progressMarkerPercent: safeStudent.progressMarkerPercent,
+    progressTone: safeStudent.progressTone,
     hasPlannedLessonCount,
     progressLabel: hasPlannedLessonCount
       ? `已上 ${safeStudent.completedLessonCount} / ${safeStudent.plannedLessonCount} 节`
@@ -956,7 +960,9 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
     ),
   ]);
   const progress = buildProgress(syncedStudent);
-  const studentLessons = (recentLessonRes.data || []).map(withTeacherConfirmedHomeworkState);
+  const studentLessons = (recentLessonRes.data || [])
+    .map(withTeacherConfirmedHomeworkState)
+    .map((lesson) => withHomeworkDeadlineState(lesson));
   const homeworkLessons = studentLessons.filter(hasLessonHomework);
   const pendingHomeworkLessons = homeworkLessons.filter((lesson) => !isLessonHomeworkCompleted(lesson));
   return {
@@ -1057,7 +1063,8 @@ const getHomeData = async (event = {}) => {
     ]);
     const allLessons = lessonResults
       .flatMap((items) => items || [])
-      .map(withTeacherConfirmedHomeworkState);
+      .map(withTeacherConfirmedHomeworkState)
+      .map((lesson) => withHomeworkDeadlineState(lesson));
     const mistakeCount = mistakeCounts.reduce((total, item) => total + Number(item && item.total || 0), 0);
     const recentLessons = allLessons
       .sort((left, right) => String(right.lessonDate || "").localeCompare(String(left.lessonDate || "")))
@@ -1559,6 +1566,9 @@ const addStudent = async (event) => {
   });
   const plannedLessonCount = toNonNegativeNumber(data.plannedLessonCount, "总课时");
   const completedLessonCount = toNonNegativeNumber(data.completedLessonCount, "已上课时");
+  const lessonPackageSize = Object.prototype.hasOwnProperty.call(data, "lessonPackageSize")
+    ? toLessonPackageSize(data.lessonPackageSize)
+    : courseWorkflow.getDefaultLessonPackageSize(data);
   if (plannedLessonCount > 0 && completedLessonCount > plannedLessonCount) {
     throw createError("INVALID_PROGRESS", "已上课时不能大于总课时");
   }
@@ -1580,6 +1590,7 @@ const addStudent = async (event) => {
     subject: data.subject || appConfig.defaultSubject,
     plannedLessonCount,
     completedLessonCount,
+    lessonPackageSize,
     recordedLessonCount: 0,
     vocabularyEnabled: false,
     englishCourseEnabled: true,
@@ -1656,20 +1667,27 @@ const updateStudentProgress = async (event) => {
   if (plannedLessonCount > 0 && completedLessonCount > plannedLessonCount) {
     throw createError("INVALID_PROGRESS", "已上课时不能大于总课时");
   }
-  const recordedLessonCount = await getStudentLessonCount(data.studentId);
+  const [recordedLessonCount, studentRes] = await Promise.all([
+    getStudentLessonCount(data.studentId),
+    db.collection("students").doc(data.studentId).get(),
+  ]);
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const lessonPackageSize = Object.prototype.hasOwnProperty.call(data, "lessonPackageSize")
+    ? toLessonPackageSize(data.lessonPackageSize)
+    : courseWorkflow.getLessonPackageSize(studentRes.data);
   await db.collection("students").doc(data.studentId).update({
     data: {
       plannedLessonCount,
       completedLessonCount,
+      lessonPackageSize,
       recordedLessonCount,
     },
   });
-  return {
-    success: true,
+  return Object.assign({ success: true }, buildProgress({
     plannedLessonCount,
     completedLessonCount,
-    progressPercent: plannedLessonCount ? Math.round((completedLessonCount / plannedLessonCount) * 100) : 0,
-  };
+    lessonPackageSize,
+  }));
 };
 
 const seedStudents = async () => {
@@ -1764,7 +1782,9 @@ const getStudentDetail = async (event) => {
     role: identity.role,
     student: sanitizeStudent(student, identity.role === "teacher"),
     vocabularyLevels: getVocabularyLibrary().levels.filter((level) => !level.isReferenceOnly),
-    lessons: lessons.map(withTeacherConfirmedHomeworkState),
+    lessons: lessons
+      .map(withTeacherConfirmedHomeworkState)
+      .map((lesson) => withHomeworkDeadlineState(lesson)),
     cycleStatus: canReadMistakeLearning ? buildCycleStatus(student) : null,
     analytics,
     vocabularyOverview,
@@ -1787,9 +1807,26 @@ const listStudentHomework = async (event) => {
   if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
   ensureEnglishCourseAccess(identity, studentRes.data, data);
   const lessons = (await loadAllVocabularyDocuments("lessons", { studentId }, "lessonDate", "desc"))
-    .map(withTeacherConfirmedHomeworkState);
+    .map(withTeacherConfirmedHomeworkState)
+    .map((lesson) => withHomeworkDeadlineState(lesson));
   const homeworkLessons = lessons.filter(hasLessonHomework);
-  const pendingLessons = homeworkLessons.filter((lesson) => !isLessonHomeworkCompleted(lesson));
+  const deadlinePriority = { overdue: 0, today: 1, upcoming: 2, none: 3 };
+  const pendingLessons = homeworkLessons
+    .filter((lesson) => !isLessonHomeworkCompleted(lesson))
+    .sort((left, right) => {
+      const leftPriority = Object.prototype.hasOwnProperty.call(deadlinePriority, left.homeworkDueStatus)
+        ? deadlinePriority[left.homeworkDueStatus]
+        : 3;
+      const rightPriority = Object.prototype.hasOwnProperty.call(deadlinePriority, right.homeworkDueStatus)
+        ? deadlinePriority[right.homeworkDueStatus]
+        : 3;
+      const statusDiff = leftPriority - rightPriority;
+      if (statusDiff) return statusDiff;
+      const dueDiff = String(left.homeworkDueDate || "9999-12-31")
+        .localeCompare(String(right.homeworkDueDate || "9999-12-31"));
+      if (dueDiff) return dueDiff;
+      return String(right.lessonDate || "").localeCompare(String(left.lessonDate || ""));
+    });
   const completedLessons = homeworkLessons.filter(isLessonHomeworkCompleted);
   return {
     success: true,
@@ -2979,7 +3016,9 @@ const listLessons = async (event) => {
   return {
     success: true,
     role: identity.role,
-    data: (res.data || []).map(withTeacherConfirmedHomeworkState),
+    data: (res.data || [])
+      .map(withTeacherConfirmedHomeworkState)
+      .map((lesson) => withHomeworkDeadlineState(lesson)),
   };
 };
 
@@ -2988,6 +3027,75 @@ const toLessonNoInteger = (value) => {
   if (!/^\d+$/.test(text)) return null;
   const num = Number(text);
   return Number.isSafeInteger(num) && num > 0 ? num : null;
+};
+
+const buildPreviousLessonReference = (lesson) => {
+  if (!lesson) return null;
+  const reference = {
+    _id: String(lesson._id || ""),
+    title: String(lesson.title || "").trim(),
+    subject: String(lesson.subject || appConfig.defaultSubject || "英语").trim(),
+    lessonDate: String(lesson.lessonDate || "").trim(),
+    lessonNo: String(lesson.lessonNo || "").trim(),
+    lessonTemplateKey: LESSON_TEMPLATE_KEYS.includes(lesson.lessonTemplateKey)
+      ? lesson.lessonTemplateKey
+      : "general",
+    reviewContent: String(lesson.reviewContent || "").trim(),
+    taughtContent: String(lesson.taughtContent || "").trim(),
+    masterySummary: String(lesson.masterySummary || lesson.summary || "").trim(),
+    oralTopic: String(lesson.oralTopic || "").trim(),
+    targetExpression: String(lesson.targetExpression || "").trim(),
+    independentOutput: String(lesson.independentOutput || "").trim(),
+    correctionNotes: String(lesson.correctionNotes || "").trim(),
+    ketSkill: String(lesson.ketSkill || "").trim(),
+    nextReview: String(lesson.nextReview || "").trim(),
+    homeworkTask: String(lesson.homeworkTask || "").trim(),
+    recordingTaskEnabled: lesson.recordingTaskEnabled === true,
+    recordingPrompt: String(lesson.recordingPrompt || "").trim(),
+    recordingRepeatCount: normalizeRecordingRepeatCount(lesson.recordingRepeatCount),
+    homeworkDueDays: Number.isInteger(Number(lesson.homeworkDueDays))
+      ? Number(lesson.homeworkDueDays)
+      : -1,
+  };
+  reference.hasReferenceContent = Boolean(
+    reference.reviewContent
+    || reference.taughtContent
+    || reference.masterySummary
+    || reference.oralTopic
+    || reference.targetExpression
+    || reference.independentOutput
+    || reference.correctionNotes
+    || reference.ketSkill
+    || reference.nextReview
+    || reference.homeworkTask
+    || reference.recordingPrompt
+  );
+  return reference;
+};
+
+const findPreviousLessonReference = (lessons, currentLesson) => {
+  const currentId = String(currentLesson && currentLesson._id || "");
+  const currentLessonNo = toLessonNoInteger(currentLesson && currentLesson.lessonNo);
+  const candidates = (lessons || []).filter((item) => String(item && item._id || "") !== currentId);
+  let eligible = currentLessonNo
+    ? candidates.filter((item) => {
+      const lessonNo = toLessonNoInteger(item && item.lessonNo);
+      return lessonNo && lessonNo < currentLessonNo;
+    })
+    : [];
+  if (!eligible.length) {
+    eligible = candidates.filter((item) => (
+      String(item && item.lessonDate || "") <= String(currentLesson && currentLesson.lessonDate || "")
+    ));
+  }
+  eligible.sort((left, right) => {
+    const lessonNoDiff = (toLessonNoInteger(right.lessonNo) || 0) - (toLessonNoInteger(left.lessonNo) || 0);
+    if (lessonNoDiff) return lessonNoDiff;
+    const dateDiff = String(right.lessonDate || "").localeCompare(String(left.lessonDate || ""));
+    if (dateDiff) return dateDiff;
+    return getCreatedTime(right) - getCreatedTime(left);
+  });
+  return buildPreviousLessonReference(eligible[0]);
 };
 
 const getNextLessonNo = async (event) => {
@@ -2999,6 +3107,7 @@ const getNextLessonNo = async (event) => {
   }
 
   let maxLessonNo = 0;
+  let previousLesson = null;
   const pageSize = 100;
   const lessonsQuery = db.collection("lessons").where({ studentId });
   const countRes = await lessonsQuery.count();
@@ -3009,6 +3118,13 @@ const getNextLessonNo = async (event) => {
       if (lessonNo && lessonNo > maxLessonNo) {
         maxLessonNo = lessonNo;
       }
+      const previousLessonNo = previousLesson ? toLessonNoInteger(previousLesson.lessonNo) : null;
+      const hasLaterLessonNo = lessonNo && (!previousLessonNo || lessonNo > previousLessonNo);
+      const sameLessonNo = lessonNo && previousLessonNo && lessonNo === previousLessonNo;
+      const hasLaterDate = String(lesson.lessonDate || "") > String(previousLesson && previousLesson.lessonDate || "");
+      if (!previousLesson || hasLaterLessonNo || (sameLessonNo && hasLaterDate) || (!lessonNo && !previousLessonNo && hasLaterDate)) {
+        previousLesson = lesson;
+      }
     });
   }
 
@@ -3017,6 +3133,7 @@ const getNextLessonNo = async (event) => {
     maxLessonNo,
     nextLessonNo: maxLessonNo + 1,
     hasHistory: maxLessonNo > 0,
+    previousLesson: buildPreviousLessonReference(previousLesson),
   };
 };
 
@@ -3035,6 +3152,16 @@ const normalizeRecordingRepeatCount = (value) => {
 const normalizeRecordingPreparationSeconds = (value) => {
   const seconds = Math.trunc(Number(value));
   return RECORDING_PREPARATION_OPTIONS.includes(seconds) ? seconds : 5;
+};
+
+const normalizeHomeworkDueDays = (value, recordingTaskEnabled) => {
+  if (!recordingTaskEnabled) return -1;
+  if (value === undefined || value === null || value === "") return -1;
+  const days = Number(value);
+  if (!Number.isInteger(days) || days < -1 || days > courseWorkflow.MAX_HOMEWORK_DUE_DAYS) {
+    throw createError("INVALID_HOMEWORK_DEADLINE", "录音作业期限只能设置为当天至 7 天后");
+  }
+  return days;
 };
 
 const normalizeLearningObservations = (items) => (Array.isArray(items) ? items : [])
@@ -3076,6 +3203,7 @@ const normalizeLessonWorkspacePayload = (data = {}) => {
     nextReview: normalizeLessonText(data.nextReview),
     homeworkTask: normalizeLessonText(data.homeworkTask),
     recordingTaskEnabled,
+    homeworkDueDays: normalizeHomeworkDueDays(data.homeworkDueDays, recordingTaskEnabled),
     recordingTaskType,
     recordingPrompt: recordingTaskType === "ket_official"
       ? officialTask.prompt
@@ -3121,6 +3249,10 @@ const withTeacherConfirmedHomeworkState = (lesson) => {
   });
 };
 
+const withHomeworkDeadlineState = (lesson, now = Date.now()) => (
+  Object.assign({}, lesson, courseWorkflow.buildHomeworkDeadlineState(lesson, now))
+);
+
 const getHomeworkTaskSignature = (lesson = {}) => JSON.stringify({
   homeworkTask: String(lesson.homeworkTask || "").trim(),
   recordingTaskEnabled: lesson.recordingTaskEnabled === true,
@@ -3140,6 +3272,9 @@ const buildHomeworkResetFields = (taskVersion) => ({
   homeworkTeacherReviewStatus: "unreviewed",
   homeworkTeacherReviewedAt: null,
   homeworkTeacherReviewedAtMs: 0,
+  homeworkFirstSubmittedAtMs: 0,
+  homeworkLastSubmittedAtMs: 0,
+  homeworkSubmittedLate: false,
   homeworkReminderSubscribed: false,
   homeworkReminderNotifyOpenId: "",
   homeworkReminderNotifyStatus: "not_subscribed",
@@ -3309,6 +3444,12 @@ const updateLessonWorkspace = async (event) => {
     };
     if (taskChanged) {
       Object.assign(updateData, buildHomeworkResetFields(Number(lesson.homeworkTaskVersion || 0) + 1));
+    } else {
+      updateData.homeworkSubmittedLate = courseWorkflow.buildHomeworkDeadlineState(
+        Object.assign({}, lesson, workspace),
+        Date.now(),
+        lesson.homeworkFirstSubmittedAtMs
+      ).homeworkSubmittedLate;
     }
     await lessonRef.update({ data: updateData });
     return { taskChanged, homeworkTaskVersion: updateData.homeworkTaskVersion || lesson.homeworkTaskVersion || 1 };
@@ -3554,10 +3695,13 @@ const getLessonDetail = async (event) => {
     ensureEnglishCourseAccess(identity, student, data);
     canReadMistakes = isMistakeLearningEnabled(student);
   }
-  const [lessonPapers, lessonMistakes, lessonSubmissions] = await Promise.all([
+  const [lessonPapers, lessonMistakes, lessonSubmissions, studentLessons] = await Promise.all([
     loadAllLessonDocuments("papers", lessonId),
     loadAllLessonDocuments("mistakes", lessonId),
     loadAllLessonDocuments("lessonSubmissions", lessonId),
+    identity.role === "teacher" && data.mode !== "teacherPreview"
+      ? loadAllStudentDocuments("lessons", lesson.studentId)
+      : Promise.resolve([]),
   ]);
   const isStudentView = identity.role === "student" || data.mode === "teacherPreview";
   const papers = lessonPapers.filter((item) => (
@@ -3584,14 +3728,20 @@ const getLessonDetail = async (event) => {
   });
   mistakes.sort((a, b) => getCreatedTime(b) - getCreatedTime(a));
   submissions.sort((a, b) => getCreatedTime(b) - getCreatedTime(a));
+  const submissionsWithTiming = submissions.map((item) => Object.assign({}, item, {
+    submittedLate: courseWorkflow.isLateHomeworkSubmission(
+      lesson,
+      Number(item.createdAtMs) || getCreatedTime(item)
+    ),
+  }));
   const [papersWithUrls, submissionsWithAudioUrls] = await Promise.all([
     attachLessonPaperUrls(papers),
-    attachLessonSubmissionAudioUrls(submissions),
+    attachLessonSubmissionAudioUrls(submissionsWithTiming),
   ]);
   return {
     success: true,
     role: identity.role,
-    lesson: withTeacherConfirmedHomeworkState(lesson),
+    lesson: withHomeworkDeadlineState(withTeacherConfirmedHomeworkState(lesson)),
     student: {
       _id: student._id,
       name: student.name || "学生",
@@ -3599,6 +3749,9 @@ const getLessonDetail = async (event) => {
     papers: papersWithUrls,
     mistakes,
     submissions: submissionsWithAudioUrls,
+    previousLesson: identity.role === "teacher" && data.mode !== "teacherPreview"
+      ? findPreviousLessonReference(studentLessons, lesson)
+      : null,
     mistakeLearningEnabled: canReadMistakes,
   };
 };
@@ -3839,6 +3992,51 @@ const isUsableLessonRecording = (submission) => Boolean(
   submission && submission.kind === "audio" && submission.status !== "需要重录"
 );
 
+const syncLessonSubmissionTiming = async (lessonId) => {
+  const lessonRes = await db.collection("lessons").doc(lessonId).get();
+  const lesson = lessonRes.data;
+  if (!lesson || lesson.deleting === true) return null;
+  const currentTaskVersion = Math.max(1, Number(lesson.homeworkTaskVersion) || 1);
+  const submissions = (await loadAllLessonDocuments("lessonSubmissions", lessonId))
+    .filter((item) => (
+      item.studentId === lesson.studentId
+      && isUsableLessonRecording(item)
+      && Math.max(1, Number(item.homeworkTaskVersion) || 1) === currentTaskVersion
+    ))
+    .sort((left, right) => (
+      (Number(left.createdAtMs) || getCreatedTime(left))
+      - (Number(right.createdAtMs) || getCreatedTime(right))
+    ));
+  const firstSubmittedAtMs = submissions.length
+    ? Number(submissions[0].createdAtMs) || getCreatedTime(submissions[0])
+    : 0;
+  const lastSubmittedAtMs = submissions.length
+    ? Number(submissions[submissions.length - 1].createdAtMs) || getCreatedTime(submissions[submissions.length - 1])
+    : 0;
+  const deadlineState = courseWorkflow.buildHomeworkDeadlineState(
+    lesson,
+    Date.now(),
+    firstSubmittedAtMs
+  );
+  await db.collection("lessons").doc(lessonId).update({
+    data: {
+      homeworkFirstSubmittedAtMs: firstSubmittedAtMs,
+      homeworkLastSubmittedAtMs: lastSubmittedAtMs,
+      homeworkSubmittedLate: deadlineState.homeworkSubmittedLate,
+    },
+  });
+  return Object.assign({ firstSubmittedAtMs, lastSubmittedAtMs }, deadlineState);
+};
+
+const syncLessonSubmissionTimingSafely = async (lessonId) => {
+  try {
+    return await syncLessonSubmissionTiming(lessonId);
+  } catch (err) {
+    console.error("sync lesson submission timing failed", lessonId, err);
+    return null;
+  }
+};
+
 const resetCompletedHomeworkWhenNoUsableRecording = async (lessonId, invalidatedAtMs) => {
   const submissions = await loadAllLessonDocuments("lessonSubmissions", lessonId);
   const usableSubmissionIds = submissions
@@ -3851,11 +4049,17 @@ const resetCompletedHomeworkWhenNoUsableRecording = async (lessonId, invalidated
     if (!lesson || lesson.deleting === true || lesson.recordingTaskEnabled !== true) return false;
     if (!isLessonHomeworkCompleted(lesson)) return false;
     if (Number(lesson.homeworkCompletedAtMs || 0) > Number(invalidatedAtMs || 0)) return false;
+    const currentTaskVersion = Math.max(1, Number(lesson.homeworkTaskVersion) || 1);
     for (let i = 0; i < usableSubmissionIds.length; i += 1) {
       const current = await getOptionalTransactionDocument(
         transaction.collection("lessonSubmissions").doc(usableSubmissionIds[i])
       );
-      if (current && current.lessonId === lessonId && isUsableLessonRecording(current)) return false;
+      if (
+        current
+        && current.lessonId === lessonId
+        && isUsableLessonRecording(current)
+        && Math.max(1, Number(current.homeworkTaskVersion) || 1) === currentTaskVersion
+      ) return false;
     }
     await lessonRef.update({
       data: buildHomeworkResetFields(lesson.homeworkTaskVersion || 1),
@@ -3884,7 +4088,8 @@ const submitLessonRecording = async (event) => {
     throw createError("RECORDING_NOT_ASSIGNED", "老师尚未为这节课布置录音任务");
   }
   await createOneCollection("lessonSubmissions");
-  const submissionId = `submission_${Date.now()}_${crypto.randomBytes(8).toString("hex")}`;
+  const submittedAtMs = Date.now();
+  const submissionId = `submission_${submittedAtMs}_${crypto.randomBytes(8).toString("hex")}`;
   const cloudPath = normalizeLessonText(data.cloudPath, 500);
   await db.runTransaction(async (transaction) => {
     const lessonRef = transaction.collection("lessons").doc(lessonId);
@@ -3909,15 +4114,34 @@ const submitLessonRecording = async (event) => {
       lessonTitleSnapshot: normalizeLessonText(currentLesson.title || "英语课", 200),
       lessonDateSnapshot: normalizeLessonText(currentLesson.lessonDate, 30),
       lessonNoSnapshot: normalizeLessonText(currentLesson.lessonNo, 30),
+      homeworkTaskVersion: Math.max(1, Number(currentLesson.homeworkTaskVersion) || 1),
       attemptNo: Math.max(1, Math.min(99, Math.trunc(Number(data.attemptNo)) || 1)),
       status: "待检查",
       teacherFeedback: "",
+      submittedLate: courseWorkflow.isLateHomeworkSubmission(currentLesson, submittedAtMs),
       createdAt: db.serverDate(),
-      createdAtMs: Date.now(),
+      createdAtMs: submittedAtMs,
     };
     await transaction.collection("lessonSubmissions").doc(submissionId).set({ data: submission });
+    const existingFirstSubmittedAtMs = Number(currentLesson.homeworkFirstSubmittedAtMs) || 0;
+    const firstSubmittedAtMs = existingFirstSubmittedAtMs || submittedAtMs;
+    await lessonRef.update({
+      data: {
+        homeworkFirstSubmittedAtMs: firstSubmittedAtMs,
+        homeworkLastSubmittedAtMs: submittedAtMs,
+        homeworkSubmittedLate: courseWorkflow.isLateHomeworkSubmission(currentLesson, firstSubmittedAtMs),
+      },
+    });
   });
-  return { success: true, _id: submissionId, homeworkAutoCompleted: false };
+  const submissionTiming = await syncLessonSubmissionTimingSafely(lessonId);
+  return {
+    success: true,
+    _id: submissionId,
+    homeworkAutoCompleted: false,
+    homeworkSubmittedLate: submissionTiming
+      ? submissionTiming.homeworkSubmittedLate
+      : courseWorkflow.isLateHomeworkSubmission(lesson, submittedAtMs),
+  };
 };
 
 const organizeLessonRecordingFiles = async (event) => {
@@ -4002,6 +4226,7 @@ const reviewLessonRecording = async (event) => {
   if (status === "需要重录") {
     await resetCompletedHomeworkWhenNoUsableRecording(submission.lessonId, reviewStartedAtMs);
   }
+  await syncLessonSubmissionTimingSafely(submission.lessonId);
   return { success: true, submissionId, status, teacherFeedback };
 };
 
@@ -4030,6 +4255,7 @@ const deleteLessonRecording = async (event) => {
   if (!deleted) return { success: true, submissionId, alreadyDeleted: true };
   await deleteUnsafeFiles([deleted.fileID]);
   const homeworkReset = await resetCompletedHomeworkWhenNoUsableRecording(lessonId, deletionStartedAtMs);
+  await syncLessonSubmissionTimingSafely(lessonId);
   return { success: true, submissionId, homeworkReset };
 };
 

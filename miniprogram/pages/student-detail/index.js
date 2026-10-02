@@ -31,6 +31,7 @@ Page({
     progressForm: {
       plannedLessonCount: "",
       completedLessonCount: "",
+      lessonPackageSize: "",
     },
     vocabularyLevels: FALLBACK_VOCABULARY_LEVELS.map((item) => Object.assign({}, item, { checked: false })),
     dailyGoalOptions: DAILY_GOAL_OPTIONS,
@@ -632,6 +633,7 @@ Page({
       progressForm: {
         plannedLessonCount: String(this.data.student.plannedLessonCount || 0),
         completedLessonCount: String(this.data.student.completedLessonCount || 0),
+        lessonPackageSize: String(this.data.student.lessonPackageSize || 0),
       },
     });
   },
@@ -660,6 +662,7 @@ Page({
             studentId: this.data.student._id,
             plannedLessonCount: this.data.progressForm.plannedLessonCount,
             completedLessonCount: this.data.progressForm.completedLessonCount,
+            lessonPackageSize: this.data.progressForm.lessonPackageSize,
           },
         },
       })

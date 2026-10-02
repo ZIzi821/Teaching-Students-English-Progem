@@ -156,6 +156,31 @@
   font-size: 22rpx;
 }
 
+.task-deadline {
+  display: inline-flex;
+  margin-top: 12rpx;
+  padding: 7rpx 12rpx;
+  border-radius: 999rpx;
+  font-size: 21rpx;
+  font-weight: 800;
+}
+
+.deadline-upcoming {
+  color: #4f7462;
+  background: #e8f2ed;
+}
+
+.deadline-today {
+  color: #8a6730;
+  background: #ffedc2;
+}
+
+.deadline-overdue,
+.deadline-late {
+  color: #985148;
+  background: #fae6e4;
+}
+
 .task-link {
   margin-top: 17rpx;
   color: #39765d;

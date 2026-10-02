@@ -63,8 +63,9 @@
     </view>
   </view>
 
-  <view class="home-progress" wx:if="{{isStudent && englishCourseEnabled}}">
+  <view class="home-progress progress-tone-{{stats.progress.progressTone}}" wx:if="{{isStudent && englishCourseEnabled}}">
     <view class="home-progress-fill" style="width: {{stats.progress.progressPercent}}%;"></view>
+    <view class="lesson-progress-marker" wx:if="{{stats.progress.showProgressMarker}}" style="left: {{stats.progress.progressMarkerPercent}}%;"></view>
   </view>
 
   <view class="card teacher-homework-notice-card" wx:if="{{isStudent && studentLearningActivities.length}}">
@@ -192,11 +193,12 @@
           <view class="student-progress-name">{{item.name}}</view>
           <view class="student-progress-grade">{{item.grade}}</view>
         </view>
-        <view class="student-progress-percent" wx:if="{{item.hasPlannedLessonCount}}">{{item.progressPercent}}%</view>
+        <view class="student-progress-percent progress-number-{{item.progressTone}}" wx:if="{{item.hasPlannedLessonCount}}">{{item.progressPercent}}%</view>
       </view>
       <view class="student-progress-text">{{item.progressLabel}}</view>
-      <view class="student-progress-bar">
+      <view class="student-progress-bar progress-tone-{{item.progressTone}}">
         <view class="student-progress-fill" style="width: {{item.progressPercent}}%;"></view>
+        <view class="lesson-progress-marker" wx:if="{{item.showProgressMarker}}" style="left: {{item.progressMarkerPercent}}%;"></view>
       </view>
       <view class="student-vocabulary-row" wx:if="{{item.vocabularyPulse.enabled}}">
         <view>
@@ -227,6 +229,7 @@
         <text class="lesson-task-badge" wx:if="{{item.homeworkTask}}">课后任务</text>
         <text class="lesson-task-badge recording-task-badge" wx:if="{{item.recordingTaskEnabled}}">录音任务</text>
         <text class="lesson-task-badge {{item.homeworkCompleted ? 'homework-done-badge' : 'homework-waiting-badge'}}">{{item.homeworkCompleted ? '学生已完成' : '等待完成'}}</text>
+        <text class="lesson-task-badge deadline-{{item.homeworkSubmittedLate ? 'late' : item.homeworkDueStatus}}" wx:if="{{item.recordingTaskEnabled && (item.homeworkSubmittedLate || (!item.homeworkCompleted && !item.homeworkHasSubmission && item.homeworkDueLabel))}}">{{item.homeworkSubmittedLate ? '逾期提交' : item.homeworkDueLabel}}</text>
       </view>
       <view class="lesson-summary">{{item.masterySummary || item.summary}}</view>
     </view>

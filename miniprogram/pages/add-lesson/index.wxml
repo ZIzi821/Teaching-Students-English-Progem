@@ -42,6 +42,40 @@
 
   </view>
 
+  <view class="card previous-reference-card" wx:if="{{previousLessonReference}}">
+    <view class="previous-reference-head" bindtap="togglePreviousLessonReference">
+      <view>
+        <view class="previous-reference-kicker">上一节课对照</view>
+        <view class="previous-reference-title">{{previousLessonReference.title || '上一节英语课'}}</view>
+        <view class="previous-reference-meta">{{previousLessonReference.lessonDate}} · 第 {{previousLessonReference.lessonNo || '—'}} 节</view>
+      </view>
+      <view class="previous-reference-toggle">{{showPreviousLessonReference ? '收起' : '展开'}}</view>
+    </view>
+    <view class="previous-reference-note">这里只显示上次填写内容，不会自动复制到本节课。</view>
+    <view class="previous-reference-body" wx:if="{{showPreviousLessonReference}}">
+      <view class="previous-reference-empty" wx:if="{{!previousLessonReference.hasReferenceContent}}">上一节课没有填写课后整理内容。</view>
+      <block wx:if="{{previousLessonReference.lessonTemplateKey === 'feng_beginner'}}">
+        <view class="previous-reference-row" wx:if="{{previousLessonReference.reviewContent}}"><text>今日复习</text><view>{{previousLessonReference.reviewContent}}</view></view>
+        <view class="previous-reference-row" wx:if="{{previousLessonReference.taughtContent}}"><text>今日新内容</text><view>{{previousLessonReference.taughtContent}}</view></view>
+        <view class="previous-reference-row" wx:if="{{previousLessonReference.masterySummary}}"><text>掌握情况</text><view>{{previousLessonReference.masterySummary}}</view></view>
+      </block>
+      <block wx:elif="{{previousLessonReference.lessonTemplateKey === 'molly_oral_ket'}}">
+        <view class="previous-reference-row" wx:if="{{previousLessonReference.oralTopic}}"><text>口语主题</text><view>{{previousLessonReference.oralTopic}}</view></view>
+        <view class="previous-reference-row" wx:if="{{previousLessonReference.targetExpression}}"><text>目标表达</text><view>{{previousLessonReference.targetExpression}}</view></view>
+        <view class="previous-reference-row" wx:if="{{previousLessonReference.independentOutput}}"><text>独立输出</text><view>{{previousLessonReference.independentOutput}}</view></view>
+        <view class="previous-reference-row" wx:if="{{previousLessonReference.correctionNotes}}"><text>需要纠正</text><view>{{previousLessonReference.correctionNotes}}</view></view>
+        <view class="previous-reference-row" wx:if="{{previousLessonReference.ketSkill}}"><text>KET 技能</text><view>{{previousLessonReference.ketSkill}}</view></view>
+      </block>
+      <block wx:else>
+        <view class="previous-reference-row" wx:if="{{previousLessonReference.taughtContent}}"><text>上节内容</text><view>{{previousLessonReference.taughtContent}}</view></view>
+        <view class="previous-reference-row" wx:if="{{previousLessonReference.masterySummary}}"><text>掌握情况</text><view>{{previousLessonReference.masterySummary}}</view></view>
+      </block>
+      <view class="previous-reference-row" wx:if="{{previousLessonReference.nextReview}}"><text>下节复习</text><view>{{previousLessonReference.nextReview}}</view></view>
+      <view class="previous-reference-row" wx:if="{{previousLessonReference.homeworkTask}}"><text>课后任务</text><view>{{previousLessonReference.homeworkTask}}</view></view>
+      <view class="previous-reference-row" wx:if="{{previousLessonReference.recordingPrompt}}"><text>录音要求</text><view>{{previousLessonReference.recordingPrompt}}</view></view>
+    </view>
+  </view>
+
   <view class="card optional-card">
     <view class="optional-head" bindtap="toggleLessonRecord">
       <view>
@@ -114,6 +148,13 @@
           <view class="field-tip">学生在课程页录制，教师可以直接播放检查。</view>
         </view>
         <switch checked="{{form.recordingTaskEnabled}}" color="#4f8f73" bindchange="onRecordingTaskChange" />
+      </view>
+      <view class="field recording-due-field" wx:if="{{form.recordingTaskEnabled}}">
+        <view class="label">录音作业期限</view>
+        <picker mode="selector" range="{{homeworkDueOptions}}" range-key="label" value="{{homeworkDueIndex}}" bindchange="onHomeworkDueChange">
+          <view class="picker-value">{{homeworkDueOptions[homeworkDueIndex].label}}</view>
+        </picker>
+        <view class="field-tip">以本节课程日期为当天；学生端会显示剩余天数，逾期后首次有效提交会标记“逾期提交”。</view>
       </view>
       <view class="field recording-type-field" wx:if="{{form.recordingTaskEnabled && form.lessonTemplateKey === 'molly_oral_ket'}}">
         <view class="label">Molly 的录音任务类型</view>

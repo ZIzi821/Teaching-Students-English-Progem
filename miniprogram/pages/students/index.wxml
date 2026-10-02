@@ -27,8 +27,9 @@
         <view class="student-meta">{{item.grade}} · {{item.subject}} · 联系人：{{item.parentName}}</view>
         <view class="student-meta">访问码：{{item.accessCode}}</view>
         <view class="progress-text">{{item.progressLabel}}</view>
-        <view class="mini-progress">
+        <view class="mini-progress progress-tone-{{item.progressTone}}">
           <view class="mini-progress-fill" style="width: {{item.progressPercent}}%;"></view>
+          <view class="mini-progress-marker" wx:if="{{item.showProgressMarker}}" style="left: {{item.progressMarkerPercent}}%;"></view>
         </view>
       </view>
       <view class="student-card-side">

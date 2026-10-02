@@ -325,6 +325,89 @@
   border-bottom: 1rpx solid #eee5d9;
 }
 
+.previous-lesson-reference {
+  margin-bottom: 26rpx;
+  padding: 20rpx;
+  border: 1rpx solid #d9d2c8;
+  border-radius: 15rpx;
+  background: #fbfaf7;
+}
+
+.previous-lesson-reference-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.previous-lesson-reference-kicker {
+  color: #6b8377;
+  font-size: 19rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+}
+
+.previous-lesson-reference-title {
+  margin-top: 6rpx;
+  color: #3d3731;
+  font-size: 25rpx;
+  font-weight: 800;
+}
+
+.previous-lesson-reference-meta,
+.previous-lesson-reference-note,
+.previous-lesson-reference-empty {
+  margin-top: 6rpx;
+  color: #817669;
+  font-size: 20rpx;
+  line-height: 1.5;
+}
+
+.previous-lesson-reference-note {
+  margin-top: 12rpx;
+  color: #6f7f76;
+}
+
+.previous-lesson-reference-toggle {
+  flex-shrink: 0;
+  padding: 7rpx 12rpx;
+  border-radius: 999rpx;
+  color: #506d60;
+  background: #edf2ee;
+  font-size: 19rpx;
+  font-weight: 700;
+}
+
+.previous-lesson-reference-body {
+  margin-top: 15rpx;
+  border-top: 1rpx solid #ece6dd;
+}
+
+.previous-lesson-reference-row {
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #eee9e1;
+  color: #554e46;
+  font-size: 22rpx;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.previous-lesson-reference-row:last-child {
+  border-bottom: 0;
+}
+
+.previous-lesson-reference-row text {
+  display: block;
+  margin-bottom: 3rpx;
+  color: #7d705f;
+  font-size: 19rpx;
+  font-weight: 700;
+}
+
+.recording-due-field {
+  margin-top: 20rpx;
+}
+
 .recording-options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -419,6 +502,22 @@
   background: #e8f2ed;
   font-size: 21rpx;
   font-weight: 700;
+}
+
+.deadline-upcoming {
+  color: #547262;
+  background: #e8f2ed;
+}
+
+.deadline-today {
+  color: #8a6730;
+  background: #fff0cf;
+}
+
+.deadline-overdue,
+.deadline-late {
+  color: #985148;
+  background: #fae6e4;
 }
 
 .record-btn {
@@ -669,6 +768,23 @@
   color: #3b352f;
   font-size: 24rpx;
   font-weight: 700;
+}
+
+.submission-status-wrap {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.submission-late-status {
+  padding: 7rpx 12rpx;
+  border-radius: 999rpx;
+  color: #985148;
+  background: #fae6e4;
+  font-size: 20rpx;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .submission-actions,

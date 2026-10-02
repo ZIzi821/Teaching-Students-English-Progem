@@ -70,9 +70,16 @@ Page({
     let statusLabel = completed ? "已提交" : "待完成";
     if (teacherStatus === "completed") statusLabel = "老师已确认";
     if (teacherStatus === "incomplete") statusLabel = "老师要求继续完成";
+    const submittedLate = lesson.homeworkSubmittedLate === true;
+    const deadlineLabel = submittedLate
+      ? "逾期提交"
+      : completed || lesson.homeworkHasSubmission ? "" : String(lesson.homeworkDueLabel || "");
+    const deadlineTone = submittedLate ? "late" : String(lesson.homeworkDueStatus || "none");
     return Object.assign({}, lesson, {
       completed,
       statusLabel,
+      deadlineLabel,
+      deadlineTone,
       completedLabel: formatCompletedTime(lesson.homeworkCompletedAtMs),
       taskPreview: String(lesson.homeworkTask || "").trim()
         || (lesson.recordingTaskType === "ket_official" ? "完成本次 KET 口语录音" : "完成本节课录音任务"),

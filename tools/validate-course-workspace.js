@@ -24,6 +24,7 @@ const appJson = JSON.parse(read("miniprogram/app.json"));
 const lessonTemplates = require(path.join(root, "miniprogram", "utils", "lessonTemplates"));
 const { KET_SPEAKING_TASKS } = require(path.join(root, "miniprogram", "utils", "ketSpeakingTasks"));
 const cloudKetTasks = JSON.parse(read("cloudfunctions/quickstartFunctions/data/ket-speaking-tasks.json"));
+const courseWorkflow = require(path.join(root, "cloudfunctions", "quickstartFunctions", "courseWorkflow"));
 
 [
   "setEnglishCourseSettings",
@@ -112,7 +113,7 @@ assert(homeWxml.includes('bindtap="goLearningActivity"'), "Teacher learning acti
 assert(homeWxml.includes('catchtap="dismissLearningActivities"'), "Teacher learning activities cannot be dismissed together");
 assert(homeJs.includes("markLearningActivitiesViewed"), "Teacher learning activity read state is not persisted");
 assert(backend.includes('activityText: "提交了录音"'), "Recording submissions are missing from teacher homework activities");
-assert(backend.includes("createdAtMs: Date.now()"), "New recording submissions do not keep a stable numeric activity time");
+assert(backend.includes("createdAtMs: submittedAtMs"), "New recording submissions do not keep a stable numeric activity time");
 assert(homeWxml.includes("今天怎么学？"), "Student home does not show the numbered daily plan");
 assert(!homeWxml.includes(">英语课程与作业<"), "Removed student course-and-homework shortcut is still visible");
 assert(homeWxml.includes('bindtap="goHomeworkTasks">全部课后任务'), "Student homework shortcut does not open the dedicated list");
@@ -130,6 +131,13 @@ assert(studentJs.includes("onStudentLessonTemplateChange"), "Student lesson temp
 assert(studentWxml.includes("英语课程与作业功能"), "Course feature switch UI is missing");
 assert(addLessonJs.includes("wx.redirectTo"), "New lesson does not open the course workspace");
 assert(addLessonJs.includes("inferLessonTemplateKey"), "New lessons do not inherit the student template");
+assert(addLessonWxml.includes("上一节课对照") && addLessonWxml.includes("不会自动复制"), "Previous-lesson read-only reference is missing");
+assert(backend.includes("buildPreviousLessonReference"), "Previous lesson data is not returned by the protected teacher endpoint");
+assert(addLessonWxml.includes("录音作业期限") && lessonWxml.includes("录音作业期限"), "Teacher recording deadline controls are missing");
+assert(backend.includes("homeworkDueDays") && backend.includes("syncLessonSubmissionTiming"), "Homework deadline or late-submission state is not persisted");
+assert(homeworkWxml.includes("deadlineLabel") && lessonWxml.includes("逾期提交"), "Student deadline and late-submission labels are missing");
+assert(homeWxml.includes("lesson-progress-marker") && studentWxml.includes("progress-marker"), "Subtle lesson-balance progress markers are missing");
+assert(!homeWxml.includes("续费") && !studentWxml.includes("续费"), "Parent-visible progress UI contains renewal wording");
 assert(appJson.pages.includes("pages/recording-practice/index"), "Recording practice page is not registered");
 assert(appJson.pages.includes("pages/homework/index"), "Homework list page is not registered");
 assert(homeworkJs.includes("listStudentHomework"), "Homework list does not use the protected cloud endpoint");
@@ -166,6 +174,8 @@ KET_SPEAKING_TASKS.forEach((task) => {
 assert.strictEqual(lessonTemplates.inferLessonTemplateKey({ name: "冯嘉文" }), "feng_beginner");
 assert.strictEqual(lessonTemplates.inferLessonTemplateKey({ name: "Molly" }), "molly_oral_ket");
 assert.strictEqual(lessonTemplates.inferLessonTemplateKey({ name: "新同学" }), "general");
+assert.strictEqual(courseWorkflow.getLessonPackageSize({ name: "Molly" }), 5);
+assert.strictEqual(courseWorkflow.getLessonPackageSize({ name: "冯嘉文" }), 3);
 assert.strictEqual(
   lessonTemplates.inferLessonTemplateKey({ name: "冯嘉文", lessonTemplateKey: "general" }),
   "general",

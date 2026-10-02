@@ -221,6 +221,7 @@
 }
 
 .home-progress {
+  position: relative;
   height: 18rpx;
   margin: -8rpx 0 28rpx;
   overflow: hidden;
@@ -232,6 +233,7 @@
   height: 100%;
   border-radius: 999rpx;
   background: #4f8f73;
+  transition: width 0.25s ease, background 0.25s ease;
 }
 
 .today-plan-card {
@@ -596,6 +598,11 @@
   font-weight: 700;
 }
 
+.progress-number-near-end,
+.progress-number-complete {
+  color: #a87532;
+}
+
 .student-progress-text {
   margin-top: 16rpx;
   color: #62584d;
@@ -611,6 +618,7 @@
 }
 
 .student-progress-bar {
+  position: relative;
   height: 16rpx;
   margin-top: 16rpx;
   overflow: hidden;
@@ -622,6 +630,27 @@
   height: 100%;
   border-radius: 999rpx;
   background: #4f8f73;
+  transition: width 0.25s ease, background 0.25s ease;
+}
+
+.lesson-progress-marker {
+  position: absolute;
+  top: 2rpx;
+  bottom: 2rpx;
+  width: 4rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.92);
+  transform: translateX(-50%);
+}
+
+.progress-tone-near-end .home-progress-fill,
+.progress-tone-near-end .student-progress-fill {
+  background: #c99a52;
+}
+
+.progress-tone-complete .home-progress-fill,
+.progress-tone-complete .student-progress-fill {
+  background: #b98743;
 }
 
 .student-vocabulary-row {
@@ -708,6 +737,22 @@
 .homework-waiting-badge {
   color: #94692e;
   background: #fff0cf;
+}
+
+.deadline-upcoming {
+  color: #4f7462;
+  background: #e8f2ed;
+}
+
+.deadline-today {
+  color: #8a6730;
+  background: #ffedc2;
+}
+
+.deadline-overdue,
+.deadline-late {
+  color: #985148;
+  background: #fae6e4;
 }
 
 .student-line {

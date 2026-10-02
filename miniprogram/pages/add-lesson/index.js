@@ -10,6 +10,18 @@ const RECORDING_TASK_TYPE_OPTIONS = [
   { value: "ket_official", label: "KET 官方样题" },
 ];
 
+const HOMEWORK_DUE_OPTIONS = [
+  { value: -1, label: "暂不设置" },
+  { value: 0, label: "当天截止" },
+  { value: 1, label: "1 天后截止" },
+  { value: 2, label: "2 天后截止" },
+  { value: 3, label: "3 天后截止" },
+  { value: 4, label: "4 天后截止" },
+  { value: 5, label: "5 天后截止" },
+  { value: 6, label: "6 天后截止" },
+  { value: 7, label: "7 天后截止" },
+];
+
 function formatDate(date) {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
@@ -35,7 +47,11 @@ Page({
     ketSpeakingTaskIndex: 0,
     selectedKetSpeakingTask: KET_SPEAKING_TASKS[0],
     ketWeeklyHint: "",
+    homeworkDueOptions: HOMEWORK_DUE_OPTIONS,
+    homeworkDueIndex: 8,
     lessonNoTip: "",
+    previousLessonReference: null,
+    showPreviousLessonReference: true,
     message: "",
     saving: false,
     showLessonRecord: false,
@@ -56,6 +72,7 @@ Page({
       nextReview: "",
       homeworkTask: "",
       recordingTaskEnabled: false,
+      homeworkDueDays: 7,
       recordingTaskType: "manual",
       recordingPrompt: "",
       recordingRepeatCount: 2,
@@ -121,6 +138,7 @@ Page({
     this.setData({
       studentIndex,
       selectedStudentName: student ? student.name : "请选择学生",
+      previousLessonReference: null,
     }, () => {
       this.applyLessonTemplate(student);
       this.updateLessonNoSuggestion();
@@ -168,6 +186,7 @@ Page({
     if (!student) {
       this.setData({
         lessonNoTip: "",
+        previousLessonReference: null,
         "form.lessonNo": "",
       });
       return;
@@ -202,6 +221,8 @@ Page({
           : "还没有课程记录，可从第 1 节开始";
         const updates = {
           lessonNoTip,
+          previousLessonReference: result.previousLesson || null,
+          showPreviousLessonReference: Boolean(result.previousLesson),
         };
         if (!this.lessonNoManuallyChanged) {
           updates["form.lessonNo"] = String(nextLessonNo);
@@ -228,8 +249,27 @@ Page({
     this.setData({ showLessonRecord: !this.data.showLessonRecord });
   },
 
+  togglePreviousLessonReference() {
+    this.setData({ showPreviousLessonReference: !this.data.showPreviousLessonReference });
+  },
+
   onRecordingTaskChange(e) {
-    this.setData({ "form.recordingTaskEnabled": Boolean(e.detail.value) });
+    const enabled = Boolean(e.detail.value);
+    const updates = { "form.recordingTaskEnabled": enabled };
+    if (enabled && Number(this.data.form.homeworkDueDays) < 0) {
+      updates.homeworkDueIndex = 8;
+      updates["form.homeworkDueDays"] = 7;
+    }
+    this.setData(updates);
+  },
+
+  onHomeworkDueChange(e) {
+    const index = Number(e.detail.value);
+    const option = HOMEWORK_DUE_OPTIONS[index] || HOMEWORK_DUE_OPTIONS[8];
+    this.setData({
+      homeworkDueIndex: index,
+      "form.homeworkDueDays": option.value,
+    });
   },
 
   onRecordingTaskTypeChange(e) {
@@ -356,6 +396,7 @@ Page({
             nextReview: form.nextReview,
             homeworkTask: form.homeworkTask,
             recordingTaskEnabled: form.recordingTaskEnabled,
+            homeworkDueDays: form.homeworkDueDays,
             recordingTaskType: form.recordingTaskType,
             recordingPrompt: form.recordingPrompt,
             recordingRepeatCount: form.recordingRepeatCount,
