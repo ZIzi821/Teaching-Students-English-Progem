@@ -33,8 +33,9 @@ assert(weak.every((item) => challenge.isWeakWord(item)));
 
 const questions = challenge.buildChallengeQuestions(selected, words, fixedRandom);
 assert.strictEqual(questions.length, 6);
-assert.strictEqual(questions.filter((item) => item.type === "spelling").length, 2);
-questions.filter((item) => item.type === "choice").forEach((item) => {
+assert(questions.some((item) => item.type === "spelling"));
+assert(questions.some((item) => item.type === "letterGap"));
+questions.filter((item) => ["wordToMeaning", "meaningToWord"].includes(item.type)).forEach((item) => {
   assert(item.options.length >= 2);
   assert.strictEqual(item.options.filter((option) => option.isAnswer).length, 1);
 });
@@ -120,5 +121,6 @@ assert.strictEqual(singleWordQuestion.type, "spelling");
 assert.strictEqual(singleWordQuestion.direction, "meaningToWord");
 assert.strictEqual(singleWordQuestion.prompt, "苹果");
 assert.strictEqual(singleWordQuestion.answer, "apple");
+assert(challenge.buildLetterGap("school").includes("_"));
 
 console.log("vocabulary challenge validation passed");

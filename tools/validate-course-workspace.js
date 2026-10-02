@@ -108,9 +108,9 @@ assert(
   "lessonReminder timeout is too short for the homework reminder queue"
 );
 assert(homeWxml.includes("待查看的新动态"), "Teacher home does not show unread homework activities");
-assert(homeWxml.includes('bindtap="goHomeworkActivity"'), "Teacher homework activity does not open and mark itself viewed");
-assert(homeWxml.includes('catchtap="dismissHomeworkActivities"'), "Teacher homework activities cannot be dismissed together");
-assert(homeJs.includes("markHomeworkActivitiesViewed"), "Teacher homework activity read state is not persisted");
+assert(homeWxml.includes('bindtap="goLearningActivity"'), "Teacher learning activity does not open and mark itself viewed");
+assert(homeWxml.includes('catchtap="dismissLearningActivities"'), "Teacher learning activities cannot be dismissed together");
+assert(homeJs.includes("markLearningActivitiesViewed"), "Teacher learning activity read state is not persisted");
 assert(backend.includes('activityText: "提交了录音"'), "Recording submissions are missing from teacher homework activities");
 assert(backend.includes("createdAtMs: Date.now()"), "New recording submissions do not keep a stable numeric activity time");
 assert(homeWxml.includes("今天怎么学？"), "Student home does not show the numbered daily plan");

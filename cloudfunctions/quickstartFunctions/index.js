@@ -2,6 +2,7 @@ const cloud = require("wx-server-sdk");
 const crypto = require("crypto");
 const appConfig = require("./config");
 const vocabulary = require("./vocabulary");
+const vocabularyQuiz = require("./vocabularyQuiz");
 const frenchLearning = require("./frenchLearning");
 const KET_SPEAKING_TASKS = require("./data/ket-speaking-tasks.json");
 
@@ -18,6 +19,7 @@ const COLLECTIONS = [
   "mistakes",
   "vocabularyProgress",
   "vocabularyDailyStats",
+  "vocabularyQuizSessions",
   "frenchLearningProgress",
   "lessonSubmissions",
   "systemLocks",
@@ -379,6 +381,10 @@ const getSystemLockId = (type, value) => {
 
 const getTeacherHomeworkActivityStateId = (openid) => (
   getSystemLockId("teacher_homework_activity", openid)
+);
+
+const getStudentLearningActivityStateId = (studentId) => (
+  getSystemLockId("student_learning_activity", studentId)
 );
 
 const uniqueValues = (values) => {
@@ -932,7 +938,7 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
   const mistakeLearningEnabled = isMistakeLearningEnabled(syncedStudent);
   const englishCourseEnabled = isEnglishCourseEnabled(syncedStudent);
   const learningDay = vocabulary.getLearningDay();
-  const [mistakeCount, recentLessonRes, todayStats] = await Promise.all([
+  const [mistakeCount, recentLessonRes, todayStats, quizSessions, learningActivityState] = await Promise.all([
     mistakeLearningEnabled
       ? db.collection("mistakes").where({ studentId }).count()
       : Promise.resolve({ total: 0 }),
@@ -942,6 +948,12 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
     syncedStudent.vocabularyEnabled === true
       ? loadAllVocabularyDocuments("vocabularyDailyStats", { studentId, learningDay })
       : Promise.resolve([]),
+    syncedStudent.vocabularyEnabled === true
+      ? loadAllStudentDocuments("vocabularyQuizSessions", studentId)
+      : Promise.resolve([]),
+    getOptionalTransactionDocument(
+      db.collection("systemLocks").doc(getStudentLearningActivityStateId(studentId))
+    ),
   ]);
   const progress = buildProgress(syncedStudent);
   const studentLessons = (recentLessonRes.data || []).map(withTeacherConfirmedHomeworkState);
@@ -968,6 +980,13 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
       completedCount: homeworkLessons.length - pendingHomeworkLessons.length,
       totalCount: homeworkLessons.length,
     },
+    studentLearningActivities: syncedStudent.vocabularyEnabled === true || englishCourseEnabled
+      ? buildStudentLearningActivities({
+        lessons: studentLessons,
+        sessions: quizSessions,
+        viewedThroughAtMs: Number(learningActivityState && learningActivityState.viewedThroughAtMs || 0),
+      })
+      : [],
   };
 };
 
@@ -990,7 +1009,12 @@ const loadAllStudentDocuments = async (collectionName, studentId) => {
 
 const getHomeData = async (event = {}) => {
   const identity = await getIdentity();
-  if (identity.role !== "guest") await createOneCollection("vocabularyDailyStats");
+  if (identity.role !== "guest") {
+    await Promise.all([
+      createOneCollection("vocabularyDailyStats"),
+      createOneCollection("vocabularyQuizSessions"),
+    ]);
+  }
   const data = event.data || {};
   const isTeacherPreview = data.mode === "teacherPreview";
   if (isTeacherPreview) {
@@ -1019,13 +1043,16 @@ const getHomeData = async (event = {}) => {
       await attachSyncedLessonCounts(visibleStudents),
       todayStats
     );
-    const [mistakeCounts, lessonResults, submissionResults] = await Promise.all([
+    const [mistakeCounts, lessonResults, submissionResults, quizSessionResults] = await Promise.all([
       Promise.all(students.map((student) => db.collection("mistakes").where({ studentId: student._id }).count())),
       Promise.all(students.map((student) => (
         loadAllStudentDocuments("lessons", student._id)
       ))),
       Promise.all(students.map((student) => (
         loadAllStudentDocuments("lessonSubmissions", student._id)
+      ))),
+      Promise.all(students.map((student) => (
+        loadAllStudentDocuments("vocabularyQuizSessions", student._id)
       ))),
     ]);
     const allLessons = lessonResults
@@ -1041,6 +1068,18 @@ const getHomeData = async (event = {}) => {
       students,
       viewedThroughAtMs: Number(homeworkActivityState && homeworkActivityState.viewedThroughAtMs || 0),
     });
+    const activityCutoffAtMs = Math.max(
+      Number(homeworkActivityState && homeworkActivityState.viewedThroughAtMs || 0),
+      Date.now() - 30 * VOCABULARY_DAY_MS
+    );
+    const vocabularyAlerts = vocabularyQuiz.buildTeacherVocabularyAlerts({
+      students,
+      sessions: quizSessionResults.flatMap((items) => items || []),
+    }).filter((item) => Number(item.activityAtMs || 0) > activityCutoffAtMs);
+    const learningActivityNotices = homeworkCompletionNotices
+      .concat(vocabularyAlerts)
+      .sort((left, right) => Number(right.activityAtMs || 0) - Number(left.activityAtMs || 0))
+      .slice(0, 8);
     const progressOverview = summarizeProgress(students);
     const studentsProgress = students.map((student) => Object.assign(
       buildStudentProgressItem(student),
@@ -1060,6 +1099,8 @@ const getHomeData = async (event = {}) => {
       studentsProgress,
       recentLessons: await attachStudentNames(recentLessons, students),
       homeworkCompletionNotices,
+      learningActivityNotices,
+      vocabularyAlgorithmVersion: vocabularyQuiz.ALGORITHM_VERSION,
     };
   }
 
@@ -1110,6 +1151,7 @@ const buildTeacherHomeworkActivities = ({ lessons, submissions, students, viewed
     const student = studentById.get(lesson.studentId);
     keepLatest({
       _id: lesson._id,
+      lessonId: lesson._id,
       studentId: lesson.studentId,
       studentName: student && student.name || "学生",
       title: lesson.title || "英语课",
@@ -1131,6 +1173,7 @@ const buildTeacherHomeworkActivities = ({ lessons, submissions, students, viewed
     const student = studentById.get(lesson.studentId);
     keepLatest({
       _id: lesson._id,
+      lessonId: lesson._id,
       studentId: lesson.studentId,
       studentName: student && student.name || submission.studentNameSnapshot || "学生",
       title: lesson.title || submission.lessonTitleSnapshot || "英语课",
@@ -1149,6 +1192,56 @@ const buildTeacherHomeworkActivities = ({ lessons, submissions, students, viewed
     }))
     .sort((left, right) => Number(right.activityAtMs || 0) - Number(left.activityAtMs || 0))
     .slice(0, 5);
+};
+
+const buildStudentLearningActivities = ({ lessons, sessions, viewedThroughAtMs }) => {
+  const cutoffAtMs = Math.max(
+    Number(viewedThroughAtMs || 0),
+    Date.now() - 30 * VOCABULARY_DAY_MS
+  );
+  const activities = [];
+  (sessions || []).forEach((session) => {
+    const activityAtMs = Number(session.completedAtMs || 0);
+    if (activityAtMs <= cutoffAtMs) return;
+    const correct = Math.max(0, Number(session.correctCount || 0));
+    const total = Math.max(0, Number(session.totalQuestions || 0));
+    activities.push({
+      _id: `quiz:${session._id || activityAtMs}`,
+      activityType: "vocabularyQuiz",
+      title: "单词小测已完成",
+      activityText: `答对 ${correct}/${total} 题${total > correct ? `，有 ${total - correct} 个词可以再练` : "，全部答对"}`,
+      activityAtMs,
+    });
+  });
+  (lessons || []).forEach((lesson) => {
+    const reviewedAtMs = Number(lesson.homeworkTeacherReviewedAtMs || 0);
+    if (reviewedAtMs > cutoffAtMs) {
+      activities.push({
+        _id: `review:${lesson._id}:${reviewedAtMs}`,
+        lessonId: lesson._id,
+        activityType: "homeworkReview",
+        title: "老师已检查课后任务",
+        activityText: lesson.homeworkTeacherReviewStatus === "completed"
+          ? `${lesson.title || "英语课"}：老师确认已完成`
+          : `${lesson.title || "英语课"}：老师建议继续完成`,
+        activityAtMs: reviewedAtMs,
+      });
+    }
+    const createdAtMs = getCreatedTime(lesson);
+    if (createdAtMs > cutoffAtMs) {
+      activities.push({
+        _id: `lesson:${lesson._id}:${createdAtMs}`,
+        lessonId: lesson._id,
+        activityType: "newLesson",
+        title: "老师布置了新的英语课",
+        activityText: lesson.title || "查看课程与课后任务",
+        activityAtMs: createdAtMs,
+      });
+    }
+  });
+  return activities
+    .sort((left, right) => Number(right.activityAtMs || 0) - Number(left.activityAtMs || 0))
+    .slice(0, 6);
 };
 
 const markHomeworkActivitiesViewed = async (event = {}) => {
@@ -1178,6 +1271,53 @@ const markHomeworkActivitiesViewed = async (event = {}) => {
     return nextAtMs;
   });
   return { success: true, viewedThroughAtMs };
+};
+
+const markStudentLearningActivitiesViewed = async (event = {}) => {
+  const identity = await getIdentity();
+  if (identity.role !== "student" || !identity.student) {
+    throw createError("PERMISSION_DENIED", "老师预览不会修改学生端已读状态");
+  }
+  const requestedAtMs = Math.min(
+    Date.now(),
+    Math.max(0, Number(event.data && event.data.viewedThroughAtMs || 0))
+  );
+  if (!requestedAtMs) return { success: true, viewedThroughAtMs: 0 };
+  await createOneCollection("systemLocks");
+  const studentId = identity.student._id;
+  const stateId = getStudentLearningActivityStateId(studentId);
+  const viewedThroughAtMs = await db.runTransaction(async (transaction) => {
+    const stateRef = transaction.collection("systemLocks").doc(stateId);
+    const current = await getOptionalTransactionDocument(stateRef);
+    const nextAtMs = Math.max(Number(current && current.viewedThroughAtMs || 0), requestedAtMs);
+    await stateRef.set({
+      data: {
+        lockType: "studentLearningActivityRead",
+        studentId,
+        viewedThroughAtMs: nextAtMs,
+        updatedAt: db.serverDate(),
+      },
+    });
+    return nextAtMs;
+  });
+  return { success: true, viewedThroughAtMs };
+};
+
+const getTeacherLearningAlerts = async () => {
+  await ensureTeacher();
+  await createOneCollection("vocabularyQuizSessions");
+  const studentsRes = await db.collection("students").get();
+  const students = (studentsRes.data || []).filter((student) => !isStudentHiddenFromTeacher(student));
+  const sessions = (await Promise.all(students.map((student) => (
+    loadAllStudentDocuments("vocabularyQuizSessions", student._id)
+  )))).flatMap((items) => items || []);
+  const alerts = vocabularyQuiz.buildTeacherVocabularyAlerts({ students, sessions });
+  return {
+    success: true,
+    algorithmVersion: vocabularyQuiz.ALGORITHM_VERSION,
+    sessionCount: sessions.length,
+    alerts,
+  };
 };
 
 const bindStudent = async (event) => {
@@ -1974,15 +2114,10 @@ const setStudentLessonTemplate = async (event) => {
 };
 
 const setVocabularyDailyGoal = async (event) => {
-  const identity = await getIdentity();
-  if (identity.role !== "student" || !identity.student) {
-    throw createError("PERMISSION_DENIED", "请在学生端选择今天的单词数量");
-  }
+  await ensureTeacher();
   const data = event.data || {};
   const studentId = String(data.studentId || "").trim();
-  if (!studentId || studentId !== identity.student._id) {
-    throw createError("PERMISSION_DENIED", "只能修改自己的今日目标");
-  }
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
   const dailyGoal = Number(data.dailyGoal);
   if (
     !Number.isInteger(dailyGoal)
@@ -2000,6 +2135,7 @@ const setVocabularyDailyGoal = async (event) => {
     learningDay: vocabulary.getLearningDay(nowMs),
     dailyGoal,
     selectedAtMs: nowMs,
+    selectedByRole: "teacher",
   };
   await createOneCollection("vocabularyDailyStats");
   const dailyStatsId = getVocabularyDailyStatsId(studentId, dailyPlan.learningDay);
@@ -2421,9 +2557,20 @@ const getVocabularyData = async (event) => {
     student: studentRes.data,
   });
   const browsePage = buildVocabularyBrowsePage(view, data);
+  const quizPlan = data.quizMode === true
+    ? vocabularyQuiz.buildPersonalizedQuizPlan({
+      words: view.words,
+      todayWords: view.todayWords.concat(view.todayReviewedWords || []),
+      dailyGoal: dailyPlan.dailyGoal,
+      studentId,
+      learningDay: dailyPlan.learningDay,
+      scope: data.quizScope === "weak" ? "weak" : "smart",
+    })
+    : null;
   return attachVocabularyAudioUrls(Object.assign({}, baseResponse, view, browsePage, {
     weeklyStats,
     pendingWords: view.pendingWords.slice(0, 100),
+    quizPlan,
   }));
 };
 
@@ -2609,6 +2756,140 @@ const reviewVocabularyWord = async (event) => {
     return reviewProgress;
   });
   return Object.assign({ success: true, studentId, wordKey }, progress);
+};
+
+const reviewVocabularyQuizAnswer = async (event) => {
+  await createOneCollection("vocabularyProgress");
+  const identity = await getIdentity();
+  if (identity.role !== "student" || !identity.student) {
+    throw createError("PERMISSION_DENIED", "老师预览不会记录小测结果");
+  }
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  if (!studentId || studentId !== identity.student._id) {
+    throw createError("PERMISSION_DENIED", "只能记录自己的小测结果");
+  }
+  const questionType = String(data.questionType || "").trim();
+  if (["wordToMeaning", "meaningToWord", "letterGap", "spelling"].indexOf(questionType) < 0) {
+    throw createError("INVALID_VOCABULARY_QUIZ", "小测题型无效，请重新进入");
+  }
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data || studentRes.data.vocabularyEnabled !== true) {
+    throw createError("VOCABULARY_DISABLED", "背单词功能尚未开启");
+  }
+  const wordKey = assertVocabularyWordKey(data.wordKey);
+  const library = getVocabularyLibrary();
+  const settings = vocabulary.normalizeVocabularySettings(
+    studentRes.data.vocabularySettings,
+    library,
+    studentRes.data
+  );
+  const progressId = vocabulary.getProgressDocumentId(studentId, wordKey);
+  await assertVocabularyWordBelongsToStudent({
+    studentId,
+    student: studentRes.data,
+    wordKey,
+    library,
+    settings,
+    progressId,
+  });
+  const nowMs = Date.now();
+  const learningDay = vocabulary.getLearningDay(nowMs);
+  const progress = await db.runTransaction(async (transaction) => {
+    const ref = transaction.collection("vocabularyProgress").doc(progressId);
+    const existingRes = await transaction.collection("vocabularyProgress")
+      .where({ _id: progressId }).limit(1).get();
+    const existing = existingRes.data && existingRes.data.length ? existingRes.data[0] : null;
+    const next = vocabulary.buildQuizProgress(existing, {
+      correct: data.correct === true,
+      questionType,
+      learningDay,
+    }, nowMs);
+    const updateData = Object.assign({}, next, {
+      studentId,
+      wordKey,
+      lastReviewedAt: db.serverDate(),
+      updatedAt: db.serverDate(),
+    });
+    if (existing) {
+      await ref.update({ data: updateData });
+    } else {
+      await ref.set({
+        data: Object.assign({}, updateData, {
+          customMeaning: "",
+          customPartOfSpeech: "",
+          excluded: false,
+          createdAt: db.serverDate(),
+        }),
+      });
+    }
+    return next;
+  });
+  return Object.assign({ success: true, studentId, wordKey }, progress);
+};
+
+const completeVocabularyQuiz = async (event) => {
+  await createOneCollection("vocabularyQuizSessions");
+  const identity = await getIdentity();
+  if (identity.role !== "student" || !identity.student) {
+    throw createError("PERMISSION_DENIED", "老师预览不会保存小测记录");
+  }
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  if (!studentId || studentId !== identity.student._id) {
+    throw createError("PERMISSION_DENIED", "只能保存自己的小测记录");
+  }
+  const rawResults = Array.isArray(data.results) ? data.results : [];
+  if (!rawResults.length || rawResults.length > 30) {
+    throw createError("INVALID_VOCABULARY_QUIZ", "小测记录不完整，请重新完成本轮小测");
+  }
+  const allowedTypes = new Set(["wordToMeaning", "meaningToWord", "letterGap", "spelling"]);
+  const results = rawResults.map((item) => {
+    const questionType = String(item && item.questionType || "").trim();
+    if (!allowedTypes.has(questionType)) {
+      throw createError("INVALID_VOCABULARY_QUIZ", "小测题型无效，请重新进入");
+    }
+    return {
+      wordKey: assertVocabularyWordKey(item && item.wordKey),
+      word: String(item && item.word || "").trim().slice(0, 80),
+      questionType,
+      correct: item && item.correct === true,
+      responseTimeMs: Math.max(0, Math.min(5 * 60 * 1000, Number(item && item.responseTimeMs || 0))),
+    };
+  });
+  const completedAtMs = Date.now();
+  const correctCount = results.filter((item) => item.correct).length;
+  const totalQuestions = results.length;
+  const accuracy = Math.round(correctCount / totalQuestions * 100);
+  const startedAtMs = Math.min(
+    completedAtMs,
+    Math.max(completedAtMs - 60 * 60 * 1000, Number(data.startedAtMs || completedAtMs))
+  );
+  const sessionData = {
+    studentId,
+    learningDay: vocabulary.getLearningDay(completedAtMs),
+    algorithmVersion: vocabularyQuiz.ALGORITHM_VERSION,
+    scope: data.scope === "weak" ? "weak" : data.scope === "retry" ? "retry" : "smart",
+    dailyGoal: Math.max(vocabulary.MIN_DAILY_GOAL, Math.min(vocabulary.MAX_DAILY_GOAL, Number(data.dailyGoal || 8))),
+    totalQuestions,
+    correctCount,
+    wrongCount: totalQuestions - correctCount,
+    accuracy,
+    startedAtMs,
+    completedAtMs,
+    durationMs: completedAtMs - startedAtMs,
+    results,
+    createdAt: db.serverDate(),
+  };
+  const addRes = await db.collection("vocabularyQuizSessions").add({ data: sessionData });
+  return {
+    success: true,
+    sessionId: addRes._id,
+    algorithmVersion: sessionData.algorithmVersion,
+    totalQuestions,
+    correctCount,
+    accuracy,
+  };
 };
 
 const updateVocabularyWord = async (event) => {
@@ -4425,7 +4706,12 @@ exports.main = async (event) => {
       case "getHomeData":
         return await getHomeData(event);
       case "markHomeworkActivitiesViewed":
+      case "markLearningActivitiesViewed":
         return await markHomeworkActivitiesViewed(event);
+      case "markStudentLearningActivitiesViewed":
+        return await markStudentLearningActivitiesViewed(event);
+      case "getTeacherLearningAlerts":
+        return await getTeacherLearningAlerts();
       case "bindStudent":
       case "bindAccessCode":
         return await bindAccessCode(event);
@@ -4456,6 +4742,10 @@ exports.main = async (event) => {
         return await getVocabularyData(event);
       case "reviewVocabularyWord":
         return await reviewVocabularyWord(event);
+      case "reviewVocabularyQuizAnswer":
+        return await reviewVocabularyQuizAnswer(event);
+      case "completeVocabularyQuiz":
+        return await completeVocabularyQuiz(event);
       case "updateVocabularyWord":
         return await updateVocabularyWord(event);
       case "getFrenchLearningOverview":

@@ -36,6 +36,8 @@ const isWeakWord = (word) => {
   const correctCount = Math.max(0, Number(source.correctCount || 0));
   return lastResult === "forgot"
     || lastResult === "hard"
+    || lastResult === "quizWrong"
+    || source.lastQuizResult === "wrong"
     || (wrongCount >= 2 && wrongCount >= correctCount);
 };
 
@@ -100,22 +102,42 @@ const buildChoiceOptions = (answer, candidates, random) => {
   }));
 };
 
+const buildLetterGap = (value) => {
+  const word = asText(value);
+  const letterIndexes = [];
+  word.split("").forEach((letter, index) => {
+    if (/[a-z]/i.test(letter)) letterIndexes.push(index);
+  });
+  const hideCount = Math.max(1, Math.min(4, Math.ceil(letterIndexes.length / 3)));
+  const hidden = new Set();
+  for (let offset = 0; offset < hideCount; offset += 1) {
+    const position = Math.floor((offset + 1) * letterIndexes.length / (hideCount + 1));
+    hidden.add(letterIndexes[Math.min(letterIndexes.length - 1, position)]);
+  }
+  return word.split("").map((letter, index) => hidden.has(index) ? "_" : letter).join(" ");
+};
+
 const buildChallengeQuestions = (selectedWords, allWords, random = Math.random) => {
   const selected = uniqueWords(selectedWords);
   const pool = uniqueWords((allWords || []).concat(selected));
-  const spellingCount = selected.length >= 5 ? 2 : selected.length >= 3 ? 1 : 0;
-  const choiceCount = selected.length - spellingCount;
   return selected.map((word, index) => {
-    const useSpelling = index >= choiceCount;
-    const preferredMeaningToWord = useSpelling || index % 2 === 1;
-    const preferredAnswer = preferredMeaningToWord ? asText(word.word) : asText(word.meaning);
+    const preferredType = ["wordToMeaning", "meaningToWord", "letterGap", "spelling"][index % 4];
+    const meaningToWord = preferredType !== "wordToMeaning";
+    const preferredAnswer = meaningToWord ? asText(word.word) : asText(word.meaning);
     const candidateValues = pool
       .filter((item) => asText(item.key || item.word) !== asText(word.key || word.word))
-      .map((item) => preferredMeaningToWord ? asText(item.word) : asText(item.meaning));
-    const options = useSpelling ? [] : buildChoiceOptions(preferredAnswer, candidateValues, random);
-    const type = !useSpelling && options.length >= 2 ? "choice" : "spelling";
-    const meaningToWord = type === "spelling" ? true : preferredMeaningToWord;
-    const answer = meaningToWord ? asText(word.word) : asText(word.meaning);
+      .map((item) => meaningToWord ? asText(item.word) : asText(item.meaning));
+    const wantsChoice = preferredType === "wordToMeaning" || preferredType === "meaningToWord";
+    const options = wantsChoice ? buildChoiceOptions(preferredAnswer, candidateValues, random) : [];
+    const type = wantsChoice && options.length < 2 ? "spelling" : preferredType;
+    const finalMeaningToWord = type !== "wordToMeaning";
+    const answer = finalMeaningToWord ? asText(word.word) : asText(word.meaning);
+    const labels = {
+      wordToMeaning: "看词选义",
+      meaningToWord: "看义选词",
+      letterGap: "补全单词",
+      spelling: "完整默写",
+    };
     return {
       id: `${asText(word.key || word.word)}-${index}`,
       wordKey: asText(word.key || word.word),
@@ -124,18 +146,26 @@ const buildChallengeQuestions = (selectedWords, allWords, random = Math.random) 
       partOfSpeech: asText(word.partOfSpeech),
       sourceLabel: asText(word.sourceLabel),
       type,
-      direction: meaningToWord ? "meaningToWord" : "wordToMeaning",
-      typeLabel: type === "spelling" ? "拼写回忆" : meaningToWord ? "看义选词" : "看词选义",
-      prompt: meaningToWord ? asText(word.meaning) : asText(word.word),
-      promptHint: type === "spelling" ? "输入对应英文" : meaningToWord ? "选择对应英文" : "选择最合适的中文释义",
+      direction: finalMeaningToWord ? "meaningToWord" : "wordToMeaning",
+      typeLabel: labels[type],
+      prompt: type === "letterGap"
+        ? `${asText(word.meaning)}\n${buildLetterGap(word.word)}`
+        : finalMeaningToWord ? asText(word.meaning) : asText(word.word),
+      promptHint: type === "spelling"
+        ? "根据中文完整默写英文"
+        : type === "letterGap"
+          ? "把缺少的字母补全，输入完整单词"
+          : finalMeaningToWord ? "选择对应英文" : "选择最合适的中文释义",
+      inputPlaceholder: type === "letterGap" ? "输入补全后的完整单词" : "输入对应英文",
       answer,
-      options: type === "choice" ? options : [],
+      options: type === "wordToMeaning" || type === "meaningToWord" ? options : [],
     };
   });
 };
 
 module.exports = {
   buildChallengeQuestions,
+  buildLetterGap,
   isWeakWord,
   normalizeAnswer,
   selectChallengeWords,

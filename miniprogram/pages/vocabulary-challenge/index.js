@@ -27,6 +27,11 @@ Page({
     accuracy: 0,
     incorrectCount: 0,
     resultSegments: [],
+    estimatedMinutes: 0,
+    focusLabel: "",
+    dailyGoal: 8,
+    algorithmVersion: "",
+    sessionSaved: false,
   },
 
   onLoad(options) {
@@ -51,7 +56,9 @@ Page({
           mode: this.data.mode,
           browseTab: this.data.scope === "weak" ? "weak" : "all",
           offset: 0,
-          limit: 60,
+          limit: 100,
+          quizMode: true,
+          quizScope: this.data.scope,
         },
       },
     }).then((res) => {
@@ -59,15 +66,25 @@ Page({
         if (!result.success) throw new Error(result.message || "暂时无法准备小测");
       const role = result.role || "guest";
       const canReview = role === "student" && result.readOnly !== true;
-      const allWords = challenge.uniqueWords((result.words || []).concat(result.todayWords || []));
+      const plannedWords = result.quizPlan && Array.isArray(result.quizPlan.words)
+        ? result.quizPlan.words
+        : [];
+      const allWords = challenge.uniqueWords(
+        (result.words || []).concat(result.todayWords || [], plannedWords)
+      );
       this.allWords = allWords;
       this.todayWords = challenge.uniqueWords(result.todayWords || []);
+      this.quizPlan = result.quizPlan || null;
       this.wordsByKey = new Map(allWords.map((item) => [String(item.key || item.word), item]));
       this.setData({
         student: result.student || null,
         canReview,
         readOnly: !canReview,
         loading: false,
+        estimatedMinutes: Number(this.quizPlan && this.quizPlan.estimatedMinutes || 0),
+        focusLabel: String(this.quizPlan && this.quizPlan.focusLabel || ""),
+        dailyGoal: Number(this.quizPlan && this.quizPlan.dailyGoal || 8),
+        algorithmVersion: String(this.quizPlan && this.quizPlan.algorithmVersion || ""),
       });
       this.startSession(this.data.scope);
     }).catch((err) => {
@@ -80,11 +97,11 @@ Page({
   },
 
   startSession(scope, retryWords) {
-    const selectedWords = challenge.selectChallengeWords({
-      todayWords: retryWords || this.todayWords || [],
-      allWords: retryWords || this.allWords || [],
-      scope: retryWords ? "retry" : scope,
-      limit: 6,
+    const selectedWords = retryWords || (this.quizPlan && this.quizPlan.words) || challenge.selectChallengeWords({
+      todayWords: this.todayWords || [],
+      allWords: this.allWords || [],
+      scope,
+      limit: 8,
     });
     const questions = challenge.buildChallengeQuestions(selectedWords, this.allWords || []);
     if (!questions.length) {
@@ -97,6 +114,7 @@ Page({
     }
     this.questions = questions;
     this.sessionResults = [];
+    this.sessionStartedAtMs = Date.now();
     this.setData({
       scope,
       score: 0,
@@ -105,6 +123,7 @@ Page({
       incorrectCount: 0,
       resultSegments: [],
       saveFailureCount: 0,
+      sessionSaved: false,
       totalQuestions: questions.length,
       message: "",
     });
@@ -113,6 +132,7 @@ Page({
 
   showQuestion(index) {
     const current = this.questions[index];
+    this.questionStartedAtMs = Date.now();
     this.setData({
       questionIndex: index,
       progressPercent: Math.round(index / this.questions.length * 100),
@@ -163,7 +183,9 @@ Page({
     this.sessionResults.push({
       wordKey: question.wordKey,
       word: question.word,
+      questionType: question.type,
       correct: isCorrect,
+      responseTimeMs: Math.max(0, Date.now() - Number(this.questionStartedAtMs || Date.now())),
     });
     this.setData({
       currentQuestion: Object.assign({}, question, { options }),
@@ -174,19 +196,20 @@ Page({
         : this.data.readOnly ? "这题没答对，学生可以稍后再练" : "没关系，这个词稍后再练",
       score: this.data.score + (isCorrect ? 1 : 0),
     });
-    if (this.data.canReview) this.saveReview(question.wordKey, isCorrect);
+    if (this.data.canReview) this.saveReview(question.wordKey, question.type, isCorrect);
   },
 
-  saveReview(wordKey, isCorrect) {
+  saveReview(wordKey, questionType, isCorrect) {
     this.setData({ saving: true, saveWarning: "" });
     wx.cloud.callFunction({
       name: "quickstartFunctions",
       data: {
-        type: "reviewVocabularyWord",
+        type: "reviewVocabularyQuizAnswer",
         data: {
           studentId: this.data.studentId,
           wordKey,
-          result: isCorrect ? "known" : "forgot",
+          questionType,
+          correct: isCorrect,
         },
       },
     }).then((res) => {
@@ -223,6 +246,32 @@ Page({
         { label: "答对", value: score, color: "#4f8f73" },
       { label: "没记牢", value: incorrectCount, color: "#e0b96a" },
       ],
+    });
+    if (this.data.canReview) this.saveSession();
+  },
+
+  saveSession() {
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "completeVocabularyQuiz",
+        data: {
+          studentId: this.data.studentId,
+          scope: this.data.scope,
+          dailyGoal: this.data.dailyGoal,
+          startedAtMs: this.sessionStartedAtMs,
+          results: this.sessionResults,
+        },
+      },
+    }).then((res) => {
+      const result = res.result || {};
+      if (!result.success) throw new Error(result.message || "小测总结保存失败");
+      this.setData({ sessionSaved: true });
+    }).catch((err) => {
+      console.error(err);
+      this.setData({
+        saveWarning: "本轮答题已完成，但小测总结没有保存。请稍后再做一次。",
+      });
     });
   },
 

@@ -9,8 +9,9 @@
   <block wx:elif="{{student}}">
       <view class="challenge-head">
       <view>
-        <view class="challenge-eyebrow">{{student.name}} · {{scope === 'weak' ? '易错词小测' : '6 题单词小测'}}</view>
-        <view class="challenge-title">做完这 6 题，看看哪些词还要再练</view>
+        <view class="challenge-eyebrow">{{student.name}} · {{scope === 'weak' ? '易错词小测' : '个性化单词小测'}}</view>
+        <view class="challenge-title">完成 {{totalQuestions}} 题，系统会按学习记录调整下一轮</view>
+        <view class="challenge-summary" wx:if="{{estimatedMinutes}}">预计 {{estimatedMinutes}} 分钟 · {{focusLabel}}</view>
       </view>
       <view class="preview-badge" wx:if="{{readOnly}}">老师预览</view>
     </view>
@@ -30,7 +31,7 @@
         <view class="question-prompt {{currentQuestion.direction === 'wordToMeaning' ? 'english-prompt' : ''}}">{{currentQuestion.prompt}}</view>
         <view class="question-meta" wx:if="{{currentQuestion.partOfSpeech}}">{{currentQuestion.partOfSpeech}}</view>
 
-        <view class="choice-list" wx:if="{{currentQuestion.type === 'choice'}}">
+        <view class="choice-list" wx:if="{{currentQuestion.type === 'wordToMeaning' || currentQuestion.type === 'meaningToWord'}}">
           <view
             class="choice-item {{item.state === 'correct' ? 'choice-correct' : item.state === 'wrong' ? 'choice-wrong' : ''}}"
             wx:for="{{currentQuestion.options}}"
@@ -48,7 +49,7 @@
             class="spelling-input"
             value="{{spellingAnswer}}"
             disabled="{{answered}}"
-            placeholder="输入对应英文"
+            placeholder="{{currentQuestion.inputPlaceholder}}"
             confirm-type="done"
             bindinput="onSpellingInput"
             bindconfirm="submitSpelling"
@@ -83,7 +84,7 @@
       <view class="result-tip" wx:else>全对！继续完成今天的单词吧。</view>
       <view class="result-actions">
         <view class="result-primary" wx:if="{{incorrectCount}}" bindtap="retryMistakes">再练答错的词</view>
-        <view class="result-secondary" bindtap="restartSession">再做 6 题</view>
+        <view class="result-secondary" bindtap="restartSession">再做一轮</view>
         <view class="result-secondary" bindtap="goBack">返回单词页</view>
       </view>
     </view>

@@ -67,13 +67,42 @@
     <view class="home-progress-fill" style="width: {{stats.progress.progressPercent}}%;"></view>
   </view>
 
+  <view class="card teacher-homework-notice-card" wx:if="{{isStudent && studentLearningActivities.length}}">
+    <view class="teacher-homework-notice-head">
+      <view>
+        <view class="teacher-homework-notice-kicker">我的新动态</view>
+        <view class="teacher-homework-notice-title">看看最近完成了什么</view>
+      </view>
+      <view class="teacher-homework-notice-actions">
+        <view class="teacher-homework-notice-count">{{studentLearningActivities.length}} 条</view>
+        <view class="teacher-homework-dismiss" catchtap="dismissStudentLearningActivities">我看完了</view>
+      </view>
+    </view>
+    <view
+      class="teacher-homework-notice-item"
+      wx:for="{{studentLearningActivities}}"
+      wx:key="_id"
+      data-activity-at="{{item.activityAtMs}}"
+      data-lesson-id="{{item.lessonId}}"
+      data-type="{{item.activityType}}"
+      bindtap="goStudentLearningActivity"
+    >
+      <view>
+        <view class="teacher-homework-student">{{item.title}}</view>
+        <view class="teacher-homework-time">{{item.activityText}} · {{item.activityLabel}}</view>
+      </view>
+      <view class="teacher-homework-link">查看 →</view>
+    </view>
+    <view class="teacher-homework-time" wx:if="{{isTeacherPreview}}">老师预览可以查看，但不会同步学生的已读状态。</view>
+  </view>
+
   <view class="card today-plan-card" wx:if="{{isStudent && studentPlanSteps.length}}">
     <view class="today-plan-head">
       <view>
         <view class="today-plan-title">今天怎么学？</view>
         <view class="today-plan-hint">按顺序完成，每一步都很清楚</view>
       </view>
-      <view class="today-plan-time">约 5～15 分钟</view>
+      <view class="today-plan-time">约 10～25 分钟</view>
     </view>
     <view
       class="today-plan-step plan-step-{{item.tone}}"
@@ -91,18 +120,27 @@
     </view>
   </view>
 
-  <view class="card teacher-homework-notice-card" wx:if="{{isTeacher && homeworkCompletionNotices.length}}">
+  <view class="card teacher-homework-notice-card" wx:if="{{isTeacher && learningActivityNotices.length}}">
     <view class="teacher-homework-notice-head">
       <view>
-        <view class="teacher-homework-notice-kicker">课后任务动态</view>
+        <view class="teacher-homework-notice-kicker">英语学习动态</view>
         <view class="teacher-homework-notice-title">待查看的新动态</view>
       </view>
       <view class="teacher-homework-notice-actions">
-        <view class="teacher-homework-notice-count">{{homeworkCompletionNotices.length}} 条</view>
-        <view class="teacher-homework-dismiss" catchtap="dismissHomeworkActivities">全部已看</view>
+        <view class="teacher-homework-notice-count">{{learningActivityNotices.length}} 条</view>
+        <view class="teacher-homework-dismiss" catchtap="dismissLearningActivities">全部已看</view>
       </view>
     </view>
-    <view class="teacher-homework-notice-item" wx:for="{{homeworkCompletionNotices}}" wx:key="_id" data-id="{{item._id}}" data-activity-at="{{item.activityAtMs}}" bindtap="goHomeworkActivity">
+    <view
+      class="teacher-homework-notice-item"
+      wx:for="{{learningActivityNotices}}"
+      wx:key="_id"
+      data-lesson-id="{{item.lessonId}}"
+      data-student-id="{{item.studentId}}"
+      data-type="{{item.activityType}}"
+      data-activity-at="{{item.activityAtMs}}"
+      bindtap="goLearningActivity"
+    >
       <view>
         <view class="teacher-homework-student">{{item.studentName || '学生'}} · {{item.title}}</view>
         <view class="teacher-homework-time">
@@ -134,7 +172,7 @@
     <view class="primary-btn french-primary-btn" wx:elif="{{currentStudent.frenchLearningEnabled}}" bindtap="goFrenchLearning">进入法语学习</view>
     <view class="disabled-home-action" wx:else>老师暂时还没有开启学习功能</view>
     <view class="student-action-grid">
-      <view class="ghost-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabulary">查词与学习记录</view>
+      <view class="ghost-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabulary">单词学习记录</view>
       <view class="ghost-btn" wx:if="{{englishCourseEnabled}}" bindtap="goHomeworkTasks">全部课后任务</view>
       <view class="ghost-btn" wx:if="{{englishCourseEnabled}}" bindtap="goMyLessons">英语课程与作业</view>
       <view class="ghost-btn" wx:elif="{{mistakeLearningEnabled}}" bindtap="goMyLessons">英语错题</view>

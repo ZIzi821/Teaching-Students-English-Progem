@@ -48,6 +48,13 @@
   line-height: 1.4;
 }
 
+.challenge-summary {
+  margin-top: 10rpx;
+  color: #6f776e;
+  font-size: 24rpx;
+  line-height: 1.55;
+}
+
 .preview-badge {
   flex-shrink: 0;
   padding: 10rpx 14rpx;
@@ -98,6 +105,7 @@
 }
 
 .question-prompt {
+  white-space: pre-line;
   margin-top: 24rpx;
   color: #2f2a24;
   font-size: 38rpx;

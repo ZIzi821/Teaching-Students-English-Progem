@@ -28,6 +28,7 @@ Page({
     role: "",
     readOnly: true,
     isTeacherManager: false,
+    canSetDailyGoal: false,
     canReview: false,
     loading: true,
     wordPageLoading: false,
@@ -64,9 +65,9 @@ Page({
       easyCount: 0,
       basicHiddenCount: 0,
     },
-    activeTab: "today",
+    activeTab: "all",
     wordTabs: WORD_TABS,
-    browsePanelOpen: false,
+    browsePanelOpen: true,
     searchActive: false,
     isStudyMode: true,
     searchKeyword: "",
@@ -110,16 +111,16 @@ Page({
     this.savedViewPreference = savedPreference;
     const savedTab = WORD_TABS.some((item) => item.value === savedPreference.activeTab)
       ? savedPreference.activeTab
-      : "today";
-    // 每次进入都先呈现清晰的今日任务；查词和历史记录由学生主动展开。
-    const browsePanelOpen = false;
+      : "all";
+    // 这是单词记录总览；今日三步流程只保留在学生首页，避免两个页面重复。
+    const browsePanelOpen = true;
     this.setData({
       studentId: options.studentId || "",
       previewStudentId: options.previewStudentId || "",
       mode: options.mode || "",
       browsePanelOpen,
-      activeTab: browsePanelOpen && savedTab !== "today" ? savedTab : "today",
-      isStudyMode: !browsePanelOpen,
+      activeTab: savedTab === "today" ? "all" : savedTab,
+      isStudyMode: false,
     });
     this.loadVocabularyData();
   },
@@ -224,6 +225,7 @@ Page({
             role,
             readOnly: Boolean(result.readOnly || role === "teacher"),
             isTeacherManager,
+            canSetDailyGoal: isTeacherManager,
             canReview: role === "student" && result.readOnly !== true,
             student,
             enabled: Boolean(
@@ -239,7 +241,10 @@ Page({
             masteryChartSegments: charts.masteryChartSegments,
             weeklyChartPoints: weeklyStats.days,
             weeklyStats,
-            dailyGoalOptions: this.prepareDailyGoalOptions(summary.todayReviewedCount),
+            dailyGoalOptions: this.prepareDailyGoalOptions(
+              summary.todayReviewedCount,
+              isTeacherManager
+            ),
             todayWords,
             todayReviewedWords,
             words,
@@ -299,11 +304,11 @@ Page({
     };
   },
 
-  prepareDailyGoalOptions(todayReviewedCount) {
+  prepareDailyGoalOptions(todayReviewedCount, canSetDailyGoal) {
     const completedCount = Number(todayReviewedCount || 0);
     return DAILY_GOAL_OPTIONS.map((value) => ({
       value,
-      disabled: value < completedCount,
+      disabled: !canSetDailyGoal || value < completedCount,
     }));
   },
 
@@ -601,7 +606,7 @@ Page({
   selectDailyGoal(e) {
     const dailyGoal = Number(e.currentTarget.dataset.goal);
     if (
-      !this.data.canReview
+      !this.data.canSetDailyGoal
       || this.data.dailyGoalSaving
       || DAILY_GOAL_OPTIONS.indexOf(dailyGoal) < 0
     ) {

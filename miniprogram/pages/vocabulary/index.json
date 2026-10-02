@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "背单词",
+  "navigationBarTitleText": "单词学习记录",
   "usingComponents": {
     "data-chart": "/components/data-chart/index"
   }

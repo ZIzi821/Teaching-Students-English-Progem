@@ -40,6 +40,8 @@ Page({
     },
     recentLessons: [],
     homeworkCompletionNotices: [],
+    learningActivityNotices: [],
+    studentLearningActivities: [],
     pendingHomework: null,
     homeworkSummary: { pendingCount: 0, completedCount: 0, totalCount: 0 },
     studentPlanSteps: [],
@@ -133,6 +135,12 @@ Page({
           homeworkCompletionNotices: (result.homeworkCompletionNotices || []).map((item) => Object.assign({}, item, {
             activityLabel: formatHomeworkActivityTime(item.activityAtMs),
           })),
+          learningActivityNotices: (result.learningActivityNotices || []).map((item) => Object.assign({}, item, {
+            activityLabel: formatHomeworkActivityTime(item.activityAtMs),
+          })),
+          studentLearningActivities: (result.studentLearningActivities || []).map((item) => Object.assign({}, item, {
+            activityLabel: formatHomeworkActivityTime(item.activityAtMs),
+          })),
           pendingHomework: result.pendingHomework || null,
           homeworkSummary: result.homeworkSummary || { pendingCount: 0, completedCount: 0, totalCount: 0 },
           studentPlanSteps: this.buildStudentPlanSteps(
@@ -186,6 +194,8 @@ Page({
       },
       recentLessons: sampleData.lessons.slice(0, 2),
       homeworkCompletionNotices: [],
+      learningActivityNotices: [],
+      studentLearningActivities: [],
       pendingHomework: null,
       homeworkSummary: { pendingCount: 0, completedCount: 0, totalCount: 0 },
       studentPlanSteps: [],
@@ -257,7 +267,7 @@ Page({
         action: "quiz",
         tone: "sand",
         title: "背完后做单词小测",
-        hint: "用 6 道题检查是否真的记住，约 2 分钟",
+        hint: "系统会按今日接触、薄弱词和复习时间安排选择、补缺与默写题",
         actionLabel: "去小测 →",
       });
     }
@@ -340,12 +350,12 @@ Page({
     });
   },
 
-  markHomeworkActivitiesViewed(viewedThroughAtMs) {
+  markLearningActivitiesViewed(viewedThroughAtMs) {
     if (!wx.cloud || !viewedThroughAtMs) return Promise.reject(new Error("云服务暂时不可用"));
     return wx.cloud.callFunction({
       name: "quickstartFunctions",
       data: {
-        type: "markHomeworkActivitiesViewed",
+        type: "markLearningActivitiesViewed",
         data: { viewedThroughAtMs },
       },
     }).then((res) => {
@@ -355,34 +365,79 @@ Page({
     });
   },
 
-  goHomeworkActivity(e) {
-    const lessonId = String(e.currentTarget.dataset.id || "");
+  goLearningActivity(e) {
+    const lessonId = String(e.currentTarget.dataset.lessonId || "");
+    const studentId = String(e.currentTarget.dataset.studentId || "");
+    const activityType = String(e.currentTarget.dataset.type || "");
     const activityAtMs = Number(e.currentTarget.dataset.activityAt || 0);
-    if (!lessonId || !activityAtMs) return;
-    const notices = this.data.homeworkCompletionNotices || [];
+    if (!activityAtMs) return;
+    const notices = this.data.learningActivityNotices || [];
     this.setData({
-      homeworkCompletionNotices: notices.filter((item) => Number(item.activityAtMs || 0) > activityAtMs),
+      learningActivityNotices: notices.filter((item) => Number(item.activityAtMs || 0) > activityAtMs),
     });
-    this.markHomeworkActivitiesViewed(activityAtMs).catch((err) => {
-      console.error("mark homework activity viewed failed", err);
+    this.markLearningActivitiesViewed(activityAtMs).catch((err) => {
+      console.error("mark learning activity viewed failed", err);
     });
-    wx.navigateTo({
-      url: "/pages/lesson-detail/index?id=" + lessonId,
-    });
+    if (lessonId) {
+      wx.navigateTo({ url: "/pages/lesson-detail/index?id=" + lessonId });
+    } else if (studentId && activityType.indexOf("quiz_") === 0) {
+      wx.navigateTo({ url: "/pages/teacher-vocabulary-detail/index?studentId=" + encodeURIComponent(studentId) });
+    }
   },
 
-  dismissHomeworkActivities() {
-    const notices = this.data.homeworkCompletionNotices || [];
+  dismissLearningActivities() {
+    const notices = this.data.learningActivityNotices || [];
     const viewedThroughAtMs = notices.reduce(
       (latest, item) => Math.max(latest, Number(item.activityAtMs || 0)),
       0
     );
     if (!viewedThroughAtMs) return;
-    this.setData({ homeworkCompletionNotices: [] });
-    this.markHomeworkActivitiesViewed(viewedThroughAtMs).catch((err) => {
-      console.error("dismiss homework activities failed", err);
-      this.setData({ homeworkCompletionNotices: notices });
+    this.setData({ learningActivityNotices: [] });
+    this.markLearningActivitiesViewed(viewedThroughAtMs).catch((err) => {
+      console.error("dismiss learning activities failed", err);
+      this.setData({ learningActivityNotices: notices });
       wx.showToast({ title: "暂时未同步，请重试", icon: "none" });
+    });
+  },
+
+  markStudentActivitiesViewed(viewedThroughAtMs) {
+    if (this.data.isTeacherPreview || !wx.cloud || !viewedThroughAtMs) return Promise.resolve();
+    return wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "markStudentLearningActivitiesViewed",
+        data: { viewedThroughAtMs },
+      },
+    });
+  },
+
+  goStudentLearningActivity(e) {
+    const activityAtMs = Number(e.currentTarget.dataset.activityAt || 0);
+    const lessonId = String(e.currentTarget.dataset.lessonId || "");
+    const activityType = String(e.currentTarget.dataset.type || "");
+    const notices = this.data.studentLearningActivities || [];
+    this.setData({
+      studentLearningActivities: notices.filter((item) => Number(item.activityAtMs || 0) > activityAtMs),
+    });
+    this.markStudentActivitiesViewed(activityAtMs).catch((err) => console.error(err));
+    if (lessonId) {
+      wx.navigateTo({ url: this.withPreviewParams("/pages/lesson-detail/index?id=" + lessonId) });
+    } else if (activityType === "vocabularyQuiz") {
+      this.goVocabularyChallenge();
+    }
+  },
+
+  dismissStudentLearningActivities() {
+    const notices = this.data.studentLearningActivities || [];
+    const viewedThroughAtMs = notices.reduce(
+      (latest, item) => Math.max(latest, Number(item.activityAtMs || 0)),
+      0
+    );
+    if (!viewedThroughAtMs) return;
+    this.setData({ studentLearningActivities: [] });
+    this.markStudentActivitiesViewed(viewedThroughAtMs).catch((err) => {
+      console.error(err);
+      this.setData({ studentLearningActivities: notices });
     });
   },
 

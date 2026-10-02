@@ -20,8 +20,9 @@ assert(homeJs.includes("/pages/vocabulary-study/index?studentId="), "student hom
 assert(homeWxml.includes("① 开始背单词"), "student home is missing the first-step learning label");
 assert(homeWxml.includes("退出绑定"), "home is missing the identity exit entry");
 assert(detailWxml.includes("建议顺序：先背单词，再做小测"), "student detail does not explain learning order");
-assert(vocabularyWxml.includes("今天怎么学？"), "vocabulary hub is missing the guided learning route");
-assert(vocabularyWxml.indexOf("查词与学习记录") < vocabularyWxml.indexOf("搜索英文、中文或词性"), "search is not nested after the library entry");
+assert(!vocabularyWxml.includes("今天怎么学？"), "vocabulary overview duplicates the guided route from student home");
+assert(vocabularyWxml.indexOf("单词明细") < vocabularyWxml.indexOf("搜索英文、中文或词性"), "search is not nested after the record entry");
+assert(vocabularyWxml.includes("由老师设置；学生端和老师预览均为只读"), "daily goal ownership is not explained");
 assert(studyWxml.includes("想好了，查看答案"), "study page is missing active-recall answer reveal");
 ["forgot", "hard", "known", "easy"].forEach((rating) => {
   assert(studyWxml.includes(`data-result="${rating}"`), `study page is missing ${rating} rating`);
@@ -77,6 +78,8 @@ assert(backend.includes("const DEFAULT_STUDENT_BIND_LIMIT = 5;"), "default stude
 assert(backend.includes("return DEFAULT_STUDENT_BIND_LIMIT;"), "ordinary access codes do not use the default bind limit");
 assert(backend.includes('mode: "signedOut"'), "identity exit mode is missing");
 assert(backend.includes('case "unbindIdentity"'), "unbindIdentity cloud action is not registered");
+assert(backend.includes('case "reviewVocabularyQuizAnswer"'), "objective quiz review action is missing");
+assert(backend.includes('case "completeVocabularyQuiz"'), "quiz session action is missing");
 assert(backend.includes('mode: "student"'), "teacher-to-student identity override is missing");
 assert(backend.indexOf('identityMode.mode === "signedOut"') < backend.indexOf("isTeacherOpenId(openid)"), "teacher whitelist is evaluated before signed-out mode");
 assert(backend.includes("[a-z0-9]+"), "beginner number word keys are not accepted by review validation");

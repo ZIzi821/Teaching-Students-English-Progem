@@ -110,7 +110,7 @@
         <view class="primary-btn overview-action" bindtap="goVocabularyStudy">
           ① {{isTeacher || isTeacherPreview ? '查看学生背词流程' : '开始今日背词'}}
         </view>
-        <view class="ghost-btn overview-challenge" bindtap="goVocabularyChallenge">② 背完后做 6 题小测</view>
+        <view class="ghost-btn overview-challenge" bindtap="goVocabularyChallenge">② 背完后做个性化小测</view>
         <view class="vocabulary-record-link" bindtap="goVocabulary">查词与查看学习记录 →</view>
       </view>
     </view>
@@ -194,7 +194,7 @@
       <view class="setting-row daily-goal-row">
         <view>
           <view class="setting-title">老师建议数量</view>
-          <view class="setting-hint">学生每天可在单词页自己选择 5～30 个。</view>
+          <view class="setting-hint">这是以后每天的默认数量；学生端不能自行修改。</view>
         </view>
         <picker mode="selector" range="{{dailyGoalOptions}}" value="{{dailyGoalIndex}}" disabled="{{vocabularySaving}}" bindchange="onVocabularyDailyGoalChange">
           <view class="goal-picker">{{vocabularyForm.dailyGoal}} 个</view>
@@ -202,9 +202,9 @@
       </view>
 
       <view class="student-goal-status">
-        <view class="setting-title">学生今日目标：{{vocabularyDailyPlan.dailyGoal}} 个</view>
+        <view class="setting-title">今日目标：{{vocabularyDailyPlan.dailyGoal}} 个</view>
         <view class="setting-hint">
-          {{vocabularyDailyPlan.hasStudentChoice ? '学生今天已选择，可查看完成情况。' : '学生今天还没选择，先按老师建议安排。'}}
+          {{vocabularyDailyPlan.hasStudentChoice ? '老师今天已单独设置，可在“查看今日学习”中调整。' : '今天按老师设置的默认数量安排。'}}
         </view>
       </view>
 

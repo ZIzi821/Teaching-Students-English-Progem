@@ -457,6 +457,7 @@ const isVocabularyWeakWord = (word) => {
   const correctCount = Math.max(0, Number(source.correctCount || 0));
   return lastResult === "forgot"
     || lastResult === "hard"
+    || lastResult === "quizWrong"
     || (wrongCount >= 2 && wrongCount >= correctCount);
 };
 
@@ -746,6 +747,45 @@ const buildReviewProgress = (existing, result, nowMs = Date.now()) => {
   };
 };
 
+// 客观小测与孩子自评使用不同的更新规则，避免选择题或重复刷题让等级虚高。
+const buildQuizProgress = (existing, options = {}, nowMs = Date.now()) => {
+  const current = existing || {};
+  const correct = options.correct === true;
+  const questionType = asText(options.questionType);
+  const learningDay = Number(options.learningDay || getLearningDay(nowMs));
+  const strongRecall = questionType === "spelling" || questionType === "letterGap";
+  const alreadyAdvancedToday = Number(current.lastQuizStageAdvancedLearningDay || 0) === learningDay;
+  const currentStage = clampStage(current.stage);
+  const nextStage = correct && strongRecall && !alreadyAdvancedToday
+    ? Math.min(5, currentStage + 1)
+    : correct
+      ? currentStage
+      : Math.max(0, currentStage - 1);
+  const nextIntervalMs = correct
+    ? SRS_INTERVALS_MS[nextStage]
+    : SRS_INTERVALS_MS[0];
+  return {
+    stage: nextStage,
+    status: getProgressLabel(nextStage),
+    reviewCount: Number(current.reviewCount || 0) + 1,
+    correctCount: Number(current.correctCount || 0) + (correct ? 1 : 0),
+    wrongCount: Number(current.wrongCount || 0) + (correct ? 0 : 1),
+    streak: correct ? Number(current.streak || 0) + 1 : 0,
+    lastResult: correct ? "quizCorrect" : "quizWrong",
+    isEasy: false,
+    lastReviewedAtMs: nowMs,
+    nextReviewAtMs: nowMs + nextIntervalMs,
+    quizCorrectCount: Number(current.quizCorrectCount || 0) + (correct ? 1 : 0),
+    quizWrongCount: Number(current.quizWrongCount || 0) + (correct ? 0 : 1),
+    lastQuizAtMs: nowMs,
+    lastQuizResult: correct ? "correct" : "wrong",
+    lastQuizType: questionType,
+    lastQuizStageAdvancedLearningDay: correct && strongRecall && !alreadyAdvancedToday
+      ? learningDay
+      : Number(current.lastQuizStageAdvancedLearningDay || 0),
+  };
+};
+
 module.exports = {
   VOCABULARY_CANDIDATES_VERSION,
   DEFAULT_DAILY_GOAL,
@@ -767,6 +807,7 @@ module.exports = {
   getStoredVocabularyCandidates,
   buildVocabularyView,
   buildReviewProgress,
+  buildQuizProgress,
   getProgressLabel,
   isVocabularyWeakWord,
 };

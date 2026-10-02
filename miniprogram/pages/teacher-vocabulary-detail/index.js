@@ -39,6 +39,8 @@ const getLastResultLabel = (value) => ({
   forgot: "上次：没记住",
   hard: "上次：有点难",
   easy: "上次：太简单",
+  quizCorrect: "上次小测：答对",
+  quizWrong: "上次小测：答错",
 }[value] || "还没有作答记录");
 
 Page({

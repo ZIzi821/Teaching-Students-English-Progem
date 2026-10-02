@@ -20,6 +20,36 @@
       </view>
     </view>
 
+    <view class="archive-head learning-alert-head">
+      <view>
+        <view class="section-title archive-title">英语学习需要关注</view>
+        <view class="archive-hint">这里持续显示当前需要处理的问题；首页的新动态即使已读，这里仍会保留到情况改善。</view>
+      </view>
+      <view class="archive-count">{{learningAlerts.length}}</view>
+    </view>
+    <view class="card empty-card" wx:if="{{!learningAlerts.length}}">
+      <view class="empty-icon">✓</view>
+      <view class="empty-title">目前没有需要处理的单词小测问题</view>
+      <view class="empty-hint">算法 {{vocabularyAlgorithmVersion || '尚未产生记录'}} · 已记录 {{quizSessionCount}} 次小测</view>
+    </view>
+    <view
+      class="card hidden-student-card learning-alert-card"
+      wx:for="{{learningAlerts}}"
+      wx:key="_id"
+      data-student-id="{{item.studentId}}"
+      bindtap="goLearningAlert"
+    >
+      <view class="hidden-student-main">
+        <view class="quick-mark">词</view>
+        <view class="student-info">
+          <view class="student-name">{{item.studentName}} · {{item.title}}</view>
+          <view class="student-meta">{{item.activityText}}</view>
+          <view class="student-note">{{item.detail}}</view>
+        </view>
+      </view>
+      <view class="restore-btn">查看单词明细</view>
+    </view>
+
     <view class="section-title">快捷管理</view>
     <view class="quick-grid">
       <view class="quick-card" bindtap="goStudents">
