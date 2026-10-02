@@ -447,10 +447,13 @@ Page({
     wx.navigateTo({ url: this.withPreviewParams("/pages/lesson-detail/index?id=" + lesson._id) });
   },
 
-  goMyLessons() {
+  goMistakeReview() {
     const studentId = this.data.currentStudent ? this.data.currentStudent._id : "";
+    if (!studentId || !this.data.mistakeLearningEnabled) return;
     wx.navigateTo({
-      url: this.withPreviewParams("/pages/student-detail/index?id=" + studentId),
+      url: this.withPreviewParams(
+        "/pages/review-dashboard/index?studentId=" + encodeURIComponent(studentId)
+      ),
     });
   },
 

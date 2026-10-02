@@ -125,6 +125,14 @@ Page({
           return;
         }
         const isTeacherPreview = result.role === "teacher" && this.data.mode === "teacherPreview";
+        // 学生端不再使用旧的“英语课程与作业”汇总页；旧链接统一回到真实学生首页。
+        if (result.role === "student" || isTeacherPreview) {
+          const previewQuery = isTeacherPreview
+            ? `?mode=teacherPreview&previewStudentId=${encodeURIComponent(this.data.studentId)}`
+            : "";
+          wx.redirectTo({ url: "/pages/index/index" + previewQuery });
+          return;
+        }
         const student = this.prepareStudent(result.student);
         const vocabularyState = this.prepareVocabularyState(student, result.vocabularyLevels || []);
         const overviewState = this.prepareVocabularyOverview(result.vocabularyOverview, vocabularyState.dailyPlan);

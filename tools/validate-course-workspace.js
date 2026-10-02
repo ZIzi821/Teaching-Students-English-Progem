@@ -114,6 +114,11 @@ assert(homeJs.includes("markLearningActivitiesViewed"), "Teacher learning activi
 assert(backend.includes('activityText: "提交了录音"'), "Recording submissions are missing from teacher homework activities");
 assert(backend.includes("createdAtMs: Date.now()"), "New recording submissions do not keep a stable numeric activity time");
 assert(homeWxml.includes("今天怎么学？"), "Student home does not show the numbered daily plan");
+assert(!homeWxml.includes(">英语课程与作业<"), "Removed student course-and-homework shortcut is still visible");
+assert(homeWxml.includes('bindtap="goHomeworkTasks">全部课后任务'), "Student homework shortcut does not open the dedicated list");
+assert(homeWxml.includes('bindtap="goMistakeReview">错题复习'), "Student mistake shortcut does not open the dedicated review page");
+assert(homeJs.includes("/pages/review-dashboard/index?studentId="), "Student mistake shortcut does not route directly to review");
+assert(studentJs.includes('result.role === "student" || isTeacherPreview'), "Legacy student-detail route does not leave the removed student interface");
 assert(homeJs.includes('title: "查看课后任务"'), "Student home does not include homework as a learning step");
 assert(homeJs.includes("prefetchTodayVocabularyAudio"), "Student home does not start today's audio prefetch");
 assert(homeJs.includes("prefetchVocabularyAudio(todayWords"), "Student home does not cache today's direct word audio");

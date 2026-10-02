@@ -167,15 +167,14 @@
     <view class="primary-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabularyStudy">
       {{vocabularyPulse.completed ? '查看今日背词结果' : '① 开始背单词 · 还差 ' + vocabularyPulse.remainingCount + ' 个'}}
     </view>
-    <view class="primary-btn" wx:elif="{{englishCourseEnabled}}" bindtap="goMyLessons">查看英语课程与作业</view>
-    <view class="primary-btn" wx:elif="{{mistakeLearningEnabled}}" bindtap="goMyLessons">查看英语错题</view>
+    <view class="primary-btn" wx:elif="{{englishCourseEnabled}}" bindtap="goHomeworkTasks">查看全部课后任务</view>
+    <view class="primary-btn" wx:elif="{{mistakeLearningEnabled}}" bindtap="goMistakeReview">开始错题复习</view>
     <view class="primary-btn french-primary-btn" wx:elif="{{currentStudent.frenchLearningEnabled}}" bindtap="goFrenchLearning">进入法语学习</view>
     <view class="disabled-home-action" wx:else>老师暂时还没有开启学习功能</view>
     <view class="student-action-grid">
       <view class="ghost-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabulary">单词学习记录</view>
       <view class="ghost-btn" wx:if="{{englishCourseEnabled}}" bindtap="goHomeworkTasks">全部课后任务</view>
-      <view class="ghost-btn" wx:if="{{englishCourseEnabled}}" bindtap="goMyLessons">英语课程与作业</view>
-      <view class="ghost-btn" wx:elif="{{mistakeLearningEnabled}}" bindtap="goMyLessons">英语错题</view>
+      <view class="ghost-btn" wx:if="{{mistakeLearningEnabled}}" bindtap="goMistakeReview">错题复习</view>
       <view class="ghost-btn" wx:if="{{currentStudent.frenchLearningEnabled}}" bindtap="goFrenchLearning">法语学习</view>
     </view>
   </view>
