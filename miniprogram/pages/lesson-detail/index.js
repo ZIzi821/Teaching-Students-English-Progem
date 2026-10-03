@@ -26,6 +26,17 @@ const HOMEWORK_DUE_OPTIONS = [
   { value: 6, label: "6 天后截止" },
   { value: 7, label: "7 天后截止" },
 ];
+const RECORDING_FEEDBACK_OPTIONS = [
+  { label: "发音准确", statuses: ["朗读正确"] },
+  { label: "语速自然", statuses: ["朗读正确"] },
+  { label: "声音清楚", statuses: ["朗读正确"] },
+  { label: "比上次进步", statuses: ["朗读正确"] },
+  { label: "注意尾音", statuses: ["朗读正确", "需要重录"] },
+  { label: "注意单词重音", statuses: ["朗读正确", "需要重录"] },
+  { label: "语速再慢一点", statuses: ["朗读正确", "需要重录"] },
+  { label: "句子读完整", statuses: ["需要重录"] },
+];
+const MAX_RECORDING_FEEDBACK_TAGS = 5;
 const MATERIAL_PURPOSES = [
   { label: "学生参考", value: "student_reference", hint: "学生端可以打开" },
   { label: "听力／跟读", value: "listening", hint: "听力或示范音频" },
@@ -74,6 +85,12 @@ const formatDateTime = (timestamp) => {
   const pad = (part) => String(part).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 };
+
+const buildRecordingFeedbackOptions = (status, selectedTags) => RECORDING_FEEDBACK_OPTIONS
+  .filter((item) => item.statuses.includes(status))
+  .map((item) => Object.assign({}, item, {
+    selected: (selectedTags || []).includes(item.label),
+  }));
 
 Page({
   data: {
@@ -148,6 +165,17 @@ Page({
     hasLegacySubmissions: false,
     organizingRecordings: false,
     deletingSubmissionId: "",
+    showRecordingReviewEditor: false,
+    savingRecordingReview: false,
+    recordingFeedbackOptions: buildRecordingFeedbackOptions("朗读正确", []),
+    recordingReviewEditor: {
+      submissionId: "",
+      displayAttemptNo: 0,
+      durationLabel: "",
+      status: "朗读正确",
+      selectedTags: [],
+      note: "",
+    },
     reviewingHomeworkStatus: "",
     subscribingHomeworkReminder: false,
     playingSubmissionId: "",
@@ -420,13 +448,27 @@ Page({
   },
 
   prepareSubmissions(submissions) {
-    return submissions.map((item, index) => Object.assign({}, item, {
-      durationLabel: formatDuration(item.duration),
-      displayAttemptNo: Number(item.attemptNo) || submissions.length - index,
-      status: item.status || "待检查",
-      teacherFeedback: item.teacherFeedback || "",
-      submittedLate: item.submittedLate === true,
-    }));
+    return submissions.map((item, index) => {
+      const teacherFeedbackTags = Array.isArray(item.teacherFeedbackTags)
+        ? item.teacherFeedbackTags.map((tag) => String(tag || "").trim()).filter(Boolean)
+        : [];
+      const teacherFeedbackNote = typeof item.teacherFeedbackNote === "string"
+        ? item.teacherFeedbackNote
+        : teacherFeedbackTags.length ? "" : String(item.teacherFeedback || "");
+      const status = item.status || "待检查";
+      return Object.assign({}, item, {
+        durationLabel: formatDuration(item.duration),
+        displayAttemptNo: Number(item.attemptNo) || submissions.length - index,
+        status,
+        teacherFeedback: item.teacherFeedback || "",
+        teacherFeedbackTags,
+        teacherFeedbackNote,
+        hasTeacherFeedback: Boolean(teacherFeedbackTags.length || teacherFeedbackNote),
+        reviewedLabel: formatDateTime(item.reviewedAtMs),
+        reviewActionLabel: status === "待检查" ? "填写反馈" : "修改反馈",
+        submittedLate: item.submittedLate === true,
+      });
+    });
   },
 
   toggleWorkspaceEditor() {
@@ -1301,29 +1343,111 @@ Page({
   },
 
   markRecordingReviewed(e) {
-    if (!this.data.isTeacher) return;
+    if (!this.data.isTeacher || this.data.savingRecordingReview) return;
     const submission = this.data.submissions[Number(e.currentTarget.dataset.index)];
     if (!submission) return;
-    wx.showActionSheet({
-      itemList: ["朗读正确", "需要重录"],
-      success: (res) => {
-        const status = res.tapIndex === 1 ? "需要重录" : "朗读正确";
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: {
-            type: "reviewLessonRecording",
-            data: { submissionId: submission._id, status, teacherFeedback: "" },
-          },
-        }).then((callRes) => {
-          const result = callRes.result || {};
-          if (!result.success) throw new Error(result.message || "状态更新失败");
-          wx.showToast({ title: status });
-          this.loadLesson();
-        }).catch((err) => {
-          console.error(err);
-          wx.showToast({ title: err.message || "更新失败", icon: "none" });
-        });
+    const status = submission.status === "需要重录" ? "需要重录" : "朗读正确";
+    const allowedLabels = RECORDING_FEEDBACK_OPTIONS
+      .filter((item) => item.statuses.includes(status))
+      .map((item) => item.label);
+    const selectedTags = (submission.teacherFeedbackTags || [])
+      .filter((label) => allowedLabels.includes(label))
+      .slice(0, MAX_RECORDING_FEEDBACK_TAGS);
+    const note = typeof submission.teacherFeedbackNote === "string"
+      ? submission.teacherFeedbackNote
+      : selectedTags.length ? "" : String(submission.teacherFeedback || "");
+    this.setData({
+      showRecordingReviewEditor: true,
+      recordingFeedbackOptions: buildRecordingFeedbackOptions(status, selectedTags),
+      recordingReviewEditor: {
+        submissionId: submission._id,
+        displayAttemptNo: submission.displayAttemptNo,
+        durationLabel: submission.durationLabel,
+        status,
+        selectedTags,
+        note,
       },
+    });
+  },
+
+  selectRecordingReviewStatus(e) {
+    if (this.data.savingRecordingReview) return;
+    const status = e.currentTarget.dataset.status === "需要重录" ? "需要重录" : "朗读正确";
+    const allowedLabels = RECORDING_FEEDBACK_OPTIONS
+      .filter((item) => item.statuses.includes(status))
+      .map((item) => item.label);
+    const selectedTags = (this.data.recordingReviewEditor.selectedTags || [])
+      .filter((label) => allowedLabels.includes(label));
+    this.setData({
+      "recordingReviewEditor.status": status,
+      "recordingReviewEditor.selectedTags": selectedTags,
+      recordingFeedbackOptions: buildRecordingFeedbackOptions(status, selectedTags),
+    });
+  },
+
+  toggleRecordingFeedbackTag(e) {
+    if (this.data.savingRecordingReview) return;
+    const label = String(e.currentTarget.dataset.label || "");
+    if (!label) return;
+    const selectedTags = (this.data.recordingReviewEditor.selectedTags || []).slice();
+    const existingIndex = selectedTags.indexOf(label);
+    if (existingIndex >= 0) {
+      selectedTags.splice(existingIndex, 1);
+    } else if (selectedTags.length >= MAX_RECORDING_FEEDBACK_TAGS) {
+      wx.showToast({ title: `最多选择 ${MAX_RECORDING_FEEDBACK_TAGS} 项`, icon: "none" });
+      return;
+    } else {
+      selectedTags.push(label);
+    }
+    this.setData({
+      "recordingReviewEditor.selectedTags": selectedTags,
+      recordingFeedbackOptions: buildRecordingFeedbackOptions(
+        this.data.recordingReviewEditor.status,
+        selectedTags
+      ),
+    });
+  },
+
+  onRecordingFeedbackNoteInput(e) {
+    this.setData({ "recordingReviewEditor.note": String(e.detail.value || "").slice(0, 300) });
+  },
+
+  keepRecordingReviewEditor() {},
+
+  closeRecordingReviewEditor() {
+    if (this.data.savingRecordingReview) return;
+    this.setData({ showRecordingReviewEditor: false });
+  },
+
+  submitRecordingReview() {
+    const editor = this.data.recordingReviewEditor || {};
+    if (!this.data.isTeacher || this.data.savingRecordingReview || !editor.submissionId) return;
+    this.setData({ savingRecordingReview: true });
+    wx.showLoading({ title: "正在保存", mask: true });
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "reviewLessonRecording",
+        data: {
+          submissionId: editor.submissionId,
+          status: editor.status,
+          teacherFeedbackTags: editor.selectedTags || [],
+          teacherFeedbackNote: editor.note || "",
+        },
+      },
+    }).then((callRes) => {
+      const result = callRes.result || {};
+      if (!result.success) throw new Error(result.message || "反馈保存失败");
+      wx.hideLoading();
+      this.setData({ showRecordingReviewEditor: false });
+      wx.showToast({ title: "反馈已保存", icon: "success" });
+      this.loadLesson();
+    }).catch((err) => {
+      console.error(err);
+      wx.hideLoading();
+      wx.showToast({ title: err.message || "反馈保存失败", icon: "none" });
+    }).finally(() => {
+      this.setData({ savingRecordingReview: false });
     });
   },
 

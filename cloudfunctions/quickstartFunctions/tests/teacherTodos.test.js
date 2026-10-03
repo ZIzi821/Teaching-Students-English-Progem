@@ -186,4 +186,66 @@ const resubmission = teacherTodos.buildTeacherTodos({
 assert.strictEqual(resubmission.items.length, 1);
 assert.strictEqual(resubmission.items[0].kind, "homework_review");
 
+const linkageLesson = {
+  _id: "lesson-feedback-linkage",
+  studentId: "student-recording",
+  title: "反馈联动练习",
+  lessonDate: "2026-10-09",
+  recordingTaskEnabled: true,
+  homeworkDueDays: 2,
+  homeworkTaskVersion: 1,
+  homeworkTeacherReviewStatus: "unreviewed",
+};
+const linkagePendingSubmission = {
+  _id: "submission-feedback-pending",
+  studentId: "student-recording",
+  lessonId: linkageLesson._id,
+  kind: "audio",
+  status: "待检查",
+  homeworkTaskVersion: 1,
+  createdAtMs: nowMs - 30 * 60 * 1000,
+};
+const linkagePending = teacherTodos.buildTeacherTodos({
+  students: [{ _id: "student-recording", name: "录音学生", englishCourseEnabled: true }],
+  lessons: [linkageLesson],
+  submissions: [linkagePendingSubmission],
+  nowMs,
+});
+assert.strictEqual(linkagePending.summary.recordingCount, 1);
+assert.strictEqual(linkagePending.items[0].kind, "recording_review");
+
+const linkageReviewedSubmission = Object.assign({}, linkagePendingSubmission, {
+  status: "朗读正确",
+  teacherFeedbackTags: ["发音准确", "注意尾音"],
+  teacherFeedbackNote: "最后一句更清楚了。",
+  reviewedAtMs: nowMs - 20 * 60 * 1000,
+});
+const linkageReviewed = teacherTodos.buildTeacherTodos({
+  students: [{ _id: "student-recording", name: "录音学生", englishCourseEnabled: true }],
+  lessons: [linkageLesson],
+  submissions: [linkageReviewedSubmission],
+  nowMs,
+});
+assert.strictEqual(linkageReviewed.summary.recordingCount, 0);
+assert(!linkageReviewed.items.some((item) => item.kind === "recording_review"));
+assert(linkageReviewed.items.some((item) => item.kind === "homework_review"));
+
+const linkageResubmitted = teacherTodos.buildTeacherTodos({
+  students: [{ _id: "student-recording", name: "录音学生", englishCourseEnabled: true }],
+  lessons: [linkageLesson],
+  submissions: [
+    linkageReviewedSubmission,
+    Object.assign({}, linkagePendingSubmission, {
+      _id: "submission-feedback-resubmitted",
+      createdAtMs: nowMs - 5 * 60 * 1000,
+    }),
+  ],
+  nowMs,
+});
+assert.strictEqual(linkageResubmitted.summary.recordingCount, 1);
+assert.strictEqual(
+  linkageResubmitted.items.find((item) => item.kind === "recording_review").pendingCount,
+  1
+);
+
 console.log("teacherTodos.test.js: passed");

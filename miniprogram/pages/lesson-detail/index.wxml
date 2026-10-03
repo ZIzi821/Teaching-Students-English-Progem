@@ -393,9 +393,19 @@
               <view class="submission-late-status" wx:if="{{item.submittedLate}}">逾期提交</view>
             </view>
           </view>
+          <view class="recording-feedback-card" wx:if="{{item.hasTeacherFeedback}}">
+            <view class="recording-feedback-head">
+              <view class="recording-feedback-title">老师反馈</view>
+              <view class="recording-feedback-time" wx:if="{{item.reviewedLabel}}">{{item.reviewedLabel}}</view>
+            </view>
+            <view class="recording-feedback-tags" wx:if="{{item.teacherFeedbackTags.length}}">
+              <view class="recording-feedback-tag" wx:for="{{item.teacherFeedbackTags}}" wx:key="*this" wx:for-item="feedbackTag">{{feedbackTag}}</view>
+            </view>
+            <view class="recording-feedback-note" wx:if="{{item.teacherFeedbackNote}}">{{item.teacherFeedbackNote}}</view>
+          </view>
           <view class="submission-actions">
             <view class="listen-btn {{!item.audioAvailable ? 'disabled-action' : ''}}" data-index="{{index}}" bindtap="playSubmission">{{playingSubmissionId === item._id ? '正在播放' : item.audioAvailable ? '播放录音' : '录音暂不可用'}}</view>
-            <view class="review-btn" wx:if="{{isTeacher}}" data-index="{{index}}" bindtap="markRecordingReviewed">检查结果</view>
+            <view class="review-btn" wx:if="{{isTeacher}}" data-index="{{index}}" bindtap="markRecordingReviewed">{{item.reviewActionLabel}}</view>
             <view class="delete-recording-btn {{deletingSubmissionId === item._id ? 'disabled-action' : ''}}" wx:if="{{isTeacher}}" data-index="{{index}}" bindtap="deleteRecording">{{deletingSubmissionId === item._id ? '删除中…' : '删除录音'}}</view>
           </view>
         </view>
@@ -512,6 +522,39 @@
     <view class="teacher-danger-zone" wx:if="{{isTeacher}}">
       <view class="danger-label">课程管理</view>
       <view class="delete-lesson-btn" bindtap="deleteLesson">{{deletingLesson ? '正在删除…' : '删除本节课'}}</view>
+    </view>
+  </view>
+</view>
+
+<view class="recording-review-mask" wx:if="{{showRecordingReviewEditor}}" bindtap="closeRecordingReviewEditor" catchtouchmove="keepRecordingReviewEditor">
+  <view class="recording-review-sheet" catchtap="keepRecordingReviewEditor">
+    <view class="recording-review-handle"></view>
+    <view class="recording-review-head">
+      <view>
+        <view class="recording-review-title">第 {{recordingReviewEditor.displayAttemptNo}} 次录音反馈</view>
+        <view class="recording-review-meta">录音时长 {{recordingReviewEditor.durationLabel}}</view>
+      </view>
+      <view class="recording-review-close" bindtap="closeRecordingReviewEditor">关闭</view>
+    </view>
+
+    <view class="recording-review-label">处理结果</view>
+    <view class="recording-review-outcomes">
+      <view class="recording-review-outcome outcome-correct {{recordingReviewEditor.status === '朗读正确' ? 'recording-review-outcome-active' : ''}}" data-status="朗读正确" bindtap="selectRecordingReviewStatus">朗读正确</view>
+      <view class="recording-review-outcome outcome-retry {{recordingReviewEditor.status === '需要重录' ? 'recording-review-outcome-active' : ''}}" data-status="需要重录" bindtap="selectRecordingReviewStatus">需要重录</view>
+    </view>
+
+    <view class="recording-review-label">快捷反馈 <text>可多选</text></view>
+    <view class="recording-review-tags">
+      <view class="recording-review-tag {{item.selected ? 'recording-review-tag-active' : ''}}" wx:for="{{recordingFeedbackOptions}}" wx:key="label" data-label="{{item.label}}" bindtap="toggleRecordingFeedbackTag">{{item.label}}</view>
+    </view>
+
+    <view class="recording-review-label recording-review-note-label">补充一句话 <text>选填</text></view>
+    <textarea class="recording-review-textarea" maxlength="300" auto-height="{{true}}" placeholder="例如：最后一句的尾音再读清楚一点" value="{{recordingReviewEditor.note}}" bindinput="onRecordingFeedbackNoteInput" />
+    <view class="recording-review-link-note">保存后会自动移出“待检查录音”；学生重新提交后会再次进入待检查。</view>
+
+    <view class="recording-review-actions">
+      <view class="recording-review-cancel" bindtap="closeRecordingReviewEditor">取消</view>
+      <view class="recording-review-save {{savingRecordingReview ? 'disabled-action' : ''}}" bindtap="submitRecordingReview">{{savingRecordingReview ? '保存中…' : '保存反馈'}}</view>
     </view>
   </view>
 </view>

@@ -787,6 +787,56 @@
   white-space: nowrap;
 }
 
+.recording-feedback-card {
+  margin-top: 15rpx;
+  padding: 16rpx 18rpx;
+  border: 1rpx solid #cfe2d8;
+  border-radius: 14rpx;
+  background: #f1f8f4;
+}
+
+.recording-feedback-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.recording-feedback-title {
+  color: #39765d;
+  font-size: 22rpx;
+  font-weight: 800;
+}
+
+.recording-feedback-time {
+  color: #8a968f;
+  font-size: 19rpx;
+}
+
+.recording-feedback-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9rpx;
+  margin-top: 12rpx;
+}
+
+.recording-feedback-tag {
+  padding: 7rpx 12rpx;
+  border-radius: 999rpx;
+  color: #39765d;
+  background: #dceee4;
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+.recording-feedback-note {
+  margin-top: 11rpx;
+  color: #4f5d56;
+  font-size: 23rpx;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
 .submission-actions,
 .upload-actions,
 .mistake-actions {
@@ -827,6 +877,184 @@
 .delete-recording-btn {
   color: #a43f38;
   background: #f8dfdc;
+}
+
+.recording-review-mask {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(45, 39, 33, 0.48);
+}
+
+.recording-review-sheet {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 90vh;
+  padding: 14rpx 28rpx calc(28rpx + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  border-radius: 28rpx 28rpx 0 0;
+  background: #fffdf8;
+  box-shadow: 0 -16rpx 48rpx rgba(51, 43, 35, 0.18);
+}
+
+.recording-review-handle {
+  width: 72rpx;
+  height: 8rpx;
+  margin: 0 auto 20rpx;
+  border-radius: 999rpx;
+  background: #d9d0c4;
+}
+
+.recording-review-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24rpx;
+}
+
+.recording-review-title {
+  color: #2f3b35;
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.recording-review-meta {
+  margin-top: 7rpx;
+  color: #8b8176;
+  font-size: 21rpx;
+}
+
+.recording-review-close {
+  flex-shrink: 0;
+  padding: 8rpx 4rpx;
+  color: #817669;
+  font-size: 23rpx;
+}
+
+.recording-review-label {
+  margin-top: 28rpx;
+  color: #4a423a;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+
+.recording-review-label text {
+  margin-left: 9rpx;
+  color: #9a8f83;
+  font-size: 19rpx;
+  font-weight: 500;
+}
+
+.recording-review-outcomes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+  margin-top: 13rpx;
+}
+
+.recording-review-outcome {
+  padding: 20rpx 14rpx;
+  border: 2rpx solid #dfd5c8;
+  border-radius: 16rpx;
+  color: #6c6258;
+  background: #fbf7f0;
+  font-size: 24rpx;
+  font-weight: 800;
+  text-align: center;
+}
+
+.outcome-correct.recording-review-outcome-active {
+  border-color: #5b9a7d;
+  color: #2f7255;
+  background: #e8f4ed;
+}
+
+.outcome-retry.recording-review-outcome-active {
+  border-color: #d18a71;
+  color: #9a4f38;
+  background: #fbece7;
+}
+
+.recording-review-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 13rpx;
+}
+
+.recording-review-tag {
+  padding: 13rpx 17rpx;
+  border: 1rpx solid #dfd5c8;
+  border-radius: 999rpx;
+  color: #675d53;
+  background: #fbf7f0;
+  font-size: 22rpx;
+}
+
+.recording-review-tag-active {
+  border-color: #76a88f;
+  color: #327056;
+  background: #e2f1e9;
+  font-weight: 800;
+}
+
+.recording-review-note-label {
+  margin-top: 26rpx;
+}
+
+.recording-review-textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 130rpx;
+  margin-top: 13rpx;
+  padding: 18rpx;
+  border: 1rpx solid #ddd2c4;
+  border-radius: 15rpx;
+  color: #443d36;
+  background: #fff;
+  font-size: 23rpx;
+  line-height: 1.55;
+}
+
+.recording-review-link-note {
+  margin-top: 16rpx;
+  padding: 14rpx 16rpx;
+  border-radius: 13rpx;
+  color: #61766b;
+  background: #edf5f0;
+  font-size: 20rpx;
+  line-height: 1.55;
+}
+
+.recording-review-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 14rpx;
+  margin-top: 24rpx;
+}
+
+.recording-review-cancel,
+.recording-review-save {
+  padding: 20rpx 16rpx;
+  border-radius: 15rpx;
+  font-size: 24rpx;
+  font-weight: 800;
+  text-align: center;
+}
+
+.recording-review-cancel {
+  color: #746a5f;
+  background: #eee8df;
+}
+
+.recording-review-save {
+  color: #fff;
+  background: #4f8f73;
 }
 
 .purpose-grid {

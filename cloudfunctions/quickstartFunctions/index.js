@@ -6,6 +6,7 @@ const vocabularyQuiz = require("./vocabularyQuiz");
 const frenchLearning = require("./frenchLearning");
 const courseWorkflow = require("./courseWorkflow");
 const teacherTodos = require("./teacherTodos");
+const recordingFeedback = require("./recordingFeedback");
 const KET_SPEAKING_TASKS = require("./data/ket-speaking-tasks.json");
 
 cloud.init({
@@ -4259,10 +4260,10 @@ const reviewLessonRecording = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
   const submissionId = String(data.submissionId || "").trim();
-  const status = data.status === "需要重录" ? "需要重录" : "朗读正确";
-  const teacherFeedback = normalizeLessonText(data.teacherFeedback, 500);
+  const feedback = recordingFeedback.normalizeRecordingFeedback(data);
+  const { status } = feedback;
   if (!submissionId) throw createError("INVALID_RECORDING", "录音信息不完整，请刷新后重试");
-  await assertContentSafe({ texts: [teacherFeedback] });
+  await assertContentSafe({ texts: [feedback.text] });
   const reviewStartedAtMs = Date.now();
   const submission = await db.runTransaction(async (transaction) => {
     const submissionRef = transaction.collection("lessonSubmissions").doc(submissionId);
@@ -4271,8 +4272,12 @@ const reviewLessonRecording = async (event) => {
     await submissionRef.update({
       data: {
         status,
-        teacherFeedback,
+        teacherFeedback: feedback.text,
+        teacherFeedbackTags: feedback.tags,
+        teacherFeedbackNote: feedback.note,
+        teacherFeedbackVersion: 2,
         reviewedAt: db.serverDate(),
+        reviewedAtMs: reviewStartedAtMs,
       },
     });
     return current;
@@ -4281,7 +4286,14 @@ const reviewLessonRecording = async (event) => {
     await resetCompletedHomeworkWhenNoUsableRecording(submission.lessonId, reviewStartedAtMs);
   }
   await syncLessonSubmissionTimingSafely(submission.lessonId);
-  return { success: true, submissionId, status, teacherFeedback };
+  return {
+    success: true,
+    submissionId,
+    status,
+    teacherFeedback: feedback.text,
+    teacherFeedbackTags: feedback.tags,
+    teacherFeedbackNote: feedback.note,
+  };
 };
 
 const deleteLessonRecording = async (event) => {
