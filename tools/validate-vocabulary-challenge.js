@@ -1,5 +1,20 @@
 const assert = require("assert");
+const fs = require("fs");
+const path = require("path");
 const challenge = require("../miniprogram/utils/vocabularyChallenge");
+
+const pageScript = fs.readFileSync(
+  path.join(__dirname, "../miniprogram/pages/vocabulary-challenge/index.js"),
+  "utf8"
+);
+const pageMarkup = fs.readFileSync(
+  path.join(__dirname, "../miniprogram/pages/vocabulary-challenge/index.wxml"),
+  "utf8"
+);
+assert(pageMarkup.includes("currentQuestion.answerMode === 'choice'"));
+assert(pageMarkup.includes("currentQuestion.feedbackAnswer"));
+assert(pageScript.includes("answerMode: question.answerMode"));
+assert(pageScript.includes("question.answerMode, isCorrect"));
 
 const words = Array.from({ length: 8 }, (_, index) => ({
   key: `word-${index}`,
@@ -15,11 +30,11 @@ const fixedRandom = () => 0.25;
 const selected = challenge.selectChallengeWords({
   todayWords: words.slice(2, 5),
   allWords: words,
-  limit: 6,
+  limit: 8,
   random: fixedRandom,
 });
-assert.strictEqual(selected.length, 6);
-assert.strictEqual(new Set(selected.map((item) => item.key)).size, 6);
+assert.strictEqual(selected.length, 8);
+assert.strictEqual(new Set(selected.map((item) => item.key)).size, 8);
 
 const weak = challenge.selectChallengeWords({
   todayWords: [],
@@ -32,14 +47,48 @@ assert.strictEqual(weak.length, 2);
 assert(weak.every((item) => challenge.isWeakWord(item)));
 
 const questions = challenge.buildChallengeQuestions(selected, words, fixedRandom);
-assert.strictEqual(questions.length, 6);
+assert.strictEqual(questions.length, 8);
 assert(questions.some((item) => item.type === "spelling"));
 assert(questions.some((item) => item.type === "letterGap"));
-questions.filter((item) => ["wordToMeaning", "meaningToWord"].includes(item.type)).forEach((item) => {
+assert(questions.some((item) => item.taskType === "letterCompletion" && item.answerMode === "choice"));
+assert(questions.some((item) => item.taskType === "letterCompletion" && item.answerMode === "input"));
+assert(questions.some((item) => item.taskType === "completeWord" && item.answerMode === "choice"));
+assert(questions.some((item) => item.taskType === "completeWord" && item.answerMode === "input"));
+questions.filter((item) => item.answerMode === "choice").forEach((item) => {
   assert(item.options.length >= 2);
   assert.strictEqual(item.options.filter((option) => option.isAnswer).length, 1);
 });
+questions.filter((item) => item.answerMode === "input").forEach((item) => {
+  assert.strictEqual(item.options.length, 0);
+});
+const letterInput = questions.find((item) => (
+  item.taskType === "letterCompletion" && item.answerMode === "input"
+));
+assert(letterInput.promptHint.includes("只填写"));
+assert(letterInput.promptHint.includes("不要输入完整单词"));
+assert.strictEqual(letterInput.inputPlaceholder, "只填缺少的字母");
+assert.notStrictEqual(challenge.normalizeAnswer(letterInput.answer), challenge.normalizeAnswer(letterInput.word));
+const letterChoice = questions.find((item) => (
+  item.taskType === "letterCompletion" && item.answerMode === "choice"
+));
+assert.strictEqual(letterChoice.typeLabel, "补全字母 · 选择题");
+assert(letterChoice.promptHint.includes("选择"));
+assert(letterChoice.feedbackAnswer.includes(`缺少的字母：${letterChoice.answer}`));
+const fullWordChoice = questions.find((item) => (
+  item.taskType === "completeWord" && item.answerMode === "choice"
+));
+assert.strictEqual(fullWordChoice.answer, fullWordChoice.word);
+assert.strictEqual(fullWordChoice.typeLabel, "完整单词 · 选择题");
+const fullWordInput = questions.find((item) => (
+  item.taskType === "completeWord" && item.answerMode === "input"
+));
+assert.strictEqual(fullWordInput.answer, fullWordInput.word);
+assert.strictEqual(fullWordInput.typeLabel, "完整单词 · 填空题");
 assert.strictEqual(challenge.normalizeAnswer("  I'M  Ready "), "i'm ready");
+assert.deepStrictEqual(challenge.buildLetterCompletion("two"), {
+  prompt: "t _ o",
+  answer: "w",
+});
 
 const coolingWeak = challenge.selectChallengeWords({
   todayWords: [],
@@ -118,6 +167,8 @@ const singleWordQuestion = challenge.buildChallengeQuestions([{
   meaning: "苹果",
 }], [], fixedRandom)[0];
 assert.strictEqual(singleWordQuestion.type, "spelling");
+assert.strictEqual(singleWordQuestion.taskType, "completeWord");
+assert.strictEqual(singleWordQuestion.answerMode, "input");
 assert.strictEqual(singleWordQuestion.direction, "meaningToWord");
 assert.strictEqual(singleWordQuestion.prompt, "苹果");
 assert.strictEqual(singleWordQuestion.answer, "apple");

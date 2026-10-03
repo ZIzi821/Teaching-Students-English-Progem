@@ -747,13 +747,23 @@ const buildReviewProgress = (existing, result, nowMs = Date.now()) => {
   };
 };
 
+const normalizeQuizAnswerMode = (questionType, answerMode) => {
+  const normalized = asText(answerMode);
+  if (normalized === "choice" || normalized === "input") return normalized;
+  return questionType === "wordToMeaning" || questionType === "meaningToWord"
+    ? "choice"
+    : "input";
+};
+
 // 客观小测与孩子自评使用不同的更新规则，避免选择题或重复刷题让等级虚高。
 const buildQuizProgress = (existing, options = {}, nowMs = Date.now()) => {
   const current = existing || {};
   const correct = options.correct === true;
   const questionType = asText(options.questionType);
+  const answerMode = normalizeQuizAnswerMode(questionType, options.answerMode);
   const learningDay = Number(options.learningDay || getLearningDay(nowMs));
-  const strongRecall = questionType === "spelling" || questionType === "letterGap";
+  const strongRecall = answerMode === "input"
+    && (questionType === "spelling" || questionType === "letterGap");
   const alreadyAdvancedToday = Number(current.lastQuizStageAdvancedLearningDay || 0) === learningDay;
   const currentStage = clampStage(current.stage);
   const nextStage = correct && strongRecall && !alreadyAdvancedToday
@@ -780,6 +790,7 @@ const buildQuizProgress = (existing, options = {}, nowMs = Date.now()) => {
     lastQuizAtMs: nowMs,
     lastQuizResult: correct ? "correct" : "wrong",
     lastQuizType: questionType,
+    lastQuizAnswerMode: answerMode,
     lastQuizStageAdvancedLearningDay: correct && strongRecall && !alreadyAdvancedToday
       ? learningDay
       : Number(current.lastQuizStageAdvancedLearningDay || 0),
@@ -802,6 +813,7 @@ module.exports = {
   normalizeVocabularySettings,
   getLearningDay,
   normalizeVocabularyDailyPlan,
+  normalizeQuizAnswerMode,
   getProgressDocumentId,
   extractVocabularyCandidates,
   getStoredVocabularyCandidates,

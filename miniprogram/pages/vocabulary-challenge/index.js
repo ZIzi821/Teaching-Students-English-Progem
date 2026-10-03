@@ -163,7 +163,10 @@ Page({
   submitSpelling() {
     if (this.data.answered || this.data.saving) return;
     if (!challenge.normalizeAnswer(this.data.spellingAnswer)) {
-      wx.showToast({ title: "请先输入英文答案", icon: "none" });
+      wx.showToast({
+        title: this.data.currentQuestion.emptyAnswerMessage || "请先输入英文答案",
+        icon: "none",
+      });
       return;
     }
     this.finishAnswer(this.data.spellingAnswer);
@@ -184,6 +187,8 @@ Page({
       wordKey: question.wordKey,
       word: question.word,
       questionType: question.type,
+      taskType: question.taskType,
+      answerMode: question.answerMode,
       correct: isCorrect,
       responseTimeMs: Math.max(0, Date.now() - Number(this.questionStartedAtMs || Date.now())),
     });
@@ -196,10 +201,12 @@ Page({
         : this.data.readOnly ? "这题没答对，学生可以稍后再练" : "没关系，这个词稍后再练",
       score: this.data.score + (isCorrect ? 1 : 0),
     });
-    if (this.data.canReview) this.saveReview(question.wordKey, question.type, isCorrect);
+    if (this.data.canReview) {
+      this.saveReview(question.wordKey, question.type, question.answerMode, isCorrect);
+    }
   },
 
-  saveReview(wordKey, questionType, isCorrect) {
+  saveReview(wordKey, questionType, answerMode, isCorrect) {
     this.setData({ saving: true, saveWarning: "" });
     wx.cloud.callFunction({
       name: "quickstartFunctions",
@@ -209,6 +216,7 @@ Page({
           studentId: this.data.studentId,
           wordKey,
           questionType,
+          answerMode,
           correct: isCorrect,
         },
       },

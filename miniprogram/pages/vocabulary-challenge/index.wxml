@@ -31,7 +31,7 @@
         <view class="question-prompt {{currentQuestion.direction === 'wordToMeaning' ? 'english-prompt' : ''}}">{{currentQuestion.prompt}}</view>
         <view class="question-meta" wx:if="{{currentQuestion.partOfSpeech}}">{{currentQuestion.partOfSpeech}}</view>
 
-        <view class="choice-list" wx:if="{{currentQuestion.type === 'wordToMeaning' || currentQuestion.type === 'meaningToWord'}}">
+        <view class="choice-list" wx:if="{{currentQuestion.answerMode === 'choice'}}">
           <view
             class="choice-item {{item.state === 'correct' ? 'choice-correct' : item.state === 'wrong' ? 'choice-wrong' : ''}}"
             wx:for="{{currentQuestion.options}}"
@@ -60,7 +60,7 @@
 
       <view class="card feedback-card {{answerCorrect ? 'feedback-correct' : 'feedback-wrong'}}" wx:if="{{answered}}">
         <view class="feedback-title">{{answerMessage}}</view>
-        <view class="feedback-answer">{{currentQuestion.word}} · {{currentQuestion.meaning}}</view>
+        <view class="feedback-answer">{{currentQuestion.feedbackAnswer}}</view>
         <view class="feedback-source" wx:if="{{currentQuestion.sourceLabel}}">来源：{{currentQuestion.sourceLabel}}</view>
         <view class="save-warning" wx:if="{{saveWarning}}">{{saveWarning}}</view>
         <view class="next-action {{saving ? 'action-disabled' : ''}}" bindtap="nextQuestion">

@@ -67,6 +67,23 @@ const choice = vocabulary.buildQuizProgress(
   nowMs
 );
 assert.strictEqual(choice.stage, 2, "choice questions must not raise the SRS stage");
+assert.strictEqual(choice.lastQuizAnswerMode, "choice");
+const letterChoice = vocabulary.buildQuizProgress(
+  { stage: 2 },
+  { correct: true, questionType: "letterGap", answerMode: "choice", learningDay: 123 },
+  nowMs
+);
+assert.strictEqual(letterChoice.stage, 2, "letter-completion choices must not raise the SRS stage");
+assert.strictEqual(letterChoice.lastQuizAnswerMode, "choice");
+const letterInput = vocabulary.buildQuizProgress(
+  { stage: 2 },
+  { correct: true, questionType: "letterGap", answerMode: "input", learningDay: 123 },
+  nowMs
+);
+assert.strictEqual(letterInput.stage, 3, "typed missing letters should count as active recall");
+assert.strictEqual(letterInput.lastQuizAnswerMode, "input");
+assert.strictEqual(vocabulary.normalizeQuizAnswerMode("meaningToWord", ""), "choice");
+assert.strictEqual(vocabulary.normalizeQuizAnswerMode("spelling", ""), "input");
 
 const student = { _id: "student-a", name: "测试学生" };
 const session = (offset, accuracy, totalQuestions = 8) => ({

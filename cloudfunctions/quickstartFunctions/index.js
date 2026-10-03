@@ -2810,6 +2810,11 @@ const reviewVocabularyQuizAnswer = async (event) => {
   if (["wordToMeaning", "meaningToWord", "letterGap", "spelling"].indexOf(questionType) < 0) {
     throw createError("INVALID_VOCABULARY_QUIZ", "小测题型无效，请重新进入");
   }
+  const rawAnswerMode = String(data.answerMode || "").trim();
+  if (rawAnswerMode && ["choice", "input"].indexOf(rawAnswerMode) < 0) {
+    throw createError("INVALID_VOCABULARY_QUIZ", "小测作答方式无效，请重新进入");
+  }
+  const answerMode = vocabulary.normalizeQuizAnswerMode(questionType, rawAnswerMode);
   const studentRes = await db.collection("students").doc(studentId).get();
   if (!studentRes.data || studentRes.data.vocabularyEnabled !== true) {
     throw createError("VOCABULARY_DISABLED", "背单词功能尚未开启");
@@ -2840,6 +2845,7 @@ const reviewVocabularyQuizAnswer = async (event) => {
     const next = vocabulary.buildQuizProgress(existing, {
       correct: data.correct === true,
       questionType,
+      answerMode,
       learningDay,
     }, nowMs);
     const updateData = Object.assign({}, next, {
@@ -2862,7 +2868,7 @@ const reviewVocabularyQuizAnswer = async (event) => {
     }
     return next;
   });
-  return Object.assign({ success: true, studentId, wordKey }, progress);
+  return Object.assign({ success: true, studentId, wordKey, questionType, answerMode }, progress);
 };
 
 const completeVocabularyQuiz = async (event) => {
@@ -2886,10 +2892,21 @@ const completeVocabularyQuiz = async (event) => {
     if (!allowedTypes.has(questionType)) {
       throw createError("INVALID_VOCABULARY_QUIZ", "小测题型无效，请重新进入");
     }
+    const rawAnswerMode = String(item && item.answerMode || "").trim();
+    if (rawAnswerMode && ["choice", "input"].indexOf(rawAnswerMode) < 0) {
+      throw createError("INVALID_VOCABULARY_QUIZ", "小测作答方式无效，请重新进入");
+    }
+    const answerMode = vocabulary.normalizeQuizAnswerMode(questionType, rawAnswerMode);
     return {
       wordKey: assertVocabularyWordKey(item && item.wordKey),
       word: String(item && item.word || "").trim().slice(0, 80),
       questionType,
+      taskType: questionType === "letterGap"
+        ? "letterCompletion"
+        : questionType === "wordToMeaning"
+          ? "wordMeaning"
+          : "completeWord",
+      answerMode,
       correct: item && item.correct === true,
       responseTimeMs: Math.max(0, Math.min(5 * 60 * 1000, Number(item && item.responseTimeMs || 0))),
     };
