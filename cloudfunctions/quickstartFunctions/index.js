@@ -5,6 +5,7 @@ const vocabulary = require("./vocabulary");
 const vocabularyQuiz = require("./vocabularyQuiz");
 const frenchLearning = require("./frenchLearning");
 const courseWorkflow = require("./courseWorkflow");
+const teacherTodos = require("./teacherTodos");
 const KET_SPEAKING_TASKS = require("./data/ket-speaking-tasks.json");
 
 cloud.init({
@@ -1325,6 +1326,42 @@ const getTeacherLearningAlerts = async () => {
     sessionCount: sessions.length,
     alerts,
   };
+};
+
+const getTeacherTodos = async () => {
+  await ensureTeacher();
+  await Promise.all([
+    createOneCollection("lessonSubmissions"),
+    createOneCollection("vocabularyDailyStats"),
+    createOneCollection("vocabularyQuizSessions"),
+  ]);
+  const studentsRes = await db.collection("students").get();
+  const students = (studentsRes.data || [])
+    .filter((student) => !isStudentHiddenFromTeacher(student))
+    .map((student) => Object.assign({}, student, {
+      englishCourseEnabled: isEnglishCourseEnabled(student),
+    }));
+  const [lessonResults, submissionResults, quizSessionResults, dailyStatsResults] = await Promise.all([
+    Promise.all(students.map((student) => loadAllStudentDocuments("lessons", student._id))),
+    Promise.all(students.map((student) => loadAllStudentDocuments("lessonSubmissions", student._id))),
+    Promise.all(students.map((student) => loadAllStudentDocuments("vocabularyQuizSessions", student._id))),
+    Promise.all(students.map((student) => (
+      loadAllVocabularyDocuments("vocabularyDailyStats", { studentId: student._id })
+    ))),
+  ]);
+  const quizSessions = quizSessionResults.flatMap((items) => items || []);
+  const result = teacherTodos.buildTeacherTodos({
+    students,
+    lessons: lessonResults.flatMap((items) => items || []),
+    submissions: submissionResults.flatMap((items) => items || []),
+    vocabularyAlerts: vocabularyQuiz.buildTeacherVocabularyAlerts({ students, sessions: quizSessions }),
+    dailyStats: dailyStatsResults.flatMap((items) => items || []),
+    quizSessions,
+  });
+  return Object.assign({
+    success: true,
+    inactivityThresholdDays: teacherTodos.INACTIVITY_THRESHOLD_DAYS,
+  }, result);
 };
 
 const bindStudent = async (event) => {
@@ -4955,6 +4992,8 @@ exports.main = async (event) => {
         return await markStudentLearningActivitiesViewed(event);
       case "getTeacherLearningAlerts":
         return await getTeacherLearningAlerts();
+      case "getTeacherTodos":
+        return await getTeacherTodos();
       case "bindStudent":
       case "bindAccessCode":
         return await bindAccessCode(event);

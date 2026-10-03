@@ -165,6 +165,9 @@ Page({
       mode: options.mode || "",
       isDevTools,
     });
+    this.focusSection = ["recordings", "homework", "homework-review"].includes(options.focus)
+      ? options.focus
+      : "";
     this.restoreMaterialPreferences();
     this.loadLesson();
   },
@@ -258,11 +261,28 @@ Page({
         selectedKetSpeakingTask,
         ketSpeakingTaskIndex,
         message: "",
-      });
+      }, () => this.scrollToFocusedSection());
     }).catch((err) => {
       console.error(err);
       this.setData({ message: "服务暂时不可用，请稍后再试" });
     });
+  },
+
+  scrollToFocusedSection() {
+    const focusSection = this.focusSection;
+    if (!focusSection) return;
+    this.focusSection = "";
+    setTimeout(() => {
+      const selectors = {
+        recordings: "#recording-submissions",
+        homework: "#homework-section",
+        "homework-review": "#teacher-homework-review",
+      };
+      wx.pageScrollTo({
+        selector: selectors[focusSection],
+        duration: 280,
+      });
+    }, 80);
   },
 
   prepareLesson(lesson) {

@@ -8,9 +8,6 @@ Page({
     hiddenCount: 0,
     hiddenStudents: [],
     restoringId: "",
-    learningAlerts: [],
-    vocabularyAlgorithmVersion: "",
-    quizSessionCount: 0,
   },
 
   onShow() {
@@ -57,7 +54,6 @@ Page({
         hiddenStudents,
         message: "",
       });
-      this.loadLearningAlerts();
     }).catch((err) => {
       console.error(err);
       this.setData({
@@ -66,32 +62,6 @@ Page({
         noPermission: true,
         message: "工作台暂时无法加载，请稍后再试",
       });
-    });
-  },
-
-  loadLearningAlerts() {
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getTeacherLearningAlerts" },
-    }).then((res) => {
-      const result = res.result || {};
-      if (!result.success) throw new Error(result.message || "英语学习提醒加载失败");
-      this.setData({
-        learningAlerts: result.alerts || [],
-        vocabularyAlgorithmVersion: result.algorithmVersion || "",
-        quizSessionCount: Number(result.sessionCount || 0),
-      });
-    }).catch((err) => {
-      console.error(err);
-      this.setData({ learningAlerts: [] });
-    });
-  },
-
-  goLearningAlert(event) {
-    const studentId = String(event.currentTarget.dataset.studentId || "");
-    if (!studentId) return;
-    wx.navigateTo({
-      url: "/pages/teacher-vocabulary-detail/index?studentId=" + encodeURIComponent(studentId),
     });
   },
 

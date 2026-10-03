@@ -1,0 +1,88 @@
+<view class="page todo-page {{isTeacher ? 'has-teacher-tabbar' : ''}}">
+  <view class="todo-hero">
+    <view class="hero-kicker">TEACHER TO-DO</view>
+    <view class="hero-row">
+      <view>
+        <view class="title">教师待办</view>
+        <view class="subtitle" wx:if="{{summary.totalCount}}">还有 {{summary.totalCount}} 项需要处理，涉及 {{summary.studentCount}} 位学生。</view>
+        <view class="subtitle" wx:else>当前没有尚未解决的事项。</view>
+      </view>
+      <view class="hero-count">{{summary.totalCount}}</view>
+    </view>
+    <view class="hero-note">这里按真实状态更新，不会因为“已查看”而提前消失。</view>
+  </view>
+
+  <view class="card status-card" wx:if="{{loading}}">正在整理待办…</view>
+  <view class="card status-card no-permission" wx:elif="{{noPermission}}">
+    <view>{{message}}</view>
+    <view class="retry-action" bindtap="loadTodos">重新加载</view>
+  </view>
+
+  <block wx:elif="{{isTeacher}}">
+    <view class="summary-grid">
+      <view class="summary-card summary-recording">
+        <view class="summary-number">{{summary.recordingCount}}</view>
+        <view class="summary-label">待查录音</view>
+      </view>
+      <view class="summary-card summary-homework">
+        <view class="summary-number">{{summary.homeworkCount}}</view>
+        <view class="summary-label">作业处理</view>
+      </view>
+      <view class="summary-card summary-vocabulary">
+        <view class="summary-number">{{summary.vocabularyCount}}</view>
+        <view class="summary-label">单词关注</view>
+      </view>
+      <view class="summary-card summary-inactivity">
+        <view class="summary-number">{{summary.inactivityCount}}</view>
+        <view class="summary-label">学习关注</view>
+      </view>
+    </view>
+
+    <scroll-view class="filter-scroll" scroll-x enable-flex show-scrollbar="{{false}}">
+      <view class="filter-row">
+        <view
+          class="filter-chip {{activeFilter === item.key ? 'filter-chip-active' : ''}}"
+          wx:for="{{filters}}"
+          wx:key="key"
+          data-key="{{item.key}}"
+          bindtap="chooseFilter"
+        >{{item.label}} {{item.count}}</view>
+      </view>
+    </scroll-view>
+
+    <view class="card empty-card" wx:if="{{!visibleTodos.length}}">
+      <view class="empty-icon">✓</view>
+      <view class="empty-title">这个分类目前没有待办</view>
+      <view class="empty-hint">新录音、待批改任务或需要关注的学习记录出现后，会自动显示在这里。</view>
+    </view>
+
+    <view
+      class="card todo-card todo-{{item.priority}}"
+      wx:for="{{visibleTodos}}"
+      wx:key="_id"
+      data-index="{{index}}"
+      bindtap="openTodo"
+    >
+      <view class="todo-topline">
+        <view class="student-name">{{item.studentName}}</view>
+        <view class="category-badge category-{{item.category}}">{{item.categoryLabel}}</view>
+      </view>
+      <view class="todo-title">{{item.title}}</view>
+      <view class="todo-detail">{{item.detail}}</view>
+      <view class="todo-footer">
+        <view class="todo-meta">
+          <text wx:if="{{item.meta}}">{{item.meta}}</text>
+          <text wx:if="{{item.meta && item.timeLabel}}"> · </text>
+          <text wx:if="{{item.timeLabel}}">{{item.timeLabel}}</text>
+        </view>
+        <view class="todo-action">{{item.actionLabel}} →</view>
+      </view>
+    </view>
+
+    <view class="evidence-note">
+      “学习关注”只统计小程序内可确认的背词、小测和录音记录，不代表学生在线下没有学习。
+    </view>
+  </block>
+
+  <teacher-tabbar wx:if="{{isTeacher}}" current="todos"></teacher-tabbar>
+</view>

@@ -295,7 +295,7 @@
       <view class="submission-count" wx:if="{{submissions.length}}">{{submissions.length}} 份录音</view>
     </view>
 
-    <view class="card homework-card" wx:if="{{lesson.homeworkTask || lesson.recordingTaskEnabled || submissions.length}}">
+    <view class="card homework-card" id="homework-section" wx:if="{{lesson.homeworkTask || lesson.recordingTaskEnabled || submissions.length}}">
       <view class="homework-copy" wx:if="{{lesson.homeworkTask}}">
         <view class="homework-copy-label">要完成的任务</view>
         <view class="homework-text">{{lesson.homeworkTask}}</view>
@@ -361,7 +361,7 @@
         <view class="homework-completed-copy" wx:elif="{{isTeacher}}">{{lesson.homeworkTeacherReviewStatus === 'incomplete' ? '老师已批改为未完成，等待学生继续完成。' : '学生还没有确认完成课后任务。'}}</view>
         <view class="preview-recording-note" wx:elif="{{isTeacherPreview}}">教师预览中不能代学生确认完成或开启提醒。</view>
 
-        <view class="teacher-homework-review" wx:if="{{isTeacher}}">
+        <view class="teacher-homework-review" id="teacher-homework-review" wx:if="{{isTeacher}}">
           <view class="teacher-homework-review-head">
             <view>
               <view class="teacher-homework-review-title">教师批改任务状态</view>
@@ -383,7 +383,7 @@
         </view>
       </view>
 
-      <view class="submission-list" wx:if="{{submissions.length}}">
+      <view class="submission-list" id="recording-submissions" wx:if="{{submissions.length}}">
         <view class="submission-title">学生已提交</view>
         <view class="submission-row" wx:for="{{submissions}}" wx:key="_id">
           <view class="submission-main">

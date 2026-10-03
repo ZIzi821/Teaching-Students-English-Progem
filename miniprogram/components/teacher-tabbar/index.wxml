@@ -4,13 +4,17 @@
       <view class="tab-symbol tab-symbol-home"><view class="home-roof"></view><view class="home-body"></view></view>
       <view class="tab-label">首页</view>
     </view>
-    <view class="tab-item {{current === 'students' ? 'tab-active' : ''}}" data-key="students" bindtap="switchTab">
-      <view class="tab-symbol tab-symbol-students"><view class="student-head student-head-one"></view><view class="student-head student-head-two"></view><view class="student-body"></view></view>
-      <view class="tab-label">学生</view>
+    <view class="tab-item {{current === 'todos' ? 'tab-active' : ''}}" data-key="todos" bindtap="switchTab">
+      <view class="tab-symbol tab-symbol-todos">
+        <view class="todo-row"><view class="todo-dot"></view><view class="todo-line"></view></view>
+        <view class="todo-row"><view class="todo-dot"></view><view class="todo-line"></view></view>
+        <view class="todo-row"><view class="todo-dot"></view><view class="todo-line"></view></view>
+      </view>
+      <view class="tab-label">待办</view>
     </view>
     <view class="tab-item {{current === 'workbench' ? 'tab-active' : ''}}" data-key="workbench" bindtap="switchTab">
       <view class="tab-symbol tab-symbol-workbench"><view class="workbench-cell"></view><view class="workbench-cell"></view><view class="workbench-cell"></view><view class="workbench-cell"></view></view>
-      <view class="tab-label">工作台</view>
+      <view class="tab-label">管理</view>
     </view>
   </view>
 </view>

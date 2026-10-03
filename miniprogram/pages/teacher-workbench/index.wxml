@@ -1,8 +1,8 @@
 <view class="page workbench-page {{isTeacher ? 'has-teacher-tabbar' : ''}}">
   <view class="workbench-hero">
-    <view class="hero-kicker">TEACHER WORKSPACE</view>
-    <view class="title">教师工作台</view>
-    <view class="subtitle">集中管理不常用但需要保留的学生资料。</view>
+    <view class="hero-kicker">TEACHER MANAGEMENT</view>
+    <view class="title">教师管理</view>
+    <view class="subtitle">学生账号、课程记录和隐藏资料集中在这里。</view>
   </view>
 
   <view class="card status-card" wx:if="{{loading}}">正在整理工作台…</view>
@@ -18,36 +18,6 @@
         <view class="overview-number">{{hiddenCount}}</view>
         <view class="overview-label">已隐藏学生</view>
       </view>
-    </view>
-
-    <view class="archive-head learning-alert-head">
-      <view>
-        <view class="section-title archive-title">英语学习需要关注</view>
-        <view class="archive-hint">这里持续显示当前需要处理的问题；首页的新动态即使已读，这里仍会保留到情况改善。</view>
-      </view>
-      <view class="archive-count">{{learningAlerts.length}}</view>
-    </view>
-    <view class="card empty-card" wx:if="{{!learningAlerts.length}}">
-      <view class="empty-icon">✓</view>
-      <view class="empty-title">目前没有需要处理的单词小测问题</view>
-      <view class="empty-hint">算法 {{vocabularyAlgorithmVersion || '尚未产生记录'}} · 已记录 {{quizSessionCount}} 次小测</view>
-    </view>
-    <view
-      class="card hidden-student-card learning-alert-card"
-      wx:for="{{learningAlerts}}"
-      wx:key="_id"
-      data-student-id="{{item.studentId}}"
-      bindtap="goLearningAlert"
-    >
-      <view class="hidden-student-main">
-        <view class="quick-mark">词</view>
-        <view class="student-info">
-          <view class="student-name">{{item.studentName}} · {{item.title}}</view>
-          <view class="student-meta">{{item.activityText}}</view>
-          <view class="student-note">{{item.detail}}</view>
-        </view>
-      </view>
-      <view class="restore-btn">查看单词明细</view>
     </view>
 
     <view class="section-title">快捷管理</view>
@@ -77,7 +47,7 @@
     <view class="card empty-card" wx:if="{{!hiddenStudents.length}}">
       <view class="empty-icon">✓</view>
       <view class="empty-title">目前没有隐藏学生</view>
-      <view class="empty-hint">在“学生”页面点击学生卡片右侧的“隐藏”即可移入这里。</view>
+      <view class="empty-hint">在“管理当前学生”页面点击学生卡片右侧的“隐藏”即可移入这里。</view>
     </view>
 
     <view class="card hidden-student-card" wx:for="{{hiddenStudents}}" wx:key="_id">

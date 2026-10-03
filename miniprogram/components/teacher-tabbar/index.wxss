@@ -87,32 +87,34 @@
   border-radius: 2rpx;
 }
 
-.student-head {
-  position: absolute;
-  top: 2rpx;
-  width: 14rpx;
-  height: 14rpx;
-  border: 3rpx solid currentColor;
+.tab-symbol-todos {
+  display: flex;
+  box-sizing: border-box;
+  padding: 3rpx 2rpx;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.todo-row {
+  display: flex;
+  height: 7rpx;
+  align-items: center;
+  gap: 5rpx;
+}
+
+.todo-dot {
+  box-sizing: border-box;
+  width: 7rpx;
+  height: 7rpx;
+  border: 2rpx solid currentColor;
   border-radius: 50%;
 }
 
-.student-head-one {
-  left: 3rpx;
-}
-
-.student-head-two {
-  right: 3rpx;
-}
-
-.student-body {
-  position: absolute;
-  right: 1rpx;
-  bottom: 1rpx;
-  left: 1rpx;
-  height: 14rpx;
-  border: 3rpx solid currentColor;
-  border-bottom: 0;
-  border-radius: 18rpx 18rpx 0 0;
+.todo-line {
+  width: 23rpx;
+  height: 3rpx;
+  border-radius: 999rpx;
+  background: currentColor;
 }
 
 .tab-symbol-workbench {

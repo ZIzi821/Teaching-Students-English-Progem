@@ -307,5 +307,5 @@
 
     <view class="card no-learning-card" wx:if="{{!isTeacher && !showEnglishLearning && !frenchLearningForm.enabled}}">老师暂时还没有为这个账号开启学习功能。</view>
   </view>
-  <teacher-tabbar wx:if="{{isTeacher}}" current="students"></teacher-tabbar>
+  <teacher-tabbar wx:if="{{isTeacher}}" current="workbench"></teacher-tabbar>
 </view>

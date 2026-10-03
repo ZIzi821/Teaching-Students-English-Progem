@@ -1,6 +1,6 @@
 const TABS = {
   home: "/pages/index/index",
-  students: "/pages/students/index",
+  todos: "/pages/teacher-todos/index",
   workbench: "/pages/teacher-workbench/index",
 };
 

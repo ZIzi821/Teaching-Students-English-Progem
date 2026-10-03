@@ -10,6 +10,7 @@
     "pages/french-shadowing/index",
     "pages/french-reading/index",
     "pages/french-writing/index",
+    "pages/teacher-todos/index",
     "pages/teacher-workbench/index",
     "pages/students/index",
     "pages/student-detail/index",
