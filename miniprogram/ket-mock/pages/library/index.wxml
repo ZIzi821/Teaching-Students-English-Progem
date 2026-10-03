@@ -1,0 +1,60 @@
+<view class="page library-page">
+  <view class="library-hero">
+    <view class="eyebrow">KET MOCK AUDIO</view>
+    <view class="title">模拟考官录音库</view>
+    <view class="subtitle">每套 9 段音频。英文录制稿只在教师端显示；学生端只会听到你的录音。</view>
+  </view>
+
+  <view class="card status-card" wx:if="{{loading}}">正在检查 8 套模拟题…</view>
+  <view class="card error-card" wx:elif="{{message}}">
+    <view>{{message}}</view>
+    <view class="retry" bindtap="loadLibrary">重新加载</view>
+  </view>
+
+  <block wx:else>
+    <view class="summary-row">
+      <view class="summary-card"><view class="summary-number">{{summary.completeSetCount}} / {{summary.setCount}}</view><view class="summary-label">可开始套题</view></view>
+      <view class="summary-card"><view class="summary-number">{{summary.readyCount}} / {{summary.totalCount}}</view><view class="summary-label">已备音频</view></view>
+    </view>
+    <view class="truth-note">“当前格式原创仿真”不是 Cambridge 官方真题；第 1 套也只依据公开样题结构改编，不逐字复制原题。</view>
+
+    <view class="card set-card" wx:for="{{sets}}" wx:key="id" wx:for-item="set" wx:for-index="setIndex">
+      <view class="set-head" data-id="{{set.id}}" bindtap="toggleSet">
+        <view class="set-number">{{set.order}}</view>
+        <view class="set-copy">
+          <view class="set-title">{{set.title}}</view>
+          <view class="set-source">{{set.sourceBadge}}</view>
+        </view>
+        <view class="set-state {{set.audioComplete ? 'set-complete' : ''}}">{{set.audioReadyCount}} / {{set.audioTotalCount}}</view>
+      </view>
+      <view class="progress-track"><view class="progress-fill" style="width: {{set.progressPercent}}%;"></view></view>
+
+      <view class="set-body" wx:if="{{expandedSetId === set.id}}">
+        <view class="set-meta">{{set.formatLabel}} · {{set.expectedMinutes}}</view>
+        <view class="set-meta">{{set.sourceLabel}}</view>
+        <view class="source-link" wx:if="{{set.sourceUrl}}" data-index="{{setIndex}}" bindtap="copySource">复制官方公开样题来源</view>
+
+        <view class="cue-card {{cue.audioReady ? 'cue-ready' : ''}}" wx:for="{{set.cues}}" wx:key="id" wx:for-item="cue" wx:for-index="cueIndex">
+          <view class="cue-top">
+            <view>
+              <view class="cue-title"><text class="part-badge">{{cue.partLabel}}</text>{{cue.title}}</view>
+              <view class="cue-response">{{cue.responseLabel}}</view>
+            </view>
+            <view class="audio-state {{cue.audioReady ? 'audio-ready' : ''}}">{{cue.audioReady ? '已准备' : '缺音频'}}</view>
+          </view>
+          <view class="script-label">你的英文录制稿</view>
+          <view class="script-text">{{cue.script}}</view>
+          <view class="cue-actions">
+            <view class="cue-action primary-action {{uploadingKey === set.id + ':' + cue.id ? 'disabled' : ''}}" data-set-index="{{setIndex}}" data-cue-index="{{cueIndex}}" bindtap="chooseCueAudio">
+              {{uploadingKey === set.id + ':' + cue.id ? '上传中…' : cue.audioReady ? '替换音频' : '上传音频'}}
+            </view>
+            <view class="cue-action" wx:if="{{cue.audioReady}}" data-set-index="{{setIndex}}" data-cue-index="{{cueIndex}}" bindtap="playCueAudio">
+              {{playingKey === set.id + ':' + cue.id ? '播放中…' : '试听'}}
+            </view>
+            <view class="cue-action danger-action" wx:if="{{cue.audioReady}}" data-set-index="{{setIndex}}" data-cue-index="{{cueIndex}}" bindtap="deleteCueAudio">删除</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

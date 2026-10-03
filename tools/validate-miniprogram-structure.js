@@ -6,7 +6,11 @@ const vm = require("vm");
 const root = path.resolve(__dirname, "..");
 const miniprogramRoot = path.join(root, "miniprogram");
 const appConfig = JSON.parse(fs.readFileSync(path.join(miniprogramRoot, "app.json"), "utf8"));
-const registeredPages = new Set(appConfig.pages || []);
+const subpackagePages = (appConfig.subpackages || appConfig.subPackages || []).flatMap((subpackage) => (
+  (subpackage.pages || []).map((page) => `${String(subpackage.root || "").replace(/\/$/, "")}/${page}`)
+));
+const allPages = (appConfig.pages || []).concat(subpackagePages);
+const registeredPages = new Set(allPages);
 const voidTags = new Set(["input", "import", "include", "icon"]);
 
 const validateWxmlTags = (filePath) => {
@@ -45,11 +49,11 @@ const validatePage = (pagePath) => {
     assert(methodPattern.test(jsSource), `${pagePath}: missing handler ${match[1]}`);
   }
 
-  const routePattern = /["'`]\/(pages\/[\w/-]+\/index)(?:\?[^"'`]*)?["'`]/g;
+  const routePattern = /["'`]\/([\w/-]+\/index)(?:\?[^"'`]*)?["'`]/g;
   while ((match = routePattern.exec(jsSource))) {
     assert(registeredPages.has(match[1]), `${pagePath}: unregistered route ${match[1]}`);
   }
 };
 
-(appConfig.pages || []).forEach(validatePage);
-console.log(`miniprogram structure validation passed (${appConfig.pages.length} pages)`);
+allPages.forEach(validatePage);
+console.log(`miniprogram structure validation passed (${allPages.length} pages)`);

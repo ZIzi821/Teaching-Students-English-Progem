@@ -100,4 +100,8 @@ Page({
   goAddLesson() {
     wx.navigateTo({ url: "/pages/add-lesson/index" });
   },
+
+  goKetMockLibrary() {
+    wx.navigateTo({ url: "/ket-mock/pages/library/index" });
+  },
 });

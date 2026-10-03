@@ -138,6 +138,12 @@ Page({
       if (result.role !== "student") throw new Error("请从学生端进入录音练习");
       const lesson = result.lesson || {};
       if (lesson.recordingTaskEnabled !== true) throw new Error("老师尚未为这节课布置录音任务");
+      if (lesson.recordingTaskType === "ket_mock") {
+        wx.redirectTo({
+          url: `/ket-mock/pages/exam/index?lessonId=${encodeURIComponent(this.data.lessonId)}`,
+        });
+        return;
+      }
       const submissions = Array.isArray(result.submissions) ? result.submissions : [];
       const highestAttemptNo = submissions.reduce((max, item, index) => (
         Math.max(max, Number(item.attemptNo) || submissions.length - index)

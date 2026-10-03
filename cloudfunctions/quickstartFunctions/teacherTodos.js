@@ -64,6 +64,7 @@ const buildTeacherTodos = ({
   vocabularyAlerts,
   dailyStats,
   quizSessions,
+  ketMockSessions,
   nowMs = Date.now(),
   inactivityThresholdDays = INACTIVITY_THRESHOLD_DAYS,
 } = {}) => {
@@ -85,24 +86,40 @@ const buildTeacherTodos = ({
     if (!submissionsByLesson.has(lesson._id)) submissionsByLesson.set(lesson._id, []);
     submissionsByLesson.get(lesson._id).push(submission);
   });
+  const ketSessionsByLesson = new Map();
+  (ketMockSessions || []).forEach((session) => {
+    const lesson = lessonById.get(String(session && session.lessonId || ""));
+    if (
+      !lesson
+      || session.studentId !== lesson.studentId
+      || Number(session.homeworkTaskVersion || 1) !== getTaskVersion(lesson)
+      || !["submitted", "reviewed"].includes(session.status)
+    ) return;
+    if (!ketSessionsByLesson.has(lesson._id)) ketSessionsByLesson.set(lesson._id, []);
+    ketSessionsByLesson.get(lesson._id).push(session);
+  });
 
   const items = [];
   lessonById.forEach((lesson) => {
     if (!hasLessonHomework(lesson)) return;
     const student = studentById.get(String(lesson.studentId || "")) || {};
     const lessonSubmissions = submissionsByLesson.get(lesson._id) || [];
+    const lessonKetSessions = ketSessionsByLesson.get(lesson._id) || [];
     const pendingSubmissions = lessonSubmissions.filter((item) => item.status === "待检查");
+    const pendingKetSessions = lessonKetSessions.filter((item) => item.status === "submitted");
     const usableSubmissions = lessonSubmissions.filter((item) => item.status !== "需要重录");
-    const pendingLatestAtMs = pendingSubmissions.reduce((latest, item) => (
-      Math.max(latest, getDocumentTime(item, ["createdAtMs", "createdAt"]))
+    const pendingLatestAtMs = pendingSubmissions.concat(pendingKetSessions).reduce((latest, item) => (
+      Math.max(latest, Number(item.submittedAtMs || 0), getDocumentTime(item, ["createdAtMs", "createdAt"]))
     ), 0);
-    const firstUsableAtMs = usableSubmissions.reduce((earliest, item) => {
-      const value = getDocumentTime(item, ["createdAtMs", "createdAt"]);
+    const usableKetSessions = lessonKetSessions.filter((item) => ["submitted", "reviewed"].includes(item.status));
+    const allUsableWork = usableSubmissions.concat(usableKetSessions);
+    const firstUsableAtMs = allUsableWork.reduce((earliest, item) => {
+      const value = Number(item.submittedAtMs || 0) || getDocumentTime(item, ["createdAtMs", "createdAt"]);
       if (!value) return earliest;
       return earliest ? Math.min(earliest, value) : value;
     }, 0);
-    const latestUsableAtMs = usableSubmissions.reduce((latest, item) => (
-      Math.max(latest, getDocumentTime(item, ["createdAtMs", "createdAt"]))
+    const latestUsableAtMs = allUsableWork.reduce((latest, item) => (
+      Math.max(latest, Number(item.submittedAtMs || 0) || getDocumentTime(item, ["createdAtMs", "createdAt"]))
     ), 0);
     const deadline = courseWorkflow.buildHomeworkDeadlineState(lesson, nowMs, firstUsableAtMs);
     const studentName = asText(student.name) || "学生";
@@ -131,11 +148,37 @@ const buildTeacherTodos = ({
       });
     }
 
+    if (pendingKetSessions.length) {
+      const latestKetSession = pendingKetSessions.slice().sort((left, right) => (
+        Number(right.submittedAtMs || 0) - Number(left.submittedAtMs || 0)
+      ))[0];
+      items.push({
+        _id: `ket-mock:${latestKetSession._id}`,
+        category: "recording",
+        kind: "ket_mock_review",
+        priority: "attention",
+        priorityRank: 420,
+        studentId: lesson.studentId,
+        studentName,
+        lessonId: lesson._id,
+        sessionId: latestKetSession._id,
+        title: `${lessonTitle} · KET 模拟待评分`,
+        detail: "Part 1 与 Part 2 已提交，等待回听和四维练习评分",
+        meta: latestKetSession.submittedLate === true ? "逾期提交" : asText(lesson.lessonDate),
+        actionType: "ket_mock",
+        actionLabel: "回听评分",
+        activityAtMs: Number(latestKetSession.submittedAtMs || 0),
+        sortAtMs: Number(latestKetSession.submittedAtMs || 0),
+        pendingCount: 1,
+      });
+    }
+
     const teacherReviewedAtMs = Number(lesson.homeworkTeacherReviewedAtMs || 0)
       || getDateLikeTime(lesson.homeworkTeacherReviewedAt);
     const needsHomeworkReview = !completed
-      && usableSubmissions.length > 0
+      && allUsableWork.length > 0
       && pendingSubmissions.length === 0
+      && pendingKetSessions.length === 0
       && (
         lesson.homeworkTeacherReviewStatus === "unreviewed"
         || !teacherReviewedAtMs
@@ -161,7 +204,7 @@ const buildTeacherTodos = ({
       });
     }
 
-    if (!completed && !usableSubmissions.length && deadline.homeworkDueStatus === "overdue") {
+    if (!completed && !allUsableWork.length && deadline.homeworkDueStatus === "overdue") {
       items.push({
         _id: `homework-overdue:${lesson._id}`,
         category: "homework",
@@ -235,6 +278,12 @@ const buildTeacherTodos = ({
   (submissions || []).forEach((item) => {
     if (!item || item.kind !== "audio") return;
     const activityAtMs = getDocumentTime(item, ["createdAtMs", "createdAt"]);
+    if (!activityAtMs) return;
+    keepActivity(item.studentId, vocabulary.getLearningDay(activityAtMs), activityAtMs);
+  });
+  (ketMockSessions || []).forEach((item) => {
+    if (!item || !["submitted", "reviewed"].includes(item.status)) return;
+    const activityAtMs = Number(item.submittedAtMs || item.reviewedAtMs || 0);
     if (!activityAtMs) return;
     keepActivity(item.studentId, vocabulary.getLearningDay(activityAtMs), activityAtMs);
   });

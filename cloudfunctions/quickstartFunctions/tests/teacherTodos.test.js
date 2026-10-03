@@ -248,4 +248,40 @@ assert.strictEqual(
   1
 );
 
+const ketMockTodo = teacherTodos.buildTeacherTodos({
+  students: [{ _id: "student-ket", name: "Molly", englishCourseEnabled: true }],
+  lessons: [{
+    _id: "lesson-ket-mock",
+    studentId: "student-ket",
+    title: "KET 口语模拟",
+    lessonDate: "2026-10-09",
+    recordingTaskEnabled: true,
+    recordingTaskType: "ket_mock",
+    homeworkDueDays: 2,
+    homeworkTaskVersion: 3,
+    homeworkTeacherReviewStatus: "unreviewed",
+  }],
+  submissions: [],
+  ketMockSessions: [{
+    _id: "ket-session-submitted",
+    studentId: "student-ket",
+    lessonId: "lesson-ket-mock",
+    homeworkTaskVersion: 3,
+    status: "submitted",
+    submittedAtMs: nowMs - 10 * 60 * 1000,
+  }, {
+    _id: "ket-session-old-task",
+    studentId: "student-ket",
+    lessonId: "lesson-ket-mock",
+    homeworkTaskVersion: 2,
+    status: "submitted",
+    submittedAtMs: nowMs - 2 * 24 * 60 * 60 * 1000,
+  }],
+  nowMs,
+});
+assert.strictEqual(ketMockTodo.items.length, 1);
+assert.strictEqual(ketMockTodo.items[0].kind, "ket_mock_review");
+assert.strictEqual(ketMockTodo.items[0].sessionId, "ket-session-submitted");
+assert.strictEqual(ketMockTodo.summary.recordingCount, 1);
+
 console.log("teacherTodos.test.js: passed");

@@ -1,0 +1,53 @@
+.review-page { padding-bottom: 90rpx; background: radial-gradient(circle at 88% 4%, rgba(223,239,231,.9), transparent 250rpx), #f7f3ea; }
+.review-hero { margin: 8rpx 6rpx 18rpx; }
+.eyebrow { color: #4f8f73; font-size: 19rpx; font-weight: 800; letter-spacing: 3rpx; }
+.title { margin-top: 8rpx; color: #263f36; font-size: 40rpx; font-weight: 900; }
+.subtitle { margin-top: 9rpx; color: #817669; font-size: 22rpx; line-height: 1.5; }
+.source-row { display: flex; gap: 10rpx; margin: 0 6rpx 22rpx; }
+.source-badge, .late-badge { padding: 8rpx 13rpx; border-radius: 999rpx; color: #6e572b; background: #f3e9ce; font-size: 20rpx; font-weight: 800; }
+.late-badge { color: #985148; background: #f9e7e4; }
+.status-card { border-color: #cfe1d7; background: #f3f9f5; }
+.status-title { color: #315f4c; font-size: 26rpx; font-weight: 800; }
+.status-copy { margin-top: 8rpx; color: #6e766f; font-size: 22rpx; line-height: 1.55; }
+.section-title { margin: 30rpx 6rpx 14rpx; color: #2f493e; font-size: 29rpx; font-weight: 900; }
+.part2-title { color: #6c5431; }
+.response-card { padding: 23rpx; }
+.response-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 15rpx; }
+.response-title { color: #342f29; font-size: 26rpx; font-weight: 800; }
+.response-meta { margin-top: 5rpx; color: #817669; font-size: 20rpx; }
+.part-chip { padding: 7rpx 11rpx; border-radius: 999rpx; color: #39765d; background: #e2efe8; font-size: 19rpx; font-weight: 800; }
+.part2-chip { color: #765d37; background: #f2e8d5; }
+.script-box { margin-top: 17rpx; padding: 16rpx; border-radius: 12rpx; color: #5b5248; background: #f5f1e9; font-size: 22rpx; line-height: 1.55; }
+.script-label { margin-bottom: 5rpx; color: #8a7659; font-size: 18rpx; font-weight: 800; }
+.audio-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; margin-top: 18rpx; }
+.audio-btn { display: flex; min-height: 70rpx; align-items: center; justify-content: center; border-radius: 13rpx; font-size: 22rpx; font-weight: 800; }
+.prompt-btn { color: #5f665e; background: #edeae3; }
+.response-btn { color: #fff; background: #4f8f73; }
+.visual-card { padding: 22rpx; border-color: #d8cfb8; background: #fffaf0; }
+.visual-title { color: #4a4135; font-size: 27rpx; font-weight: 800; text-align: center; }
+.visual-image { display: block; width: 100%; margin-top: 14rpx; border-radius: 12rpx; }
+.visual-question { margin-top: 13rpx; color: #64594b; font-size: 21rpx; line-height: 1.5; text-align: center; }
+.score-title { margin-top: 38rpx; }
+.score-notice { margin: 0 6rpx 18rpx; padding: 16rpx 18rpx; border-radius: 13rpx; color: #7b6237; background: #fff1cf; font-size: 21rpx; line-height: 1.5; }
+.score-editor { padding: 25rpx; }
+.score-row { display: flex; align-items: center; justify-content: space-between; gap: 15rpx; padding: 18rpx 0; border-bottom: 1rpx solid #eee7dd; }
+.score-label { color: #342f29; font-size: 24rpx; font-weight: 800; }
+.score-hint { margin-top: 4rpx; color: #817669; font-size: 19rpx; }
+.score-picker { min-width: 112rpx; padding: 13rpx 16rpx; border-radius: 12rpx; color: #315f4c; background: #e8f2ed; font-size: 23rpx; font-weight: 900; text-align: center; }
+.text-field { margin-top: 22rpx; }
+.field-label { margin-bottom: 10rpx; color: #655b50; font-size: 23rpx; font-weight: 800; }
+.text-field textarea { box-sizing: border-box; width: 100%; min-height: 120rpx; padding: 18rpx; border: 1rpx solid #ded4c7; border-radius: 13rpx; color: #2f2a24; background: #fffdfa; font-size: 23rpx; }
+.save-btn { margin-top: 26rpx; }
+.disabled { opacity: .55; }
+.score-result { text-align: center; }
+.average-score { color: #315f4c; font-size: 76rpx; font-weight: 900; line-height: 1; }
+.average-score text { margin-left: 5rpx; font-size: 28rpx; }
+.average-label { margin-top: 8rpx; color: #817669; font-size: 21rpx; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; margin-top: 26rpx; }
+.result-grid > view { padding: 18rpx 10rpx; border-radius: 13rpx; background: #f1f6f3; }
+.result-grid text { color: #315f4c; font-size: 31rpx; font-weight: 900; }
+.result-grid view view { margin-top: 5rpx; color: #71685e; font-size: 19rpx; }
+.feedback-block { margin-top: 20rpx; padding: 18rpx; border-radius: 13rpx; color: #524a42; background: #f7f3eb; font-size: 23rpx; line-height: 1.6; text-align: left; }
+.feedback-label { margin-bottom: 6rpx; color: #7c6647; font-size: 19rpx; font-weight: 800; }
+.center-card, .error-card { margin-top: 80rpx; text-align: center; color: #756c62; }
+.retry { margin-top: 14rpx; color: #39765d; font-weight: 800; }

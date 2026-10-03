@@ -1,0 +1,129 @@
+<view class="page exam-page">
+  <view class="card center-card" wx:if="{{state === 'loading'}}">
+    <view class="loading-ring"></view>
+    <view class="state-title">正在检查模拟考试…</view>
+  </view>
+
+  <view class="card error-card" wx:elif="{{state === 'error'}}">
+    <view class="error-mark">!</view>
+    <view class="state-title">模拟考试暂时无法继续</view>
+    <view class="state-copy">{{message}}</view>
+    <view class="primary-btn error-btn" bindtap="loadExam">返回考试首页</view>
+  </view>
+
+  <block wx:elif="{{state === 'instructions'}}">
+    <view class="exam-hero">
+      <view class="eyebrow">A2 KEY FOR SCHOOLS</view>
+      <view class="hero-title">口语全流程仿真</view>
+      <view class="hero-subtitle">{{set.title}}</view>
+    </view>
+    <view class="source-badge">{{set.sourceBadge}}</view>
+    <view class="source-note">{{set.sourceLabel}}</view>
+
+    <view class="card instruction-card">
+      <view class="card-kicker">READ BEFORE STARTING</view>
+      <view class="instruction-title">考试须知</view>
+      <view class="rule-row"><text>1</text><view>全程约 {{set.expectedMinutes}}，包含 Part 1 和 Part 2，中途不能暂停、回放或重录。</view></view>
+      <view class="rule-row"><text>2</text><view>每段考官录音结束后，麦克风会自动打开；答完后点击“回答完毕”。</view></view>
+      <view class="rule-row"><text>3</text><view>考试时不要切换页面或退出小程序，否则本场会标记为中断。</view></view>
+      <view class="rule-row"><text>4</text><view>Part 2 使用预录的虚拟搭档进行全流程仿真；真实双人互动仍需老师或同伴配合。</view></view>
+      <view class="rule-row"><text>5</text><view>老师的四维评分是练习反馈，不是 Cambridge 官方成绩。</view></view>
+    </view>
+
+    <view class="card readiness-card">
+      <view class="readiness-title">开始前请确认</view>
+      <view class="check-row">✓ 周围安静，可以清楚听见考官录音</view>
+      <view class="check-row">✓ 微信已允许使用麦克风</view>
+      <view class="check-row">✓ 接下来约 10 分钟不会离开页面</view>
+      <view class="primary-btn start-btn" bindtap="beginExam">我准备好了，开始考试</view>
+    </view>
+  </block>
+
+  <view class="card center-card" wx:elif="{{state === 'preparing'}}">
+    <view class="loading-ring"></view>
+    <view class="state-title">{{preparationText}}</view>
+    <view class="state-copy">{{preparationDone}} / {{preparationTotal}}</view>
+    <view class="preload-track"><view class="preload-fill" style="width: {{preparationTotal ? preparationDone / preparationTotal * 100 : 0}}%;"></view></view>
+    <view class="state-copy">准备完成后会直接进入考试，请不要离开。</view>
+  </view>
+
+  <block wx:elif="{{state === 'playing' || state === 'starting' || state === 'recording' || state === 'stopping' || state === 'between'}}">
+    <view class="exam-status-head">
+      <view>
+        <view class="part-label">SPEAKING PART {{currentPart}}</view>
+        <view class="stage-title">{{currentCue ? currentCue.studentInstruction : '考试即将开始'}}</view>
+      </view>
+      <view class="cue-count">{{cuePositionLabel}}</view>
+    </view>
+    <view class="exam-progress"><view class="exam-progress-fill" style="width: {{progressPercent}}%;"></view></view>
+
+    <view class="card visual-card" wx:if="{{currentPart === 2 && set}}">
+      <view class="visual-title">{{set.visualPrompt}}</view>
+      <image class="visual-image" src="{{set.visualAsset}}" mode="widthFix" aria-label="{{set.visualAlt}}"></image>
+      <view class="visual-question">{{set.visualQuestion}}</view>
+      <view class="option-row"><text wx:for="{{set.visualOptions}}" wx:key="*this">{{item}}</text></view>
+    </view>
+
+    <view class="card live-card">
+      <block wx:if="{{state === 'playing'}}">
+        <view class="speaker-rings"><view class="speaker-core">▶</view></view>
+        <view class="live-title">考官正在说话</view>
+        <view class="live-copy">请仔细听。录音结束后会自动开始录制回答。</view>
+      </block>
+      <block wx:elif="{{state === 'starting'}}">
+        <view class="speaker-rings microphone-rings"><view class="speaker-core">●</view></view>
+        <view class="live-title">正在打开麦克风</view>
+        <view class="live-copy">马上开始回答</view>
+      </block>
+      <block wx:elif="{{state === 'recording'}}">
+        <view class="recording-dot"></view>
+        <view class="live-title recording-title">正在录制你的回答</view>
+        <view class="timer">{{elapsedLabel}}</view>
+        <view class="remaining">最长回答时间还剩 {{remainingLabel}}</view>
+        <view class="finish-btn" bindtap="finishAnswer">回答完毕</view>
+      </block>
+      <block wx:elif="{{state === 'stopping'}}">
+        <view class="loading-ring small-ring"></view>
+        <view class="live-title">正在保存这一段回答</view>
+      </block>
+      <block wx:else>
+        <view class="transition-mark">✓</view>
+        <view class="live-title">{{currentCueIndex < 0 ? '考试马上开始' : '这一段已完成'}}</view>
+        <view class="live-copy">请保持安静，下一段会自动播放。</view>
+      </block>
+    </view>
+    <view class="response-count">已录制回答 {{completedResponseCount}} / {{expectedResponseCount}}</view>
+  </block>
+
+  <view class="card center-card" wx:elif="{{state === 'uploading'}}">
+    <view class="loading-ring"></view>
+    <view class="state-title">考试结束，正在提交回答</view>
+    <view class="state-copy">{{uploadDone}} / {{uploadTotal}} 段</view>
+    <view class="state-copy">请保持在本页，全部提交成功后才会记为完成。</view>
+  </view>
+
+  <view class="card error-card" wx:elif="{{state === 'upload_error'}}">
+    <view class="error-mark">!</view>
+    <view class="state-title">回答还没有提交成功</view>
+    <view class="state-copy">{{message}}。录音仍保留在本页，请检查网络后重试，不需要重新考试。</view>
+    <view class="primary-btn error-btn" bindtap="retryUpload">重新提交</view>
+  </view>
+
+  <view class="card success-card" wx:elif="{{state === 'success'}}">
+    <view class="success-mark">✓</view>
+    <view class="state-title">模拟考试已提交</view>
+    <view class="state-copy">Part 1 与 Part 2 共 {{expectedResponseCount}} 段回答已送给老师。</view>
+    <view class="late-pill" wx:if="{{submittedLate}}">逾期提交</view>
+    <view class="score-notice">等待老师按语法与词汇、发音、互动沟通、整体表现四项给出练习评分。</view>
+    <view class="primary-btn error-btn" bindtap="openResult">查看提交记录</view>
+    <view class="back-link" bindtap="goBack">返回课程</view>
+  </view>
+
+  <view class="card success-card" wx:elif="{{state === 'completed'}}">
+    <view class="success-mark">✓</view>
+    <view class="state-title">这项模拟考试已经完成</view>
+    <view class="state-copy">{{latestSession.status === 'reviewed' ? '老师已经完成练习评分。' : '回答已经提交，正在等待老师评分。'}}</view>
+    <view class="primary-btn error-btn" bindtap="openResult">{{latestSession.status === 'reviewed' ? '查看评分与反馈' : '查看提交记录'}}</view>
+    <view class="back-link" bindtap="goBack">返回课程</view>
+  </view>
+</view>

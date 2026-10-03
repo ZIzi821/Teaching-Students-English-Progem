@@ -161,7 +161,7 @@
         <picker mode="selector" range="{{recordingTaskTypeOptions}}" range-key="label" value="{{recordingTaskTypeIndex}}" bindchange="onRecordingTaskTypeChange">
           <view class="picker-value">{{recordingTaskTypeOptions[recordingTaskTypeIndex].label}}</view>
         </picker>
-        <view class="field-tip">普通口语由你手动输入；KET 模式只使用已核验的 Cambridge 官方样题。</view>
+        <view class="field-tip">单题练习保留官方公开样题；全流程模拟包含 1 套公开样题结构改编和 7 套当前格式原创题。</view>
       </view>
       <view class="field" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType === 'ket_official'}}">
         <view class="label">选择官方口语样题</view>
@@ -179,11 +179,25 @@
         </view>
         <view class="ket-weekly-hint" wx:if="{{ketWeeklyHint}}">{{ketWeeklyHint}}</view>
       </view>
+      <view class="field" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType === 'ket_mock'}}">
+        <view class="label">选择完整模拟套题</view>
+        <picker mode="selector" range="{{ketMockSets}}" range-key="title" value="{{ketMockSetIndex}}" bindchange="onKetMockSetChange">
+          <view class="picker-value">{{selectedKetMockSet.title}}</view>
+        </picker>
+        <view class="ket-source-card mock-source-card">
+          <view class="ket-source-title">{{selectedKetMockSet.sourceBadge}}</view>
+          <view class="ket-source-line">{{selectedKetMockSet.formatLabel}} · {{selectedKetMockSet.expectedMinutes}}</view>
+          <view class="ket-source-line">主题：{{selectedKetMockSet.topic}}</view>
+          <view class="ket-source-line">{{selectedKetMockSet.sourceLabel}}</view>
+          <view class="ket-source-warning">学生开始前，需先在“教师管理 → KET 模拟录音库”准备本套 9 段考官音频。</view>
+        </view>
+        <view class="ket-weekly-hint" wx:if="{{ketWeeklyHint}}">{{ketWeeklyHint}}</view>
+      </view>
       <view class="field recording-prompt-field" wx:if="{{form.recordingTaskEnabled}}">
         <view class="label">录音要求</view>
-        <textarea class="textarea compact-textarea {{form.recordingTaskType === 'ket_official' ? 'official-prompt' : ''}}" maxlength="2000" disabled="{{form.recordingTaskType === 'ket_official'}}" placeholder="{{lessonTemplate.recordingPlaceholder}}" value="{{form.recordingPrompt}}" data-field="recordingPrompt" bindinput="onInput"></textarea>
+        <textarea class="textarea compact-textarea {{form.recordingTaskType !== 'manual' ? 'official-prompt' : ''}}" maxlength="2000" disabled="{{form.recordingTaskType !== 'manual'}}" placeholder="{{lessonTemplate.recordingPlaceholder}}" value="{{form.recordingPrompt}}" data-field="recordingPrompt" bindinput="onInput"></textarea>
       </view>
-      <view class="recording-options" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType !== 'ket_official'}}">
+      <view class="recording-options" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType === 'manual'}}">
         <view class="recording-option">
           <view class="label">朗读遍数</view>
           <picker mode="selector" range="{{recordingRepeatOptions}}" value="{{recordingRepeatIndex}}" bindchange="onRecordingRepeatChange">
@@ -199,6 +213,9 @@
       </view>
       <view class="ket-recording-meta" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType === 'ket_official'}}">
         建议录音约 {{selectedKetSpeakingTask.suggestedRecordingSeconds}} 秒 · 录制 1 次即可
+      </view>
+      <view class="ket-recording-meta" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType === 'ket_mock'}}">
+        学生一次完成 · 考官录音自动播放 · 回答分段保存 · 不允许返回重录
       </view>
     </block>
   </view>

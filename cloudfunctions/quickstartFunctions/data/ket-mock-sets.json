@@ -1,0 +1,1194 @@
+[
+  {
+    "id": "ket-mock-01-personal-hobbies",
+    "order": 1,
+    "title": "模拟一 · 个人信息与兴趣爱好",
+    "shortTitle": "个人信息与兴趣爱好",
+    "sourceType": "official_public_adapted",
+    "sourceBadge": "官方公开样题结构改编",
+    "sourceLabel": "依据 Cambridge A2 Key for Schools 公开口语样题的题型与流程重新编写",
+    "sourceReference": "公开样题 Speaking Test 1 · Part 1–2（非原题逐字复制）",
+    "sourceUrl": "https://www.cambridgeenglish.org/Images/561990-key-for-schools-speaking-sa-sample-test-2020-.pdf",
+    "topic": "Personal information and hobbies",
+    "visualAsset": "/ket-mock/images/set-01-hobbies.webp",
+    "visualAlt": "五种课后兴趣活动：踢足球、阅读、绘画、弹吉他和玩桌游",
+    "visualPrompt": "Activities after school",
+    "visualQuestion": "Talk about the activities. Say what you like or do not like and give reasons.",
+    "visualOptions": [
+      "playing football",
+      "reading",
+      "drawing",
+      "playing the guitar",
+      "playing board games"
+    ],
+    "part1Questions": [
+      [
+        "identity",
+        "姓名与拼写",
+        "Good morning. What is your name, and how do you spell your first name?",
+        30
+      ],
+      [
+        "home",
+        "居住地",
+        "Where do you live? What do you like about your neighbourhood?",
+        40
+      ],
+      [
+        "school",
+        "学校生活",
+        "Tell me about a subject you enjoy at school.",
+        45
+      ],
+      [
+        "daily",
+        "较长回答",
+        "What do you usually do after school? Why do you like it?",
+        60
+      ]
+    ],
+    "part2": {
+      "instruction": "Now, in this part of the test, you will talk with another student about activities after school. Look at the pictures. Listen to the other student's idea, respond to it, and give reasons for your opinion.",
+      "exchangeA": "Candidate B says: I think playing football is fun because we can be active together. What do you think?",
+      "exchangeB": "Candidate B says: Reading is quieter, but it can be very interesting. Which activity is better to do with friends?",
+      "followUp": "Which activity in the pictures would you most like to do this weekend, and why?"
+    },
+    "formatLabel": "A2 Key for Schools · Speaking Part 1 + Part 2",
+    "expectedMinutes": "8–10 分钟",
+    "cues": [
+      {
+        "id": "part1-identity",
+        "part": 1,
+        "order": 1,
+        "title": "姓名与拼写",
+        "script": "Good morning. What is your name, and how do you spell your first name?",
+        "responseExpected": true,
+        "maxResponseSeconds": 30,
+        "studentInstruction": "听清考官问题后回答"
+      },
+      {
+        "id": "part1-home",
+        "part": 1,
+        "order": 2,
+        "title": "居住地",
+        "script": "Where do you live? What do you like about your neighbourhood?",
+        "responseExpected": true,
+        "maxResponseSeconds": 40,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-school",
+        "part": 1,
+        "order": 3,
+        "title": "学校生活",
+        "script": "Tell me about a subject you enjoy at school.",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-daily",
+        "part": 1,
+        "order": 4,
+        "title": "较长回答",
+        "script": "What do you usually do after school? Why do you like it?",
+        "responseExpected": true,
+        "maxResponseSeconds": 60,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part2-instructions",
+        "part": 2,
+        "order": 1,
+        "title": "Part 2 说明",
+        "script": "Now, in this part of the test, you will talk with another student about activities after school. Look at the pictures. Listen to the other student's idea, respond to it, and give reasons for your opinion.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "看图并听清讨论要求"
+      },
+      {
+        "id": "part2-exchange-a",
+        "part": 2,
+        "order": 2,
+        "title": "回应搭档观点",
+        "script": "Candidate B says: I think playing football is fun because we can be active together. What do you think?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "回应观点并说明理由"
+      },
+      {
+        "id": "part2-exchange-b",
+        "part": 2,
+        "order": 3,
+        "title": "继续讨论",
+        "script": "Candidate B says: Reading is quieter, but it can be very interesting. Which activity is better to do with friends?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "继续比较，主动补充理由"
+      },
+      {
+        "id": "part2-follow-up",
+        "part": 2,
+        "order": 4,
+        "title": "考官追问",
+        "script": "Which activity in the pictures would you most like to do this weekend, and why?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "回答考官最后的问题"
+      },
+      {
+        "id": "part2-closing",
+        "part": 2,
+        "order": 5,
+        "title": "考试结束",
+        "script": "Thank you. That is the end of the speaking test.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "考试即将结束"
+      }
+    ]
+  },
+  {
+    "id": "ket-mock-02-school-clubs",
+    "order": 2,
+    "title": "模拟二 · 学校生活与课后社团",
+    "shortTitle": "学校生活与课后社团",
+    "sourceType": "current_format_original",
+    "sourceBadge": "当前格式原创仿真",
+    "sourceLabel": "教师原创题目，按 A2 Key for Schools 当前两部分口语结构编排",
+    "sourceReference": "非 Cambridge 官方真题",
+    "sourceUrl": "",
+    "topic": "School life and clubs",
+    "visualAsset": "/ket-mock/images/set-02-school-clubs.webp",
+    "visualAlt": "五种学校社团：戏剧、科学、舞蹈、烹饪和摄影",
+    "visualPrompt": "After-school clubs",
+    "visualQuestion": "Talk about the clubs. Say which ones are useful, enjoyable or difficult.",
+    "visualOptions": [
+      "drama club",
+      "science club",
+      "dance club",
+      "cooking club",
+      "photography club"
+    ],
+    "part1Questions": [
+      [
+        "identity",
+        "个人信息",
+        "Good afternoon. What is your name, and how old are you?",
+        30
+      ],
+      [
+        "journey",
+        "上学方式",
+        "How do you usually travel to school?",
+        40
+      ],
+      [
+        "break",
+        "课间活动",
+        "What do you like doing during the school break?",
+        45
+      ],
+      [
+        "subject",
+        "较长回答",
+        "Tell me about a school lesson that was interesting. What happened?",
+        60
+      ]
+    ],
+    "part2": {
+      "instruction": "Now you are going to talk about after-school clubs. Look at the five pictures. Listen to Candidate B, answer naturally, and ask or add something when you can.",
+      "exchangeA": "Candidate B says: The science club looks useful because we can try new experiments. Do you agree?",
+      "exchangeB": "Candidate B says: I would choose the drama club because I like stories. Which club could be difficult for you?",
+      "followUp": "Which club should your school start next term, and why?"
+    },
+    "formatLabel": "A2 Key for Schools · Speaking Part 1 + Part 2",
+    "expectedMinutes": "8–10 分钟",
+    "cues": [
+      {
+        "id": "part1-identity",
+        "part": 1,
+        "order": 1,
+        "title": "个人信息",
+        "script": "Good afternoon. What is your name, and how old are you?",
+        "responseExpected": true,
+        "maxResponseSeconds": 30,
+        "studentInstruction": "听清考官问题后回答"
+      },
+      {
+        "id": "part1-journey",
+        "part": 1,
+        "order": 2,
+        "title": "上学方式",
+        "script": "How do you usually travel to school?",
+        "responseExpected": true,
+        "maxResponseSeconds": 40,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-break",
+        "part": 1,
+        "order": 3,
+        "title": "课间活动",
+        "script": "What do you like doing during the school break?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-subject",
+        "part": 1,
+        "order": 4,
+        "title": "较长回答",
+        "script": "Tell me about a school lesson that was interesting. What happened?",
+        "responseExpected": true,
+        "maxResponseSeconds": 60,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part2-instructions",
+        "part": 2,
+        "order": 1,
+        "title": "Part 2 说明",
+        "script": "Now you are going to talk about after-school clubs. Look at the five pictures. Listen to Candidate B, answer naturally, and ask or add something when you can.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "看图并听清讨论要求"
+      },
+      {
+        "id": "part2-exchange-a",
+        "part": 2,
+        "order": 2,
+        "title": "回应搭档观点",
+        "script": "Candidate B says: The science club looks useful because we can try new experiments. Do you agree?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "回应观点并说明理由"
+      },
+      {
+        "id": "part2-exchange-b",
+        "part": 2,
+        "order": 3,
+        "title": "继续讨论",
+        "script": "Candidate B says: I would choose the drama club because I like stories. Which club could be difficult for you?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "继续比较，主动补充理由"
+      },
+      {
+        "id": "part2-follow-up",
+        "part": 2,
+        "order": 4,
+        "title": "考官追问",
+        "script": "Which club should your school start next term, and why?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "回答考官最后的问题"
+      },
+      {
+        "id": "part2-closing",
+        "part": 2,
+        "order": 5,
+        "title": "考试结束",
+        "script": "Thank you. That is the end of the speaking test.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "考试即将结束"
+      }
+    ]
+  },
+  {
+    "id": "ket-mock-03-weekend-places",
+    "order": 3,
+    "title": "模拟三 · 家庭生活与周末去处",
+    "shortTitle": "家庭生活与周末去处",
+    "sourceType": "current_format_original",
+    "sourceBadge": "当前格式原创仿真",
+    "sourceLabel": "教师原创题目，按 A2 Key for Schools 当前两部分口语结构编排",
+    "sourceReference": "非 Cambridge 官方真题",
+    "sourceUrl": "",
+    "topic": "Home life and weekend places",
+    "visualAsset": "/ket-mock/images/set-03-weekend-places.webp",
+    "visualAlt": "五种周末去处：公园、博物馆、电影院、游泳池和图书馆",
+    "visualPrompt": "Places to go at the weekend",
+    "visualQuestion": "Talk about the places. Say what is fun, relaxing or interesting about them.",
+    "visualOptions": [
+      "a park",
+      "a museum",
+      "a cinema",
+      "a swimming pool",
+      "a library"
+    ],
+    "part1Questions": [
+      [
+        "identity",
+        "个人信息",
+        "Hello. What is your full name?",
+        25
+      ],
+      [
+        "home",
+        "家庭生活",
+        "Who do you spend most time with at home?",
+        40
+      ],
+      [
+        "room",
+        "房间与物品",
+        "Tell me about your favourite room in your home.",
+        45
+      ],
+      [
+        "weekend",
+        "较长回答",
+        "What did you do last weekend? What did you enjoy most?",
+        60
+      ]
+    ],
+    "part2": {
+      "instruction": "Now talk about places to visit at the weekend. Look at the pictures and discuss the choices with Candidate B. Explain your ideas, not only the name of a place.",
+      "exchangeA": "Candidate B says: The park is a good choice because it is free and we can be outside. What do you think?",
+      "exchangeB": "Candidate B says: A museum may be more interesting on a rainy day. Which place is best for a family?",
+      "followUp": "Where would you choose to go this Saturday, and what would you do there?"
+    },
+    "formatLabel": "A2 Key for Schools · Speaking Part 1 + Part 2",
+    "expectedMinutes": "8–10 分钟",
+    "cues": [
+      {
+        "id": "part1-identity",
+        "part": 1,
+        "order": 1,
+        "title": "个人信息",
+        "script": "Hello. What is your full name?",
+        "responseExpected": true,
+        "maxResponseSeconds": 25,
+        "studentInstruction": "听清考官问题后回答"
+      },
+      {
+        "id": "part1-home",
+        "part": 1,
+        "order": 2,
+        "title": "家庭生活",
+        "script": "Who do you spend most time with at home?",
+        "responseExpected": true,
+        "maxResponseSeconds": 40,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-room",
+        "part": 1,
+        "order": 3,
+        "title": "房间与物品",
+        "script": "Tell me about your favourite room in your home.",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-weekend",
+        "part": 1,
+        "order": 4,
+        "title": "较长回答",
+        "script": "What did you do last weekend? What did you enjoy most?",
+        "responseExpected": true,
+        "maxResponseSeconds": 60,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part2-instructions",
+        "part": 2,
+        "order": 1,
+        "title": "Part 2 说明",
+        "script": "Now talk about places to visit at the weekend. Look at the pictures and discuss the choices with Candidate B. Explain your ideas, not only the name of a place.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "看图并听清讨论要求"
+      },
+      {
+        "id": "part2-exchange-a",
+        "part": 2,
+        "order": 2,
+        "title": "回应搭档观点",
+        "script": "Candidate B says: The park is a good choice because it is free and we can be outside. What do you think?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "回应观点并说明理由"
+      },
+      {
+        "id": "part2-exchange-b",
+        "part": 2,
+        "order": 3,
+        "title": "继续讨论",
+        "script": "Candidate B says: A museum may be more interesting on a rainy day. Which place is best for a family?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "继续比较，主动补充理由"
+      },
+      {
+        "id": "part2-follow-up",
+        "part": 2,
+        "order": 4,
+        "title": "考官追问",
+        "script": "Where would you choose to go this Saturday, and what would you do there?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "回答考官最后的问题"
+      },
+      {
+        "id": "part2-closing",
+        "part": 2,
+        "order": 5,
+        "title": "考试结束",
+        "script": "Thank you. That is the end of the speaking test.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "考试即将结束"
+      }
+    ]
+  },
+  {
+    "id": "ket-mock-04-celebration-food",
+    "order": 4,
+    "title": "模拟四 · 庆祝活动与聚会食物",
+    "shortTitle": "庆祝活动与聚会食物",
+    "sourceType": "current_format_original",
+    "sourceBadge": "当前格式原创仿真",
+    "sourceLabel": "教师原创题目，按 A2 Key for Schools 当前两部分口语结构编排",
+    "sourceReference": "非 Cambridge 官方真题",
+    "sourceUrl": "",
+    "topic": "Celebrations and party food",
+    "visualAsset": "/ket-mock/images/set-04-celebration-food.webp",
+    "visualAlt": "五种聚会食物：水果、三明治、披萨、蛋糕和果汁",
+    "visualPrompt": "Food for a class celebration",
+    "visualQuestion": "Talk about the food. Say which choices are tasty, healthy or easy to share.",
+    "visualOptions": [
+      "fruit",
+      "sandwiches",
+      "pizza",
+      "cake",
+      "fruit juice"
+    ],
+    "part1Questions": [
+      [
+        "identity",
+        "个人信息",
+        "Good morning. What is your name, and when is your birthday?",
+        30
+      ],
+      [
+        "food",
+        "喜欢的食物",
+        "What food do you like eating with your family?",
+        40
+      ],
+      [
+        "celebration",
+        "庆祝方式",
+        "How do you usually celebrate your birthday?",
+        45
+      ],
+      [
+        "memory",
+        "较长回答",
+        "Tell me about a celebration you really enjoyed.",
+        60
+      ]
+    ],
+    "part2": {
+      "instruction": "Imagine your class is planning a small celebration. Look at the food pictures and discuss them with Candidate B. Give reasons and react to the other idea.",
+      "exchangeA": "Candidate B says: Fruit is healthy and easy to put on the table. Do you think students will choose it?",
+      "exchangeB": "Candidate B says: Pizza is popular, but it can be difficult to share. Which food is easiest for the class?",
+      "followUp": "Choose two things for the celebration and explain why they work well together."
+    },
+    "formatLabel": "A2 Key for Schools · Speaking Part 1 + Part 2",
+    "expectedMinutes": "8–10 分钟",
+    "cues": [
+      {
+        "id": "part1-identity",
+        "part": 1,
+        "order": 1,
+        "title": "个人信息",
+        "script": "Good morning. What is your name, and when is your birthday?",
+        "responseExpected": true,
+        "maxResponseSeconds": 30,
+        "studentInstruction": "听清考官问题后回答"
+      },
+      {
+        "id": "part1-food",
+        "part": 1,
+        "order": 2,
+        "title": "喜欢的食物",
+        "script": "What food do you like eating with your family?",
+        "responseExpected": true,
+        "maxResponseSeconds": 40,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-celebration",
+        "part": 1,
+        "order": 3,
+        "title": "庆祝方式",
+        "script": "How do you usually celebrate your birthday?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-memory",
+        "part": 1,
+        "order": 4,
+        "title": "较长回答",
+        "script": "Tell me about a celebration you really enjoyed.",
+        "responseExpected": true,
+        "maxResponseSeconds": 60,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part2-instructions",
+        "part": 2,
+        "order": 1,
+        "title": "Part 2 说明",
+        "script": "Imagine your class is planning a small celebration. Look at the food pictures and discuss them with Candidate B. Give reasons and react to the other idea.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "看图并听清讨论要求"
+      },
+      {
+        "id": "part2-exchange-a",
+        "part": 2,
+        "order": 2,
+        "title": "回应搭档观点",
+        "script": "Candidate B says: Fruit is healthy and easy to put on the table. Do you think students will choose it?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "回应观点并说明理由"
+      },
+      {
+        "id": "part2-exchange-b",
+        "part": 2,
+        "order": 3,
+        "title": "继续讨论",
+        "script": "Candidate B says: Pizza is popular, but it can be difficult to share. Which food is easiest for the class?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "继续比较，主动补充理由"
+      },
+      {
+        "id": "part2-follow-up",
+        "part": 2,
+        "order": 4,
+        "title": "考官追问",
+        "script": "Choose two things for the celebration and explain why they work well together.",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "回答考官最后的问题"
+      },
+      {
+        "id": "part2-closing",
+        "part": 2,
+        "order": 5,
+        "title": "考试结束",
+        "script": "Thank you. That is the end of the speaking test.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "考试即将结束"
+      }
+    ]
+  },
+  {
+    "id": "ket-mock-05-holiday-travel",
+    "order": 5,
+    "title": "模拟五 · 假期经历与出行方式",
+    "shortTitle": "假期经历与出行方式",
+    "sourceType": "current_format_original",
+    "sourceBadge": "当前格式原创仿真",
+    "sourceLabel": "教师原创题目，按 A2 Key for Schools 当前两部分口语结构编排",
+    "sourceReference": "非 Cambridge 官方真题",
+    "sourceUrl": "",
+    "topic": "Holidays and travel",
+    "visualAsset": "/ket-mock/images/set-05-holiday-travel.webp",
+    "visualAlt": "五种出行方式：火车、公交车、自行车、汽车和步行",
+    "visualPrompt": "Ways to travel on a day trip",
+    "visualQuestion": "Talk about the ways to travel. Say which are quick, comfortable, cheap or enjoyable.",
+    "visualOptions": [
+      "by train",
+      "by bus",
+      "by bike",
+      "by car",
+      "on foot"
+    ],
+    "part1Questions": [
+      [
+        "identity",
+        "个人信息",
+        "Hello. What is your name, and where are you from?",
+        30
+      ],
+      [
+        "holiday",
+        "假期偏好",
+        "Do you prefer holidays in a city or in the countryside?",
+        40
+      ],
+      [
+        "packing",
+        "旅行准备",
+        "What do you always take with you on a day trip?",
+        45
+      ],
+      [
+        "experience",
+        "较长回答",
+        "Tell me about a journey you remember well.",
+        60
+      ]
+    ],
+    "part2": {
+      "instruction": "Now discuss different ways to travel on a class day trip. Look at the pictures, listen to Candidate B and explain your own choices.",
+      "exchangeA": "Candidate B says: Travelling by train is comfortable because everyone can sit together. What do you think?",
+      "exchangeB": "Candidate B says: Going by bike is exciting, but it may take too long. Which way is best for a class?",
+      "followUp": "Which way of travelling do you enjoy most, and where would you like to go?"
+    },
+    "formatLabel": "A2 Key for Schools · Speaking Part 1 + Part 2",
+    "expectedMinutes": "8–10 分钟",
+    "cues": [
+      {
+        "id": "part1-identity",
+        "part": 1,
+        "order": 1,
+        "title": "个人信息",
+        "script": "Hello. What is your name, and where are you from?",
+        "responseExpected": true,
+        "maxResponseSeconds": 30,
+        "studentInstruction": "听清考官问题后回答"
+      },
+      {
+        "id": "part1-holiday",
+        "part": 1,
+        "order": 2,
+        "title": "假期偏好",
+        "script": "Do you prefer holidays in a city or in the countryside?",
+        "responseExpected": true,
+        "maxResponseSeconds": 40,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-packing",
+        "part": 1,
+        "order": 3,
+        "title": "旅行准备",
+        "script": "What do you always take with you on a day trip?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-experience",
+        "part": 1,
+        "order": 4,
+        "title": "较长回答",
+        "script": "Tell me about a journey you remember well.",
+        "responseExpected": true,
+        "maxResponseSeconds": 60,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part2-instructions",
+        "part": 2,
+        "order": 1,
+        "title": "Part 2 说明",
+        "script": "Now discuss different ways to travel on a class day trip. Look at the pictures, listen to Candidate B and explain your own choices.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "看图并听清讨论要求"
+      },
+      {
+        "id": "part2-exchange-a",
+        "part": 2,
+        "order": 2,
+        "title": "回应搭档观点",
+        "script": "Candidate B says: Travelling by train is comfortable because everyone can sit together. What do you think?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "回应观点并说明理由"
+      },
+      {
+        "id": "part2-exchange-b",
+        "part": 2,
+        "order": 3,
+        "title": "继续讨论",
+        "script": "Candidate B says: Going by bike is exciting, but it may take too long. Which way is best for a class?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "继续比较，主动补充理由"
+      },
+      {
+        "id": "part2-follow-up",
+        "part": 2,
+        "order": 4,
+        "title": "考官追问",
+        "script": "Which way of travelling do you enjoy most, and where would you like to go?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "回答考官最后的问题"
+      },
+      {
+        "id": "part2-closing",
+        "part": 2,
+        "order": 5,
+        "title": "考试结束",
+        "script": "Thank you. That is the end of the speaking test.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "考试即将结束"
+      }
+    ]
+  },
+  {
+    "id": "ket-mock-06-friends-free-time",
+    "order": 6,
+    "title": "模拟六 · 朋友与共同休闲",
+    "shortTitle": "朋友与共同休闲",
+    "sourceType": "current_format_original",
+    "sourceBadge": "当前格式原创仿真",
+    "sourceLabel": "教师原创题目，按 A2 Key for Schools 当前两部分口语结构编排",
+    "sourceReference": "非 Cambridge 官方真题",
+    "sourceUrl": "",
+    "topic": "Friends and free time",
+    "visualAsset": "/ket-mock/images/set-06-friends-free-time.webp",
+    "visualAlt": "五种朋友共同活动：野餐、看电影、打篮球、做手工和烘焙",
+    "visualPrompt": "Things to do with friends",
+    "visualQuestion": "Talk about the activities. Say which are exciting, creative, easy or expensive.",
+    "visualOptions": [
+      "having a picnic",
+      "watching a film",
+      "playing basketball",
+      "making crafts",
+      "baking"
+    ],
+    "part1Questions": [
+      [
+        "identity",
+        "个人信息",
+        "Good afternoon. What is your name?",
+        25
+      ],
+      [
+        "friend",
+        "朋友",
+        "What do you like about one of your friends?",
+        40
+      ],
+      [
+        "together",
+        "共同活动",
+        "What do you usually do when you meet your friends?",
+        45
+      ],
+      [
+        "plan",
+        "较长回答",
+        "Describe a good day out with a friend. Where would you go and what would you do?",
+        60
+      ]
+    ],
+    "part2": {
+      "instruction": "Now talk about things to do with friends. Use the pictures, respond to Candidate B and say why an activity is or is not a good idea.",
+      "exchangeA": "Candidate B says: A picnic is relaxing and everyone can bring some food. Do you agree?",
+      "exchangeB": "Candidate B says: Watching a film is easy to plan, but we cannot talk very much. Which activity helps friends talk together?",
+      "followUp": "Which activity would you choose for a new student in your class, and why?"
+    },
+    "formatLabel": "A2 Key for Schools · Speaking Part 1 + Part 2",
+    "expectedMinutes": "8–10 分钟",
+    "cues": [
+      {
+        "id": "part1-identity",
+        "part": 1,
+        "order": 1,
+        "title": "个人信息",
+        "script": "Good afternoon. What is your name?",
+        "responseExpected": true,
+        "maxResponseSeconds": 25,
+        "studentInstruction": "听清考官问题后回答"
+      },
+      {
+        "id": "part1-friend",
+        "part": 1,
+        "order": 2,
+        "title": "朋友",
+        "script": "What do you like about one of your friends?",
+        "responseExpected": true,
+        "maxResponseSeconds": 40,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-together",
+        "part": 1,
+        "order": 3,
+        "title": "共同活动",
+        "script": "What do you usually do when you meet your friends?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-plan",
+        "part": 1,
+        "order": 4,
+        "title": "较长回答",
+        "script": "Describe a good day out with a friend. Where would you go and what would you do?",
+        "responseExpected": true,
+        "maxResponseSeconds": 60,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part2-instructions",
+        "part": 2,
+        "order": 1,
+        "title": "Part 2 说明",
+        "script": "Now talk about things to do with friends. Use the pictures, respond to Candidate B and say why an activity is or is not a good idea.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "看图并听清讨论要求"
+      },
+      {
+        "id": "part2-exchange-a",
+        "part": 2,
+        "order": 2,
+        "title": "回应搭档观点",
+        "script": "Candidate B says: A picnic is relaxing and everyone can bring some food. Do you agree?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "回应观点并说明理由"
+      },
+      {
+        "id": "part2-exchange-b",
+        "part": 2,
+        "order": 3,
+        "title": "继续讨论",
+        "script": "Candidate B says: Watching a film is easy to plan, but we cannot talk very much. Which activity helps friends talk together?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "继续比较，主动补充理由"
+      },
+      {
+        "id": "part2-follow-up",
+        "part": 2,
+        "order": 4,
+        "title": "考官追问",
+        "script": "Which activity would you choose for a new student in your class, and why?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "回答考官最后的问题"
+      },
+      {
+        "id": "part2-closing",
+        "part": 2,
+        "order": 5,
+        "title": "考试结束",
+        "script": "Thank you. That is the end of the speaking test.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "考试即将结束"
+      }
+    ]
+  },
+  {
+    "id": "ket-mock-07-learning-tools",
+    "order": 7,
+    "title": "模拟七 · 学习习惯与学习工具",
+    "shortTitle": "学习习惯与学习工具",
+    "sourceType": "current_format_original",
+    "sourceBadge": "当前格式原创仿真",
+    "sourceLabel": "教师原创题目，按 A2 Key for Schools 当前两部分口语结构编排",
+    "sourceReference": "非 Cambridge 官方真题",
+    "sourceUrl": "",
+    "topic": "Learning habits and tools",
+    "visualAsset": "/ket-mock/images/set-07-learning-tools.webp",
+    "visualAlt": "五种学习工具：纸质书、笔记本电脑、单词卡、学习伙伴和教学视频",
+    "visualPrompt": "Ways to learn something new",
+    "visualQuestion": "Talk about the learning tools. Say which are helpful, easy to use or distracting.",
+    "visualOptions": [
+      "a printed book",
+      "a laptop",
+      "word cards",
+      "a study partner",
+      "a learning video"
+    ],
+    "part1Questions": [
+      [
+        "identity",
+        "个人信息",
+        "Hello. What is your name, and what year are you in at school?",
+        30
+      ],
+      [
+        "homework",
+        "作业习惯",
+        "Where do you usually do your homework?",
+        40
+      ],
+      [
+        "english",
+        "英语学习",
+        "What helps you remember new English words?",
+        45
+      ],
+      [
+        "skill",
+        "较长回答",
+        "Tell me about something new you learned recently. How did you learn it?",
+        60
+      ]
+    ],
+    "part2": {
+      "instruction": "Now discuss ways to learn something new. Look at the pictures and talk with Candidate B about the good and difficult points of each choice.",
+      "exchangeA": "Candidate B says: Learning videos are useful because we can watch a difficult part again. What do you think?",
+      "exchangeB": "Candidate B says: A study partner can answer questions, but friends may start chatting. Which tool helps you focus best?",
+      "followUp": "Choose the best way to learn a new language and explain your choice."
+    },
+    "formatLabel": "A2 Key for Schools · Speaking Part 1 + Part 2",
+    "expectedMinutes": "8–10 分钟",
+    "cues": [
+      {
+        "id": "part1-identity",
+        "part": 1,
+        "order": 1,
+        "title": "个人信息",
+        "script": "Hello. What is your name, and what year are you in at school?",
+        "responseExpected": true,
+        "maxResponseSeconds": 30,
+        "studentInstruction": "听清考官问题后回答"
+      },
+      {
+        "id": "part1-homework",
+        "part": 1,
+        "order": 2,
+        "title": "作业习惯",
+        "script": "Where do you usually do your homework?",
+        "responseExpected": true,
+        "maxResponseSeconds": 40,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-english",
+        "part": 1,
+        "order": 3,
+        "title": "英语学习",
+        "script": "What helps you remember new English words?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-skill",
+        "part": 1,
+        "order": 4,
+        "title": "较长回答",
+        "script": "Tell me about something new you learned recently. How did you learn it?",
+        "responseExpected": true,
+        "maxResponseSeconds": 60,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part2-instructions",
+        "part": 2,
+        "order": 1,
+        "title": "Part 2 说明",
+        "script": "Now discuss ways to learn something new. Look at the pictures and talk with Candidate B about the good and difficult points of each choice.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "看图并听清讨论要求"
+      },
+      {
+        "id": "part2-exchange-a",
+        "part": 2,
+        "order": 2,
+        "title": "回应搭档观点",
+        "script": "Candidate B says: Learning videos are useful because we can watch a difficult part again. What do you think?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "回应观点并说明理由"
+      },
+      {
+        "id": "part2-exchange-b",
+        "part": 2,
+        "order": 3,
+        "title": "继续讨论",
+        "script": "Candidate B says: A study partner can answer questions, but friends may start chatting. Which tool helps you focus best?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "继续比较，主动补充理由"
+      },
+      {
+        "id": "part2-follow-up",
+        "part": 2,
+        "order": 4,
+        "title": "考官追问",
+        "script": "Choose the best way to learn a new language and explain your choice.",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "回答考官最后的问题"
+      },
+      {
+        "id": "part2-closing",
+        "part": 2,
+        "order": 5,
+        "title": "考试结束",
+        "script": "Thank you. That is the end of the speaking test.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "考试即将结束"
+      }
+    ]
+  },
+  {
+    "id": "ket-mock-08-healthy-outdoors",
+    "order": 8,
+    "title": "模拟八 · 健康习惯与户外活动",
+    "shortTitle": "健康习惯与户外活动",
+    "sourceType": "current_format_original",
+    "sourceBadge": "当前格式原创仿真",
+    "sourceLabel": "教师原创题目，按 A2 Key for Schools 当前两部分口语结构编排",
+    "sourceReference": "非 Cambridge 官方真题",
+    "sourceUrl": "",
+    "topic": "Healthy habits and outdoor activities",
+    "visualAsset": "/ket-mock/images/set-08-healthy-outdoors.webp",
+    "visualAlt": "五种健康周末活动：徒步、骑车、游泳、打羽毛球和在花园劳动",
+    "visualPrompt": "Healthy weekend activities",
+    "visualQuestion": "Talk about the activities. Say which are healthy, relaxing, difficult or fun.",
+    "visualOptions": [
+      "hiking",
+      "cycling",
+      "swimming",
+      "playing badminton",
+      "gardening"
+    ],
+    "part1Questions": [
+      [
+        "identity",
+        "个人信息",
+        "Good morning. What is your name?",
+        25
+      ],
+      [
+        "morning",
+        "日常习惯",
+        "What do you usually do before school?",
+        40
+      ],
+      [
+        "sport",
+        "运动",
+        "Which sport or outdoor activity do you enjoy?",
+        45
+      ],
+      [
+        "health",
+        "较长回答",
+        "What can young people do to have a healthy week?",
+        60
+      ]
+    ],
+    "part2": {
+      "instruction": "Now discuss healthy activities for the weekend. Look at the pictures, respond to Candidate B and explain which activities would work for different people.",
+      "exchangeA": "Candidate B says: Cycling is exciting and we can travel to different places. Do you agree?",
+      "exchangeB": "Candidate B says: Swimming is very healthy, but we need a pool. Which activity is easiest to do near home?",
+      "followUp": "Which activity would you plan for your family this weekend, and why?"
+    },
+    "formatLabel": "A2 Key for Schools · Speaking Part 1 + Part 2",
+    "expectedMinutes": "8–10 分钟",
+    "cues": [
+      {
+        "id": "part1-identity",
+        "part": 1,
+        "order": 1,
+        "title": "个人信息",
+        "script": "Good morning. What is your name?",
+        "responseExpected": true,
+        "maxResponseSeconds": 25,
+        "studentInstruction": "听清考官问题后回答"
+      },
+      {
+        "id": "part1-morning",
+        "part": 1,
+        "order": 2,
+        "title": "日常习惯",
+        "script": "What do you usually do before school?",
+        "responseExpected": true,
+        "maxResponseSeconds": 40,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-sport",
+        "part": 1,
+        "order": 3,
+        "title": "运动",
+        "script": "Which sport or outdoor activity do you enjoy?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part1-health",
+        "part": 1,
+        "order": 4,
+        "title": "较长回答",
+        "script": "What can young people do to have a healthy week?",
+        "responseExpected": true,
+        "maxResponseSeconds": 60,
+        "studentInstruction": "像正式考试一样直接回答"
+      },
+      {
+        "id": "part2-instructions",
+        "part": 2,
+        "order": 1,
+        "title": "Part 2 说明",
+        "script": "Now discuss healthy activities for the weekend. Look at the pictures, respond to Candidate B and explain which activities would work for different people.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "看图并听清讨论要求"
+      },
+      {
+        "id": "part2-exchange-a",
+        "part": 2,
+        "order": 2,
+        "title": "回应搭档观点",
+        "script": "Candidate B says: Cycling is exciting and we can travel to different places. Do you agree?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "回应观点并说明理由"
+      },
+      {
+        "id": "part2-exchange-b",
+        "part": 2,
+        "order": 3,
+        "title": "继续讨论",
+        "script": "Candidate B says: Swimming is very healthy, but we need a pool. Which activity is easiest to do near home?",
+        "responseExpected": true,
+        "maxResponseSeconds": 75,
+        "studentInstruction": "继续比较，主动补充理由"
+      },
+      {
+        "id": "part2-follow-up",
+        "part": 2,
+        "order": 4,
+        "title": "考官追问",
+        "script": "Which activity would you plan for your family this weekend, and why?",
+        "responseExpected": true,
+        "maxResponseSeconds": 45,
+        "studentInstruction": "回答考官最后的问题"
+      },
+      {
+        "id": "part2-closing",
+        "part": 2,
+        "order": 5,
+        "title": "考试结束",
+        "script": "Thank you. That is the end of the speaking test.",
+        "responseExpected": false,
+        "maxResponseSeconds": 0,
+        "studentInstruction": "考试即将结束"
+      }
+    ]
+  }
+]

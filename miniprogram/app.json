@@ -29,6 +29,17 @@
     "pages/add-mistake/index",
     "pages/batch-import-mistakes/index"
   ],
+  "subpackages": [
+    {
+      "name": "ketMock",
+      "root": "ket-mock",
+      "pages": [
+        "pages/library/index",
+        "pages/exam/index",
+        "pages/review/index"
+      ]
+    }
+  ],
   "window": {
     "backgroundColor": "#F7F3EA",
     "backgroundTextStyle": "light",

@@ -1,0 +1,79 @@
+<view class="page review-page">
+  <view class="card center-card" wx:if="{{loading}}">正在整理 Part 1 与 Part 2 录音…</view>
+  <view class="card error-card" wx:elif="{{message}}">
+    <view>{{message}}</view>
+    <view class="retry" bindtap="loadSession">重新加载</view>
+  </view>
+
+  <block wx:else>
+    <view class="review-hero">
+      <view class="eyebrow">KET SPEAKING REVIEW</view>
+      <view class="title">{{set.title}}</view>
+      <view class="subtitle">{{session.studentNameSnapshot}} · {{session.lessonTitleSnapshot}} · {{session.submittedLabel}}</view>
+    </view>
+    <view class="source-row">
+      <view class="source-badge">{{set.sourceBadge}}</view>
+      <view class="late-badge" wx:if="{{session.submittedLate}}">逾期提交</view>
+    </view>
+
+    <view class="card status-card" wx:if="{{session.status === 'submitted'}}">
+      <view class="status-title">{{canReview ? '等待你的练习评分' : '已提交，等待老师评分'}}</view>
+      <view class="status-copy">回答已按 Part 1 和 Part 2 分段保存，回听时不会混入考官录音。</view>
+    </view>
+
+    <view class="section-title">Part 1 · Interview</view>
+    <view class="card response-card" wx:for="{{part1Rows}}" wx:key="cueId" wx:for-item="row" wx:for-index="rowIndex">
+      <view class="response-head"><view><view class="response-title">{{row.cueTitle}}</view><view class="response-meta">回答 {{row.durationLabel}}</view></view><view class="part-chip">P1</view></view>
+      <view class="script-box" wx:if="{{canReview && row.script}}"><view class="script-label">考官录制稿</view><view>{{row.script}}</view></view>
+      <view class="audio-actions">
+        <view class="audio-btn prompt-btn" data-part="1" data-index="{{rowIndex}}" data-type="prompt" bindtap="playAudio">{{playingKey === 'prompt:' + row.cueId ? '停止考官音频' : '播放考官问题'}}</view>
+        <view class="audio-btn response-btn" data-part="1" data-index="{{rowIndex}}" data-type="response" bindtap="playAudio">{{playingKey === 'response:' + row.cueId ? '停止学生回答' : '播放学生回答'}}</view>
+      </view>
+    </view>
+
+    <view class="section-title part2-title">Part 2 · Discussion</view>
+    <view class="card visual-card">
+      <view class="visual-title">{{set.visualPrompt}}</view>
+      <image class="visual-image" src="{{set.visualAsset}}" mode="widthFix" aria-label="{{set.visualAlt}}"></image>
+      <view class="visual-question">{{set.visualQuestion}}</view>
+    </view>
+    <view class="card response-card" wx:for="{{part2Rows}}" wx:key="cueId" wx:for-item="row" wx:for-index="rowIndex">
+      <view class="response-head"><view><view class="response-title">{{row.cueTitle}}</view><view class="response-meta">回答 {{row.durationLabel}}</view></view><view class="part-chip part2-chip">P2</view></view>
+      <view class="script-box" wx:if="{{canReview && row.script}}"><view class="script-label">考官／虚拟搭档录制稿</view><view>{{row.script}}</view></view>
+      <view class="audio-actions">
+        <view class="audio-btn prompt-btn" data-part="2" data-index="{{rowIndex}}" data-type="prompt" bindtap="playAudio">{{playingKey === 'prompt:' + row.cueId ? '停止提示音频' : '播放提示音频'}}</view>
+        <view class="audio-btn response-btn" data-part="2" data-index="{{rowIndex}}" data-type="response" bindtap="playAudio">{{playingKey === 'response:' + row.cueId ? '停止学生回答' : '播放学生回答'}}</view>
+      </view>
+    </view>
+
+    <view class="section-title score-title">四维练习评分</view>
+    <view class="score-notice">教师练习评分，用于后续学习调整，不是 Cambridge 官方考试成绩。</view>
+
+    <view class="card score-editor" wx:if="{{canReview}}">
+      <view class="score-row" wx:for="{{scoreFields}}" wx:key="key" wx:for-item="field">
+        <view><view class="score-label">{{field.label}}</view><view class="score-hint">{{field.hint}}</view></view>
+        <picker mode="selector" range="{{scoreOptions}}" range-key="label" value="{{assessmentForm[field.key] * 2}}" data-field="{{field.key}}" bindchange="onScoreChange">
+          <view class="score-picker">{{assessmentForm[field.key]}} / 5</view>
+        </picker>
+      </view>
+      <view class="text-field"><view class="field-label">做得好的地方</view><textarea maxlength="500" placeholder="例如：回答完整，能够主动说明原因" value="{{assessmentForm.strengths}}" data-field="strengths" bindinput="onAssessmentInput"></textarea></view>
+      <view class="text-field"><view class="field-label">下一步重点</view><textarea maxlength="500" placeholder="例如：Part 2 回应后再追问一句" value="{{assessmentForm.nextFocus}}" data-field="nextFocus" bindinput="onAssessmentInput"></textarea></view>
+      <view class="text-field"><view class="field-label">补充反馈</view><textarea maxlength="800" placeholder="可选" value="{{assessmentForm.comment}}" data-field="comment" bindinput="onAssessmentInput"></textarea></view>
+      <view class="primary-btn save-btn {{saving ? 'disabled' : ''}}" bindtap="saveAssessment">{{saving ? '保存中…' : session.status === 'reviewed' ? '更新练习评分' : '保存练习评分'}}</view>
+    </view>
+
+    <view class="card score-result" wx:elif="{{session.status === 'reviewed' && session.assessment}}">
+      <view class="average-score">{{session.assessment.average}}<text>/ 5</text></view>
+      <view class="average-label">四项平均练习分</view>
+      <view class="result-grid">
+        <view><text>{{session.assessment.grammarVocabulary}}</text><view>语法与词汇</view></view>
+        <view><text>{{session.assessment.pronunciation}}</text><view>发音</view></view>
+        <view><text>{{session.assessment.interactiveCommunication}}</text><view>互动沟通</view></view>
+        <view><text>{{session.assessment.globalAchievement}}</text><view>整体表现</view></view>
+      </view>
+      <view class="feedback-block" wx:if="{{session.assessment.strengths}}"><view class="feedback-label">做得好的地方</view><view>{{session.assessment.strengths}}</view></view>
+      <view class="feedback-block" wx:if="{{session.assessment.nextFocus}}"><view class="feedback-label">下一步重点</view><view>{{session.assessment.nextFocus}}</view></view>
+      <view class="feedback-block" wx:if="{{session.assessment.comment}}"><view class="feedback-label">老师补充</view><view>{{session.assessment.comment}}</view></view>
+    </view>
+  </block>
+</view>

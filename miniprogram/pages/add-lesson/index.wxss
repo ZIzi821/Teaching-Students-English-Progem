@@ -200,6 +200,11 @@
   background: #edf7f2;
 }
 
+.mock-source-card {
+  border-color: #d8cfb8;
+  background: #faf5e8;
+}
+
 .ket-source-title {
   color: #315f4c;
   font-size: 24rpx;

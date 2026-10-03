@@ -34,6 +34,10 @@
         <view class="quick-mark quick-mark-lesson">课</view>
         <view><view class="quick-title">建立课程记录</view><view class="quick-hint">课后记录、任务与学生录音</view></view>
       </view>
+      <view class="quick-card" bindtap="goKetMockLibrary">
+        <view class="quick-mark quick-mark-ket">K</view>
+        <view><view class="quick-title">KET 模拟录音库</view><view class="quick-hint">准备 8 套考官与虚拟搭档音频</view></view>
+      </view>
     </view>
 
     <view class="archive-head">

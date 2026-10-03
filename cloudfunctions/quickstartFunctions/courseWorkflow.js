@@ -121,13 +121,18 @@ const isLateHomeworkSubmission = (lesson, submittedAtMs) => {
 
 const buildHomeworkDeadlineState = (lesson, now = Date.now(), firstSubmittedAtMs) => {
   const homeworkDueDate = getHomeworkDueDate(lesson);
+  const submittedAtMs = Number(
+    firstSubmittedAtMs === undefined
+      ? lesson && lesson.homeworkFirstSubmittedAtMs
+      : firstSubmittedAtMs
+  ) || 0;
   if (!homeworkDueDate) {
     return {
       homeworkDueDate: "",
       homeworkDueAtMs: 0,
       homeworkDueStatus: "none",
       homeworkDueLabel: "",
-      homeworkHasSubmission: false,
+      homeworkHasSubmission: submittedAtMs > 0,
       homeworkSubmittedOnTime: false,
       homeworkSubmittedLate: false,
       homeworkSubmissionTimingLabel: "",
@@ -146,11 +151,6 @@ const buildHomeworkDeadlineState = (lesson, now = Date.now(), firstSubmittedAtMs
     homeworkDueStatus = "overdue";
     homeworkDueLabel = `已逾期 ${Math.abs(daysUntilDue)} 天`;
   }
-  const submittedAtMs = Number(
-    firstSubmittedAtMs === undefined
-      ? lesson && lesson.homeworkFirstSubmittedAtMs
-      : firstSubmittedAtMs
-  ) || 0;
   const homeworkDueAtMs = getHongKongDayEndMs(homeworkDueDate);
   const homeworkHasSubmission = submittedAtMs > 0;
   const homeworkSubmittedLate = Boolean(submittedAtMs && submittedAtMs > homeworkDueAtMs);

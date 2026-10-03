@@ -126,6 +126,12 @@ Page({
       });
       return;
     }
+    if (item.actionType === "ket_mock" && item.sessionId) {
+      wx.navigateTo({
+        url: "/ket-mock/pages/review/index?sessionId=" + encodeURIComponent(item.sessionId),
+      });
+      return;
+    }
     if (item.actionType === "vocabulary" && item.studentId) {
       wx.navigateTo({
         url: "/pages/teacher-vocabulary-detail/index?studentId=" + encodeURIComponent(item.studentId),

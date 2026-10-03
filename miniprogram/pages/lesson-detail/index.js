@@ -3,6 +3,7 @@ const {
   findTemplate,
 } = require("../../utils/lessonTemplates");
 const { KET_SPEAKING_TASKS, findKetSpeakingTask } = require("../../utils/ketSpeakingTasks");
+const { KET_MOCK_SETS, findKetMockSet } = require("../../utils/ketMockSets");
 
 const HOMEWORK_REMINDER_TEMPLATE_ID = "Ih535VWa2FCNlCCvZUYFJOt8fOA3EY3l7Pxoa9rszYA";
 const MATERIAL_PREFERENCES_KEY = "lessonMaterialPreferencesV2";
@@ -14,6 +15,7 @@ const OBSERVATION_STATUSES = ["独立完成", "提示后完成", "暂未掌握"]
 const RECORDING_TASK_TYPE_OPTIONS = [
   { value: "manual", label: "手动口语任务" },
   { value: "ket_official", label: "KET 官方样题" },
+  { value: "ket_mock", label: "KET 全流程模拟" },
 ];
 const HOMEWORK_DUE_OPTIONS = [
   { value: -1, label: "暂不设置" },
@@ -109,6 +111,8 @@ Page({
     materialCount: 0,
     mistakes: [],
     submissions: [],
+    ketMockSessions: [],
+    ketMockLatestSession: null,
     message: "",
     deletingLesson: false,
     savingWorkspace: false,
@@ -147,6 +151,7 @@ Page({
       recordingRepeatCount: 2,
       recordingPreparationSeconds: 5,
       ketSpeakingTaskId: "",
+      ketMockSetId: "",
       learningObservations: [],
     },
     observationStatuses: OBSERVATION_STATUSES,
@@ -161,6 +166,9 @@ Page({
     ketSpeakingTasks: KET_SPEAKING_TASKS,
     ketSpeakingTaskIndex: 0,
     selectedKetSpeakingTask: KET_SPEAKING_TASKS[0],
+    ketMockSets: KET_MOCK_SETS,
+    ketMockSetIndex: 0,
+    selectedKetMockSet: KET_MOCK_SETS[0],
     ketWeeklyHint: "",
     hasLegacySubmissions: false,
     organizingRecordings: false,
@@ -257,12 +265,14 @@ Page({
       const submissions = this.prepareSubmissions(result.submissions || []);
       const recordingRepeatIndex = Math.max(0, this.data.recordingRepeatOptions.indexOf(lesson.recordingRepeatCount));
       const recordingPreparationIndex = Math.max(0, this.data.recordingPreparationOptions.indexOf(lesson.recordingPreparationSeconds));
-      const recordingTaskTypeIndex = lesson.recordingTaskType === "ket_official" ? 1 : 0;
+      const recordingTaskTypeIndex = Math.max(0, RECORDING_TASK_TYPE_OPTIONS.findIndex((item) => item.value === lesson.recordingTaskType));
       const homeworkDueIndex = Math.max(0, HOMEWORK_DUE_OPTIONS.findIndex((item) => (
         item.value === Number(lesson.homeworkDueDays)
       )));
       const selectedKetSpeakingTask = findKetSpeakingTask(lesson.ketSpeakingTaskId) || KET_SPEAKING_TASKS[0];
       const ketSpeakingTaskIndex = Math.max(0, KET_SPEAKING_TASKS.findIndex((item) => item.id === selectedKetSpeakingTask.id));
+      const selectedKetMockSet = findKetMockSet(lesson.ketMockSetId) || KET_MOCK_SETS[0];
+      const ketMockSetIndex = Math.max(0, KET_MOCK_SETS.findIndex((item) => item.id === selectedKetMockSet.id));
       this.setData({
         role: result.role,
         isTeacher,
@@ -288,8 +298,14 @@ Page({
         homeworkDueIndex,
         selectedKetSpeakingTask,
         ketSpeakingTaskIndex,
+        selectedKetMockSet,
+        ketMockSetIndex,
         message: "",
-      }, () => this.scrollToFocusedSection());
+      }, () => {
+        if (lesson.recordingTaskType === "ket_mock") this.loadKetMockSessions();
+        else this.setData({ ketMockSessions: [], ketMockLatestSession: null });
+        this.scrollToFocusedSection();
+      });
     }).catch((err) => {
       console.error(err);
       this.setData({ message: "服务暂时不可用，请稍后再试" });
@@ -345,7 +361,9 @@ Page({
       homeworkDueDays: Number.isInteger(Number(lesson.homeworkDueDays))
         ? Number(lesson.homeworkDueDays)
         : -1,
-      recordingTaskType: lesson.recordingTaskType === "ket_official" ? "ket_official" : "manual",
+      recordingTaskType: ["ket_official", "ket_mock"].includes(lesson.recordingTaskType)
+        ? lesson.recordingTaskType
+        : "manual",
       recordingPrompt: lesson.recordingPrompt || "",
       recordingRepeatCount: Math.max(1, Math.min(5, Number(lesson.recordingRepeatCount) || 2)),
       recordingPreparationSeconds: [0, 3, 5, 10, 15].includes(Number(lesson.recordingPreparationSeconds))
@@ -354,6 +372,8 @@ Page({
       recordingSuggestedSeconds: Math.max(0, Number(lesson.recordingSuggestedSeconds) || 0),
       ketSpeakingTaskId: lesson.ketSpeakingTaskId || "",
       ketSpeakingTask: lesson.ketSpeakingTask || findKetSpeakingTask(lesson.ketSpeakingTaskId),
+      ketMockSetId: lesson.ketMockSetId || "",
+      ketMockSet: lesson.ketMockSet || findKetMockSet(lesson.ketMockSetId),
       hasHomeworkTask: Boolean(String(lesson.homeworkTask || "").trim() || lesson.recordingTaskEnabled === true),
       homeworkCompleted: lesson.homeworkCompleted === true || Number(lesson.homeworkCompletedAtMs) > 0,
       homeworkCompletedAtMs: Number(lesson.homeworkCompletedAtMs) || 0,
@@ -394,13 +414,16 @@ Page({
       homeworkDueDays: Number.isInteger(Number(lesson.homeworkDueDays))
         ? Number(lesson.homeworkDueDays)
         : -1,
-      recordingTaskType: lesson.recordingTaskType === "ket_official" ? "ket_official" : "manual",
+      recordingTaskType: ["ket_official", "ket_mock"].includes(lesson.recordingTaskType)
+        ? lesson.recordingTaskType
+        : "manual",
       recordingPrompt: lesson.recordingPrompt || "",
       recordingRepeatCount: lesson.recordingRepeatCount || 2,
       recordingPreparationSeconds: [0, 3, 5, 10, 15].includes(Number(lesson.recordingPreparationSeconds))
         ? Number(lesson.recordingPreparationSeconds)
         : 5,
       ketSpeakingTaskId: lesson.ketSpeakingTaskId || "",
+      ketMockSetId: lesson.ketMockSetId || "",
       learningObservations: (lesson.learningObservations || []).map((item) => Object.assign({}, item)),
     };
   },
@@ -512,6 +535,7 @@ Page({
         ketWeeklyHint: "",
         "workspaceForm.recordingTaskType": "manual",
         "workspaceForm.ketSpeakingTaskId": "",
+        "workspaceForm.ketMockSetId": "",
       });
     }
     this.setData(updates);
@@ -544,7 +568,8 @@ Page({
       "workspaceForm.recordingTaskType": option.value,
     }, () => {
       if (option.value === "ket_official") this.applyKetSpeakingTask(this.data.ketSpeakingTaskIndex);
-      else this.setData({ "workspaceForm.ketSpeakingTaskId": "", ketWeeklyHint: "" });
+      else if (option.value === "ket_mock") this.applyKetMockSet(this.data.ketMockSetIndex);
+      else this.setData({ "workspaceForm.ketSpeakingTaskId": "", "workspaceForm.ketMockSetId": "", ketWeeklyHint: "" });
     });
   },
 
@@ -562,10 +587,32 @@ Page({
       recordingRepeatIndex: 0,
       recordingPreparationIndex: preparationIndex,
       "workspaceForm.ketSpeakingTaskId": task.id,
+      "workspaceForm.ketMockSetId": "",
       "workspaceForm.recordingPrompt": task.prompt,
       "workspaceForm.recordingRepeatCount": 1,
       "workspaceForm.recordingPreparationSeconds": task.preparationSeconds,
       "workspaceForm.ketSkill": `${task.part} · ${task.topic}`,
+    }, () => this.checkKetWeeklyStatus());
+  },
+
+  onKetMockSetChange(e) {
+    this.applyKetMockSet(Number(e.detail.value));
+  },
+
+  applyKetMockSet(index) {
+    const safeIndex = Math.max(0, Math.min(KET_MOCK_SETS.length - 1, Number(index) || 0));
+    const set = KET_MOCK_SETS[safeIndex];
+    this.setData({
+      ketMockSetIndex: safeIndex,
+      selectedKetMockSet: set,
+      recordingRepeatIndex: 0,
+      recordingPreparationIndex: 0,
+      "workspaceForm.ketSpeakingTaskId": "",
+      "workspaceForm.ketMockSetId": set.id,
+      "workspaceForm.recordingPrompt": `${set.title}：按完整考试流程完成 Part 1 与 Part 2。`,
+      "workspaceForm.recordingRepeatCount": 1,
+      "workspaceForm.recordingPreparationSeconds": 0,
+      "workspaceForm.ketSkill": `Speaking Part 1 + Part 2 · ${set.topic}`,
     }, () => this.checkKetWeeklyStatus());
   },
 
@@ -574,7 +621,7 @@ Page({
     if (
       !lesson
       || this.data.workspaceForm.lessonTemplateKey !== "molly_oral_ket"
-      || this.data.workspaceForm.recordingTaskType !== "ket_official"
+      || !["ket_official", "ket_mock"].includes(this.data.workspaceForm.recordingTaskType)
     ) {
       this.setData({ ketWeeklyHint: "" });
       return;
@@ -1232,8 +1279,54 @@ Page({
 
   goRecordingPractice() {
     if (!this.data.isStudent || !this.data.lesson || !this.data.lesson.recordingTaskEnabled) return;
+    if (this.data.lesson.recordingTaskType === "ket_mock") {
+      wx.navigateTo({
+        url: `/ket-mock/pages/exam/index?lessonId=${encodeURIComponent(this.data.lessonId)}`,
+      });
+      return;
+    }
     wx.navigateTo({
       url: `/pages/recording-practice/index?lessonId=${encodeURIComponent(this.data.lessonId)}`,
+    });
+  },
+
+  loadKetMockSessions() {
+    if (!this.data.lessonId) return;
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: { type: "listKetMockSessions", data: { lessonId: this.data.lessonId } },
+    }).then((res) => {
+      const result = res.result || {};
+      if (!result.success) return;
+      const statusLabels = {
+        started: "考试进行中",
+        interrupted: "考试未完成",
+        submitted: "等待老师评分",
+        reviewed: "老师已评分",
+      };
+      const sessions = (result.sessions || []).map((session) => Object.assign({}, session, {
+        statusLabel: statusLabels[session.status] || "状态未知",
+        submittedLabel: formatDateTime(session.submittedAtMs || session.startedAtMs),
+        canOpen: !this.data.isTeacherPreview && ["submitted", "reviewed"].includes(session.status),
+        actionLabel: this.data.isTeacherPreview
+          ? "只读预览"
+          : ["submitted", "reviewed"].includes(session.status)
+            ? (this.data.isTeacher ? "回听评分" : "查看")
+            : "可重新开始",
+      }));
+      this.setData({ ketMockSessions: sessions, ketMockLatestSession: sessions[0] || null });
+    }).catch((err) => console.error("load KET mock sessions failed", err));
+  },
+
+  openKetMockSession(e) {
+    if (this.data.isTeacherPreview) {
+      wx.showToast({ title: "教师预览中不进入评分页", icon: "none" });
+      return;
+    }
+    const session = this.data.ketMockSessions[Number(e.currentTarget.dataset.index)];
+    if (!session || !session.canOpen) return;
+    wx.navigateTo({
+      url: `/ket-mock/pages/review/index?sessionId=${encodeURIComponent(session._id)}`,
     });
   },
 

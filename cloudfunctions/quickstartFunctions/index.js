@@ -7,6 +7,8 @@ const frenchLearning = require("./frenchLearning");
 const courseWorkflow = require("./courseWorkflow");
 const teacherTodos = require("./teacherTodos");
 const recordingFeedback = require("./recordingFeedback");
+const ketMock = require("./ketMock");
+const { createKetMockService } = require("./ketMockService");
 const KET_SPEAKING_TASKS = require("./data/ket-speaking-tasks.json");
 
 cloud.init({
@@ -25,6 +27,8 @@ const COLLECTIONS = [
   "vocabularyQuizSessions",
   "frenchLearningProgress",
   "lessonSubmissions",
+  "ketMockAssets",
+  "ketMockSessions",
   "systemLocks",
 ];
 const VOCABULARY_DAY_MS = 24 * 60 * 60 * 1000;
@@ -1342,13 +1346,14 @@ const getTeacherTodos = async () => {
     .map((student) => Object.assign({}, student, {
       englishCourseEnabled: isEnglishCourseEnabled(student),
     }));
-  const [lessonResults, submissionResults, quizSessionResults, dailyStatsResults] = await Promise.all([
+  const [lessonResults, submissionResults, quizSessionResults, dailyStatsResults, ketMockSessions] = await Promise.all([
     Promise.all(students.map((student) => loadAllStudentDocuments("lessons", student._id))),
     Promise.all(students.map((student) => loadAllStudentDocuments("lessonSubmissions", student._id))),
     Promise.all(students.map((student) => loadAllStudentDocuments("vocabularyQuizSessions", student._id))),
     Promise.all(students.map((student) => (
       loadAllVocabularyDocuments("vocabularyDailyStats", { studentId: student._id })
     ))),
+    ketMockService.loadSessionsForStudents(students),
   ]);
   const quizSessions = quizSessionResults.flatMap((items) => items || []);
   const result = teacherTodos.buildTeacherTodos({
@@ -1358,6 +1363,7 @@ const getTeacherTodos = async () => {
     vocabularyAlerts: vocabularyQuiz.buildTeacherVocabularyAlerts({ students, sessions: quizSessions }),
     dailyStats: dailyStatsResults.flatMap((items) => items || []),
     quizSessions,
+    ketMockSessions,
   });
   return Object.assign({
     success: true,
@@ -1911,7 +1917,7 @@ const getKetWeeklyStatus = async (event) => {
   const lessons = await loadAllVocabularyDocuments("lessons", { studentId }, "lessonDate", "desc");
   const existing = lessons.find((lesson) => (
     lesson._id !== excludeLessonId
-    && lesson.recordingTaskType === "ket_official"
+    && ["ket_official", "ket_mock"].includes(lesson.recordingTaskType)
     && String(lesson.lessonDate || "") >= week.start
     && String(lesson.lessonDate || "") <= week.end
   )) || null;
@@ -3237,13 +3243,18 @@ const normalizeLessonWorkspacePayload = (data = {}) => {
     ? data.lessonTemplateKey
     : "general";
   const recordingTaskEnabled = data.recordingTaskEnabled === true;
-  const requestedTaskType = data.recordingTaskType === "ket_official" ? "ket_official" : "manual";
+  const requestedTaskType = ["ket_official", "ket_mock"].includes(data.recordingTaskType)
+    ? data.recordingTaskType
+    : "manual";
   const officialTask = lessonTemplateKey === "molly_oral_ket" && recordingTaskEnabled
     ? findOfficialKetSpeakingTask(String(data.ketSpeakingTaskId || "").trim())
     : null;
+  const mockSet = lessonTemplateKey === "molly_oral_ket" && recordingTaskEnabled
+    ? ketMock.findSet(String(data.ketMockSetId || "").trim())
+    : null;
   const recordingTaskType = requestedTaskType === "ket_official" && officialTask
     ? "ket_official"
-    : "manual";
+    : requestedTaskType === "ket_mock" && mockSet ? "ket_mock" : "manual";
   return {
     title: normalizeLessonText(data.title, 100),
     lessonTemplateKey,
@@ -3262,18 +3273,34 @@ const normalizeLessonWorkspacePayload = (data = {}) => {
     recordingTaskType,
     recordingPrompt: recordingTaskType === "ket_official"
       ? officialTask.prompt
-      : normalizeLessonText(data.recordingPrompt, 2000),
-    recordingRepeatCount: recordingTaskType === "ket_official"
+      : recordingTaskType === "ket_mock"
+        ? `${mockSet.title}：按完整考试流程完成 Part 1 与 Part 2。`
+        : normalizeLessonText(data.recordingPrompt, 2000),
+    recordingRepeatCount: ["ket_official", "ket_mock"].includes(recordingTaskType)
       ? 1
       : normalizeRecordingRepeatCount(data.recordingRepeatCount),
     recordingPreparationSeconds: recordingTaskType === "ket_official"
       ? officialTask.preparationSeconds
+      : recordingTaskType === "ket_mock" ? 0
       : normalizeRecordingPreparationSeconds(data.recordingPreparationSeconds),
     recordingSuggestedSeconds: recordingTaskType === "ket_official"
       ? officialTask.suggestedRecordingSeconds
-      : 0,
+      : recordingTaskType === "ket_mock" ? 600 : 0,
     ketSpeakingTaskId: recordingTaskType === "ket_official" ? officialTask.id : "",
     ketSpeakingTask: recordingTaskType === "ket_official" ? officialTask : null,
+    ketMockSetId: recordingTaskType === "ket_mock" ? mockSet.id : "",
+    ketMockSet: recordingTaskType === "ket_mock" ? {
+      id: mockSet.id,
+      order: mockSet.order,
+      title: mockSet.title,
+      shortTitle: mockSet.shortTitle,
+      sourceType: mockSet.sourceType,
+      sourceBadge: mockSet.sourceBadge,
+      sourceLabel: mockSet.sourceLabel,
+      sourceReference: mockSet.sourceReference,
+      formatLabel: mockSet.formatLabel,
+      expectedMinutes: mockSet.expectedMinutes,
+    } : null,
     learningObservations: normalizeLearningObservations(data.learningObservations),
   };
 };
@@ -3314,8 +3341,11 @@ const getHomeworkTaskSignature = (lesson = {}) => JSON.stringify({
   recordingPrompt: String(lesson.recordingPrompt || "").trim(),
   recordingRepeatCount: normalizeRecordingRepeatCount(lesson.recordingRepeatCount),
   recordingPreparationSeconds: normalizeRecordingPreparationSeconds(lesson.recordingPreparationSeconds),
-  recordingTaskType: lesson.recordingTaskType === "ket_official" ? "ket_official" : "manual",
+  recordingTaskType: ["ket_official", "ket_mock"].includes(lesson.recordingTaskType)
+    ? lesson.recordingTaskType
+    : "manual",
   ketSpeakingTaskId: String(lesson.ketSpeakingTaskId || ""),
+  ketMockSetId: String(lesson.ketMockSetId || ""),
 });
 
 const buildHomeworkResetFields = (taskVersion) => ({
@@ -3609,6 +3639,7 @@ const deleteLesson = async (event) => {
       deletedPaperCount: 0,
       deletedMistakeCount: 0,
       deletedSubmissionCount: 0,
+      deletedKetMockSessionCount: 0,
     };
   }
   const lesson = deleteState.lesson;
@@ -3620,6 +3651,7 @@ const deleteLesson = async (event) => {
     loadAllLessonDocuments("mistakes", lessonId),
     loadAllLessonDocuments("lessonSubmissions", lessonId),
   ]);
+  const ketMockDeletion = await ketMockService.deleteLessonSessions(lessonId, lesson.studentId);
   const mistakes = lessonMistakes;
   const mismatchedMistakeCount = mistakes.filter((mistake) => mistake.studentId !== lesson.studentId).length;
   if (mismatchedMistakeCount) {
@@ -3669,6 +3701,7 @@ const deleteLesson = async (event) => {
     deletedPaperCount: papers.length,
     deletedMistakeCount: mistakes.length,
     deletedSubmissionCount: lessonSubmissions.length,
+    deletedKetMockSessionCount: ketMockDeletion.deletedSessionCount,
     completedLessonCount,
   };
 };
@@ -4142,6 +4175,9 @@ const submitLessonRecording = async (event) => {
   if (lesson.recordingTaskEnabled !== true) {
     throw createError("RECORDING_NOT_ASSIGNED", "老师尚未为这节课布置录音任务");
   }
+  if (lesson.recordingTaskType === "ket_mock") {
+    throw createError("KET_MOCK_REQUIRES_EXAM", "这项任务需要从 KET 全流程模拟考场完成");
+  }
   await createOneCollection("lessonSubmissions");
   const submittedAtMs = Date.now();
   const submissionId = `submission_${submittedAtMs}_${crypto.randomBytes(8).toString("hex")}`;
@@ -4154,6 +4190,7 @@ const submitLessonRecording = async (event) => {
       || currentLesson.deleting === true
       || currentLesson.studentId !== identity.student._id
       || currentLesson.recordingTaskEnabled !== true
+      || currentLesson.recordingTaskType === "ket_mock"
     ) throw createError("RECORDING_NOT_ASSIGNED", "录音任务已经变化，请刷新后重新录制");
     const submission = {
       studentId: identity.student._id,
@@ -4985,6 +5022,21 @@ const deleteMistake = async (event) => {
   return { success: true };
 };
 
+const ketMockService = createKetMockService({
+  db,
+  cloud,
+  courseWorkflow,
+  createError,
+  createOneCollection,
+  deleteUnsafeFiles,
+  ensureEnglishCourseAccess,
+  ensureStudentAccess,
+  ensureTeacher,
+  getIdentity,
+  getOptionalTransactionDocument,
+  assertContentSafe,
+});
+
 exports.main = async (event) => {
   try {
     switch (event.type) {
@@ -5082,6 +5134,26 @@ exports.main = async (event) => {
         return await listKetSpeakingTasks();
       case "getKetWeeklyStatus":
         return await getKetWeeklyStatus(event);
+      case "getKetMockLibrary":
+        return await ketMockService.listLibrary();
+      case "saveKetMockCueAudio":
+        return await ketMockService.saveCueAudio(event);
+      case "deleteKetMockCueAudio":
+        return await ketMockService.deleteCueAudio(event);
+      case "getKetMockExam":
+        return await ketMockService.getExam(event);
+      case "startKetMockSession":
+        return await ketMockService.startSession(event);
+      case "abortKetMockSession":
+        return await ketMockService.abortSession(event);
+      case "completeKetMockSession":
+        return await ketMockService.completeSession(event);
+      case "listKetMockSessions":
+        return await ketMockService.listSessions(event);
+      case "getKetMockSessionDetail":
+        return await ketMockService.getSessionDetail(event);
+      case "reviewKetMockSession":
+        return await ketMockService.reviewSession(event);
       case "getStudentAnalytics":
         return await getStudentAnalytics(event);
       case "listLessons":

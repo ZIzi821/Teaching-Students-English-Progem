@@ -75,4 +75,10 @@ assert.strictEqual(
   "逾期提交"
 );
 
+assert.strictEqual(
+  courseWorkflow.buildHomeworkDeadlineState({ homeworkDueDays: -1 }, afterDue, onTimeSubmission).homeworkHasSubmission,
+  true,
+  "submission state must remain visible even when the teacher did not set a deadline"
+);
+
 console.log("courseWorkflow tests passed");

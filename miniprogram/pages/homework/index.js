@@ -70,6 +70,9 @@ Page({
     let statusLabel = completed ? "已提交" : "待完成";
     if (teacherStatus === "completed") statusLabel = "老师已确认";
     if (teacherStatus === "incomplete") statusLabel = "老师要求继续完成";
+    if (!completed && teacherStatus === "unreviewed" && lesson.recordingTaskType === "ket_mock" && lesson.homeworkHasSubmission) {
+      statusLabel = "已提交待评分";
+    }
     const submittedLate = lesson.homeworkSubmittedLate === true;
     const deadlineLabel = submittedLate
       ? "逾期提交"
@@ -82,8 +85,12 @@ Page({
       deadlineTone,
       completedLabel: formatCompletedTime(lesson.homeworkCompletedAtMs),
       taskPreview: String(lesson.homeworkTask || "").trim()
-        || (lesson.recordingTaskType === "ket_official" ? "完成本次 KET 口语录音" : "完成本节课录音任务"),
-      recordingLabel: lesson.recordingTaskType === "ket_official" ? "KET 官方样题录音" : "需要提交录音",
+        || (lesson.recordingTaskType === "ket_mock"
+          ? "完成本次 KET 口语全流程模拟"
+          : lesson.recordingTaskType === "ket_official" ? "完成本次 KET 口语录音" : "完成本节课录音任务"),
+      recordingLabel: lesson.recordingTaskType === "ket_mock"
+        ? "KET Part 1 + Part 2 模拟"
+        : lesson.recordingTaskType === "ket_official" ? "KET 官方样题录音" : "需要提交录音",
     });
   },
 

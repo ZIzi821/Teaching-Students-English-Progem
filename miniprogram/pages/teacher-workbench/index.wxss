@@ -114,6 +114,11 @@
   background: #7b6a53;
 }
 
+.quick-mark-ket {
+  color: #6e572b;
+  background: #f3e9ce;
+}
+
 .quick-title {
   color: #39332d;
   font-size: 25rpx;
