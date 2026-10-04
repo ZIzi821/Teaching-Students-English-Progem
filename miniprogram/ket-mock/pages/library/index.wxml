@@ -16,7 +16,7 @@
       <view class="summary-card"><view class="summary-number">{{summary.completeSetCount}} / {{summary.setCount}}</view><view class="summary-label">可开始套题</view></view>
       <view class="summary-card"><view class="summary-number">{{summary.readyCount}} / {{summary.totalCount}}</view><view class="summary-label">已备音频</view></view>
     </view>
-    <view class="truth-note">“当前格式原创仿真”不是 Cambridge 官方真题；第 1 套也只依据公开样题结构改编，不逐字复制原题。</view>
+    <view class="truth-note">“原创题”为本小程序自行编写，不是 Cambridge 官方真题；第 1 套只依据公开样题结构改编，不逐字复制原题。</view>
 
     <view class="card set-card" wx:for="{{sets}}" wx:key="id" wx:for-item="set" wx:for-index="setIndex">
       <view class="set-head" data-id="{{set.id}}" bindtap="toggleSet">

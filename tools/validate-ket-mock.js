@@ -13,6 +13,7 @@ assert.strictEqual(cloudSets.length, 8, "Cloud KET mock catalogue must expose 8 
 assert.deepStrictEqual(frontend.KET_MOCK_SETS, cloudSets, "Frontend and cloud KET mock catalogues must stay identical");
 assert.strictEqual(frontend.KET_MOCK_SETS[0].sourceType, "official_public_adapted", "Set 1 source boundary is missing");
 assert.ok(frontend.KET_MOCK_SETS.slice(1).every((set) => set.sourceType === "current_format_original"), "Sets 2-8 must be clearly labelled original");
+assert.ok(frontend.KET_MOCK_SETS.slice(1).every((set) => set.sourceBadge === "原创题"), "Sets 2-8 must use the concise original-question label");
 
 const cloudById = new Map(cloudSets.map((set) => [set.id, set]));
 let imageBytes = 0;
@@ -59,6 +60,7 @@ assert.ok(cloudIndex.includes('"ketMockSessions"'), "ketMockSessions collection 
 const addLessonJs = read("miniprogram", "pages", "add-lesson", "index.js");
 const lessonDetailJs = read("miniprogram", "pages", "lesson-detail", "index.js");
 const workbenchJs = read("miniprogram", "pages", "teacher-workbench", "index.js");
+const libraryWxml = read("miniprogram", "ket-mock", "pages", "library", "index.wxml");
 const examJs = read("miniprogram", "ket-mock", "pages", "exam", "index.js");
 const examWxml = read("miniprogram", "ket-mock", "pages", "exam", "index.wxml");
 const reviewJs = read("miniprogram", "ket-mock", "pages", "review", "index.js");
@@ -68,6 +70,7 @@ const recordingPracticeJs = read("miniprogram", "pages", "recording-practice", "
 assert.ok(addLessonJs.includes('value: "ket_mock"'), "Lesson creation cannot assign a full mock");
 assert.ok(lessonDetailJs.includes("/ket-mock/pages/exam/index?lessonId="), "Lesson detail does not open the mock exam");
 assert.ok(workbenchJs.includes("/ket-mock/pages/library/index"), "Teacher workbench does not open the audio library");
+assert.ok(libraryWxml.includes("“原创题”为本小程序自行编写"), "Teacher library does not explain the original-question label");
 assert.ok(examJs.includes("audio.onEnded"), "Exam does not advance after examiner audio ends");
 assert.ok(examJs.includes("this.startRecording(cue)"), "Exam does not start the microphone automatically");
 assert.ok(examJs.includes("interruptExam"), "Exam has no interruption handling");
