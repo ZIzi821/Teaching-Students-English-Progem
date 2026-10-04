@@ -143,7 +143,20 @@ assert(appJson.pages.includes("pages/homework/index"), "Homework list page is no
 assert(homeworkJs.includes("listStudentHomework"), "Homework list does not use the protected cloud endpoint");
 assert(!homeworkJs.includes("saveLearningReminderSubscription"), "Removed long-term reminder action is still present");
 assert(!backend.includes("learningReminderSubscriptions"), "Removed long-term reminder storage is still registered");
-assert(homeworkWxml.includes("现在要完成"), "Homework list pending section is missing");
+[
+  "老师让你继续完成",
+  "已逾期",
+  "今天截止",
+  "即将到期",
+  "已提交，等待老师",
+  "已经完成",
+].forEach((label) => {
+  assert(homeworkJs.includes(label) || homeworkWxml.includes(label), `Homework physical group is missing: ${label}`);
+});
+assert(homeworkWxml.includes("summary.actionableCount") && homeworkWxml.includes("summary.awaitingReviewCount"), "Homework summary does not separate student actions from teacher review");
+assert(homeworkJs.includes("inferHomeworkListGroup") && homeworkJs.includes("taskSections"), "Homework list does not build deterministic physical sections");
+assert(backend.includes("buildHomeworkListGrouping"), "Cloud homework list does not return deterministic grouping metadata");
+assert(homeworkWxml.includes('bindtap="toggleCompleted"') && homeworkJs.includes("showCompleted: false"), "Completed homework is not collapsed by default");
 assert(!homeworkWxml.includes("家长长期学习提醒"), "Removed long-term reminder entry is still visible");
 assert(addLessonWxml.includes("录音任务类型") && addLessonWxml.includes("Molly 还可选择 KET") && addLessonWxml.includes("选择官方口语样题"), "Molly KET task selector is missing from lesson creation");
 assert(addLessonWxml.includes('maxlength="2000"'), "New-lesson recording prompt limit is too short");

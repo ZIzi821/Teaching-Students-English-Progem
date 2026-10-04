@@ -1,6 +1,15 @@
 const DAY_MS = 24 * 60 * 60 * 1000;
 const HONG_KONG_OFFSET_MS = 8 * 60 * 60 * 1000;
 const MAX_HOMEWORK_DUE_DAYS = 7;
+const HOMEWORK_LIST_GROUPS = Object.freeze({
+  returned: "returned",
+  overdue: "overdue",
+  today: "today",
+  upcoming: "upcoming",
+  noDeadline: "noDeadline",
+  awaitingReview: "awaitingReview",
+  completed: "completed",
+});
 
 const toSafeCount = (value) => {
   const number = Number(value || 0);
@@ -166,16 +175,72 @@ const buildHomeworkDeadlineState = (lesson, now = Date.now(), firstSubmittedAtMs
   };
 };
 
+const getHomeworkListGroup = (lesson = {}, completed = false) => {
+  if (completed) return HOMEWORK_LIST_GROUPS.completed;
+  if (String(lesson.homeworkTeacherReviewStatus || "") === "incomplete") {
+    return HOMEWORK_LIST_GROUPS.returned;
+  }
+  const hasSubmission = lesson.homeworkHasSubmission === true
+    || Number(lesson.homeworkFirstSubmittedAtMs || 0) > 0;
+  if (hasSubmission) return HOMEWORK_LIST_GROUPS.awaitingReview;
+  const dueStatus = String(lesson.homeworkDueStatus || "none");
+  if (dueStatus === "overdue") return HOMEWORK_LIST_GROUPS.overdue;
+  if (dueStatus === "today") return HOMEWORK_LIST_GROUPS.today;
+  if (dueStatus === "upcoming") return HOMEWORK_LIST_GROUPS.upcoming;
+  return HOMEWORK_LIST_GROUPS.noDeadline;
+};
+
+const buildHomeworkListGrouping = ({ pendingLessons = [], completedLessons = [] } = {}) => {
+  const groups = Object.keys(HOMEWORK_LIST_GROUPS).reduce((result, key) => {
+    result[HOMEWORK_LIST_GROUPS[key]] = [];
+    return result;
+  }, {});
+  const decoratedPendingLessons = (Array.isArray(pendingLessons) ? pendingLessons : []).map((lesson) => {
+    const homeworkListGroup = getHomeworkListGroup(lesson, false);
+    const decorated = Object.assign({}, lesson, { homeworkListGroup });
+    groups[homeworkListGroup].push(decorated);
+    return decorated;
+  });
+  const decoratedCompletedLessons = (Array.isArray(completedLessons) ? completedLessons : []).map((lesson) => {
+    const decorated = Object.assign({}, lesson, {
+      homeworkListGroup: HOMEWORK_LIST_GROUPS.completed,
+    });
+    groups[HOMEWORK_LIST_GROUPS.completed].push(decorated);
+    return decorated;
+  });
+  const actionableCount = groups.returned.length
+    + groups.overdue.length
+    + groups.today.length
+    + groups.upcoming.length
+    + groups.noDeadline.length;
+  return {
+    pendingLessons: decoratedPendingLessons,
+    completedLessons: decoratedCompletedLessons,
+    groups,
+    summary: {
+      actionableCount,
+      awaitingReviewCount: groups.awaitingReview.length,
+      urgentCount: groups.returned.length + groups.overdue.length + groups.today.length,
+      pendingCount: decoratedPendingLessons.length,
+      completedCount: decoratedCompletedLessons.length,
+      totalCount: decoratedPendingLessons.length + decoratedCompletedLessons.length,
+    },
+  };
+};
+
 module.exports = {
   DAY_MS,
+  HOMEWORK_LIST_GROUPS,
   MAX_HOMEWORK_DUE_DAYS,
   addDays,
   buildHomeworkDeadlineState,
+  buildHomeworkListGrouping,
   buildLessonProgress,
   formatHongKongDay,
   getDefaultLessonPackageSize,
   getHomeworkDueDate,
   getHongKongDayEndMs,
+  getHomeworkListGroup,
   getLessonPackageSize,
   isLateHomeworkSubmission,
 };

@@ -81,4 +81,33 @@ assert.strictEqual(
   "submission state must remain visible even when the teacher did not set a deadline"
 );
 
+const homeworkGrouping = courseWorkflow.buildHomeworkListGrouping({
+  pendingLessons: [
+    { _id: "returned", homeworkTeacherReviewStatus: "incomplete", homeworkHasSubmission: true, homeworkDueStatus: "overdue" },
+    { _id: "overdue", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "overdue" },
+    { _id: "today", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "today" },
+    { _id: "upcoming", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "upcoming" },
+    { _id: "no-deadline", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "none" },
+    { _id: "awaiting", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: true, homeworkDueStatus: "overdue" },
+  ],
+  completedLessons: [{ _id: "completed", homeworkTeacherReviewStatus: "completed" }],
+});
+assert.deepStrictEqual(homeworkGrouping.groups.returned.map((item) => item._id), ["returned"]);
+assert.deepStrictEqual(homeworkGrouping.groups.overdue.map((item) => item._id), ["overdue"]);
+assert.deepStrictEqual(homeworkGrouping.groups.today.map((item) => item._id), ["today"]);
+assert.deepStrictEqual(homeworkGrouping.groups.upcoming.map((item) => item._id), ["upcoming"]);
+assert.deepStrictEqual(homeworkGrouping.groups.noDeadline.map((item) => item._id), ["no-deadline"]);
+assert.deepStrictEqual(homeworkGrouping.groups.awaitingReview.map((item) => item._id), ["awaiting"]);
+assert.deepStrictEqual(homeworkGrouping.groups.completed.map((item) => item._id), ["completed"]);
+assert.strictEqual(homeworkGrouping.summary.actionableCount, 5);
+assert.strictEqual(homeworkGrouping.summary.awaitingReviewCount, 1);
+assert.strictEqual(homeworkGrouping.summary.urgentCount, 3);
+assert.strictEqual(homeworkGrouping.summary.pendingCount, 6);
+assert.strictEqual(homeworkGrouping.summary.completedCount, 1);
+assert.strictEqual(
+  courseWorkflow.getHomeworkListGroup({ homeworkTeacherReviewStatus: "incomplete", homeworkHasSubmission: true }),
+  "returned",
+  "teacher-returned work must take priority over an existing submission"
+);
+
 console.log("courseWorkflow tests passed");

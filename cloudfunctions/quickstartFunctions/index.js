@@ -2277,18 +2277,18 @@ const listStudentHomework = async (event) => {
       return String(right.lessonDate || "").localeCompare(String(left.lessonDate || ""));
     });
   const completedLessons = homeworkLessons.filter(isLessonHomeworkCompleted);
+  const homeworkGrouping = courseWorkflow.buildHomeworkListGrouping({
+    pendingLessons,
+    completedLessons,
+  });
   return {
     success: true,
     role: identity.role,
     readOnly: isTeacherPreview,
     student: sanitizeStudent(studentRes.data, false),
-    pendingLessons,
-    completedLessons,
-    summary: {
-      pendingCount: pendingLessons.length,
-      completedCount: completedLessons.length,
-      totalCount: homeworkLessons.length,
-    },
+    pendingLessons: homeworkGrouping.pendingLessons,
+    completedLessons: homeworkGrouping.completedLessons,
+    summary: homeworkGrouping.summary,
   };
 };
 
