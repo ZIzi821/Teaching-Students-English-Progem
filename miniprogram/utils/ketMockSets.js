@@ -1,5 +1,39 @@
 const OFFICIAL_SAMPLE_URL = "https://www.cambridgeenglish.org/Images/561990-key-for-schools-speaking-sa-sample-test-2020-.pdf";
 
+const DEFAULT_TEACHER_GUIDE = {
+  practiceNotice: "以下锚点只用于本小程序的教师练习评分，不是 Cambridge 官方分数换算。",
+  scoreGuidance: [
+    {
+      key: "grammarVocabulary",
+      label: "语法与词汇",
+      anchor2: "2 分：主要使用单词或很短的句子，错误常影响表达，需要明显提示。",
+      anchor3: "3 分：能用简单完整句表达熟悉话题，并给出基本原因或例子。",
+      anchor45: "4–5 分：能较灵活地连接句子、比较选项，偶有错误但不妨碍理解。",
+    },
+    {
+      key: "pronunciation",
+      label: "发音",
+      anchor2: "2 分：部分词句较难听清，停顿较多，重音或语调常影响理解。",
+      anchor3: "3 分：整体可以听懂，常见词发音清楚，句子有基本重音和语调。",
+      anchor45: "4–5 分：大部分时间清楚自然，能用重音和语调突出意思。",
+    },
+    {
+      key: "interactiveCommunication",
+      label: "互动沟通",
+      anchor2: "2 分：能回答直接问题，但较少回应搭档观点，也很少主动推进。",
+      anchor3: "3 分：能回应搭档、表达同意或不同意，并补充一个理由。",
+      anchor45: "4–5 分：能自然接续、追问、比较和邀请搭档回应，使讨论持续。",
+    },
+    {
+      key: "globalAchievement",
+      label: "整体表现",
+      anchor2: "2 分：只完成部分任务，回答常需提示，信息较零散。",
+      anchor3: "3 分：基本完成任务，回答相关，能让听者理解主要意思。",
+      anchor45: "4–5 分：完整完成任务，回答连贯、有理由，能较自然地交流。",
+    },
+  ],
+};
+
 const RAW_KET_MOCK_SETS = [
   {
     id: "ket-mock-01-personal-hobbies",
@@ -233,10 +267,237 @@ const RAW_KET_MOCK_SETS = [
       followUp: "Which activity would you plan for your family this weekend, and why?",
     },
   },
+  {
+    id: "ket-mock-09-digital-contact",
+    order: 9,
+    title: "模拟九 · 数字生活与联系朋友",
+    shortTitle: "数字生活与联系朋友",
+    sourceType: "current_format_original",
+    sourceBadge: "原创题",
+    sourceLabel: "本小程序原创题，按 A2 Key for Schools 当前口语结构独立编写",
+    sourceReference: "参考公开考试结构与高质量模考编排标准，未复制出版题目",
+    sourceUrl: "",
+    topic: "Digital life and keeping in touch",
+    visualAsset: "/ket-mock/images/set-09-digital-contact.webp",
+    visualAlt: "五种联系朋友的方式：面对面聊天、视频通话、打电话、发文字消息和写电子邮件",
+    visualPrompt: "Ways to keep in touch",
+    visualQuestion: "Talk about the ways. Say which are easy, personal, useful or sometimes difficult.",
+    visualOptions: ["talking face to face", "a video call", "a phone call", "a text message", "an email"],
+    part1Questions: [
+      ["identity", "个人信息", "Good afternoon. What is your name, and how old are you?", 30, ["Could you tell me your name?", "Are you eleven or twelve?"], "My name is Anna Lee, and I am twelve years old."],
+      ["device", "常用设备", "Which device do you use most often, and what do you use it for?", 45, ["Do you use a phone or a tablet?", "Do you use it for homework?"], "I use my tablet most often because I do my homework and watch short learning videos on it."],
+      ["online", "网络活动", "What do you enjoy doing online in your free time?", 45, ["Do you watch videos online?", "Do you send messages to friends?"], "I enjoy sending messages to my friends and looking for information about animals."],
+      ["technology", "较长回答", "Tell me about a time technology helped you learn something.", 60, ["What did you learn?", "Which app or website did you use?", "Was it useful? Why?"], "Last month I used a video lesson to learn how to make a presentation. I watched one part twice, took notes and then finished it by myself."],
+    ],
+    part2: {
+      instruction: "Now you are going to talk together about ways to keep in touch with a friend who has moved to another town. Look at the five pictures, respond to Candidate B and explain your ideas.",
+      exchangeA: "Candidate B says: I think video calls are best because friends can see each other and show things. What do you think?",
+      exchangeABackupPrompts: ["Do you agree that video calls are useful?", "Is a video call always easy?"],
+      exchangeAModelAnswer: "I agree because video calls feel friendly and we can see each other. However, both friends need a good internet connection.",
+      exchangeB: "Candidate B says: Text messages are quick, but phone calls feel more personal. Which way is better when you have important news?",
+      exchangeBBackupPrompts: ["Would you call or send a message?", "Why is that way better for important news?"],
+      exchangeBModelAnswer: "I would make a phone call because my friend can hear my voice and ask questions immediately. A text message is better for a short plan.",
+      followUps: [
+        {
+          id: "part2-follow-up-preference",
+          title: "同主题追问一",
+          script: "Do you prefer talking to friends online or face to face? Why?",
+          backupPrompts: ["Do you like meeting friends in person?", "Is talking online more convenient?"],
+          modelAnswer: "I prefer talking face to face because I can see my friend's feelings and we can do something together.",
+          maxResponseSeconds: 50,
+          studentInstruction: "回答追问并给出理由",
+        },
+        {
+          id: "part2-follow-up-screen-time",
+          title: "同主题追问二",
+          script: "Should children have some screen-free time every day? Why or why not?",
+          backupPrompts: ["Is too much screen time a problem?", "What can children do without a screen?"],
+          modelAnswer: "Yes, I think children should have some screen-free time. They can exercise, read or talk with their family.",
+          maxResponseSeconds: 50,
+          studentInstruction: "继续表达观点并举例",
+        },
+      ],
+    },
+    teacherGuide: {
+      focus: ["能否先回应虚拟搭档，再表达自己的选择", "能否比较两种沟通方式并说明适用情境", "能否在第二轮追问中给出理由或例子"],
+    },
+  },
+  {
+    id: "ket-mock-10-helping-home",
+    order: 10,
+    title: "模拟十 · 家庭责任与帮助家人",
+    shortTitle: "家庭责任与帮助家人",
+    sourceType: "current_format_original",
+    sourceBadge: "原创题",
+    sourceLabel: "本小程序原创题，按 A2 Key for Schools 当前口语结构独立编写",
+    sourceReference: "参考公开考试结构与高质量模考编排标准，未复制出版题目",
+    sourceUrl: "",
+    topic: "Home responsibilities and helping family",
+    visualAsset: "/ket-mock/images/set-10-helping-home.webp",
+    visualAlt: "五种帮助家人的方式：做简单饭菜、洗碗、帮忙购物、整理房间和照顾宠物",
+    visualPrompt: "Ways to help at home",
+    visualQuestion: "Talk about the jobs. Say which are useful, enjoyable, easy or difficult.",
+    visualOptions: ["preparing food", "washing dishes", "grocery shopping", "tidying a bedroom", "looking after a pet"],
+    part1Questions: [
+      ["identity", "个人信息", "Good morning. What is your name, and who do you live with?", 35, ["Could you tell me your name?", "Do you live with your family?"], "My name is Ben. I live with my parents and my younger sister."],
+      ["after-school", "放学后", "What do you usually do when you get home from school?", 45, ["Do you have a snack?", "Do you do homework first?"], "I usually have a snack and rest for a few minutes. Then I do my homework at my desk."],
+      ["meal", "家庭饮食", "Which meal do you most enjoy eating at home?", 45, ["Do you like breakfast or dinner best?", "Who usually makes it?"], "I enjoy dinner most because everyone is at home and we can talk about our day."],
+      ["home-job", "较长回答", "Tell me about a job at home that you learned to do.", 60, ["Who showed you how to do it?", "Was it difficult at first?", "How often do you do it now?"], "I learned to make a simple salad with my dad. At first I was slow, but now I can wash and cut the vegetables safely."],
+    ],
+    part2: {
+      instruction: "Now you are going to talk together about ways children can help at home. Look at the five pictures, respond to Candidate B and discuss the good and difficult points.",
+      exchangeA: "Candidate B says: Preparing food is useful because children learn an important skill, but an adult may need to help. Do you agree?",
+      exchangeABackupPrompts: ["Is cooking useful for children?", "Can children cook alone?"],
+      exchangeAModelAnswer: "Yes, I agree. Preparing simple food is useful and can be fun, but children should ask an adult for help with hot or sharp things.",
+      exchangeB: "Candidate B says: Looking after a pet is enjoyable, but it must be done every day. Which job teaches children the most responsibility?",
+      exchangeBBackupPrompts: ["Is caring for a pet a big responsibility?", "Which job must be done regularly?"],
+      exchangeBModelAnswer: "I think looking after a pet teaches the most responsibility because the animal needs food and care every day, even when we are busy.",
+      followUps: [
+        {
+          id: "part2-follow-up-weekly-job",
+          title: "同主题追问一",
+          script: "Which job at home should every child do each week? Why?",
+          backupPrompts: ["Should children tidy their own room?", "Why is that job important?"],
+          modelAnswer: "Every child should tidy their own room because it keeps the home comfortable and teaches them to care for their things.",
+          maxResponseSeconds: 50,
+          studentInstruction: "回答追问并说明原因",
+        },
+        {
+          id: "part2-follow-up-together",
+          title: "同主题追问二",
+          script: "Do you prefer doing jobs alone or with your family? Why?",
+          backupPrompts: ["Is it faster with another person?", "Can doing jobs together be fun?"],
+          modelAnswer: "I prefer doing jobs with my family because we can finish faster and talk while we work.",
+          maxResponseSeconds: 50,
+          studentInstruction: "继续表达偏好并给出理由",
+        },
+      ],
+    },
+    teacherGuide: {
+      focus: ["能否使用频率表达说明日常责任", "能否比较有趣与必要两种角度", "能否围绕安全、时间和责任补充理由"],
+    },
+  },
+  {
+    id: "ket-mock-11-birthday-gifts",
+    order: 11,
+    title: "模拟十一 · 朋友生日与礼物选择",
+    shortTitle: "朋友生日与礼物选择",
+    sourceType: "current_format_original",
+    sourceBadge: "原创题",
+    sourceLabel: "本小程序原创题，按 A2 Key for Schools 当前口语结构独立编写",
+    sourceReference: "参考公开考试结构与高质量模考编排标准，未复制出版题目",
+    sourceUrl: "",
+    topic: "Birthdays and choosing gifts",
+    visualAsset: "/ket-mock/images/set-11-birthday-gifts.webp",
+    visualAlt: "五种生日礼物：故事书、美术套装、运动水壶、桌游和头戴式耳机",
+    visualPrompt: "Birthday gifts for a friend",
+    visualQuestion: "Talk about the gifts. Say which are interesting, useful, fun to share or difficult to choose.",
+    visualOptions: ["an adventure book", "an art set", "a sports bottle", "a board game", "headphones"],
+    part1Questions: [
+      ["identity", "个人信息", "Hello. What is your name, and when is your birthday?", 35, ["Could you tell me your name?", "Is your birthday in summer?"], "My name is Sofia, and my birthday is in August."],
+      ["shopping", "购物习惯", "Where do you usually go when you need to buy a present?", 45, ["Do you go to a shopping centre?", "Do you ever buy presents online?"], "I usually go to a shopping centre because I can look at different things before I choose."],
+      ["money", "花钱选择", "Do you usually save your money or spend it?", 45, ["Do you save money for something special?", "What do you like buying?"], "I usually save most of my money, but sometimes I buy a book or a snack with my friends."],
+      ["present", "较长回答", "Tell me about a present that was special to you.", 60, ["Who gave it to you?", "Why did you like it?", "Do you still use it?"], "My aunt gave me a camera for my birthday. It was special because I wanted to take pictures on family trips, and I still use it."],
+    ],
+    part2: {
+      instruction: "Now you are going to talk together about birthday gifts for a friend in your class. Look at the five pictures, respond to Candidate B and explain which gifts would or would not be suitable.",
+      exchangeA: "Candidate B says: A book can be a great present, but we need to know what kind of stories our friend likes. What do you think?",
+      exchangeABackupPrompts: ["Is a book easy to choose?", "What kind of book might be interesting?"],
+      exchangeAModelAnswer: "I agree that a book is a good present because it can last a long time. We should ask what stories our friend enjoys before choosing one.",
+      exchangeB: "Candidate B says: A board game is fun because friends can use it together. Which gift in the pictures is the most useful?",
+      exchangeBBackupPrompts: ["Is a sports bottle useful?", "Which present could someone use every day?"],
+      exchangeBModelAnswer: "I think the sports bottle is the most useful because our friend can take it to school and sports practice every day.",
+      followUps: [
+        {
+          id: "part2-follow-up-experience",
+          title: "同主题追问一",
+          script: "Would you rather give someone an object or take them somewhere special? Why?",
+          backupPrompts: ["Would you give a present or plan a day out?", "Which choice makes a better memory?"],
+          modelAnswer: "I would take my friend somewhere special because we could enjoy the day together and remember it for a long time.",
+          maxResponseSeconds: 50,
+          studentInstruction: "比较两种选择并说明理由",
+        },
+        {
+          id: "part2-follow-up-expensive",
+          title: "同主题追问二",
+          script: "Is an expensive present always better than a simple present? Why or why not?",
+          backupPrompts: ["Can a simple present be special?", "What is more important than the price?"],
+          modelAnswer: "No, a simple present can be better if it matches the person's interests. The thought is more important than the price.",
+          maxResponseSeconds: 50,
+          studentInstruction: "继续表达观点并解释",
+        },
+      ],
+    },
+    teacherGuide: {
+      focus: ["能否从兴趣、实用性和价格多个角度比较", "能否自然使用 would rather、because 等表达", "能否回应观点而不是只说自己的答案"],
+    },
+  },
+  {
+    id: "ket-mock-12-town-improvements",
+    order: 12,
+    title: "模拟十二 · 社区生活与改善设施",
+    shortTitle: "社区生活与改善设施",
+    sourceType: "current_format_original",
+    sourceBadge: "原创题",
+    sourceLabel: "本小程序原创题，按 A2 Key for Schools 当前口语结构独立编写",
+    sourceReference: "参考公开考试结构与高质量模考编排标准，未复制出版题目",
+    sourceUrl: "",
+    topic: "Town life and local improvements",
+    visualAsset: "/ket-mock/images/set-12-town-improvements.webp",
+    visualAlt: "五种社区改善方式：安全自行车道、青少年学习室、运动场、更好的公交服务和社区花园",
+    visualPrompt: "Improvements for young people in town",
+    visualQuestion: "Talk about the improvements. Say which are useful, healthy, relaxing or expensive.",
+    visualOptions: ["a cycle path", "a library study room", "a sports court", "a better bus service", "a community garden"],
+    part1Questions: [
+      ["identity", "个人信息", "Good afternoon. What is your name, and where do you live?", 35, ["Could you tell me your name?", "Do you live in a town or a city?"], "My name is Leo, and I live in a small town near the sea."],
+      ["transport", "日常出行", "How do you usually travel around your town?", 45, ["Do you walk or take a bus?", "How do you travel to school?"], "I usually walk to places near my home, but I take the bus when I go to the town centre."],
+      ["place", "喜欢的地方", "What is your favourite place near your home?", 45, ["Do you like the park?", "What do you do there?"], "My favourite place is the park because I can ride my bike and meet my friends there."],
+      ["local-event", "较长回答", "Tell me about an activity or event you enjoyed in your local area.", 60, ["Where did it happen?", "Who did you go with?", "What did you do there?"], "Last month I went to a weekend market with my family. We tried some food, listened to music and bought plants for our balcony."],
+    ],
+    part2: {
+      instruction: "Now you are going to talk together about improvements for young people in your town. Look at the five pictures, respond to Candidate B and compare who each improvement would help.",
+      exchangeA: "Candidate B says: A new sports court would help young people stay active, but it could cost a lot of money. What do you think?",
+      exchangeABackupPrompts: ["Would many young people use a sports court?", "Could it be expensive to build?"],
+      exchangeAModelAnswer: "I think a sports court would be useful because many young people could play there after school. It may be expensive, but different sports clubs could share it.",
+      exchangeB: "Candidate B says: A better bus service could help more people than a community garden. Do you agree?",
+      exchangeBBackupPrompts: ["Who needs the bus service?", "What is good about a community garden?"],
+      exchangeBModelAnswer: "I agree that buses would help more people, especially students and older people. However, a community garden could make the town greener and friendlier.",
+      followUps: [
+        {
+          id: "part2-follow-up-school-area",
+          title: "同主题追问一",
+          script: "What is one thing you would improve near your school? Why?",
+          backupPrompts: ["Does your school need a safer road?", "Would you add a place to study or play?"],
+          modelAnswer: "I would add a safer cycle path near my school because many students ride bikes and the road is busy in the morning.",
+          maxResponseSeconds: 50,
+          studentInstruction: "提出一个改善建议并说明理由",
+        },
+        {
+          id: "part2-follow-up-town-city",
+          title: "同主题追问二",
+          script: "Is it better for young people to live in a small town or a big city? Why?",
+          backupPrompts: ["Which place has more activities?", "Which place is quieter or safer?"],
+          modelAnswer: "I think a big city has more activities and public transport, but a small town can be quieter and easier to travel around.",
+          maxResponseSeconds: 50,
+          studentInstruction: "比较两种生活环境并说明看法",
+        },
+      ],
+    },
+    teacherGuide: {
+      focus: ["能否比较受益人群、成本和便利性", "能否用 however、but 等连接相反观点", "能否提出具体改善建议而不是只复述图片"],
+    },
+  },
 ];
 
+const withTeacherSupport = (cue, backupPrompts, modelAnswer) => Object.assign(
+  {},
+  cue,
+  Array.isArray(backupPrompts) && backupPrompts.length ? { backupPrompts: backupPrompts.slice() } : {},
+  modelAnswer ? { modelAnswer } : {}
+);
+
 const buildCues = (set) => {
-  const part1Cues = set.part1Questions.map((question, index) => ({
+  const part1Cues = set.part1Questions.map((question, index) => withTeacherSupport({
     id: `part1-${question[0]}`,
     part: 1,
     order: index + 1,
@@ -245,8 +506,17 @@ const buildCues = (set) => {
     responseExpected: true,
     maxResponseSeconds: question[3],
     studentInstruction: index === 0 ? "听清考官问题后回答" : "像正式考试一样直接回答",
-  }));
-  return part1Cues.concat([
+  }, question[4], question[5]));
+  const followUps = Array.isArray(set.part2.followUps) && set.part2.followUps.length
+    ? set.part2.followUps
+    : [{
+      id: "part2-follow-up",
+      title: "考官追问",
+      script: set.part2.followUp,
+      maxResponseSeconds: 45,
+      studentInstruction: "回答考官最后的问题",
+    }];
+  const part2Cues = [
     {
       id: "part2-instructions",
       part: 2,
@@ -257,7 +527,7 @@ const buildCues = (set) => {
       maxResponseSeconds: 0,
       studentInstruction: "看图并听清讨论要求",
     },
-    {
+    withTeacherSupport({
       id: "part2-exchange-a",
       part: 2,
       order: 2,
@@ -266,8 +536,8 @@ const buildCues = (set) => {
       responseExpected: true,
       maxResponseSeconds: 75,
       studentInstruction: "回应观点并说明理由",
-    },
-    {
+    }, set.part2.exchangeABackupPrompts, set.part2.exchangeAModelAnswer),
+    withTeacherSupport({
       id: "part2-exchange-b",
       part: 2,
       order: 3,
@@ -276,21 +546,21 @@ const buildCues = (set) => {
       responseExpected: true,
       maxResponseSeconds: 75,
       studentInstruction: "继续比较，主动补充理由",
-    },
-    {
-      id: "part2-follow-up",
-      part: 2,
-      order: 4,
-      title: "考官追问",
-      script: set.part2.followUp,
-      responseExpected: true,
-      maxResponseSeconds: 45,
-      studentInstruction: "回答考官最后的问题",
-    },
+    }, set.part2.exchangeBBackupPrompts, set.part2.exchangeBModelAnswer),
+  ].concat(followUps.map((followUp, index) => withTeacherSupport({
+    id: followUp.id || `part2-follow-up-${index + 1}`,
+    part: 2,
+    order: index + 4,
+    title: followUp.title || `同主题追问${index + 1}`,
+    script: followUp.script,
+    responseExpected: true,
+    maxResponseSeconds: Number(followUp.maxResponseSeconds || 45),
+    studentInstruction: followUp.studentInstruction || "回答追问并说明理由",
+  }, followUp.backupPrompts, followUp.modelAnswer)), [
     {
       id: "part2-closing",
       part: 2,
-      order: 5,
+      order: followUps.length + 4,
       title: "考试结束",
       script: "Thank you. That is the end of the speaking test.",
       responseExpected: false,
@@ -298,11 +568,17 @@ const buildCues = (set) => {
       studentInstruction: "考试即将结束",
     },
   ]);
+  return part1Cues.concat(part2Cues);
 };
 
 const KET_MOCK_SETS = RAW_KET_MOCK_SETS.map((set) => Object.assign({}, set, {
   formatLabel: "A2 Key for Schools · Speaking Part 1 + Part 2",
   expectedMinutes: "8–10 分钟",
+  teacherGuide: {
+    practiceNotice: DEFAULT_TEACHER_GUIDE.practiceNotice,
+    focus: set.teacherGuide && Array.isArray(set.teacherGuide.focus) ? set.teacherGuide.focus.slice() : [],
+    scoreGuidance: DEFAULT_TEACHER_GUIDE.scoreGuidance.map((item) => Object.assign({}, item)),
+  },
   cues: buildCues(set),
 }));
 

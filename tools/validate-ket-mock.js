@@ -4,24 +4,35 @@ const path = require("path");
 
 const root = path.join(__dirname, "..");
 const read = (...parts) => fs.readFileSync(path.join(root, ...parts), "utf8");
+const directoryBytes = (directory) => fs.readdirSync(directory, { withFileTypes: true }).reduce((sum, entry) => {
+  const entryPath = path.join(directory, entry.name);
+  return sum + (entry.isDirectory() ? directoryBytes(entryPath) : fs.statSync(entryPath).size);
+}, 0);
 const frontend = require(path.join(root, "miniprogram", "utils", "ketMockSets"));
 const cloudSets = JSON.parse(read("cloudfunctions", "quickstartFunctions", "data", "ket-mock-sets.json"));
 const app = JSON.parse(read("miniprogram", "app.json"));
 
-assert.strictEqual(frontend.KET_MOCK_SETS.length, 8, "KET mock catalogue must expose 8 sets");
-assert.strictEqual(cloudSets.length, 8, "Cloud KET mock catalogue must expose 8 sets");
+assert.strictEqual(frontend.KET_MOCK_SETS.length, 12, "KET mock catalogue must expose 12 sets");
+assert.strictEqual(cloudSets.length, 12, "Cloud KET mock catalogue must expose 12 sets");
 assert.deepStrictEqual(frontend.KET_MOCK_SETS, cloudSets, "Frontend and cloud KET mock catalogues must stay identical");
 assert.strictEqual(frontend.KET_MOCK_SETS[0].sourceType, "official_public_adapted", "Set 1 source boundary is missing");
-assert.ok(frontend.KET_MOCK_SETS.slice(1).every((set) => set.sourceType === "current_format_original"), "Sets 2-8 must be clearly labelled original");
-assert.ok(frontend.KET_MOCK_SETS.slice(1).every((set) => set.sourceBadge === "原创题"), "Sets 2-8 must use the concise original-question label");
+assert.ok(frontend.KET_MOCK_SETS.slice(1).every((set) => set.sourceType === "current_format_original"), "Sets 2-12 must be clearly labelled original");
+assert.ok(frontend.KET_MOCK_SETS.slice(1).every((set) => set.sourceBadge === "原创题"), "Sets 2-12 must use the concise original-question label");
+assert.strictEqual(frontend.KET_MOCK_SETS.filter((set) => set.order >= 9).length, 4, "Four enhanced original sets are required");
 
 const cloudById = new Map(cloudSets.map((set) => [set.id, set]));
 let imageBytes = 0;
 frontend.KET_MOCK_SETS.forEach((set) => {
   const cloudSet = cloudById.get(set.id);
+  const enhancedSet = set.order >= 9;
   assert.ok(cloudSet, `Cloud catalogue is missing ${set.id}`);
-  assert.strictEqual(set.cues.length, 9, `${set.id} must contain 9 examiner audio cues`);
-  assert.strictEqual(set.cues.filter((cue) => cue.responseExpected).length, 7, `${set.id} must contain 7 recorded answers`);
+  assert.strictEqual(set.cues.length, enhancedSet ? 10 : 9, `${set.id} has an unexpected examiner cue count`);
+  assert.strictEqual(set.cues.filter((cue) => cue.responseExpected).length, enhancedSet ? 8 : 7, `${set.id} has an unexpected recorded-answer count`);
+  assert.strictEqual(set.teacherGuide.scoreGuidance.length, 4, `${set.id} must expose four teacher scoring anchors`);
+  if (enhancedSet) {
+    assert.ok(set.cues.filter((cue) => cue.responseExpected)
+      .every((cue) => cue.backupPrompts.length >= 2 && cue.modelAnswer), `${set.id} is missing enhanced teacher support`);
+  }
   assert.deepStrictEqual(
     set.cues.map((cue) => [cue.id, cue.part, cue.script, cue.responseExpected]),
     cloudSet.cues.map((cue) => [cue.id, cue.part, cue.script, cue.responseExpected]),
@@ -33,7 +44,18 @@ frontend.KET_MOCK_SETS.forEach((set) => {
   imageBytes += size;
   assert.ok(size <= 250000, `${set.id} visual asset is too large for the mini-program package`);
 });
-assert.ok(imageBytes <= 1500000, "KET mock visual assets exceed the package budget");
+assert.ok(imageBytes <= 1800000, "KET mock visual assets exceed the package budget");
+
+const miniprogramRoot = path.join(root, "miniprogram");
+const ketSubpackageRoot = path.join(miniprogramRoot, "ket-mock");
+const ketSubpackageBytes = directoryBytes(ketSubpackageRoot);
+const mainPackageBytes = fs.readdirSync(miniprogramRoot, { withFileTypes: true }).reduce((sum, entry) => {
+  if (entry.name === "ket-mock") return sum;
+  const entryPath = path.join(miniprogramRoot, entry.name);
+  return sum + (entry.isDirectory() ? directoryBytes(entryPath) : fs.statSync(entryPath).size);
+}, 0);
+assert.ok(ketSubpackageBytes <= 2 * 1024 * 1024, "KET subpackage exceeds the 2 MiB package limit");
+assert.ok(mainPackageBytes <= 2 * 1024 * 1024, "Main package exceeds the 2 MiB package limit");
 
 const registeredSubpages = (app.subpackages || app.subPackages || []).flatMap((subpackage) => (
   (subpackage.pages || []).map((page) => `${subpackage.root}/${page}`)
@@ -45,6 +67,7 @@ const registeredSubpages = (app.subpackages || app.subPackages || []).flatMap((s
 ].forEach((page) => assert.ok(registeredSubpages.includes(page), `${page} is not registered in the KET subpackage`));
 
 const cloudIndex = read("cloudfunctions", "quickstartFunctions", "index.js");
+const catalogueBuilder = read("tools", "build-ket-mock-catalogue.js");
 [
   "getKetMockLibrary",
   "saveKetMockCueAudio",
@@ -56,6 +79,7 @@ const cloudIndex = read("cloudfunctions", "quickstartFunctions", "index.js");
 ].forEach((action) => assert.ok(cloudIndex.includes(`case \"${action}\"`), `Cloud action ${action} is missing`));
 assert.ok(cloudIndex.includes('"ketMockAssets"'), "ketMockAssets collection is not initialized");
 assert.ok(cloudIndex.includes('"ketMockSessions"'), "ketMockSessions collection is not initialized");
+assert.ok(catalogueBuilder.includes("JSON.stringify(KET_MOCK_SETS"), "KET mock catalogue builder is missing");
 
 const addLessonJs = read("miniprogram", "pages", "add-lesson", "index.js");
 const lessonDetailJs = read("miniprogram", "pages", "lesson-detail", "index.js");
@@ -71,6 +95,7 @@ assert.ok(addLessonJs.includes('value: "ket_mock"'), "Lesson creation cannot ass
 assert.ok(lessonDetailJs.includes("/ket-mock/pages/exam/index?lessonId="), "Lesson detail does not open the mock exam");
 assert.ok(workbenchJs.includes("/ket-mock/pages/library/index"), "Teacher workbench does not open the audio library");
 assert.ok(libraryWxml.includes("“原创题”为本小程序自行编写"), "Teacher library does not explain the original-question label");
+assert.ok(libraryWxml.includes("教师备用追问 · 无需预录"), "Teacher library does not expose optional backup prompts");
 assert.ok(examJs.includes("audio.onEnded"), "Exam does not advance after examiner audio ends");
 assert.ok(examJs.includes("this.startRecording(cue)"), "Exam does not start the microphone automatically");
 assert.ok(examJs.includes("interruptExam"), "Exam has no interruption handling");
@@ -79,7 +104,10 @@ assert.ok(examWxml.includes("虚拟搭档"), "Automated Part 2 boundary is not d
 assert.ok(!examWxml.includes("{{currentCue.script}}"), "Student exam must not display the examiner script");
 assert.ok(reviewJs.includes("grammarVocabulary") && reviewJs.includes("interactiveCommunication"), "Four-dimension scoring fields are missing");
 assert.ok(reviewWxml.includes("不是 Cambridge 官方考试成绩"), "Practice-score disclaimer is missing");
+assert.ok(reviewWxml.includes("A2 参考示范 · 不要求照背"), "Teacher review does not expose model-answer guidance");
+assert.ok(reviewWxml.includes("四项分数锚点"), "Teacher review does not expose scoring anchors");
+assert.ok(!examWxml.includes("modelAnswer") && !examWxml.includes("backupPrompts"), "Teacher-only guidance leaked into the student exam template");
 assert.ok(recordingPracticeJs.includes("/ket-mock/pages/exam/index?lessonId="), "Legacy recording route does not redirect full mocks to the exam");
 assert.ok(cloudIndex.includes('lesson.recordingTaskType === "ket_mock"'), "Normal recording submissions are not blocked for full mocks");
 
-console.log(`KET mock validation passed (8 sets, ${imageBytes} image bytes)`);
+console.log(`KET mock validation passed (12 sets, ${imageBytes} image bytes, main ${(mainPackageBytes / 1048576).toFixed(3)} MiB, KET ${(ketSubpackageBytes / 1048576).toFixed(3)} MiB)`);

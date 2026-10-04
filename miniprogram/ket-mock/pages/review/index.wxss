@@ -19,6 +19,11 @@
 .part2-chip { color: #765d37; background: #f2e8d5; }
 .script-box { margin-top: 17rpx; padding: 16rpx; border-radius: 12rpx; color: #5b5248; background: #f5f1e9; font-size: 22rpx; line-height: 1.55; }
 .script-label { margin-bottom: 5rpx; color: #8a7659; font-size: 18rpx; font-weight: 800; }
+.teacher-support { margin-top: 13rpx; padding: 16rpx; border-radius: 12rpx; color: #5e5448; background: #fff6e4; font-size: 21rpx; line-height: 1.55; }
+.support-label { color: #7b6035; font-size: 18rpx; font-weight: 800; }
+.support-line { margin-top: 4rpx; }
+.model-label { margin-top: 13rpx; }
+.model-answer { margin-top: 5rpx; color: #3f4f47; }
 .audio-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; margin-top: 18rpx; }
 .audio-btn { display: flex; min-height: 70rpx; align-items: center; justify-content: center; border-radius: 13rpx; font-size: 22rpx; font-weight: 800; }
 .prompt-btn { color: #5f665e; background: #edeae3; }
@@ -29,6 +34,17 @@
 .visual-question { margin-top: 13rpx; color: #64594b; font-size: 21rpx; line-height: 1.5; text-align: center; }
 .score-title { margin-top: 38rpx; }
 .score-notice { margin: 0 6rpx 18rpx; padding: 16rpx 18rpx; border-radius: 13rpx; color: #7b6237; background: #fff1cf; font-size: 21rpx; line-height: 1.5; }
+.guide-toggle { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; padding: 20rpx 22rpx; }
+.guide-toggle-title { color: #315f4c; font-size: 24rpx; font-weight: 900; }
+.guide-toggle-copy { margin-top: 5rpx; color: #817669; font-size: 19rpx; line-height: 1.45; }
+.guide-toggle-mark { flex-shrink: 0; color: #39765d; font-size: 21rpx; font-weight: 800; }
+.score-guide { padding: 23rpx; border-color: #d6e3da; background: #fbfdfb; }
+.guide-notice { padding: 14rpx 16rpx; border-radius: 11rpx; color: #785f36; background: #fff2d5; font-size: 20rpx; line-height: 1.5; }
+.guide-section-title { margin-top: 20rpx; color: #315f4c; font-size: 22rpx; font-weight: 900; }
+.focus-line { margin-top: 7rpx; color: #554e46; font-size: 21rpx; line-height: 1.55; }
+.rubric-row { margin-top: 14rpx; padding: 16rpx; border-radius: 12rpx; background: #eef5f1; }
+.rubric-label { color: #315f4c; font-size: 22rpx; font-weight: 900; }
+.rubric-line { margin-top: 6rpx; color: #5d564e; font-size: 20rpx; line-height: 1.5; }
 .score-editor { padding: 25rpx; }
 .score-row { display: flex; align-items: center; justify-content: space-between; gap: 15rpx; padding: 18rpx 0; border-bottom: 1rpx solid #eee7dd; }
 .score-label { color: #342f29; font-size: 24rpx; font-weight: 800; }

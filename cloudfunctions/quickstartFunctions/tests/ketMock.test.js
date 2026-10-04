@@ -2,21 +2,34 @@ const assert = require("assert");
 const ketMock = require("../ketMock");
 
 assert.deepStrictEqual(ketMock.validateCatalogue(), []);
-assert.strictEqual(ketMock.KET_MOCK_SETS.length, 8);
+assert.strictEqual(ketMock.KET_MOCK_SETS.length, 12);
 assert.strictEqual(ketMock.KET_MOCK_SETS[0].sourceType, "official_public_adapted");
 assert.ok(ketMock.KET_MOCK_SETS.slice(1).every((set) => set.sourceType === "current_format_original"));
 
 ketMock.KET_MOCK_SETS.forEach((set) => {
-  assert.strictEqual(set.cues.length, 9);
-  assert.strictEqual(set.cues.filter((cue) => cue.responseExpected).length, 7);
+  const enhancedSet = set.order >= 9;
+  assert.strictEqual(set.cues.length, enhancedSet ? 10 : 9);
+  assert.strictEqual(set.cues.filter((cue) => cue.responseExpected).length, enhancedSet ? 8 : 7);
   assert.ok(set.cues.some((cue) => cue.part === 1));
   assert.ok(set.cues.some((cue) => cue.part === 2));
+  assert.strictEqual(set.teacherGuide.scoreGuidance.length, 4);
 });
+
+const enhancedSets = ketMock.KET_MOCK_SETS.slice(8);
+assert.strictEqual(enhancedSets.length, 4);
+assert.ok(enhancedSets.every((set) => set.sourceBadge === "原创题"));
+assert.ok(enhancedSets.every((set) => set.cues.filter((cue) => cue.responseExpected)
+  .every((cue) => cue.backupPrompts.length >= 2 && cue.modelAnswer)));
 
 const firstSet = ketMock.KET_MOCK_SETS[0];
 const assets = firstSet.cues.map((cue) => ({ setId: firstSet.id, cueId: cue.id, fileID: `cloud://${cue.id}` }));
 assert.strictEqual(ketMock.buildAssetCompleteness(firstSet, assets).complete, true);
 assert.strictEqual(ketMock.buildAssetCompleteness(firstSet, assets.slice(1)).complete, false);
+
+const enhancedSet = enhancedSets[0];
+const studentSet = ketMock.sanitizeSetForStudent(enhancedSet, []);
+assert.strictEqual(Object.prototype.hasOwnProperty.call(studentSet, "teacherGuide"), false);
+assert.ok(studentSet.cues.every((cue) => !cue.backupPrompts && !cue.modelAnswer));
 
 const assessment = ketMock.normalizeAssessment({
   grammarVocabulary: 3.5,

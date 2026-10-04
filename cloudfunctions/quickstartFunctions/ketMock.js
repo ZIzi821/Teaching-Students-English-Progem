@@ -105,9 +105,15 @@ const validateCatalogue = (sets = KET_MOCK_SETS) => {
     if (!["official_public_adapted", "current_format_original"].includes(set && set.sourceType)) {
       errors.push(`${set && set.id}: invalid sourceType`);
     }
-    if (!set || !Array.isArray(set.cues) || set.cues.length !== 9) {
-      errors.push(`${set && set.id}: expected 9 cues`);
+    const enhancedSet = Number(set && set.order || 0) >= 9;
+    const expectedCueCount = enhancedSet ? 10 : 9;
+    const expectedResponseCount = enhancedSet ? 8 : 7;
+    if (!set || !Array.isArray(set.cues) || set.cues.length !== expectedCueCount) {
+      errors.push(`${set && set.id}: expected ${expectedCueCount} cues`);
       return;
+    }
+    if (!set.teacherGuide || !Array.isArray(set.teacherGuide.scoreGuidance) || set.teacherGuide.scoreGuidance.length !== 4) {
+      errors.push(`${set.id}: incomplete teacher score guidance`);
     }
     const cueIds = new Set();
     set.cues.forEach((cue) => {
@@ -118,11 +124,17 @@ const validateCatalogue = (sets = KET_MOCK_SETS) => {
       if (cue.responseExpected && Number(cue.maxResponseSeconds || 0) <= 0) {
         errors.push(`${set.id}/${cue.id}: response cue needs time limit`);
       }
+      if (enhancedSet && cue.responseExpected && (!Array.isArray(cue.backupPrompts) || !cue.backupPrompts.length || !cue.modelAnswer)) {
+        errors.push(`${set.id}/${cue.id}: enhanced response cue needs backup prompts and a model answer`);
+      }
     });
+    if (set.cues.filter((cue) => cue.responseExpected).length !== expectedResponseCount) {
+      errors.push(`${set.id}: expected ${expectedResponseCount} response cues`);
+    }
     if (!set.cues.some((cue) => cue.part === 1 && cue.responseExpected)) errors.push(`${set.id}: missing Part 1 response`);
     if (!set.cues.some((cue) => cue.part === 2 && cue.responseExpected)) errors.push(`${set.id}: missing Part 2 response`);
   });
-  if ((sets || []).length !== 8) errors.push("catalogue must contain 8 complete sets");
+  if ((sets || []).length !== 12) errors.push("catalogue must contain 12 complete sets");
   return errors;
 };
 

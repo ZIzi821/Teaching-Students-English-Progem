@@ -189,7 +189,7 @@
           <view class="ket-source-line">{{selectedKetMockSet.formatLabel}} · {{selectedKetMockSet.expectedMinutes}}</view>
           <view class="ket-source-line">主题：{{selectedKetMockSet.topic}}</view>
           <view class="ket-source-line">{{selectedKetMockSet.sourceLabel}}</view>
-          <view class="ket-source-warning">学生开始前，需先在“教师管理 → KET 模拟录音库”准备本套 9 段考官音频。</view>
+          <view class="ket-source-warning">学生开始前，需先在“教师管理 → KET 模拟录音库”准备本套 {{selectedKetMockSet.cues.length}} 段考官与虚拟搭档音频。</view>
         </view>
         <view class="ket-weekly-hint" wx:if="{{ketWeeklyHint}}">{{ketWeeklyHint}}</view>
       </view>

@@ -25,6 +25,10 @@
     <view class="card response-card" wx:for="{{part1Rows}}" wx:key="cueId" wx:for-item="row" wx:for-index="rowIndex">
       <view class="response-head"><view><view class="response-title">{{row.cueTitle}}</view><view class="response-meta">回答 {{row.durationLabel}}</view></view><view class="part-chip">P1</view></view>
       <view class="script-box" wx:if="{{canReview && row.script}}"><view class="script-label">考官录制稿</view><view>{{row.script}}</view></view>
+      <view class="teacher-support" wx:if="{{canReview && ((row.backupPrompts && row.backupPrompts.length) || row.modelAnswer)}}">
+        <block wx:if="{{row.backupPrompts && row.backupPrompts.length}}"><view class="support-label">学生卡住时可选追问</view><view class="support-line" wx:for="{{row.backupPrompts}}" wx:key="*this" wx:for-item="guidePrompt">• {{guidePrompt}}</view></block>
+        <block wx:if="{{row.modelAnswer}}"><view class="support-label model-label">A2 参考示范 · 不要求照背</view><view class="model-answer">{{row.modelAnswer}}</view></block>
+      </view>
       <view class="audio-actions">
         <view class="audio-btn prompt-btn" data-part="1" data-index="{{rowIndex}}" data-type="prompt" bindtap="playAudio">{{playingKey === 'prompt:' + row.cueId ? '停止考官音频' : '播放考官问题'}}</view>
         <view class="audio-btn response-btn" data-part="1" data-index="{{rowIndex}}" data-type="response" bindtap="playAudio">{{playingKey === 'response:' + row.cueId ? '停止学生回答' : '播放学生回答'}}</view>
@@ -40,6 +44,10 @@
     <view class="card response-card" wx:for="{{part2Rows}}" wx:key="cueId" wx:for-item="row" wx:for-index="rowIndex">
       <view class="response-head"><view><view class="response-title">{{row.cueTitle}}</view><view class="response-meta">回答 {{row.durationLabel}}</view></view><view class="part-chip part2-chip">P2</view></view>
       <view class="script-box" wx:if="{{canReview && row.script}}"><view class="script-label">考官／虚拟搭档录制稿</view><view>{{row.script}}</view></view>
+      <view class="teacher-support" wx:if="{{canReview && ((row.backupPrompts && row.backupPrompts.length) || row.modelAnswer)}}">
+        <block wx:if="{{row.backupPrompts && row.backupPrompts.length}}"><view class="support-label">学生卡住时可选追问</view><view class="support-line" wx:for="{{row.backupPrompts}}" wx:key="*this" wx:for-item="guidePrompt">• {{guidePrompt}}</view></block>
+        <block wx:if="{{row.modelAnswer}}"><view class="support-label model-label">A2 参考示范 · 不要求照背</view><view class="model-answer">{{row.modelAnswer}}</view></block>
+      </view>
       <view class="audio-actions">
         <view class="audio-btn prompt-btn" data-part="2" data-index="{{rowIndex}}" data-type="prompt" bindtap="playAudio">{{playingKey === 'prompt:' + row.cueId ? '停止提示音频' : '播放提示音频'}}</view>
         <view class="audio-btn response-btn" data-part="2" data-index="{{rowIndex}}" data-type="response" bindtap="playAudio">{{playingKey === 'response:' + row.cueId ? '停止学生回答' : '播放学生回答'}}</view>
@@ -48,6 +56,25 @@
 
     <view class="section-title score-title">四维练习评分</view>
     <view class="score-notice">教师练习评分，用于后续学习调整，不是 Cambridge 官方考试成绩。</view>
+
+    <view class="card guide-toggle" wx:if="{{canReview && set.teacherGuide}}" bindtap="toggleScoreGuide">
+      <view><view class="guide-toggle-title">查看本套评分参考</view><view class="guide-toggle-copy">逐项锚点、观察重点与示范回答仅教师可见</view></view>
+      <view class="guide-toggle-mark">{{scoreGuideExpanded ? '收起' : '展开'}}</view>
+    </view>
+    <view class="card score-guide" wx:if="{{canReview && scoreGuideExpanded && set.teacherGuide}}">
+      <view class="guide-notice">{{set.teacherGuide.practiceNotice}}</view>
+      <block wx:if="{{set.teacherGuide.focus && set.teacherGuide.focus.length}}">
+        <view class="guide-section-title">本套观察重点</view>
+        <view class="focus-line" wx:for="{{set.teacherGuide.focus}}" wx:key="*this" wx:for-item="focusItem">• {{focusItem}}</view>
+      </block>
+      <view class="guide-section-title">四项分数锚点</view>
+      <view class="rubric-row" wx:for="{{set.teacherGuide.scoreGuidance}}" wx:key="key" wx:for-item="rubric">
+        <view class="rubric-label">{{rubric.label}}</view>
+        <view class="rubric-line">{{rubric.anchor2}}</view>
+        <view class="rubric-line">{{rubric.anchor3}}</view>
+        <view class="rubric-line">{{rubric.anchor45}}</view>
+      </view>
+    </view>
 
     <view class="card score-editor" wx:if="{{canReview}}">
       <view class="score-row" wx:for="{{scoreFields}}" wx:key="key" wx:for-item="field">

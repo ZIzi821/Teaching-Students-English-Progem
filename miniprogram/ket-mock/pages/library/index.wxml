@@ -2,10 +2,10 @@
   <view class="library-hero">
     <view class="eyebrow">KET MOCK AUDIO</view>
     <view class="title">模拟考官录音库</view>
-    <view class="subtitle">每套 9 段音频。英文录制稿只在教师端显示；学生端只会听到你的录音。</view>
+    <view class="subtitle">每套需准备完整一组考官与虚拟搭档音频。英文录制稿只在教师端显示；学生端只会听到你的录音。</view>
   </view>
 
-  <view class="card status-card" wx:if="{{loading}}">正在检查 8 套模拟题…</view>
+  <view class="card status-card" wx:if="{{loading}}">正在检查模拟题录音…</view>
   <view class="card error-card" wx:elif="{{message}}">
     <view>{{message}}</view>
     <view class="retry" bindtap="loadLibrary">重新加载</view>
@@ -44,6 +44,10 @@
           </view>
           <view class="script-label">你的英文录制稿</view>
           <view class="script-text">{{cue.script}}</view>
+          <view class="backup-box" wx:if="{{cue.backupPrompts && cue.backupPrompts.length}}">
+            <view class="backup-title">教师备用追问 · 无需预录</view>
+            <view class="backup-line" wx:for="{{cue.backupPrompts}}" wx:key="*this" wx:for-item="backupPrompt">• {{backupPrompt}}</view>
+          </view>
           <view class="cue-actions">
             <view class="cue-action primary-action {{uploadingKey === set.id + ':' + cue.id ? 'disabled' : ''}}" data-set-index="{{setIndex}}" data-cue-index="{{cueIndex}}" bindtap="chooseCueAudio">
               {{uploadingKey === set.id + ':' + cue.id ? '上传中…' : cue.audioReady ? '替换音频' : '上传音频'}}

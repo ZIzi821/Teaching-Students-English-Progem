@@ -38,6 +38,9 @@
 .audio-ready { color: #39765d; }
 .script-label { margin-top: 18rpx; color: #8a7659; font-size: 18rpx; font-weight: 800; letter-spacing: 1rpx; }
 .script-text { margin-top: 8rpx; color: #33302b; font-size: 24rpx; line-height: 1.65; }
+.backup-box { margin-top: 14rpx; padding: 14rpx 16rpx; border-radius: 12rpx; color: #665941; background: #f7edd8; font-size: 21rpx; line-height: 1.55; }
+.backup-title { margin-bottom: 5rpx; color: #7c6032; font-size: 18rpx; font-weight: 800; }
+.backup-line + .backup-line { margin-top: 3rpx; }
 .cue-actions { display: flex; flex-wrap: wrap; gap: 10rpx; margin-top: 18rpx; }
 .cue-action { padding: 12rpx 18rpx; border-radius: 12rpx; color: #4f6f63; background: #e8f1ec; font-size: 21rpx; font-weight: 800; }
 .primary-action { color: #fff; background: #4f8f73; }

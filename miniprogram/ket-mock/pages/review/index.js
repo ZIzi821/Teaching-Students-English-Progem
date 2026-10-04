@@ -37,6 +37,7 @@ Page({
     playingKey: "",
     scoreOptions: SCORE_OPTIONS,
     scoreFields: SCORE_FIELDS,
+    scoreGuideExpanded: false,
     saving: false,
     assessmentForm: {
       grammarVocabulary: 3,
@@ -147,6 +148,10 @@ Page({
     if (["strengths", "nextFocus", "comment"].includes(field)) {
       this.setData({ [`assessmentForm.${field}`]: e.detail.value });
     }
+  },
+
+  toggleScoreGuide() {
+    this.setData({ scoreGuideExpanded: !this.data.scoreGuideExpanded });
   },
 
   saveAssessment() {
