@@ -72,6 +72,7 @@
       </block>
       <view class="previous-reference-row" wx:if="{{previousLessonReference.nextReview}}"><text>下节复习</text><view>{{previousLessonReference.nextReview}}</view></view>
       <view class="previous-reference-row" wx:if="{{previousLessonReference.homeworkTask}}"><text>课后任务</text><view>{{previousLessonReference.homeworkTask}}</view></view>
+      <view class="previous-reference-row" wx:if="{{previousLessonReference.followReadingContent}}"><text>跟读内容</text><view>{{previousLessonReference.followReadingContent}}</view></view>
       <view class="previous-reference-row" wx:if="{{previousLessonReference.recordingPrompt}}"><text>录音要求</text><view>{{previousLessonReference.recordingPrompt}}</view></view>
     </view>
   </view>
@@ -156,12 +157,13 @@
         </picker>
         <view class="field-tip">以本节课程日期为当天；学生端会显示剩余天数，逾期后首次有效提交会标记“逾期提交”。</view>
       </view>
-      <view class="field recording-type-field" wx:if="{{form.recordingTaskEnabled && form.lessonTemplateKey === 'molly_oral_ket'}}">
-        <view class="label">Molly 的录音任务类型</view>
+      <view class="field recording-type-field" wx:if="{{form.recordingTaskEnabled}}">
+        <view class="label">录音任务类型</view>
         <picker mode="selector" range="{{recordingTaskTypeOptions}}" range-key="label" value="{{recordingTaskTypeIndex}}" bindchange="onRecordingTaskTypeChange">
           <view class="picker-value">{{recordingTaskTypeOptions[recordingTaskTypeIndex].label}}</view>
         </picker>
-        <view class="field-tip">单题练习保留官方公开样题；全流程模拟包含 1 套公开样题结构改编和 7 套当前格式原创题。</view>
+        <view class="field-tip" wx:if="{{form.lessonTemplateKey === 'molly_oral_ket'}}">独立朗读不播放教师示范；跟读会先播放你的逐条录音。Molly 还可选择 KET 单题或全流程模拟。</view>
+        <view class="field-tip" wx:else>独立朗读由学生直接录音；跟读会先播放你的逐条示范，再自动打开麦克风。</view>
       </view>
       <view class="field" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType === 'ket_official'}}">
         <view class="label">选择官方口语样题</view>
@@ -194,8 +196,36 @@
         <view class="ket-weekly-hint" wx:if="{{ketWeeklyHint}}">{{ketWeeklyHint}}</view>
       </view>
       <view class="field recording-prompt-field" wx:if="{{form.recordingTaskEnabled}}">
-        <view class="label">录音要求</view>
-        <textarea class="textarea compact-textarea {{form.recordingTaskType !== 'manual' ? 'official-prompt' : ''}}" maxlength="2000" disabled="{{form.recordingTaskType !== 'manual'}}" placeholder="{{lessonTemplate.recordingPlaceholder}}" value="{{form.recordingPrompt}}" data-field="recordingPrompt" bindinput="onInput"></textarea>
+        <view class="label">{{form.recordingTaskType === 'follow_reading' ? '补充要求（可不填）' : '录音要求'}}</view>
+        <textarea class="textarea compact-textarea {{form.recordingTaskType === 'ket_official' || form.recordingTaskType === 'ket_mock' ? 'official-prompt' : ''}}" maxlength="2000" disabled="{{form.recordingTaskType === 'ket_official' || form.recordingTaskType === 'ket_mock'}}" placeholder="{{form.recordingTaskType === 'follow_reading' ? '例如：先听完整，再按相同语速读一遍' : lessonTemplate.recordingPlaceholder}}" value="{{form.recordingPrompt}}" data-field="recordingPrompt" bindinput="onInput"></textarea>
+      </view>
+      <view class="follow-reading-box" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType === 'follow_reading'}}">
+        <view class="field">
+          <view class="label">跟读内容</view>
+          <textarea class="textarea follow-reading-content" maxlength="4000" placeholder="每行填写一个单词或一句话，最多 20 条\n例如：\napple\nI go to school by bus." value="{{form.followReadingContent}}" data-field="followReadingContent" bindinput="onInput"></textarea>
+          <view class="field-tip">保存课程后，在课程页为每一条内容上传对应的教师示范录音。</view>
+        </view>
+        <view class="recording-options follow-reading-options">
+          <view class="recording-option">
+            <view class="label">播放方式</view>
+            <picker mode="selector" range="{{followReadingModeOptions}}" range-key="label" value="{{followReadingModeIndex}}" bindchange="onFollowReadingModeChange">
+              <view class="picker-value">{{followReadingModeOptions[followReadingModeIndex].label}}</view>
+            </picker>
+          </view>
+          <view class="recording-option">
+            <view class="label">听完准备</view>
+            <picker mode="selector" range="{{followReadingGapOptions}}" value="{{followReadingGapIndex}}" bindchange="onFollowReadingGapChange">
+              <view class="picker-value">{{form.followReadingGapSeconds}} 秒</view>
+            </picker>
+          </view>
+          <view class="recording-option">
+            <view class="label">每条最长录音</view>
+            <picker mode="selector" range="{{followReadingResponseOptions}}" value="{{followReadingResponseIndex}}" bindchange="onFollowReadingResponseChange">
+              <view class="picker-value">{{form.followReadingResponseSeconds}} 秒</view>
+            </picker>
+          </view>
+        </view>
+        <view class="field-tip">自动模式会连续播放、倒计时、录音并进入下一条；手动模式由学生点每条示范音，播放结束后仍自动倒计时和录音。</view>
       </view>
       <view class="recording-options" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType === 'manual'}}">
         <view class="recording-option">

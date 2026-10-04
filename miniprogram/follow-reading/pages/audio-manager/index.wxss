@@ -1,0 +1,28 @@
+.manager-page { min-height: 100vh; background: radial-gradient(circle at 90% 4%, rgba(220,239,229,.9), transparent 250rpx), #f7f3ea; }
+.hero { margin: 10rpx 6rpx 28rpx; }
+.eyebrow { color: #4f8f73; font-size: 19rpx; font-weight: 800; letter-spacing: 3rpx; }
+.title { margin-top: 8rpx; color: #263f36; font-size: 43rpx; font-weight: 900; }
+.subtitle { margin-top: 10rpx; color: #817669; font-size: 23rpx; }
+.state-card, .error-card { margin-top: 70rpx; color: #675e54; text-align: center; }
+.retry { margin-top: 18rpx; color: #39765d; font-weight: 800; }
+.summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14rpx; }
+.summary-card { padding: 23rpx 18rpx; border: 1rpx solid #e5d9c8; border-radius: 16rpx; background: #fffdfa; }
+.summary-number { color: #2e6c53; font-size: 31rpx; font-weight: 900; }
+.summary-label { margin-top: 7rpx; color: #887d70; font-size: 20rpx; }
+.mode-note, .truth-note { margin-top: 14rpx; padding: 15rpx 17rpx; border-radius: 13rpx; color: #5b7165; background: #e9f4ee; font-size: 21rpx; line-height: 1.55; }
+.truth-note { color: #79623f; background: #fff0cf; }
+.item-card { margin-top: 18rpx; padding: 23rpx; border-color: #ead9d2; }
+.item-ready { border-color: #cfe2d8; }
+.item-head { display: flex; align-items: flex-start; gap: 14rpx; }
+.item-number { display: flex; width: 42rpx; height: 42rpx; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 50%; color: #fff; background: #5a8e76; font-size: 20rpx; font-weight: 800; }
+.item-text { min-width: 0; flex: 1; color: #342f29; font-size: 27rpx; font-weight: 700; line-height: 1.55; word-break: break-word; }
+.item-state { flex-shrink: 0; padding: 7rpx 11rpx; border-radius: 999rpx; color: #9a5149; background: #fae7e4; font-size: 19rpx; font-weight: 800; }
+.ready-state { color: #39765d; background: #e4f1e9; }
+.file-name { margin: 13rpx 0 0 56rpx; color: #918579; font-size: 19rpx; word-break: break-all; }
+.actions { display: flex; gap: 10rpx; margin-top: 20rpx; }
+.action { min-width: 0; flex: 1; padding: 16rpx 9rpx; border-radius: 12rpx; color: #675d52; background: #eee8df; font-size: 21rpx; font-weight: 800; text-align: center; }
+.primary-action { color: #fff; background: #4f8f73; }
+.danger-action { color: #a44e47; background: #f8dfdc; }
+.disabled { opacity: .55; }
+.complete-note { margin: 25rpx 8rpx 10rpx; color: #985148; font-size: 22rpx; font-weight: 700; line-height: 1.55; text-align: center; }
+.complete-note-ready { color: #39765d; }

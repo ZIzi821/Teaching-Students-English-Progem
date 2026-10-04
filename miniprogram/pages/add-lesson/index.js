@@ -6,10 +6,18 @@ const {
 const { KET_SPEAKING_TASKS } = require("../../utils/ketSpeakingTasks");
 const { KET_MOCK_SETS } = require("../../utils/ketMockSets");
 
-const RECORDING_TASK_TYPE_OPTIONS = [
-  { value: "manual", label: "手动口语任务" },
+const BASIC_RECORDING_TASK_TYPE_OPTIONS = [
+  { value: "manual", label: "独立朗读（不播放示范）" },
+  { value: "follow_reading", label: "跟读（先听老师示范）" },
+];
+const KET_RECORDING_TASK_TYPE_OPTIONS = [
+  ...BASIC_RECORDING_TASK_TYPE_OPTIONS,
   { value: "ket_official", label: "KET 官方样题" },
   { value: "ket_mock", label: "KET 全流程模拟" },
+];
+const FOLLOW_READING_MODE_OPTIONS = [
+  { value: "automatic", label: "自动连续跟读" },
+  { value: "manual", label: "手动逐条播放" },
 ];
 
 const HOMEWORK_DUE_OPTIONS = [
@@ -43,7 +51,7 @@ Page({
     recordingPreparationOptions: [0, 3, 5, 10, 15],
     recordingRepeatIndex: 1,
     recordingPreparationIndex: 2,
-    recordingTaskTypeOptions: RECORDING_TASK_TYPE_OPTIONS,
+    recordingTaskTypeOptions: BASIC_RECORDING_TASK_TYPE_OPTIONS,
     recordingTaskTypeIndex: 0,
     ketSpeakingTasks: KET_SPEAKING_TASKS,
     ketSpeakingTaskIndex: 0,
@@ -59,6 +67,12 @@ Page({
     showPreviousLessonReference: true,
     message: "",
     saving: false,
+    followReadingModeOptions: FOLLOW_READING_MODE_OPTIONS,
+    followReadingModeIndex: 0,
+    followReadingGapOptions: [1, 2, 3],
+    followReadingGapIndex: 1,
+    followReadingResponseOptions: [3, 5, 8, 10, 15, 20],
+    followReadingResponseIndex: 2,
     showLessonRecord: false,
     form: {
       title: "",
@@ -82,6 +96,10 @@ Page({
       recordingPrompt: "",
       recordingRepeatCount: 2,
       recordingPreparationSeconds: 5,
+      followReadingMode: "automatic",
+      followReadingGapSeconds: 2,
+      followReadingResponseSeconds: 8,
+      followReadingContent: "",
       ketSpeakingTaskId: "",
       ketMockSetId: "",
     },
@@ -155,16 +173,24 @@ Page({
   applyLessonTemplate(student, explicitKey) {
     const key = explicitKey || inferLessonTemplateKey(student);
     const index = Math.max(0, LESSON_TEMPLATE_OPTIONS.findIndex((item) => item.key === key));
+    const recordingTaskTypeOptions = key === "molly_oral_ket"
+      ? KET_RECORDING_TASK_TYPE_OPTIONS
+      : BASIC_RECORDING_TASK_TYPE_OPTIONS;
+    const currentType = this.data.form.recordingTaskType;
+    const safeType = recordingTaskTypeOptions.some((item) => item.value === currentType)
+      ? currentType
+      : "manual";
     const updates = {
       lessonTemplateIndex: index,
       lessonTemplate: findTemplate(key),
       "form.lessonTemplateKey": key,
+      recordingTaskTypeOptions,
+      recordingTaskTypeIndex: Math.max(0, recordingTaskTypeOptions.findIndex((item) => item.value === safeType)),
+      "form.recordingTaskType": safeType,
     };
-    if (key !== "molly_oral_ket") {
+    if (safeType === "manual" && currentType !== "manual") {
       Object.assign(updates, {
-        recordingTaskTypeIndex: 0,
         ketWeeklyHint: "",
-        "form.recordingTaskType": "manual",
         "form.ketSpeakingTaskId": "",
         "form.ketMockSetId": "",
       });
@@ -281,7 +307,7 @@ Page({
 
   onRecordingTaskTypeChange(e) {
     const index = Number(e.detail.value);
-    const option = RECORDING_TASK_TYPE_OPTIONS[index] || RECORDING_TASK_TYPE_OPTIONS[0];
+    const option = this.data.recordingTaskTypeOptions[index] || this.data.recordingTaskTypeOptions[0];
     this.setData({
       recordingTaskTypeIndex: index,
       "form.recordingTaskType": option.value,
@@ -385,6 +411,31 @@ Page({
     });
   },
 
+  onFollowReadingModeChange(e) {
+    const index = Number(e.detail.value);
+    const option = FOLLOW_READING_MODE_OPTIONS[index] || FOLLOW_READING_MODE_OPTIONS[0];
+    this.setData({
+      followReadingModeIndex: index,
+      "form.followReadingMode": option.value,
+    });
+  },
+
+  onFollowReadingGapChange(e) {
+    const index = Number(e.detail.value);
+    this.setData({
+      followReadingGapIndex: index,
+      "form.followReadingGapSeconds": this.data.followReadingGapOptions[index],
+    });
+  },
+
+  onFollowReadingResponseChange(e) {
+    const index = Number(e.detail.value);
+    this.setData({
+      followReadingResponseIndex: index,
+      "form.followReadingResponseSeconds": this.data.followReadingResponseOptions[index],
+    });
+  },
+
   submitLesson() {
     if (this.data.saving) return;
     const student = this.data.students[this.data.studentIndex];
@@ -395,6 +446,17 @@ Page({
         icon: "none",
       });
       return;
+    }
+    if (form.recordingTaskEnabled && form.recordingTaskType === "follow_reading") {
+      const itemCount = String(form.followReadingContent || "").split(/\r?\n/).filter((line) => line.trim()).length;
+      if (!itemCount) {
+        wx.showToast({ title: "请填写跟读内容", icon: "none" });
+        return;
+      }
+      if (itemCount > 20) {
+        wx.showToast({ title: "跟读内容最多 20 条", icon: "none" });
+        return;
+      }
     }
 
     if (!this.lessonRequestId) {
@@ -431,6 +493,10 @@ Page({
             recordingPrompt: form.recordingPrompt,
             recordingRepeatCount: form.recordingRepeatCount,
             recordingPreparationSeconds: form.recordingPreparationSeconds,
+            followReadingMode: form.followReadingMode,
+            followReadingGapSeconds: form.followReadingGapSeconds,
+            followReadingResponseSeconds: form.followReadingResponseSeconds,
+            followReadingContent: form.followReadingContent,
             ketSpeakingTaskId: form.ketSpeakingTaskId,
             ketMockSetId: form.ketMockSetId,
             learningObservations: [],

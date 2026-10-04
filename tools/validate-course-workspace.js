@@ -145,7 +145,7 @@ assert(!homeworkJs.includes("saveLearningReminderSubscription"), "Removed long-t
 assert(!backend.includes("learningReminderSubscriptions"), "Removed long-term reminder storage is still registered");
 assert(homeworkWxml.includes("现在要完成"), "Homework list pending section is missing");
 assert(!homeworkWxml.includes("家长长期学习提醒"), "Removed long-term reminder entry is still visible");
-assert(addLessonWxml.includes("Molly 的录音任务类型") && addLessonWxml.includes("选择官方口语样题"), "Molly KET task selector is missing from lesson creation");
+assert(addLessonWxml.includes("录音任务类型") && addLessonWxml.includes("Molly 还可选择 KET") && addLessonWxml.includes("选择官方口语样题"), "Molly KET task selector is missing from lesson creation");
 assert(addLessonWxml.includes('maxlength="2000"'), "New-lesson recording prompt limit is too short");
 assert(lessonWxml.includes('maxlength="2000"'), "Lesson-edit recording prompt limit is too short");
 assert(backend.includes("normalizeLessonText(data.recordingPrompt, 2000)"), "Cloud recording prompt limit is too short");

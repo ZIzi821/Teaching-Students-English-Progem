@@ -13,7 +13,7 @@
   <block wx:else>
     <view class="practice-head">
       <view class="eyebrow">{{isKetTask ? 'KET SPEAKING PRACTICE' : 'READING PRACTICE'}}</view>
-      <view class="practice-title">{{isKetTask ? '像考试一样，听清再回答' : '先看清，再开口'}}</view>
+      <view class="practice-title">{{isKetTask ? '像考试一样，听清再回答' : '独立朗读，不播放示范音'}}</view>
       <view class="lesson-name">{{lesson.title}} · 第 {{lesson.lessonNo || '—'}} 节</view>
     </view>
 

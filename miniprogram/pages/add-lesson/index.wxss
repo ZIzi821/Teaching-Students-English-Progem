@@ -260,6 +260,28 @@
   min-width: 0;
 }
 
+.follow-reading-box {
+  margin: 6rpx 0 24rpx;
+  padding: 20rpx;
+  border: 1rpx solid #cfe2d7;
+  border-radius: 16rpx;
+  background: #f1f8f4;
+}
+
+.follow-reading-content {
+  min-height: 260rpx;
+  background: #fffdf8;
+}
+
+.follow-reading-options {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18rpx;
+}
+
+.follow-reading-options .recording-option:last-child {
+  grid-column: 1 / -1;
+}
+
 .input,
 .picker-value,
 .textarea {

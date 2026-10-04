@@ -12,10 +12,18 @@ const LOCAL_MATERIAL_TOKEN = "fd5b0c8301b641b5b28651b0d6b414ee637f0c4e6a5fb984";
 const LOCAL_MATERIAL_PROTOCOL_VERSION = 1;
 
 const OBSERVATION_STATUSES = ["独立完成", "提示后完成", "暂未掌握"];
-const RECORDING_TASK_TYPE_OPTIONS = [
-  { value: "manual", label: "手动口语任务" },
+const BASIC_RECORDING_TASK_TYPE_OPTIONS = [
+  { value: "manual", label: "独立朗读（不播放示范）" },
+  { value: "follow_reading", label: "跟读（先听老师示范）" },
+];
+const KET_RECORDING_TASK_TYPE_OPTIONS = [
+  ...BASIC_RECORDING_TASK_TYPE_OPTIONS,
   { value: "ket_official", label: "KET 官方样题" },
   { value: "ket_mock", label: "KET 全流程模拟" },
+];
+const FOLLOW_READING_MODE_OPTIONS = [
+  { value: "automatic", label: "自动连续跟读" },
+  { value: "manual", label: "手动逐条播放" },
 ];
 const HOMEWORK_DUE_OPTIONS = [
   { value: -1, label: "暂不设置" },
@@ -150,6 +158,10 @@ Page({
       recordingPrompt: "",
       recordingRepeatCount: 2,
       recordingPreparationSeconds: 5,
+      followReadingMode: "automatic",
+      followReadingGapSeconds: 2,
+      followReadingResponseSeconds: 8,
+      followReadingContent: "",
       ketSpeakingTaskId: "",
       ketMockSetId: "",
       learningObservations: [],
@@ -159,8 +171,14 @@ Page({
     recordingPreparationOptions: [0, 3, 5, 10, 15],
     recordingRepeatIndex: 1,
     recordingPreparationIndex: 2,
-    recordingTaskTypeOptions: RECORDING_TASK_TYPE_OPTIONS,
+    recordingTaskTypeOptions: BASIC_RECORDING_TASK_TYPE_OPTIONS,
     recordingTaskTypeIndex: 0,
+    followReadingModeOptions: FOLLOW_READING_MODE_OPTIONS,
+    followReadingModeIndex: 0,
+    followReadingGapOptions: [1, 2, 3],
+    followReadingGapIndex: 1,
+    followReadingResponseOptions: [3, 5, 8, 10, 15, 20],
+    followReadingResponseIndex: 2,
     homeworkDueOptions: HOMEWORK_DUE_OPTIONS,
     homeworkDueIndex: 0,
     ketSpeakingTasks: KET_SPEAKING_TASKS,
@@ -265,7 +283,13 @@ Page({
       const submissions = this.prepareSubmissions(result.submissions || []);
       const recordingRepeatIndex = Math.max(0, this.data.recordingRepeatOptions.indexOf(lesson.recordingRepeatCount));
       const recordingPreparationIndex = Math.max(0, this.data.recordingPreparationOptions.indexOf(lesson.recordingPreparationSeconds));
-      const recordingTaskTypeIndex = Math.max(0, RECORDING_TASK_TYPE_OPTIONS.findIndex((item) => item.value === lesson.recordingTaskType));
+      const recordingTaskTypeOptions = lesson.lessonTemplateKey === "molly_oral_ket"
+        ? KET_RECORDING_TASK_TYPE_OPTIONS
+        : BASIC_RECORDING_TASK_TYPE_OPTIONS;
+      const recordingTaskTypeIndex = Math.max(0, recordingTaskTypeOptions.findIndex((item) => item.value === lesson.recordingTaskType));
+      const followReadingModeIndex = Math.max(0, FOLLOW_READING_MODE_OPTIONS.findIndex((item) => item.value === lesson.followReadingMode));
+      const followReadingGapIndex = Math.max(0, this.data.followReadingGapOptions.indexOf(lesson.followReadingGapSeconds));
+      const followReadingResponseIndex = Math.max(0, this.data.followReadingResponseOptions.indexOf(lesson.followReadingResponseSeconds));
       const homeworkDueIndex = Math.max(0, HOMEWORK_DUE_OPTIONS.findIndex((item) => (
         item.value === Number(lesson.homeworkDueDays)
       )));
@@ -294,7 +318,11 @@ Page({
         lessonTemplateIndex,
         recordingRepeatIndex,
         recordingPreparationIndex,
+        recordingTaskTypeOptions,
         recordingTaskTypeIndex,
+        followReadingModeIndex,
+        followReadingGapIndex,
+        followReadingResponseIndex,
         homeworkDueIndex,
         selectedKetSpeakingTask,
         ketSpeakingTaskIndex,
@@ -361,7 +389,7 @@ Page({
       homeworkDueDays: Number.isInteger(Number(lesson.homeworkDueDays))
         ? Number(lesson.homeworkDueDays)
         : -1,
-      recordingTaskType: ["ket_official", "ket_mock"].includes(lesson.recordingTaskType)
+      recordingTaskType: ["follow_reading", "ket_official", "ket_mock"].includes(lesson.recordingTaskType)
         ? lesson.recordingTaskType
         : "manual",
       recordingPrompt: lesson.recordingPrompt || "",
@@ -370,6 +398,21 @@ Page({
         ? Number(lesson.recordingPreparationSeconds)
         : 5,
       recordingSuggestedSeconds: Math.max(0, Number(lesson.recordingSuggestedSeconds) || 0),
+      followReadingMode: lesson.followReadingMode === "manual" ? "manual" : "automatic",
+      followReadingGapSeconds: [1, 2, 3].includes(Number(lesson.followReadingGapSeconds))
+        ? Number(lesson.followReadingGapSeconds)
+        : 2,
+      followReadingResponseSeconds: [3, 5, 8, 10, 15, 20].includes(Number(lesson.followReadingResponseSeconds))
+        ? Number(lesson.followReadingResponseSeconds)
+        : 8,
+      followReadingItems: Array.isArray(lesson.followReadingItems) ? lesson.followReadingItems : [],
+      followReadingContent: (Array.isArray(lesson.followReadingItems) ? lesson.followReadingItems : [])
+        .map((item) => item.text || "")
+        .filter(Boolean)
+        .join("\n"),
+      followReadingAudioReadyCount: Math.max(0, Number(lesson.followReadingAudioReadyCount) || 0),
+      followReadingAudioTotalCount: Math.max(0, Number(lesson.followReadingAudioTotalCount) || 0),
+      followReadingAudioComplete: lesson.followReadingAudioComplete === true,
       ketSpeakingTaskId: lesson.ketSpeakingTaskId || "",
       ketSpeakingTask: lesson.ketSpeakingTask || findKetSpeakingTask(lesson.ketSpeakingTaskId),
       ketMockSetId: lesson.ketMockSetId || "",
@@ -414,7 +457,7 @@ Page({
       homeworkDueDays: Number.isInteger(Number(lesson.homeworkDueDays))
         ? Number(lesson.homeworkDueDays)
         : -1,
-      recordingTaskType: ["ket_official", "ket_mock"].includes(lesson.recordingTaskType)
+      recordingTaskType: ["follow_reading", "ket_official", "ket_mock"].includes(lesson.recordingTaskType)
         ? lesson.recordingTaskType
         : "manual",
       recordingPrompt: lesson.recordingPrompt || "",
@@ -422,6 +465,14 @@ Page({
       recordingPreparationSeconds: [0, 3, 5, 10, 15].includes(Number(lesson.recordingPreparationSeconds))
         ? Number(lesson.recordingPreparationSeconds)
         : 5,
+      followReadingMode: lesson.followReadingMode === "manual" ? "manual" : "automatic",
+      followReadingGapSeconds: [1, 2, 3].includes(Number(lesson.followReadingGapSeconds))
+        ? Number(lesson.followReadingGapSeconds)
+        : 2,
+      followReadingResponseSeconds: [3, 5, 8, 10, 15, 20].includes(Number(lesson.followReadingResponseSeconds))
+        ? Number(lesson.followReadingResponseSeconds)
+        : 8,
+      followReadingContent: (lesson.followReadingItems || []).map((item) => item.text || "").filter(Boolean).join("\n"),
       ketSpeakingTaskId: lesson.ketSpeakingTaskId || "",
       ketMockSetId: lesson.ketMockSetId || "",
       learningObservations: (lesson.learningObservations || []).map((item) => Object.assign({}, item)),
@@ -479,9 +530,14 @@ Page({
         ? item.teacherFeedbackNote
         : teacherFeedbackTags.length ? "" : String(item.teacherFeedback || "");
       const status = item.status || "待检查";
+      const isFollowReading = item.recordingMode === "follow_reading";
       return Object.assign({}, item, {
         durationLabel: formatDuration(item.duration),
         displayAttemptNo: Number(item.attemptNo) || submissions.length - index,
+        displayName: isFollowReading
+          ? `第 ${Number(item.attemptNo) || 1} 轮 · 第 ${Number(item.followReadingItemOrder) || index + 1} 条`
+          : `第 ${Number(item.attemptNo) || submissions.length - index} 次录音`,
+        displayPrompt: isFollowReading ? String(item.followReadingItemText || "") : "",
         status,
         teacherFeedback: item.teacherFeedback || "",
         teacherFeedbackTags,
@@ -500,10 +556,18 @@ Page({
     const homeworkDueIndex = Math.max(0, HOMEWORK_DUE_OPTIONS.findIndex((item) => (
       item.value === Number(this.data.lesson.homeworkDueDays)
     )));
+    const recordingTaskTypeOptions = this.data.lesson.lessonTemplateKey === "molly_oral_ket"
+      ? KET_RECORDING_TASK_TYPE_OPTIONS
+      : BASIC_RECORDING_TASK_TYPE_OPTIONS;
     this.setData({
       showWorkspaceEditor: opening,
       workspaceForm: this.createWorkspaceForm(this.data.lesson),
       homeworkDueIndex,
+      recordingTaskTypeOptions,
+      recordingTaskTypeIndex: Math.max(0, recordingTaskTypeOptions.findIndex((item) => item.value === this.data.lesson.recordingTaskType)),
+      followReadingModeIndex: Math.max(0, FOLLOW_READING_MODE_OPTIONS.findIndex((item) => item.value === this.data.lesson.followReadingMode)),
+      followReadingGapIndex: Math.max(0, this.data.followReadingGapOptions.indexOf(this.data.lesson.followReadingGapSeconds)),
+      followReadingResponseIndex: Math.max(0, this.data.followReadingResponseOptions.indexOf(this.data.lesson.followReadingResponseSeconds)),
     }, () => {
       if (opening) this.checkKetWeeklyStatus();
     });
@@ -524,16 +588,24 @@ Page({
 
   onWorkspaceTemplateChange(e) {
     const option = LESSON_TEMPLATE_OPTIONS[Number(e.detail.value)] || LESSON_TEMPLATE_OPTIONS[0];
+    const recordingTaskTypeOptions = option.key === "molly_oral_ket"
+      ? KET_RECORDING_TASK_TYPE_OPTIONS
+      : BASIC_RECORDING_TASK_TYPE_OPTIONS;
+    const currentType = this.data.workspaceForm.recordingTaskType;
+    const safeType = recordingTaskTypeOptions.some((item) => item.value === currentType)
+      ? currentType
+      : "manual";
     const updates = {
       lessonTemplateIndex: LESSON_TEMPLATE_OPTIONS.indexOf(option),
       lessonTemplate: option,
       "workspaceForm.lessonTemplateKey": option.key,
+      recordingTaskTypeOptions,
+      recordingTaskTypeIndex: Math.max(0, recordingTaskTypeOptions.findIndex((item) => item.value === safeType)),
+      "workspaceForm.recordingTaskType": safeType,
     };
-    if (option.key !== "molly_oral_ket") {
+    if (safeType === "manual" && currentType !== "manual") {
       Object.assign(updates, {
-        recordingTaskTypeIndex: 0,
         ketWeeklyHint: "",
-        "workspaceForm.recordingTaskType": "manual",
         "workspaceForm.ketSpeakingTaskId": "",
         "workspaceForm.ketMockSetId": "",
       });
@@ -562,7 +634,7 @@ Page({
 
   onRecordingTaskTypeChange(e) {
     const index = Number(e.detail.value);
-    const option = RECORDING_TASK_TYPE_OPTIONS[index] || RECORDING_TASK_TYPE_OPTIONS[0];
+    const option = this.data.recordingTaskTypeOptions[index] || this.data.recordingTaskTypeOptions[0];
     this.setData({
       recordingTaskTypeIndex: index,
       "workspaceForm.recordingTaskType": option.value,
@@ -669,6 +741,31 @@ Page({
     });
   },
 
+  onFollowReadingModeChange(e) {
+    const index = Number(e.detail.value);
+    const option = FOLLOW_READING_MODE_OPTIONS[index] || FOLLOW_READING_MODE_OPTIONS[0];
+    this.setData({
+      followReadingModeIndex: index,
+      "workspaceForm.followReadingMode": option.value,
+    });
+  },
+
+  onFollowReadingGapChange(e) {
+    const index = Number(e.detail.value);
+    this.setData({
+      followReadingGapIndex: index,
+      "workspaceForm.followReadingGapSeconds": this.data.followReadingGapOptions[index],
+    });
+  },
+
+  onFollowReadingResponseChange(e) {
+    const index = Number(e.detail.value);
+    this.setData({
+      followReadingResponseIndex: index,
+      "workspaceForm.followReadingResponseSeconds": this.data.followReadingResponseOptions[index],
+    });
+  },
+
   addObservation() {
     const observations = this.data.workspaceForm.learningObservations.slice();
     observations.push({ content: "", status: OBSERVATION_STATUSES[0], note: "" });
@@ -700,6 +797,17 @@ Page({
     if (!String(form.title || "").trim()) {
       wx.showToast({ title: "请填写课程名称", icon: "none" });
       return;
+    }
+    if (form.recordingTaskEnabled && form.recordingTaskType === "follow_reading") {
+      const itemCount = String(form.followReadingContent || "").split(/\r?\n/).filter((line) => line.trim()).length;
+      if (!itemCount) {
+        wx.showToast({ title: "请填写跟读内容", icon: "none" });
+        return;
+      }
+      if (itemCount > 20) {
+        wx.showToast({ title: "跟读内容最多 20 条", icon: "none" });
+        return;
+      }
     }
     this.setData({ savingWorkspace: true });
     wx.showLoading({ title: "保存中", mask: true });
@@ -1278,7 +1386,24 @@ Page({
   },
 
   goRecordingPractice() {
-    if (!this.data.isStudent || !this.data.lesson || !this.data.lesson.recordingTaskEnabled) return;
+    if ((!this.data.isStudent && !this.data.isTeacherPreview) || !this.data.lesson || !this.data.lesson.recordingTaskEnabled) return;
+    if (this.data.lesson.recordingTaskType === "follow_reading") {
+      if (!this.data.lesson.followReadingAudioComplete) {
+        wx.showToast({ title: "老师还没有准备完整示范音频", icon: "none" });
+        return;
+      }
+      const previewQuery = this.data.isTeacherPreview
+        ? `&mode=teacherPreview&previewStudentId=${encodeURIComponent(this.data.previewStudentId || this.data.lesson.studentId || "")}`
+        : "";
+      wx.navigateTo({
+        url: `/follow-reading/pages/practice/index?lessonId=${encodeURIComponent(this.data.lessonId)}${previewQuery}`,
+      });
+      return;
+    }
+    if (this.data.isTeacherPreview) {
+      wx.showToast({ title: "教师预览中不能代学生录音", icon: "none" });
+      return;
+    }
     if (this.data.lesson.recordingTaskType === "ket_mock") {
       wx.navigateTo({
         url: `/ket-mock/pages/exam/index?lessonId=${encodeURIComponent(this.data.lessonId)}`,
@@ -1287,6 +1412,13 @@ Page({
     }
     wx.navigateTo({
       url: `/pages/recording-practice/index?lessonId=${encodeURIComponent(this.data.lessonId)}`,
+    });
+  },
+
+  goFollowReadingAudioManager() {
+    if (!this.data.isTeacher || !this.data.lesson || this.data.lesson.recordingTaskType !== "follow_reading") return;
+    wx.navigateTo({
+      url: `/follow-reading/pages/audio-manager/index?lessonId=${encodeURIComponent(this.data.lessonId)}`,
     });
   },
 

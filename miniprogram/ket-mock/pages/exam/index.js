@@ -3,6 +3,8 @@ const sanitizeSegment = (value, fallback, limit = 40) => {
   return text.slice(0, limit) || fallback;
 };
 
+const { playReliableAudio, preloadAudioSources } = require("../../../utils/reliableAudio");
+
 const formatTimer = (seconds) => {
   const total = Math.max(0, Math.trunc(Number(seconds) || 0));
   return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
@@ -20,6 +22,8 @@ Page({
     preparationText: "",
     preparationDone: 0,
     preparationTotal: 0,
+    audioPreloadState: "idle",
+    audioPreloadLabel: "等待预载考官录音",
     sessionId: "",
     currentCueIndex: -1,
     currentCue: null,
@@ -145,7 +149,12 @@ Page({
         state: completed ? "completed" : "instructions",
         expectedResponseCount,
         preparationTotal: (result.set.cues || []).length,
+        preparationDone: 0,
+        audioPreloadState: completed ? "idle" : "loading",
+        audioPreloadLabel: completed ? "" : "正在预载考官录音 0 / " + (result.set.cues || []).length,
         message: "",
+      }, () => {
+        if (!completed) this.startExamAudioPreload().catch(() => {});
       });
     }).catch((err) => {
       console.error(err);
@@ -162,7 +171,7 @@ Page({
       preparationDone: 0,
       preparationTotal: cueCount,
     });
-    this.ensureMicrophonePermission(() => this.prepareExamAudio());
+    this.ensureMicrophonePermission(() => this.ensureExamAudioReady());
   },
 
   ensureMicrophonePermission(callback) {
@@ -194,35 +203,59 @@ Page({
     });
   },
 
-  prepareExamAudio() {
+  startExamAudioPreload(force = false) {
+    if (this.audioPreloadPromise && !force) return this.audioPreloadPromise;
     const cues = (this.data.set && this.data.set.cues) || [];
     this.localAudioByCueId = {};
     this.setData({
-      state: "preparing",
-      preparationText: "正在准备考官录音",
+      audioPreloadState: "loading",
+      audioPreloadLabel: `正在预载考官录音 0 / ${cues.length}`,
       preparationDone: 0,
       preparationTotal: cues.length,
     });
-    let completed = 0;
-    Promise.all(cues.map((cue) => new Promise((resolve, reject) => {
-      if (!cue.audioUrl) return reject(new Error("考官录音不完整"));
-      wx.downloadFile({
-        url: cue.audioUrl,
-        success: (result) => {
-          if (result.statusCode !== 200 || !result.tempFilePath) return reject(new Error("考官录音下载失败"));
-          this.localAudioByCueId[cue.id] = result.tempFilePath;
-          completed += 1;
-          this.setData({ preparationDone: completed });
-          resolve();
-        },
-        fail: reject,
+    this.audioPreloadPromise = preloadAudioSources(cues.map((cue) => ({
+      id: cue.id,
+      audioUrl: cue.audioUrl,
+    })), {
+      concurrency: 3,
+      onProgress: (done, total) => this.setData({
+        preparationDone: done,
+        preparationTotal: total,
+        audioPreloadLabel: `正在预载考官录音 ${done} / ${total}`,
+      }),
+    }).then((result) => {
+      this.localAudioByCueId = result.localById;
+      this.setData({
+        audioPreloadState: "ready",
+        audioPreloadLabel: `考官录音已预载 ${result.total} / ${result.total}`,
+        preparationDone: result.total,
       });
-    }))).then(() => this.createSession())
-      .catch((err) => {
-        console.error(err);
-        this.setData({ state: "instructions" });
-        wx.showModal({ title: "准备失败", content: "考官录音没有全部加载完成，请检查网络后重试。", showCancel: false });
+      return result;
+    }).catch((error) => {
+      console.error(error);
+      this.audioPreloadPromise = null;
+      this.setData({
+        audioPreloadState: "failed",
+        audioPreloadLabel: "考官录音预载失败，开始时会重新尝试",
       });
+      throw error;
+    });
+    return this.audioPreloadPromise;
+  },
+
+  ensureExamAudioReady() {
+    this.setData({
+      state: "preparing",
+      preparationText: this.data.audioPreloadState === "ready" ? "考官录音已经准备完成" : "正在准备考官录音",
+    });
+    const ready = this.data.audioPreloadState === "ready"
+      ? Promise.resolve()
+      : this.startExamAudioPreload(this.data.audioPreloadState === "failed");
+    ready.then(() => this.createSession()).catch((err) => {
+      console.error(err);
+      this.setData({ state: "instructions" });
+      wx.showModal({ title: "准备失败", content: "考官录音没有全部加载完成，请检查网络后重试。", showCancel: false });
+    });
   },
 
   createSession() {
@@ -283,33 +316,26 @@ Page({
 
   playCueAudio(cue) {
     if (this.examAudio) this.examAudio.destroy();
-    const audio = wx.createInnerAudioContext();
-    this.examAudio = audio;
-    audio.obeyMuteSwitch = false;
-    audio.autoplay = false;
-    audio.src = this.localAudioByCueId[cue.id] || cue.audioUrl;
-    let started = false;
-    const play = () => {
-      if (started || !this.examActive || this.examAudio !== audio) return;
-      started = true;
-      audio.play();
-    };
-    audio.onCanplay(play);
-    audio.onEnded(() => {
-      if (!this.examActive || this.examAudio !== audio) return;
-      audio.destroy();
-      this.examAudio = null;
-      if (cue.responseExpected) this.startRecording(cue);
-      else {
-        this.setData({ state: "between" });
-        this.nextCueTimer = setTimeout(() => this.playNextCue(), 700);
-      }
+    const playback = playReliableAudio({
+      localPath: this.localAudioByCueId[cue.id],
+      audioUrl: cue.audioUrl,
+    }, {
+      onEnded: () => {
+        if (!this.examActive || this.examAudio !== playback) return;
+        playback.destroy();
+        this.examAudio = null;
+        if (cue.responseExpected) this.startRecording(cue);
+        else {
+          this.setData({ state: "between" });
+          this.nextCueTimer = setTimeout(() => this.playNextCue(), 700);
+        }
+      },
+      onError: (err) => {
+        console.error(err);
+        this.interruptExam("audio_error", "考官录音播放失败，本场考试已中断。请检查声音和网络后重新开始。");
+      },
     });
-    audio.onError((err) => {
-      console.error(err);
-      this.interruptExam("audio_error", "考官录音播放失败，本场考试已中断。请检查声音和网络后重新开始。");
-    });
-    setTimeout(play, 300);
+    this.examAudio = playback;
   },
 
   startRecording(cue) {

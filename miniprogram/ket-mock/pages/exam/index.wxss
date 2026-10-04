@@ -11,6 +11,9 @@
 .rule-row text { display: flex; width: 40rpx; height: 40rpx; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 50%; color: #fff; background: #5a8e76; font-size: 20rpx; font-weight: 800; }
 .readiness-card { background: #fffaf1; }
 .check-row { margin-top: 15rpx; color: #5e665f; font-size: 23rpx; }
+.audio-preload-state { margin-top: 22rpx; padding: 14rpx 16rpx; border-radius: 12rpx; color: #6f6252; background: #f2ece2; font-size: 21rpx; line-height: 1.5; }
+.preload-ready { color: #39765d; background: #e7f3ec; font-weight: 700; }
+.preload-failed { color: #9a5149; background: #f9e7e4; }
 .start-btn { margin-top: 28rpx; }
 .center-card, .error-card, .success-card { margin-top: 80rpx; padding: 38rpx 30rpx; text-align: center; }
 .loading-ring { width: 72rpx; height: 72rpx; margin: 8rpx auto 25rpx; border: 8rpx solid #dfebe4; border-top-color: #4f8f73; border-radius: 50%; animation: spin .8s linear infinite; }

@@ -101,7 +101,9 @@ assert.ok(lessonDetailJs.includes("/ket-mock/pages/exam/index?lessonId="), "Less
 assert.ok(workbenchJs.includes("/ket-mock/pages/library/index"), "Teacher workbench does not open the audio library");
 assert.ok(libraryWxml.includes("“原创题”为本小程序自行编写"), "Teacher library does not explain the original-question label");
 assert.ok(libraryWxml.includes("教师备用追问 · 无需预录"), "Teacher library does not expose optional backup prompts");
-assert.ok(examJs.includes("audio.onEnded"), "Exam does not advance after examiner audio ends");
+assert.ok(libraryWxml.includes("下一段提示音开头") && libraryWxml.includes("不要使用 “Good / 不错”"), "Teacher library lacks neutral transition guidance");
+assert.ok(examJs.includes("playReliableAudio") && examJs.includes("onEnded"), "Exam does not verify and advance after examiner audio ends");
+assert.ok(examJs.includes("startExamAudioPreload"), "Exam does not preload examiner audio when the page opens");
 assert.ok(examJs.includes("this.startRecording(cue)"), "Exam does not start the microphone automatically");
 assert.ok(examJs.includes("interruptExam"), "Exam has no interruption handling");
 assert.ok(examWxml.includes("中途不能暂停、回放或重录"), "Exam rules do not explain the no-replay rule");

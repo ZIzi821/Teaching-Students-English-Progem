@@ -143,6 +143,7 @@
           <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.ketSkill}}"><text>KET 技能</text><view>{{previousLessonReference.ketSkill}}</view></view>
           <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.nextReview}}"><text>下节复习</text><view>{{previousLessonReference.nextReview}}</view></view>
           <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.homeworkTask}}"><text>课后任务</text><view>{{previousLessonReference.homeworkTask}}</view></view>
+          <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.followReadingContent}}"><text>跟读内容</text><view>{{previousLessonReference.followReadingContent}}</view></view>
           <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.recordingPrompt}}"><text>录音要求</text><view>{{previousLessonReference.recordingPrompt}}</view></view>
         </view>
       </view>
@@ -218,12 +219,13 @@
         </picker>
         <view class="field-hint">以课程日期为当天，最多设置到 7 天后；历史任务未设置时可继续保持不变。</view>
       </view>
-      <view class="field" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.lessonTemplateKey === 'molly_oral_ket'}}">
-        <view class="label">Molly 的录音任务类型</view>
+      <view class="field" wx:if="{{workspaceForm.recordingTaskEnabled}}">
+        <view class="label">录音任务类型</view>
         <picker mode="selector" range="{{recordingTaskTypeOptions}}" range-key="label" value="{{recordingTaskTypeIndex}}" bindchange="onRecordingTaskTypeChange">
           <view class="picker-value">{{recordingTaskTypeOptions[recordingTaskTypeIndex].label}}</view>
         </picker>
-        <view class="field-hint">单题练习保留官方公开样题；全流程模拟包含 1 套公开样题结构改编和 7 套当前格式原创题。</view>
+        <view class="field-hint" wx:if="{{workspaceForm.lessonTemplateKey === 'molly_oral_ket'}}">独立朗读不播放教师示范；跟读会先播放你的逐条录音。Molly 还可选择 KET 单题或全流程模拟。</view>
+        <view class="field-hint" wx:else>独立朗读由学生直接录音；跟读会先播放你的逐条示范，再自动打开麦克风。</view>
       </view>
       <view class="field" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.recordingTaskType === 'ket_official'}}">
         <view class="label">选择官方口语样题</view>
@@ -256,8 +258,36 @@
         <view class="ket-weekly-hint" wx:if="{{ketWeeklyHint}}">{{ketWeeklyHint}}</view>
       </view>
       <view class="field" wx:if="{{workspaceForm.recordingTaskEnabled}}">
-        <view class="label">录音要求</view>
-        <textarea class="textarea recording-prompt-textarea {{workspaceForm.recordingTaskType !== 'manual' ? 'official-prompt' : ''}}" maxlength="2000" disabled="{{workspaceForm.recordingTaskType !== 'manual'}}" placeholder="{{lessonTemplate.recordingPlaceholder}}" value="{{workspaceForm.recordingPrompt}}" data-field="recordingPrompt" bindinput="onWorkspaceInput"></textarea>
+        <view class="label">{{workspaceForm.recordingTaskType === 'follow_reading' ? '补充要求（可不填）' : '录音要求'}}</view>
+        <textarea class="textarea recording-prompt-textarea {{workspaceForm.recordingTaskType === 'ket_official' || workspaceForm.recordingTaskType === 'ket_mock' ? 'official-prompt' : ''}}" maxlength="2000" disabled="{{workspaceForm.recordingTaskType === 'ket_official' || workspaceForm.recordingTaskType === 'ket_mock'}}" placeholder="{{workspaceForm.recordingTaskType === 'follow_reading' ? '例如：先听完整，再按相同语速读一遍' : lessonTemplate.recordingPlaceholder}}" value="{{workspaceForm.recordingPrompt}}" data-field="recordingPrompt" bindinput="onWorkspaceInput"></textarea>
+      </view>
+      <view class="follow-reading-box" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.recordingTaskType === 'follow_reading'}}">
+        <view class="field">
+          <view class="label">跟读内容</view>
+          <textarea class="textarea follow-reading-content" maxlength="4000" placeholder="每行填写一个单词或一句话，最多 20 条" value="{{workspaceForm.followReadingContent}}" data-field="followReadingContent" bindinput="onWorkspaceInput"></textarea>
+          <view class="field-hint">修改某条文字后，对应示范音频会要求重新上传；未修改的条目继续保留。</view>
+        </view>
+        <view class="recording-options follow-reading-options">
+          <view class="field recording-option-field">
+            <view class="label">播放方式</view>
+            <picker mode="selector" range="{{followReadingModeOptions}}" range-key="label" value="{{followReadingModeIndex}}" bindchange="onFollowReadingModeChange">
+              <view class="picker-value">{{followReadingModeOptions[followReadingModeIndex].label}}</view>
+            </picker>
+          </view>
+          <view class="field recording-option-field">
+            <view class="label">听完准备</view>
+            <picker mode="selector" range="{{followReadingGapOptions}}" value="{{followReadingGapIndex}}" bindchange="onFollowReadingGapChange">
+              <view class="picker-value">{{workspaceForm.followReadingGapSeconds}} 秒</view>
+            </picker>
+          </view>
+          <view class="field recording-option-field follow-reading-wide-option">
+            <view class="label">每条最长录音</view>
+            <picker mode="selector" range="{{followReadingResponseOptions}}" value="{{followReadingResponseIndex}}" bindchange="onFollowReadingResponseChange">
+              <view class="picker-value">{{workspaceForm.followReadingResponseSeconds}} 秒</view>
+            </picker>
+          </view>
+        </view>
+        <view class="field-hint">自动模式连续完成全部条目；手动模式由学生点示范音，但播放结束后仍自动倒计时和录音。</view>
       </view>
       <view class="recording-options" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.recordingTaskType === 'manual'}}">
         <view class="field recording-option-field">
@@ -319,7 +349,7 @@
         <view class="homework-text">{{lesson.homeworkTask}}</view>
       </view>
       <view class="recording-task" wx:if="{{lesson.recordingTaskEnabled}}">
-        <view class="recording-task-title">{{lesson.recordingTaskType === 'ket_mock' ? 'KET 全流程口语模拟' : lesson.recordingTaskType === 'ket_official' ? 'KET 口语录音' : '跟读录音'}}</view>
+        <view class="recording-task-title">{{lesson.recordingTaskType === 'ket_mock' ? 'KET 全流程口语模拟' : lesson.recordingTaskType === 'ket_official' ? 'KET 口语录音' : lesson.recordingTaskType === 'follow_reading' ? '教师示范跟读' : '独立朗读录音'}}</view>
         <view class="ket-task-source" wx:if="{{lesson.recordingTaskType === 'ket_official' && lesson.ketSpeakingTask}}">
           <view>{{lesson.ketSpeakingTask.sourceYear}} · {{lesson.ketSpeakingTask.part}} · {{lesson.ketSpeakingTask.difficulty}}</view>
           <view>{{lesson.ketSpeakingTask.sourceLabel}}</view>
@@ -330,21 +360,33 @@
           <view>{{lesson.ketMockSet.formatLabel}} · {{lesson.ketMockSet.expectedMinutes}}</view>
           <view>{{lesson.ketMockSet.sourceReference}}</view>
         </view>
-        <view class="recording-prompt-label">{{lesson.recordingTaskType === 'ket_mock' ? '考试任务' : lesson.recordingTaskType === 'ket_official' ? '口语题目' : '朗读内容'}}</view>
-        <view class="recording-task-prompt">{{lesson.recordingPrompt || '按老师课堂要求完成朗读并提交。'}}</view>
+        <block wx:if="{{lesson.recordingTaskType === 'follow_reading'}}">
+          <view class="recording-prompt-label">跟读内容</view>
+          <view class="follow-reading-task-list">
+            <view class="follow-reading-task-item" wx:for="{{lesson.followReadingItems}}" wx:key="id" wx:for-item="followItem"><text>{{followItem.order}}</text><view>{{followItem.text}}</view></view>
+          </view>
+          <view class="recording-task-prompt" wx:if="{{lesson.recordingPrompt}}">补充要求：{{lesson.recordingPrompt}}</view>
+          <view class="follow-audio-status {{lesson.followReadingAudioComplete ? 'follow-audio-complete' : ''}}">教师示范音频 {{lesson.followReadingAudioReadyCount}} / {{lesson.followReadingAudioTotalCount}}</view>
+          <view class="manage-follow-audio" wx:if="{{isTeacher}}" bindtap="goFollowReadingAudioManager">管理逐条示范音频 →</view>
+        </block>
+        <block wx:else>
+          <view class="recording-prompt-label">{{lesson.recordingTaskType === 'ket_mock' ? '考试任务' : lesson.recordingTaskType === 'ket_official' ? '口语题目' : '朗读内容'}}</view>
+          <view class="recording-task-prompt">{{lesson.recordingPrompt || '按老师课堂要求完成朗读并提交。'}}</view>
+        </block>
         <view class="recording-task-meta">
-          <view class="recording-meta-chip">{{lesson.recordingTaskType === 'ket_mock' ? 'Part 1 + Part 2' : lesson.recordingTaskType === 'ket_official' ? '录制 1 次' : '朗读 ' + lesson.recordingRepeatCount + ' 遍'}}</view>
-          <view class="recording-meta-chip">{{lesson.recordingTaskType === 'ket_mock' ? '全程约 8–10 分钟' : lesson.recordingPreparationSeconds ? '练习准备 ' + lesson.recordingPreparationSeconds + ' 秒' : '直接听题回答'}}</view>
+          <view class="recording-meta-chip">{{lesson.recordingTaskType === 'ket_mock' ? 'Part 1 + Part 2' : lesson.recordingTaskType === 'ket_official' ? '录制 1 次' : lesson.recordingTaskType === 'follow_reading' ? (lesson.followReadingMode === 'automatic' ? '自动连续跟读' : '手动逐条播放') : '朗读 ' + lesson.recordingRepeatCount + ' 遍'}}</view>
+          <view class="recording-meta-chip">{{lesson.recordingTaskType === 'ket_mock' ? '全程约 8–10 分钟' : lesson.recordingTaskType === 'follow_reading' ? '听完准备 ' + lesson.followReadingGapSeconds + ' 秒' : lesson.recordingPreparationSeconds ? '练习准备 ' + lesson.recordingPreparationSeconds + ' 秒' : '直接听题回答'}}</view>
+          <view class="recording-meta-chip" wx:if="{{lesson.recordingTaskType === 'follow_reading'}}">每条最长 {{lesson.followReadingResponseSeconds}} 秒</view>
           <view class="recording-meta-chip deadline-chip deadline-{{lesson.homeworkSubmittedLate ? 'late' : lesson.homeworkDueStatus}}" wx:if="{{lesson.homeworkSubmittedLate || (!lesson.homeworkCompleted && !lesson.homeworkHasSubmission && lesson.homeworkDueLabel)}}">
             {{lesson.homeworkSubmittedLate ? '逾期提交' : lesson.homeworkDueLabel}}
           </view>
         </view>
         <view class="ket-timing-note" wx:if="{{lesson.recordingTaskType === 'ket_official' && lesson.ketSpeakingTask}}">{{lesson.ketSpeakingTask.timingLabel}}</view>
-        <view class="recording-privacy" wx:if="{{isStudent}}">{{lesson.recordingTaskType === 'ket_mock' ? '考试中不显示题目文字；每段考官录音结束后自动开始录制回答。' : '录音只用于老师检查本次朗读。'}}</view>
-        <view class="record-btn" wx:if="{{isStudent}}" bindtap="goRecordingPractice">
-          {{lesson.recordingTaskType === 'ket_mock' ? (ketMockLatestSession && (ketMockLatestSession.status === 'submitted' || ketMockLatestSession.status === 'reviewed') ? '查看模拟考试结果' : '进入模拟考场') : '进入录音练习'}}
+        <view class="recording-privacy" wx:if="{{isStudent || isTeacherPreview}}">{{lesson.recordingTaskType === 'ket_mock' ? '考试中不显示题目文字；每段考官录音结束后自动开始录制回答。' : lesson.recordingTaskType === 'follow_reading' ? '示范音会提前加载；播放结束后自动准备并打开麦克风。' : '录音只用于老师检查本次朗读。'}}</view>
+        <view class="record-btn {{lesson.recordingTaskType === 'follow_reading' && !lesson.followReadingAudioComplete ? 'disabled-action' : ''}}" wx:if="{{isStudent || (isTeacherPreview && lesson.recordingTaskType === 'follow_reading')}}" bindtap="goRecordingPractice">
+          {{lesson.recordingTaskType === 'ket_mock' ? (ketMockLatestSession && (ketMockLatestSession.status === 'submitted' || ketMockLatestSession.status === 'reviewed') ? '查看模拟考试结果' : '进入模拟考场') : lesson.recordingTaskType === 'follow_reading' ? (isTeacherPreview ? '进入跟读练习（预览）' : lesson.followReadingAudioComplete ? '进入跟读练习' : '等待老师准备示范音频') : '进入独立朗读'}}
         </view>
-        <view class="preview-recording-note" wx:if="{{isTeacherPreview}}">教师预览中不能代学生录音。</view>
+        <view class="preview-recording-note" wx:if="{{isTeacherPreview}}">{{lesson.recordingTaskType === 'follow_reading' ? '教师预览可体验跟读流程，但不会上传录音或写入学生记录。' : '教师预览中不能代学生录音。'}}</view>
       </view>
 
       <view class="ket-session-list" wx:if="{{lesson.recordingTaskType === 'ket_mock' && ketMockSessions.length}}">
@@ -423,7 +465,8 @@
         <view class="submission-title">学生已提交</view>
         <view class="submission-row" wx:for="{{submissions}}" wx:key="_id">
           <view class="submission-main">
-            <view class="submission-name">第 {{item.displayAttemptNo}} 次录音 · {{item.durationLabel}}</view>
+            <view class="submission-name">{{item.displayName}} · {{item.durationLabel}}</view>
+            <view class="submission-prompt" wx:if="{{item.displayPrompt}}">{{item.displayPrompt}}</view>
             <view class="submission-status-wrap">
               <view class="submission-status status-{{item.status === '已听' || item.status === '朗读正确' ? 'independent' : item.status === '需要重录' ? 'pending' : 'prompted'}}">{{item.status}}</view>
               <view class="submission-late-status" wx:if="{{item.submittedLate}}">逾期提交</view>

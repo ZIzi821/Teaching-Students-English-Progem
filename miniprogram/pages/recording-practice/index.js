@@ -304,7 +304,7 @@ Page({
               lessonId: this.data.lessonId,
               fileID: uploadedFileID,
               cloudPath,
-              fileName: `第${attemptNo}次-跟读录音.mp3`,
+              fileName: `第${attemptNo}次-独立朗读录音.mp3`,
               attemptNo,
               duration,
               fileSize,

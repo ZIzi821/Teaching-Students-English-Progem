@@ -1,0 +1,38 @@
+<view class="page manager-page">
+  <view class="hero">
+    <view class="eyebrow">FOLLOW-READING AUDIO</view>
+    <view class="title">逐条准备示范音频</view>
+    <view class="subtitle" wx:if="{{lesson}}">{{student.name}} · {{lesson.title}} · 第 {{lesson.lessonNo || '—'}} 节</view>
+  </view>
+
+  <view class="card state-card" wx:if="{{loading}}">正在读取跟读内容…</view>
+  <view class="card error-card" wx:elif="{{message}}">
+    <view>{{message}}</view>
+    <view class="retry" bindtap="loadManager">重新加载</view>
+  </view>
+
+  <block wx:else>
+    <view class="summary-grid">
+      <view class="summary-card"><view class="summary-number">{{readyCount}} / {{totalCount}}</view><view class="summary-label">已准备示范音</view></view>
+      <view class="summary-card"><view class="summary-number">{{gapSeconds}} 秒</view><view class="summary-label">听完后的准备时间</view></view>
+    </view>
+    <view class="mode-note">{{modeLabel}} · 每条学生录音最长 {{responseSeconds}} 秒</view>
+    <view class="truth-note">每条文字对应一段教师录音。只有全部准备完成，学生才能开始；学生进入后会先把整组音频预载到微信临时目录。</view>
+
+    <view class="card item-card {{item.audioReady ? 'item-ready' : ''}}" wx:for="{{items}}" wx:key="id">
+      <view class="item-head">
+        <view class="item-number">{{item.order}}</view>
+        <view class="item-text">{{item.text}}</view>
+        <view class="item-state {{item.audioReady ? 'ready-state' : ''}}">{{item.audioReady ? '已准备' : '缺音频'}}</view>
+      </view>
+      <view class="file-name" wx:if="{{item.audioFileName}}">{{item.audioFileName}}</view>
+      <view class="actions">
+        <view class="action primary-action {{uploadingItemId ? 'disabled' : ''}}" data-index="{{index}}" bindtap="chooseAudio">{{uploadingItemId === item.id ? '上传中…' : item.audioReady ? '替换音频' : '上传音频'}}</view>
+        <view class="action" wx:if="{{item.audioReady}}" data-index="{{index}}" bindtap="playAudio">{{playingItemId === item.id ? '播放中…' : '试听'}}</view>
+        <view class="action danger-action" wx:if="{{item.audioReady}}" data-index="{{index}}" bindtap="deleteAudio">{{deletingItemId === item.id ? '删除中…' : '删除'}}</view>
+      </view>
+    </view>
+
+    <view class="complete-note {{audioComplete ? 'complete-note-ready' : ''}}">{{audioComplete ? '全部示范音频已准备，学生可以开始跟读。' : '还有 ' + (totalCount - readyCount) + ' 条没有示范音频。'}}</view>
+  </block>
+</view>

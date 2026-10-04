@@ -35,6 +35,7 @@
       <view class="check-row">✓ 周围安静，可以清楚听见考官录音</view>
       <view class="check-row">✓ 微信已允许使用麦克风</view>
       <view class="check-row">✓ 接下来约 10 分钟不会离开页面</view>
+      <view class="audio-preload-state preload-{{audioPreloadState}}">{{audioPreloadLabel}}</view>
       <view class="primary-btn start-btn" bindtap="beginExam">我准备好了，开始考试</view>
     </view>
   </block>

@@ -418,6 +418,27 @@
   min-width: 0;
 }
 
+.follow-reading-box {
+  margin: 2rpx 0 24rpx;
+  padding: 20rpx;
+  border: 1rpx solid #cfe2d7;
+  border-radius: 16rpx;
+  background: #f1f8f4;
+}
+
+.follow-reading-content {
+  min-height: 260rpx;
+  background: #fffdf8;
+}
+
+.follow-reading-options {
+  margin-top: 12rpx;
+}
+
+.follow-reading-wide-option {
+  grid-column: 1 / -1;
+}
+
 .recording-label {
   margin-bottom: 0;
 }
@@ -486,6 +507,64 @@
   overflow-wrap: anywhere;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.follow-reading-task-list {
+  margin-top: 10rpx;
+  overflow: hidden;
+  border: 1rpx solid #dfe9e3;
+  border-radius: 16rpx;
+  background: #f5faf7;
+}
+
+.follow-reading-task-item {
+  display: flex;
+  gap: 16rpx;
+  padding: 18rpx 20rpx;
+  border-bottom: 1rpx solid #e1ebe5;
+  color: #263b33;
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.follow-reading-task-item:last-child {
+  border-bottom: 0;
+}
+
+.follow-reading-task-item text {
+  display: flex;
+  width: 38rpx;
+  height: 38rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #5f927a;
+  font-size: 19rpx;
+}
+
+.follow-audio-status,
+.manage-follow-audio {
+  margin-top: 14rpx;
+  padding: 13rpx 15rpx;
+  border-radius: 12rpx;
+  color: #94564d;
+  background: #fae9e6;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.follow-audio-complete {
+  color: #39765d;
+  background: #e4f1e9;
+}
+
+.manage-follow-audio {
+  color: #39765d;
+  background: #e4f1e9;
+  text-align: center;
 }
 
 .recording-task-meta {
@@ -824,6 +903,13 @@
   color: #3b352f;
   font-size: 24rpx;
   font-weight: 700;
+}
+
+.submission-prompt {
+  margin-top: 7rpx;
+  color: #6d6257;
+  font-size: 22rpx;
+  line-height: 1.5;
 }
 
 .submission-status-wrap {
