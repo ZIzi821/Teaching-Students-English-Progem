@@ -24,6 +24,15 @@
       </view>
     </view>
 
+    <view class="card teacher-reminder-entry" wx:if="{{isTeacher}}" bindtap="goStudentReminders">
+      <view class="teacher-reminder-mark">提</view>
+      <view class="teacher-reminder-copy">
+        <view class="teacher-reminder-title">给学生的动态提醒</view>
+        <view class="teacher-reminder-hint">发布、修改或撤回学生首页里的自定义提醒</view>
+      </view>
+      <view class="teacher-reminder-link">管理 →</view>
+    </view>
+
     <view class="card french-student-entry" wx:if="{{!isTeacher && frenchLearningForm.enabled}}" bindtap="goFrenchLearning">
       <view class="french-student-mark">FR</view>
       <view class="french-student-main">

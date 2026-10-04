@@ -1,0 +1,122 @@
+:host {
+  display: block;
+}
+
+.student-tabbar {
+  position: fixed;
+  z-index: 90;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1rpx solid #e8ded1;
+  background: rgba(255, 253, 250, 0.98);
+  box-shadow: 0 -8rpx 28rpx rgba(87, 67, 43, 0.08);
+}
+
+.student-tabbar-inner {
+  display: flex;
+  height: 104rpx;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.tab-item {
+  position: relative;
+  display: flex;
+  width: 45%;
+  height: 90rpx;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #8c8175;
+}
+
+.tab-item::before {
+  position: absolute;
+  top: 0;
+  width: 34rpx;
+  height: 5rpx;
+  border-radius: 999rpx;
+  background: transparent;
+  content: "";
+}
+
+.tab-active {
+  color: #39765d;
+}
+
+.tab-active::before {
+  background: #4f8f73;
+}
+
+.tab-symbol {
+  position: relative;
+  width: 42rpx;
+  height: 36rpx;
+  color: currentColor;
+}
+
+.tab-label {
+  margin-top: 5rpx;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
+.book-left,
+.book-right {
+  position: absolute;
+  top: 5rpx;
+  box-sizing: border-box;
+  width: 19rpx;
+  height: 27rpx;
+  border: 3rpx solid currentColor;
+  background: #fffdfa;
+}
+
+.book-left {
+  left: 3rpx;
+  border-radius: 6rpx 1rpx 1rpx 6rpx;
+  transform: skewY(7deg);
+}
+
+.book-right {
+  right: 3rpx;
+  border-radius: 1rpx 6rpx 6rpx 1rpx;
+  transform: skewY(-7deg);
+}
+
+.medal-circle {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 8rpx;
+  display: flex;
+  box-sizing: border-box;
+  width: 27rpx;
+  height: 27rpx;
+  align-items: center;
+  justify-content: center;
+  border: 3rpx solid currentColor;
+  border-radius: 50%;
+  background: #fffdfa;
+  font-size: 14rpx;
+}
+
+.medal-ribbon {
+  position: absolute;
+  top: 23rpx;
+  width: 10rpx;
+  height: 13rpx;
+  background: currentColor;
+}
+
+.medal-ribbon-left {
+  left: 12rpx;
+  transform: skewX(-15deg);
+}
+
+.medal-ribbon-right {
+  right: 12rpx;
+  transform: skewX(15deg);
+}

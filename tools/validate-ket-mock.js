@@ -49,13 +49,18 @@ assert.ok(imageBytes <= 1800000, "KET mock visual assets exceed the package budg
 const miniprogramRoot = path.join(root, "miniprogram");
 const ketSubpackageRoot = path.join(miniprogramRoot, "ket-mock");
 const ketSubpackageBytes = directoryBytes(ketSubpackageRoot);
+const subpackageRoots = new Set((app.subpackages || app.subPackages || []).map((subpackage) => subpackage.root));
 const mainPackageBytes = fs.readdirSync(miniprogramRoot, { withFileTypes: true }).reduce((sum, entry) => {
-  if (entry.name === "ket-mock") return sum;
+  if (subpackageRoots.has(entry.name)) return sum;
   const entryPath = path.join(miniprogramRoot, entry.name);
   return sum + (entry.isDirectory() ? directoryBytes(entryPath) : fs.statSync(entryPath).size);
 }, 0);
 assert.ok(ketSubpackageBytes <= 2 * 1024 * 1024, "KET subpackage exceeds the 2 MiB package limit");
 assert.ok(mainPackageBytes <= 2 * 1024 * 1024, "Main package exceeds the 2 MiB package limit");
+(app.subpackages || app.subPackages || []).forEach((subpackage) => {
+  const subpackageBytes = directoryBytes(path.join(miniprogramRoot, subpackage.root));
+  assert.ok(subpackageBytes <= 2 * 1024 * 1024, `${subpackage.name || subpackage.root} subpackage exceeds the 2 MiB package limit`);
+});
 
 const registeredSubpages = (app.subpackages || app.subPackages || []).flatMap((subpackage) => (
   (subpackage.pages || []).map((page) => `${subpackage.root}/${page}`)

@@ -6,6 +6,10 @@
   padding-bottom: 180rpx;
 }
 
+.has-student-tabbar {
+  padding-bottom: 180rpx;
+}
+
 .preview-banner {
   display: flex;
   align-items: center;
@@ -490,16 +494,39 @@
   border-top: 1rpx solid #d8e8df;
 }
 
+.teacher-homework-notice-item > view:first-child {
+  min-width: 0;
+  flex: 1;
+}
+
 .teacher-homework-student {
   color: #2f493f;
   font-size: 25rpx;
   font-weight: 600;
 }
 
+.student-reminder-badge {
+  display: inline-flex;
+  margin-right: 9rpx;
+  padding: 4rpx 9rpx;
+  border-radius: 999rpx;
+  color: #8a6730;
+  background: #fff0cf;
+  font-size: 18rpx;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
 .teacher-homework-time {
   margin-top: 6rpx;
   color: #75837c;
   font-size: 21rpx;
+}
+
+.student-reminder-text {
+  color: #4f5f57;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .teacher-homework-link {

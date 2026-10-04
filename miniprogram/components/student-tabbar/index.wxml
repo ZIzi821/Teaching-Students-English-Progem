@@ -1,0 +1,19 @@
+<view class="student-tabbar" role="navigation" aria-label="学生端底部导航">
+  <view class="student-tabbar-inner">
+    <view class="tab-item {{current === 'learning' ? 'tab-active' : ''}}" data-key="learning" bindtap="switchTab">
+      <view class="tab-symbol learning-symbol">
+        <view class="book-left"></view>
+        <view class="book-right"></view>
+      </view>
+      <view class="tab-label">学习</view>
+    </view>
+    <view class="tab-item {{current === 'achievements' ? 'tab-active' : ''}}" data-key="achievements" bindtap="switchTab">
+      <view class="tab-symbol achievement-symbol">
+        <view class="medal-circle">★</view>
+        <view class="medal-ribbon medal-ribbon-left"></view>
+        <view class="medal-ribbon medal-ribbon-right"></view>
+      </view>
+      <view class="tab-label">成就</view>
+    </view>
+  </view>
+</view>

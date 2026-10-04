@@ -38,6 +38,14 @@
         "pages/exam/index",
         "pages/review/index"
       ]
+    },
+    {
+      "name": "engagement",
+      "root": "engagement",
+      "pages": [
+        "pages/achievements/index",
+        "pages/reminders/index"
+      ]
     }
   ],
   "window": {
@@ -49,7 +57,8 @@
   },
   "usingComponents": {
     "teacher-preview-banner": "/components/teacher-preview-banner/index",
-    "teacher-tabbar": "/components/teacher-tabbar/index"
+    "teacher-tabbar": "/components/teacher-tabbar/index",
+    "student-tabbar": "/components/student-tabbar/index"
   },
   "permission": {
     "scope.record": {

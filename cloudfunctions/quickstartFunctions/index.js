@@ -7,6 +7,7 @@ const frenchLearning = require("./frenchLearning");
 const courseWorkflow = require("./courseWorkflow");
 const teacherTodos = require("./teacherTodos");
 const recordingFeedback = require("./recordingFeedback");
+const studentEngagement = require("./studentEngagement");
 const ketMock = require("./ketMock");
 const { createKetMockService } = require("./ketMockService");
 const KET_SPEAKING_TASKS = require("./data/ket-speaking-tasks.json");
@@ -29,6 +30,7 @@ const COLLECTIONS = [
   "lessonSubmissions",
   "ketMockAssets",
   "ketMockSessions",
+  "studentReminders",
   "systemLocks",
 ];
 const VOCABULARY_DAY_MS = 24 * 60 * 60 * 1000;
@@ -948,7 +950,7 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
   const mistakeLearningEnabled = isMistakeLearningEnabled(syncedStudent);
   const englishCourseEnabled = isEnglishCourseEnabled(syncedStudent);
   const learningDay = vocabulary.getLearningDay();
-  const [mistakeCount, recentLessonRes, todayStats, quizSessions, learningActivityState] = await Promise.all([
+  const [mistakeCount, recentLessonRes, todayStats, quizSessions, learningActivityState, studentReminders] = await Promise.all([
     mistakeLearningEnabled
       ? db.collection("mistakes").where({ studentId }).count()
       : Promise.resolve({ total: 0 }),
@@ -964,6 +966,7 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
     getOptionalTransactionDocument(
       db.collection("systemLocks").doc(getStudentLearningActivityStateId(studentId))
     ),
+    loadAllStudentDocuments("studentReminders", studentId),
   ]);
   const progress = buildProgress(syncedStudent);
   const studentLessons = (recentLessonRes.data || [])
@@ -992,13 +995,12 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
       completedCount: homeworkLessons.length - pendingHomeworkLessons.length,
       totalCount: homeworkLessons.length,
     },
-    studentLearningActivities: syncedStudent.vocabularyEnabled === true || englishCourseEnabled
-      ? buildStudentLearningActivities({
-        lessons: studentLessons,
-        sessions: quizSessions,
-        viewedThroughAtMs: Number(learningActivityState && learningActivityState.viewedThroughAtMs || 0),
-      })
-      : [],
+    studentLearningActivities: buildStudentLearningActivities({
+      lessons: studentLessons,
+      sessions: quizSessions,
+      reminders: studentReminders,
+      viewedThroughAtMs: Number(learningActivityState && learningActivityState.viewedThroughAtMs || 0),
+    }),
   };
 };
 
@@ -1025,6 +1027,7 @@ const getHomeData = async (event = {}) => {
     await Promise.all([
       createOneCollection("vocabularyDailyStats"),
       createOneCollection("vocabularyQuizSessions"),
+      createOneCollection("studentReminders"),
     ]);
   }
   const data = event.data || {};
@@ -1207,7 +1210,7 @@ const buildTeacherHomeworkActivities = ({ lessons, submissions, students, viewed
     .slice(0, 5);
 };
 
-const buildStudentLearningActivities = ({ lessons, sessions, viewedThroughAtMs }) => {
+const buildStudentLearningActivities = ({ lessons, sessions, reminders, viewedThroughAtMs }) => {
   const cutoffAtMs = Math.max(
     Number(viewedThroughAtMs || 0),
     Date.now() - 30 * VOCABULARY_DAY_MS
@@ -1252,9 +1255,14 @@ const buildStudentLearningActivities = ({ lessons, sessions, viewedThroughAtMs }
       });
     }
   });
+  const reminderActivities = studentEngagement.buildReminderActivities({
+    reminders,
+    viewedThroughAtMs,
+  });
   return activities
+    .concat(reminderActivities)
     .sort((left, right) => Number(right.activityAtMs || 0) - Number(left.activityAtMs || 0))
-    .slice(0, 6);
+    .slice(0, 8);
 };
 
 const markHomeworkActivitiesViewed = async (event = {}) => {
@@ -1369,6 +1377,219 @@ const getTeacherTodos = async () => {
     success: true,
     inactivityThresholdDays: teacherTodos.INACTIVITY_THRESHOLD_DAYS,
   }, result);
+};
+
+const normalizeStudentReminderInput = (data = {}) => {
+  const rawTitle = String(data.title || "").trim();
+  const rawContent = String(data.content || "").trim();
+  if (!rawTitle) throw createError("INVALID_REMINDER", "请填写提醒标题");
+  if (!rawContent) throw createError("INVALID_REMINDER", "请填写提醒内容");
+  if (rawTitle.length > 40) throw createError("INVALID_REMINDER", "提醒标题不能超过 40 个字");
+  if (rawContent.length > 300) throw createError("INVALID_REMINDER", "提醒内容不能超过 300 个字");
+  return { title: rawTitle, content: rawContent };
+};
+
+const sanitizeStudentReminder = (reminder) => ({
+  _id: reminder._id || "",
+  studentId: reminder.studentId || "",
+  title: reminder.title || "",
+  content: reminder.content || "",
+  status: reminder.status === "withdrawn" ? "withdrawn" : "active",
+  version: Math.max(1, Number(reminder.version) || 1),
+  createdAtMs: Math.max(0, Number(reminder.createdAtMs) || getCreatedTime(reminder)),
+  updatedAtMs: Math.max(
+    0,
+    Number(reminder.updatedAtMs)
+      || getDateLikeTime(reminder.updatedAt)
+      || Number(reminder.createdAtMs)
+      || getCreatedTime(reminder)
+  ),
+  withdrawnAtMs: Math.max(0, Number(reminder.withdrawnAtMs) || 0),
+});
+
+const listStudentReminders = async (event = {}) => {
+  await ensureTeacher();
+  const studentId = String(event.data && event.data.studentId || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  await createOneCollection("studentReminders");
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const allReminders = (await loadAllStudentDocuments("studentReminders", studentId))
+    .map(sanitizeStudentReminder)
+    .sort((left, right) => right.updatedAtMs - left.updatedAtMs);
+  const activeReminders = allReminders.filter((item) => item.status === "active");
+  const recentHistory = allReminders.filter((item) => item.status === "withdrawn").slice(0, 30);
+  const reminders = activeReminders.concat(recentHistory)
+    .sort((left, right) => right.updatedAtMs - left.updatedAtMs);
+  return {
+    success: true,
+    student: { _id: studentRes.data._id, name: studentRes.data.name || "学生" },
+    reminders,
+    activeCount: activeReminders.length,
+  };
+};
+
+const saveStudentReminder = async (event = {}) => {
+  const teacherIdentity = await ensureTeacher();
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  const reminderId = String(data.reminderId || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  if (reminderId && !/^[a-zA-Z0-9_-]{1,120}$/.test(reminderId)) {
+    throw createError("INVALID_REMINDER", "提醒信息无效，请刷新后重试");
+  }
+  const input = normalizeStudentReminderInput(data);
+  await assertContentSafe({ texts: [input.title, input.content] });
+  await createOneCollection("studentReminders");
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const nowMs = Date.now();
+  const targetId = reminderId || `student_reminder_${nowMs}_${crypto.randomBytes(6).toString("hex")}`;
+  const reminder = await db.runTransaction(async (transaction) => {
+    const reminderRef = transaction.collection("studentReminders").doc(targetId);
+    const current = await getOptionalTransactionDocument(reminderRef);
+    if (reminderId) {
+      if (!current || current.studentId !== studentId) {
+        throw createError("REMINDER_NOT_FOUND", "这条提醒不存在或已经撤回");
+      }
+      if (current.status === "withdrawn") {
+        throw createError("REMINDER_WITHDRAWN", "已撤回的提醒不能再编辑，请新建一条提醒");
+      }
+      const updateData = {
+        title: input.title,
+        content: input.content,
+        version: Math.max(1, Number(current.version) || 1) + 1,
+        updatedAt: db.serverDate(),
+        updatedAtMs: nowMs,
+        updatedBy: teacherIdentity.openid || "",
+      };
+      await reminderRef.update({ data: updateData });
+      return Object.assign({}, current, updateData, { _id: targetId });
+    }
+    const created = {
+      studentId,
+      title: input.title,
+      content: input.content,
+      status: "active",
+      version: 1,
+      createdBy: teacherIdentity.openid || "",
+      updatedBy: teacherIdentity.openid || "",
+      createdAt: db.serverDate(),
+      createdAtMs: nowMs,
+      updatedAt: db.serverDate(),
+      updatedAtMs: nowMs,
+    };
+    await reminderRef.set({ data: created });
+    return Object.assign({ _id: targetId }, created);
+  });
+  return {
+    success: true,
+    created: !reminderId,
+    reminder: sanitizeStudentReminder(reminder),
+  };
+};
+
+const withdrawStudentReminder = async (event = {}) => {
+  const teacherIdentity = await ensureTeacher();
+  const reminderId = String(event.data && event.data.reminderId || "").trim();
+  if (!reminderId || !/^[a-zA-Z0-9_-]{1,120}$/.test(reminderId)) {
+    throw createError("INVALID_REMINDER", "提醒信息无效，请刷新后重试");
+  }
+  await createOneCollection("studentReminders");
+  const nowMs = Date.now();
+  const reminder = await db.runTransaction(async (transaction) => {
+    const reminderRef = transaction.collection("studentReminders").doc(reminderId);
+    const current = await getOptionalTransactionDocument(reminderRef);
+    if (!current) throw createError("REMINDER_NOT_FOUND", "这条提醒不存在或已经撤回");
+    if (current.status === "withdrawn") return Object.assign({}, current, { _id: reminderId });
+    const updateData = {
+      status: "withdrawn",
+      withdrawnAt: db.serverDate(),
+      withdrawnAtMs: nowMs,
+      withdrawnBy: teacherIdentity.openid || "",
+      updatedAt: db.serverDate(),
+      updatedAtMs: nowMs,
+    };
+    await reminderRef.update({ data: updateData });
+    return Object.assign({}, current, updateData, { _id: reminderId });
+  });
+  return { success: true, reminder: sanitizeStudentReminder(reminder) };
+};
+
+const loadStudentEngagementParticipant = async (student) => {
+  const studentId = student._id;
+  const [vocabularyDailyStats, quizSessions, lessons, submissions, ketMockSessions, frenchProgress] = await Promise.all([
+    loadAllStudentDocuments("vocabularyDailyStats", studentId),
+    loadAllStudentDocuments("vocabularyQuizSessions", studentId),
+    loadAllStudentDocuments("lessons", studentId),
+    loadAllStudentDocuments("lessonSubmissions", studentId),
+    loadAllStudentDocuments("ketMockSessions", studentId),
+    loadAllVocabularyDocuments("frenchLearningProgress", { learnerKey: `student:${studentId}` }),
+  ]);
+  return {
+    student,
+    records: {
+      vocabularyDailyStats,
+      quizSessions,
+      lessons,
+      submissions,
+      ketMockSessions,
+      frenchProgress,
+    },
+  };
+};
+
+const getStudentEngagement = async (event = {}) => {
+  const identity = await getIdentity();
+  const data = event.data || {};
+  const isTeacherPreview = data.mode === "teacherPreview";
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
+  if (isTeacherPreview && identity.role !== "teacher") {
+    throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
+  }
+  if (identity.role === "teacher" && !isTeacherPreview) {
+    throw createError("PERMISSION_DENIED", "请从学生详情进入学生端预览");
+  }
+  const requestedStudentId = String(data.previewStudentId || data.studentId || "").trim();
+  const studentId = identity.role === "student" && identity.student
+    ? identity.student._id
+    : requestedStudentId;
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  await ensureStudentAccess(studentId);
+  await Promise.all([
+    createOneCollection("vocabularyDailyStats"),
+    createOneCollection("vocabularyQuizSessions"),
+    createOneCollection("lessonSubmissions"),
+    createOneCollection("ketMockSessions"),
+    createOneCollection("frenchLearningProgress"),
+  ]);
+  const studentsRes = await db.collection("students").get();
+  const allStudents = studentsRes.data || [];
+  const currentStudent = allStudents.find((student) => student._id === studentId);
+  if (!currentStudent) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const currentTeacherOpenId = String(currentStudent.teacherOpenId || "").trim();
+  const participants = allStudents.filter((student) => {
+    if (student._id === studentId) return true;
+    if (!studentEngagement.isPkEligibleStudent(student)) return false;
+    const participantTeacherOpenId = String(student.teacherOpenId || "").trim();
+    return !currentTeacherOpenId
+      || !participantTeacherOpenId
+      || participantTeacherOpenId === currentTeacherOpenId;
+  });
+  const participantRecords = await Promise.all(participants.map(loadStudentEngagementParticipant));
+  const dashboard = studentEngagement.buildEngagementDashboard({
+    participants: participantRecords,
+    currentStudentId: studentId,
+  });
+  if (!dashboard) throw createError("ENGAGEMENT_UNAVAILABLE", "成就数据暂时无法计算，请稍后再试");
+  return {
+    success: true,
+    role: identity.role,
+    isTeacherPreview,
+    readOnly: isTeacherPreview,
+    student: sanitizeStudent(currentStudent, false),
+    dashboard,
+  };
 };
 
 const bindStudent = async (event) => {
@@ -5058,6 +5279,14 @@ exports.main = async (event) => {
         return await getTeacherLearningAlerts();
       case "getTeacherTodos":
         return await getTeacherTodos();
+      case "listStudentReminders":
+        return await listStudentReminders(event);
+      case "saveStudentReminder":
+        return await saveStudentReminder(event);
+      case "withdrawStudentReminder":
+        return await withdrawStudentReminder(event);
+      case "getStudentEngagement":
+        return await getStudentEngagement(event);
       case "bindStudent":
       case "bindAccessCode":
         return await bindAccessCode(event);

@@ -26,6 +26,53 @@
   flex: 1;
 }
 
+.teacher-reminder-entry {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  border-color: #d7e6de;
+  background: linear-gradient(145deg, #fffdfa 0%, #f0f8f4 100%);
+}
+
+.teacher-reminder-mark {
+  display: flex;
+  width: 62rpx;
+  height: 62rpx;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 18rpx;
+  color: #fff;
+  background: #4f8f73;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.teacher-reminder-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.teacher-reminder-title {
+  color: #2f493f;
+  font-size: 27rpx;
+  font-weight: 800;
+}
+
+.teacher-reminder-hint {
+  margin-top: 6rpx;
+  color: #80766a;
+  font-size: 21rpx;
+  line-height: 1.45;
+}
+
+.teacher-reminder-link {
+  flex-shrink: 0;
+  color: #39765d;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
 .name {
   color: #243f35;
   font-size: 38rpx;

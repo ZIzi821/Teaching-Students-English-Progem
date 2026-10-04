@@ -1,4 +1,4 @@
-<view class="page home-page {{isTeacher ? 'has-teacher-tabbar' : ''}}">
+<view class="page home-page {{isTeacher ? 'has-teacher-tabbar' : ''}} {{isStudent ? 'has-student-tabbar' : ''}}">
   <view class="preview-banner" wx:if="{{isTeacherPreview}}">
     <view>
       <view class="preview-banner-title">正在查看 {{currentStudent.name}} 的真实学生首页</view>
@@ -72,7 +72,7 @@
     <view class="teacher-homework-notice-head">
       <view>
         <view class="teacher-homework-notice-kicker">我的新动态</view>
-        <view class="teacher-homework-notice-title">看看最近完成了什么</view>
+        <view class="teacher-homework-notice-title">看看最近有什么新消息</view>
       </view>
       <view class="teacher-homework-notice-actions">
         <view class="teacher-homework-notice-count">{{studentLearningActivities.length}} 条</view>
@@ -89,10 +89,12 @@
       bindtap="goStudentLearningActivity"
     >
       <view>
-        <view class="teacher-homework-student">{{item.title}}</view>
-        <view class="teacher-homework-time">{{item.activityText}} · {{item.activityLabel}}</view>
+        <view class="teacher-homework-student">
+          <text class="student-reminder-badge" wx:if="{{item.activityType === 'teacherReminder'}}">老师提醒</text>{{item.title}}
+        </view>
+        <view class="teacher-homework-time {{item.activityType === 'teacherReminder' ? 'student-reminder-text' : ''}}">{{item.activityText}} · {{item.activityLabel}}</view>
       </view>
-      <view class="teacher-homework-link">查看 →</view>
+      <view class="teacher-homework-link">{{item.activityType === 'teacherReminder' ? '知道了' : '查看 →'}}</view>
     </view>
     <view class="teacher-homework-time" wx:if="{{isTeacherPreview}}">老师预览可以查看，但不会同步学生的已读状态。</view>
   </view>
@@ -244,4 +246,10 @@
     <view class="identity-exit" bindtap="unbindIdentity">退出绑定</view>
   </view>
   <teacher-tabbar wx:if="{{isTeacher}}" current="home"></teacher-tabbar>
+  <student-tabbar
+    wx:if="{{isStudent}}"
+    current="learning"
+    mode="{{mode}}"
+    preview-student-id="{{previewStudentId}}"
+  ></student-tabbar>
 </view>

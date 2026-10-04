@@ -1,0 +1,72 @@
+<view class="page reminder-page">
+  <view class="reminder-hero">
+    <view class="hero-kicker">STUDENT REMINDER</view>
+    <view class="hero-title">{{student ? student.name + '的动态提醒' : '学生动态提醒'}}</view>
+    <view class="hero-hint">发布在学生首页“我的新动态”中，可修改或撤回。这是小程序内提醒，不是微信消息推送。</view>
+  </view>
+
+  <view class="card status-card" wx:if="{{loading}}">正在读取提醒…</view>
+  <view class="card error-card" wx:elif="{{message}}">{{message}}</view>
+
+  <block wx:elif="{{student}}">
+    <view class="card editor-card">
+      <view class="editor-head">
+        <view>
+          <view class="editor-title">{{editingReminderId ? '修改提醒' : '发布新提醒'}}</view>
+          <view class="editor-hint">修改后会重新出现在学生的新动态顶部。</view>
+        </view>
+        <view class="editing-badge" wx:if="{{editingReminderId}}">编辑中</view>
+      </view>
+      <view class="field">
+        <view class="label">提醒标题</view>
+        <input class="input" maxlength="40" value="{{form.title}}" placeholder="例如：明天记得带课本" bindinput="onTitleInput" />
+        <view class="counter">{{form.title.length || 0}} / 40</view>
+      </view>
+      <view class="field">
+        <view class="label">提醒内容</view>
+        <textarea class="textarea" maxlength="300" auto-height value="{{form.content}}" placeholder="写清楚学生需要知道或准备的事情" bindinput="onContentInput"></textarea>
+        <view class="counter">{{form.content.length || 0}} / 300</view>
+      </view>
+      <view class="editor-actions">
+        <view class="ghost-btn editor-button" wx:if="{{editingReminderId}}" bindtap="cancelEdit">取消修改</view>
+        <view class="primary-btn editor-button {{saving ? 'button-disabled' : ''}}" bindtap="submitReminder">{{saving ? '处理中…' : (editingReminderId ? '保存并重新提醒' : '发布提醒')}}</view>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <view>
+        <view class="section-title">正在显示</view>
+        <view class="section-hint">学生点“知道了”后只会隐藏自己的已读动态，不会删除教师记录。</view>
+      </view>
+      <view class="section-count">{{activeReminders.length}}</view>
+    </view>
+    <view class="card empty-card" wx:if="{{!activeReminders.length}}">目前没有正在显示的自定义提醒。</view>
+    <view class="card reminder-card" wx:for="{{activeReminders}}" wx:key="_id">
+      <view class="reminder-card-head">
+        <view class="reminder-title">{{item.title}}</view>
+        <view class="active-badge">显示中</view>
+      </view>
+      <view class="reminder-content">{{item.content}}</view>
+      <view class="reminder-meta">更新于 {{item.timeLabel}}<text wx:if="{{item.version > 1}}"> · 已修改 {{item.version - 1}} 次</text></view>
+      <view class="reminder-actions">
+        <view class="edit-button" data-id="{{item._id}}" bindtap="editReminder">修改</view>
+        <view class="withdraw-button" data-id="{{item._id}}" bindtap="withdrawReminder">撤回</view>
+      </view>
+    </view>
+
+    <view class="section-head history-head" wx:if="{{historyReminders.length}}">
+      <view>
+        <view class="section-title">最近撤回</view>
+        <view class="section-hint">仅教师可见，用于确认以前发布过什么。</view>
+      </view>
+    </view>
+    <view class="card reminder-card withdrawn-card" wx:for="{{historyReminders}}" wx:key="_id">
+      <view class="reminder-card-head">
+        <view class="reminder-title">{{item.title}}</view>
+        <view class="withdrawn-badge">已撤回</view>
+      </view>
+      <view class="reminder-content">{{item.content}}</view>
+      <view class="reminder-meta">{{item.timeLabel}}</view>
+    </view>
+  </block>
+</view>

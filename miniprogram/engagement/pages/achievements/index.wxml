@@ -1,0 +1,124 @@
+<view class="page achievement-page has-student-tabbar">
+  <view class="preview-banner" wx:if="{{isTeacherPreview && student}}">
+    <view>
+      <view class="preview-banner-title">正在查看 {{student.name}} 的真实学生成就页</view>
+      <view class="preview-banner-hint">积分、成就和本周 PK 与学生看到的一样；本页没有可写入的按钮。</view>
+    </view>
+    <view class="preview-banner-action" bindtap="goBackToTeacher">返回教师端</view>
+  </view>
+
+  <view class="card loading-card" wx:if="{{loading}}">正在核对学习记录并计算积分…</view>
+  <view class="card error-card" wx:elif="{{message}}">
+    <view>{{message}}</view>
+    <view class="retry-button" bindtap="retry">重新加载</view>
+  </view>
+
+  <block wx:elif="{{student && dashboard}}">
+    <view class="achievement-hero">
+      <view class="hero-kicker">{{student.name}} · LEARNING JOURNEY</view>
+      <view class="hero-main">
+        <view>
+          <view class="hero-title">我的学习成就</view>
+          <view class="hero-level">Lv.{{dashboard.level.number}} {{dashboard.level.title}}</view>
+        </view>
+        <view class="point-orb">
+          <view class="point-number">{{dashboard.totalPoints}}</view>
+          <view class="point-label">总积分</view>
+        </view>
+      </view>
+      <view class="level-track"><view class="level-fill" style="width: {{dashboard.level.progressPercent}}%;"></view></view>
+      <view class="level-note" wx:if="{{dashboard.level.pointsToNext}}">再得 {{dashboard.level.pointsToNext}} 分升级为“{{dashboard.level.nextTitle}}”</view>
+      <view class="level-note" wx:else>已经到达当前最高等级</view>
+    </view>
+
+    <view class="summary-grid">
+      <view class="summary-card">
+        <view class="summary-number">{{dashboard.weeklyPoints}}</view>
+        <view class="summary-label">本周积分</view>
+      </view>
+      <view class="summary-card">
+        <view class="summary-number">{{dashboard.streakDays}}</view>
+        <view class="summary-label">连续学习天数</view>
+      </view>
+      <view class="summary-card">
+        <view class="summary-number">{{dashboard.unlockedAchievementCount}}</view>
+        <view class="summary-label">已获成就</view>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <view>
+        <view class="section-title">成就收藏</view>
+        <view class="section-hint">只由真实学习记录自动点亮</view>
+      </view>
+      <view class="section-count">{{dashboard.unlockedAchievementCount}} / {{dashboard.achievements.length}}</view>
+    </view>
+    <view class="achievement-grid">
+      <view class="achievement-card {{item.unlocked ? 'achievement-unlocked' : 'achievement-locked'}}" wx:for="{{dashboard.achievements}}" wx:key="id">
+        <view class="achievement-mark">{{item.mark}}</view>
+        <view class="achievement-title">{{item.title}}</view>
+        <view class="achievement-description">{{item.description}}</view>
+        <view class="achievement-progress"><view class="achievement-progress-fill" style="width: {{item.progressPercent}}%;"></view></view>
+        <view class="achievement-state">{{item.progressText}}</view>
+      </view>
+    </view>
+
+    <view class="card pk-card">
+      <view class="pk-head">
+        <view>
+          <view class="section-title card-section-title">本周同学 PK</view>
+          <view class="section-hint">{{dashboard.weekLabel}} · 只比较本周可核验学习积分</view>
+        </view>
+        <view class="my-rank">{{dashboard.weeklyRank ? '第 ' + dashboard.weeklyRank + ' 名' : '暂不参与'}}</view>
+      </view>
+      <view class="pk-message">{{dashboard.pkMessage}}</view>
+      <view class="ranking-list">
+        <view class="ranking-row {{item.isCurrent ? 'ranking-current' : ''}}" wx:for="{{dashboard.weeklyRanking}}" wx:key="rowKey">
+          <view class="rank-mark rank-{{item.rank}}">{{item.rankMark}}</view>
+          <view class="rank-name">{{item.displayName}}</view>
+          <view class="rank-points">{{item.weeklyPoints}} 分</view>
+        </view>
+      </view>
+      <view class="privacy-note">为保护学生隐私，其他同学只显示简化名称；不能查看对方资料，也没有聊天功能。</view>
+    </view>
+
+    <view class="card breakdown-card">
+      <view class="section-title card-section-title">积分从哪里来？</view>
+      <view class="section-hint">积分自动从现有记录计算，不能手动领取或靠重复点按钮增加。</view>
+      <view class="rule-summary">
+        <view>英语单词 +{{dashboard.rules.vocabularyPerWord}} / 个（每天最多 {{dashboard.rules.vocabularyDailyCap}} 个）</view>
+        <view>单词小测每天只计最好一轮：完成 +{{dashboard.rules.quizCompletion}}，正确率最多 +{{dashboard.rules.quizAccuracyMax}}</view>
+        <view>录音任务 +{{dashboard.rules.recordingPerTask}} / 项 · 老师确认作业 +{{dashboard.rules.homeworkConfirmed}} / 项</view>
+        <view>KET 模拟 +{{dashboard.rules.ketMockCompleted}} / 套 · 法语 +{{dashboard.rules.frenchPerActivity}} / 项（每天最多 {{dashboard.rules.frenchDailyCap}} 项）</view>
+      </view>
+      <view class="breakdown-empty" wx:if="{{!dashboard.pointsBreakdown.length}}">完成一次学习后，这里会显示积分来源。</view>
+      <view class="breakdown-row" wx:for="{{dashboard.pointsBreakdown}}" wx:key="key">
+        <view class="breakdown-copy">
+          <view class="breakdown-title">{{item.label}}</view>
+          <view class="breakdown-detail">{{item.detail}}</view>
+        </view>
+        <view class="breakdown-points">+{{item.points}}</view>
+      </view>
+    </view>
+
+    <view class="card recent-card" wx:if="{{dashboard.recentPoints.length}}">
+      <view class="section-title card-section-title">最近得分</view>
+      <view class="recent-row" wx:for="{{dashboard.recentPoints}}" wx:key="key">
+        <view>
+          <view class="recent-title">{{item.title}}</view>
+          <view class="recent-date">{{item.dateLabel}}</view>
+        </view>
+        <view class="recent-points">+{{item.points}}</view>
+      </view>
+    </view>
+
+    <view class="evidence-note">积分用于鼓励稳定学习，不代表考试成绩，也不影响老师对作业和口语的真实评价。</view>
+  </block>
+
+  <student-tabbar
+    wx:if="{{student}}"
+    current="achievements"
+    mode="{{mode}}"
+    preview-student-id="{{previewStudentId}}"
+  ></student-tabbar>
+</view>

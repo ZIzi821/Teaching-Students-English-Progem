@@ -333,6 +333,14 @@ Page({
     });
   },
 
+  goStudentReminders() {
+    const student = this.data.student;
+    if (!this.data.isTeacher || !student || !student._id) return;
+    wx.navigateTo({
+      url: "/engagement/pages/reminders/index?studentId=" + encodeURIComponent(student._id),
+    });
+  },
+
   goBackToTeacher() {
     wx.navigateBack({
       fail() {
