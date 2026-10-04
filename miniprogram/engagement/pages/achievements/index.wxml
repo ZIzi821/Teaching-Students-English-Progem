@@ -86,7 +86,7 @@
           <view class="rank-points">{{item.pkScore}} PK 分</view>
         </view>
       </view>
-      <view class="privacy-note">为保护学生隐私，其他真实同学只显示简化名称；挑战选手不是现实学生，不能查看任何对方资料，也没有聊天功能。</view>
+      <view class="privacy-note">为保护学生隐私，其他真实同学只显示简化名称；不能查看任何对方资料，也没有聊天功能。</view>
     </view>
 
     <view class="card breakdown-card">
