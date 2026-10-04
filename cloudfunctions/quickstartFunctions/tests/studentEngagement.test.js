@@ -6,7 +6,7 @@ const nowMs = Date.UTC(2026, 9, 7, 4, 0, 0);
 const today = engagement.getLearningDay(nowMs);
 const atDay = (day, hour = 12) => day * DAY_MS - 8 * 60 * 60 * 1000 + hour * 60 * 60 * 1000;
 
-const studentA = { _id: "student-a", name: "Molly", status: "在读", frenchLearningEnabled: true };
+const studentA = { _id: "student-a", name: "Molly", status: "在读", frenchLearningEnabled: true, completedLessonCount: 40 };
 const studentB = { _id: "student-b", name: "冯嘉文", status: "在读" };
 
 const score = engagement.buildStudentScore({
@@ -73,6 +73,36 @@ assert.strictEqual(dashboard.participantCount, 2, "Students who are no longer ac
 assert.strictEqual(dashboard.weeklyRanking[0].displayName, "冯同学", "Other student names must be masked");
 assert.strictEqual(dashboard.weeklyRanking[1].displayName, "我", "Current learner must be shown as me");
 assert.strictEqual(dashboard.distanceToNext, 7, "Distance to next rank should require strictly exceeding it");
+assert.strictEqual(dashboard.pkScore, dashboard.weeklyPoints, "A real student's PK score must equal verified weekly points");
+
+const challengeState = engagement.getPkChallengeScore({
+  _id: "challenge-1",
+  name: "闪电挑战者",
+  weeklyBaseScore: 15,
+  dailyIncrement: 2,
+  enabled: true,
+}, nowMs);
+assert.strictEqual(challengeState.elapsedDays, 2, "Challenge growth must use Hong Kong week days from Monday");
+assert.strictEqual(challengeState.score, 19, "Challenge score formula is incorrect");
+const challengeDashboard = engagement.buildEngagementDashboard({
+  currentStudentId: studentA._id,
+  nowMs,
+  participants: [
+    { student: studentA, records: { vocabularyDailyStats: [{ learningDay: today, reviewedWordCount: 5 }] } },
+    { student: Object.assign({}, studentB, { pkEnabled: false }), records: { vocabularyDailyStats: [{ learningDay: today, reviewedWordCount: 30 }] } },
+  ],
+  challengeProfiles: [{
+    _id: "challenge-1",
+    name: "闪电挑战者",
+    weeklyBaseScore: 15,
+    dailyIncrement: 2,
+    enabled: true,
+  }],
+});
+assert.strictEqual(challengeDashboard.participantCount, 2, "Opted-out real students must stay off the PK ranking");
+assert.strictEqual(challengeDashboard.weeklyRanking[0].displayName, "闪电挑战者");
+assert.strictEqual(challengeDashboard.weeklyRanking[0].isChallenge, true, "Configured competitors must be labelled as challenge participants");
+assert.strictEqual(challengeDashboard.weeklyRanking[1].pkScore, 10, "Real PK score must remain verified weekly points");
 
 const tiedDashboard = engagement.buildEngagementDashboard({
   currentStudentId: studentA._id,
@@ -100,5 +130,7 @@ assert.deepStrictEqual(reminderActivities.map((item) => item.reminderId), ["acti
 const achievements = engagement.buildAchievements(score, studentA);
 assert.ok(achievements.find((item) => item.id === "steady_three" && item.unlocked), "Three-day streak achievement is missing");
 assert.ok(achievements.find((item) => item.id === "french_explorer" && item.unlocked), "French achievement should be available to enabled learners");
+assert.ok(achievements.find((item) => item.id === "lesson_twenty" && item.unlocked), "Twenty-lesson achievement is missing");
+assert.ok(achievements.find((item) => item.id === "lesson_forty" && item.unlocked), "Forty-lesson achievement is missing");
 
-console.log("Student engagement tests passed: capped verified points, achievements, masked weekly PK, and reminder visibility.");
+console.log("Student engagement tests passed: verified points, lesson milestones, opt-in PK, labelled challenge participants, and reminder visibility.");

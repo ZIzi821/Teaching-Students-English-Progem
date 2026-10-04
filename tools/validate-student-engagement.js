@@ -15,6 +15,10 @@ const tabbarJs = read("miniprogram", "components", "student-tabbar", "index.js")
 const tabbarWxml = read("miniprogram", "components", "student-tabbar", "index.wxml");
 const achievementJs = read("miniprogram", "engagement", "pages", "achievements", "index.js");
 const achievementWxml = read("miniprogram", "engagement", "pages", "achievements", "index.wxml");
+const managerJs = read("miniprogram", "engagement", "pages", "manager", "index.js");
+const managerWxml = read("miniprogram", "engagement", "pages", "manager", "index.wxml");
+const workbenchJs = read("miniprogram", "pages", "teacher-workbench", "index.js");
+const workbenchWxml = read("miniprogram", "pages", "teacher-workbench", "index.wxml");
 const reminderJs = read("miniprogram", "engagement", "pages", "reminders", "index.js");
 const reminderWxml = read("miniprogram", "engagement", "pages", "reminders", "index.wxml");
 
@@ -23,6 +27,7 @@ const engagementPackage = (app.subpackages || app.subPackages || [])
 assert(engagementPackage, "Student engagement subpackage is not registered");
 assert(engagementPackage.pages.includes("pages/achievements/index"), "Achievement page is not registered");
 assert(engagementPackage.pages.includes("pages/reminders/index"), "Teacher reminder page is not registered");
+assert(engagementPackage.pages.includes("pages/manager/index"), "Teacher engagement manager is not registered");
 assert.strictEqual(
   app.usingComponents && app.usingComponents["student-tabbar"],
   "/components/student-tabbar/index",
@@ -40,10 +45,11 @@ assert(achievementWxml.includes("真实学生成就页"), "Teacher preview is no
 assert(achievementJs.includes('type: "getStudentEngagement"'), "Achievement page does not load protected engagement data");
 assert(!achievementJs.includes("save") && !achievementJs.includes("claim"), "Achievement page must not expose a point-claim write path");
 
-["listStudentReminders", "saveStudentReminder", "withdrawStudentReminder", "getStudentEngagement"].forEach((action) => {
+["listStudentReminders", "saveStudentReminder", "withdrawStudentReminder", "getStudentEngagement", "getTeacherEngagementManager", "saveStudentPkEligibility", "savePkChallengeProfile", "deletePkChallengeProfile"].forEach((action) => {
   assert(backend.includes(`case "${action}"`), `Cloud action ${action} is missing`);
 });
 assert(backend.includes('"studentReminders"'), "studentReminders collection is not initialized");
+assert(backend.includes('"pkChallengeProfiles"'), "pkChallengeProfiles collection is not initialized");
 assert(backend.includes("studentEngagement.buildReminderActivities"), "Custom reminders are not merged into student dynamics");
 assert(backend.includes('identity.role !== "student" || !identity.student'), "Teacher preview read-state protection changed unexpectedly");
 assert(reminderJs.includes('type: "saveStudentReminder"'), "Teacher reminder editor cannot publish or edit");
@@ -52,9 +58,16 @@ assert(reminderWxml.includes("小程序内提醒，不是微信消息推送"), "
 assert(detailJs.includes("goStudentReminders"), "Student management has no reminder entry handler");
 assert(detailWxml.includes("给学生的动态提醒"), "Student management has no reminder entry");
 assert(homeJs.includes("this.data.isTeacherPreview") && homeJs.includes("Promise.resolve()"), "Teacher preview must not persist student read state");
+assert(workbenchJs.includes("/engagement/pages/manager/index") && workbenchWxml.includes("成就与 PK 管理"), "Teacher workbench has no engagement manager entry");
+assert(managerJs.includes('type: "saveStudentPkEligibility"'), "Teacher cannot control real-student PK participation");
+assert(managerJs.includes('type: "savePkChallengeProfile"') && managerJs.includes('type: "deletePkChallengeProfile"'), "Teacher cannot manage challenge participants");
+assert(managerWxml.includes("真实学生的 PK 分 = 本周可核验学习积分") && managerWxml.includes("教师不能手动改动"), "Teacher manager does not explain the fair real-student score rule");
+assert(managerWxml.includes("挑战选手") && achievementWxml.includes("挑战选手"), "Challenge participants are not clearly labelled on both sides");
+assert(achievementWxml.includes("本周学习积分 1:1 等于 PK 分"), "Student page does not explain the relationship between points and PK score");
+assert(engagementLogic.buildAchievements({ recordedLessonCount: 40 }, {}).some((item) => item.id === "lesson_forty" && item.unlocked), "Forty-lesson achievement is missing");
 
 assert.strictEqual(engagementLogic.POINT_RULES.vocabularyDailyCap, 30, "Vocabulary daily cap changed unexpectedly");
 assert.strictEqual(engagementLogic.POINT_RULES.frenchDailyCap, 10, "French daily cap changed unexpectedly");
 assert(engagementLogic.buildStudentScore && engagementLogic.buildEngagementDashboard, "Tested engagement aggregators are missing");
 
-console.log("Student engagement validation passed: teacher reminders, read-only preview, verified points, achievements, masked weekly PK, and two student tabs.");
+console.log("Student engagement validation passed: lesson milestones, teacher-managed opt-in PK, fair verified scores, labelled challenge participants, and read-only preview.");

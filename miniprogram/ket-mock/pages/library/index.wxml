@@ -16,7 +16,7 @@
       <view class="summary-card"><view class="summary-number">{{summary.completeSetCount}} / {{summary.setCount}}</view><view class="summary-label">可开始套题</view></view>
       <view class="summary-card"><view class="summary-number">{{summary.readyCount}} / {{summary.totalCount}}</view><view class="summary-label">已备音频</view></view>
     </view>
-    <view class="truth-note">“原创题”为本小程序自行编写，不是 Cambridge 官方真题；第 1 套只依据公开样题结构改编，不逐字复制原题。</view>
+    <view class="truth-note">题库分三类：第 1 套“官方公开样题结构改编”；第 2–8 套“独家原创题目”；第 9–12 套“机构-独家原创题”。第三类表示按机构级完整模考标准原创，并不是复制某家机构的出版原题。</view>
     <view class="truth-note">录制衔接：把 “Thank you. Now, let’s talk about …” 直接放在下一段提示音开头；不要使用 “Good / 不错” 等评价性话语，也不需要单独上传一条衔接音频。</view>
 
     <view class="card set-card" wx:for="{{sets}}" wx:key="id" wx:for-item="set" wx:for-index="setIndex">

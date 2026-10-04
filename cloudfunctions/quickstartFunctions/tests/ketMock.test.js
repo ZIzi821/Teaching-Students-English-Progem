@@ -4,7 +4,8 @@ const ketMock = require("../ketMock");
 assert.deepStrictEqual(ketMock.validateCatalogue(), []);
 assert.strictEqual(ketMock.KET_MOCK_SETS.length, 12);
 assert.strictEqual(ketMock.KET_MOCK_SETS[0].sourceType, "official_public_adapted");
-assert.ok(ketMock.KET_MOCK_SETS.slice(1).every((set) => set.sourceType === "current_format_original"));
+assert.ok(ketMock.KET_MOCK_SETS.slice(1, 8).every((set) => set.sourceType === "exclusive_original"));
+assert.ok(ketMock.KET_MOCK_SETS.slice(8).every((set) => set.sourceType === "institution_exclusive_original"));
 
 ketMock.KET_MOCK_SETS.forEach((set) => {
   const enhancedSet = set.order >= 9;
@@ -17,7 +18,7 @@ ketMock.KET_MOCK_SETS.forEach((set) => {
 
 const enhancedSets = ketMock.KET_MOCK_SETS.slice(8);
 assert.strictEqual(enhancedSets.length, 4);
-assert.ok(enhancedSets.every((set) => set.sourceBadge === "原创题"));
+assert.ok(enhancedSets.every((set) => set.sourceBadge === "机构-独家原创题"));
 assert.ok(enhancedSets.every((set) => set.cues.filter((cue) => cue.responseExpected)
   .every((cue) => cue.backupPrompts.length >= 2 && cue.modelAnswer)));
 

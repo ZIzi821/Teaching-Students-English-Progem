@@ -38,6 +38,10 @@
         <view class="quick-mark quick-mark-ket">K</view>
         <view><view class="quick-title">KET 模拟录音库</view><view class="quick-hint">逐套准备考官与虚拟搭档音频</view></view>
       </view>
+      <view class="quick-card" bindtap="goEngagementManager">
+        <view class="quick-mark quick-mark-engagement">榜</view>
+        <view><view class="quick-title">成就与 PK 管理</view><view class="quick-hint">参榜学生、挑战选手与分数规则</view></view>
+      </view>
     </view>
 
     <view class="archive-head">

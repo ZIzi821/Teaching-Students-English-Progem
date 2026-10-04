@@ -14,6 +14,12 @@ const POINT_RULES = Object.freeze({
   frenchDailyCap: 10,
 });
 
+const PK_CHALLENGE_LIMITS = Object.freeze({
+  nameLength: 18,
+  weeklyBaseScoreMax: 1000,
+  dailyIncrementMax: 100,
+});
+
 const LEVELS = Object.freeze([
   { level: 1, minimum: 0, title: "学习新芽" },
   { level: 2, minimum: 100, title: "坚持学员" },
@@ -92,6 +98,33 @@ const getWeekWindow = (nowMs = Date.now()) => {
   };
 };
 
+const normalizePkChallengeProfile = (profile = {}) => ({
+  _id: String(profile._id || "").trim(),
+  name: String(profile.name || "").trim().slice(0, PK_CHALLENGE_LIMITS.nameLength),
+  weeklyBaseScore: clamp(
+    Math.round(asNumber(profile.weeklyBaseScore)),
+    0,
+    PK_CHALLENGE_LIMITS.weeklyBaseScoreMax
+  ),
+  dailyIncrement: clamp(
+    Math.round(asNumber(profile.dailyIncrement)),
+    0,
+    PK_CHALLENGE_LIMITS.dailyIncrementMax
+  ),
+  enabled: profile.enabled !== false,
+});
+
+const getPkChallengeScore = (profile = {}, nowMs = Date.now()) => {
+  const normalized = normalizePkChallengeProfile(profile);
+  const week = getWeekWindow(nowMs);
+  const elapsedDays = clamp(getLearningDay(nowMs) - week.startDay, 0, 6);
+  return {
+    score: normalized.weeklyBaseScore + normalized.dailyIncrement * elapsedDays,
+    elapsedDays,
+    week,
+  };
+};
+
 const getStreakDays = (activeDays, nowMs = Date.now()) => {
   const daySet = activeDays instanceof Set ? activeDays : new Set(activeDays || []);
   let cursor = getLearningDay(nowMs);
@@ -147,6 +180,7 @@ const buildLevel = (totalPoints) => {
 const buildStudentScore = (records = {}, nowMs = Date.now()) => {
   const events = [];
   const activeDays = new Set();
+  const lessonRecords = Array.isArray(records.lessons) ? records.lessons : [];
   const addEvent = ({ key, type, title, points, day, atMs, count = 1 }) => {
     const safePoints = Math.max(0, Math.round(asNumber(points)));
     const safeDay = Math.trunc(asNumber(day, getLearningDay(atMs || nowMs)));
@@ -235,7 +269,7 @@ const buildStudentScore = (records = {}, nowMs = Date.now()) => {
   });
 
   let homeworkCount = 0;
-  (records.lessons || []).forEach((lesson) => {
+  lessonRecords.forEach((lesson) => {
     if (!isTeacherConfirmedHomework(lesson)) return;
     const atMs = getDocumentTime(lesson, ["homeworkCompletedAtMs", "homeworkTeacherReviewedAtMs", "updatedAt"]);
     if (!atMs) return;
@@ -334,6 +368,9 @@ const buildStudentScore = (records = {}, nowMs = Date.now()) => {
     homeworkCount,
     ketMockCount: completedKetByTask.size,
     frenchActivityCount,
+    recordedLessonCount: new Set(lessonRecords.map((lesson, index) => (
+      String(lesson && lesson._id || `lesson-${index + 1}`)
+    ))).size,
     pointsBreakdown,
     events: events.sort((left, right) => right.atMs - left.atMs),
   };
@@ -341,6 +378,11 @@ const buildStudentScore = (records = {}, nowMs = Date.now()) => {
 
 const buildAchievements = (score, student = {}) => {
   const source = score || buildStudentScore();
+  const completedLessonCount = Math.max(
+    0,
+    Math.round(asNumber(source.recordedLessonCount)),
+    Math.round(asNumber(student.completedLessonCount))
+  );
   const definitions = [
     { id: "first_step", mark: "启", title: "第一次出发", description: "留下第 1 天真实学习记录", current: source.activeDayCount, target: 1 },
     { id: "word_sprout", mark: "词", title: "单词小树苗", description: "累计完成 20 个英语单词复习", current: source.reviewedWordCount, target: 20 },
@@ -351,6 +393,8 @@ const buildAchievements = (score, student = {}) => {
     { id: "steady_seven", mark: "7", title: "一周坚持", description: "连续 7 天留下学习记录", current: source.streakDays, target: 7 },
     { id: "points_hundred", mark: "星", title: "百积分新星", description: "累计获得 100 学习积分", current: source.totalPoints, target: 100 },
     { id: "ket_challenger", mark: "K", title: "KET 挑战者", description: "完成第 1 套 KET 口语模拟", current: source.ketMockCount, target: 1 },
+    { id: "lesson_twenty", mark: "20", title: "二十课时里程碑", description: "累计完成 20 节课程，学习正在形成自己的节奏", current: completedLessonCount, target: 20 },
+    { id: "lesson_forty", mark: "40", title: "四十课时进阶", description: "累计完成 40 节课程，把坚持变成长期成长", current: completedLessonCount, target: 40 },
   ];
   if (student.frenchLearningEnabled === true || source.frenchActivityCount > 0) {
     definitions.push({
@@ -383,6 +427,8 @@ const maskStudentName = (name) => {
 
 const isPkEligibleStudent = (student) => {
   if (!student || !student._id) return false;
+  if (student.pkEnabled === false) return false;
+  if (student.teacherHidden === true) return false;
   const status = String(student.status || "在读").trim();
   return !status || status === "在读";
 };
@@ -391,46 +437,78 @@ const buildRankingRows = (ranked, currentStudentId) => {
   let previousPoints = null;
   let displayedRank = 0;
   return (ranked || []).map((item, index) => {
-    if (previousPoints === null || item.score.weeklyPoints !== previousPoints) {
+    const pkScore = Math.max(0, Math.round(asNumber(item.pkScore, item.score && item.score.weeklyPoints)));
+    if (previousPoints === null || pkScore !== previousPoints) {
       displayedRank = index + 1;
-      previousPoints = item.score.weeklyPoints;
+      previousPoints = pkScore;
     }
+    const isChallenge = item.participantType === "challenge";
     return {
-      rowKey: `ranking-${index + 1}`,
+      rowKey: isChallenge ? `challenge-${item.profile._id}` : `student-${item.student._id}`,
       rank: displayedRank,
-      displayName: item.student._id === currentStudentId ? "我" : maskStudentName(item.student.name),
-      weeklyPoints: item.score.weeklyPoints,
+      displayName: item.student._id === currentStudentId
+        ? "我"
+        : isChallenge ? item.profile.name : maskStudentName(item.student.name),
+      weeklyPoints: pkScore,
+      pkScore,
+      verifiedWeeklyPoints: isChallenge ? 0 : item.score.weeklyPoints,
       isCurrent: item.student._id === currentStudentId,
+      isChallenge,
+      participantLabel: isChallenge ? "挑战选手" : "真实学习积分",
     };
   });
 };
 
-const buildEngagementDashboard = ({ participants = [], currentStudentId, nowMs = Date.now() } = {}) => {
+const buildEngagementDashboard = ({ participants = [], challengeProfiles = [], currentStudentId, nowMs = Date.now() } = {}) => {
   const scoredParticipants = (participants || [])
     .filter((item) => item && item.student && item.student._id)
     .map((item) => ({
       student: item.student,
       score: buildStudentScore(item.records || {}, nowMs),
+      participantType: "student",
     }));
   const current = scoredParticipants.find((item) => item.student._id === currentStudentId);
   if (!current) return null;
-  const eligible = scoredParticipants.filter((item) => isPkEligibleStudent(item.student));
+  const challengeParticipants = (challengeProfiles || [])
+    .map((profile) => normalizePkChallengeProfile(profile))
+    .filter((profile) => profile._id && profile.name && profile.enabled)
+    .map((profile) => {
+      const challengeScore = getPkChallengeScore(profile, nowMs).score;
+      return {
+        participantType: "challenge",
+        profile,
+        student: { _id: `challenge:${profile._id}`, name: profile.name },
+        score: { weeklyPoints: challengeScore, totalPoints: challengeScore },
+        pkScore: challengeScore,
+      };
+    });
+  const eligible = scoredParticipants
+    .filter((item) => isPkEligibleStudent(item.student))
+    .map((item) => Object.assign({}, item, { pkScore: item.score.weeklyPoints }))
+    .concat(challengeParticipants);
+  const sortRanked = (items) => items.slice().sort((left, right) => (
+    right.pkScore - left.pkScore
+    || Number(right.score.totalPoints || 0) - Number(left.score.totalPoints || 0)
+    || String(left.student._id).localeCompare(String(right.student._id))
+  ));
+  const pkPolicy = {
+    realStudentRule: "真实学生 PK 分与本周可核验学习积分 1:1 相同，教师不能手动改分",
+    challengeRule: "挑战选手由教师设置周一起始分和每日增幅，并在榜单中明确标注",
+  };
   if (!isPkEligibleStudent(current.student)) {
     const achievements = buildAchievements(current.score, current.student);
-    const inactiveRanking = eligible.slice().sort((left, right) => (
-      right.score.weeklyPoints - left.score.weeklyPoints
-      || right.score.totalPoints - left.score.totalPoints
-      || String(left.student._id).localeCompare(String(right.student._id))
-    ));
+    const inactiveRanking = sortRanked(eligible);
     return {
       totalPoints: current.score.totalPoints,
       weeklyPoints: current.score.weeklyPoints,
+      pkScore: current.score.weeklyPoints,
       level: current.score.level,
       streakDays: current.score.streakDays,
       activeDayCount: current.score.activeDayCount,
       weekLabel: current.score.week.label,
       weeklyRank: 0,
       participantCount: eligible.length,
+      challengeParticipantCount: challengeParticipants.length,
       distanceToNext: 0,
       pkMessage: "当前学习状态不参与本周同学 PK",
       achievements,
@@ -444,34 +522,33 @@ const buildEngagementDashboard = ({ participants = [], currentStudentId, nowMs =
         dateLabel: getDateKeyForLearningDay(event.day).slice(5).replace("-", "/"),
       })),
       rules: POINT_RULES,
+      pkPolicy,
     };
   }
-  const ranked = eligible.slice().sort((left, right) => (
-    right.score.weeklyPoints - left.score.weeklyPoints
-    || right.score.totalPoints - left.score.totalPoints
-    || String(left.student._id).localeCompare(String(right.student._id))
-  ));
+  const ranked = sortRanked(eligible);
   const currentIndex = ranked.findIndex((item) => item.student._id === currentStudentId);
   const next = currentIndex > 0
-    ? ranked.slice(0, currentIndex).reverse().find((item) => item.score.weeklyPoints > current.score.weeklyPoints) || null
+    ? ranked.slice(0, currentIndex).reverse().find((item) => item.pkScore > current.score.weeklyPoints) || null
     : null;
   const weeklyRanking = buildRankingRows(ranked, currentStudentId);
   const currentRanking = weeklyRanking.find((item) => item.isCurrent);
   const tiedForLead = currentRanking && currentRanking.rank === 1
-    && ranked.filter((item) => item.score.weeklyPoints === current.score.weeklyPoints).length > 1;
+    && ranked.filter((item) => item.pkScore === current.score.weeklyPoints).length > 1;
   const achievements = buildAchievements(current.score, current.student);
   return {
     totalPoints: current.score.totalPoints,
     weeklyPoints: current.score.weeklyPoints,
+    pkScore: current.score.weeklyPoints,
     level: current.score.level,
     streakDays: current.score.streakDays,
     activeDayCount: current.score.activeDayCount,
     weekLabel: current.score.week.label,
     weeklyRank: currentRanking ? currentRanking.rank : currentIndex + 1,
     participantCount: ranked.length,
-    distanceToNext: next ? Math.max(0, next.score.weeklyPoints - current.score.weeklyPoints + 1) : 0,
+    challengeParticipantCount: challengeParticipants.length,
+    distanceToNext: next ? Math.max(0, next.pkScore - current.score.weeklyPoints + 1) : 0,
     pkMessage: next
-      ? `再得 ${Math.max(0, next.score.weeklyPoints - current.score.weeklyPoints + 1)} 分可以超过上一名`
+      ? `再得 ${Math.max(0, next.pkScore - current.score.weeklyPoints + 1)} 分可以超过上一名`
       : tiedForLead
         ? "本周并列领先，再得 1 分就能单独领先"
         : ranked.length > 1 ? "本周暂时领先，继续保持" : "有更多同学学习后，这里会出现本周 PK",
@@ -486,6 +563,7 @@ const buildEngagementDashboard = ({ participants = [], currentStudentId, nowMs =
       dateLabel: getDateKeyForLearningDay(event.day).slice(5).replace("-", "/"),
     })),
     rules: POINT_RULES,
+    pkPolicy,
   };
 };
 
@@ -514,6 +592,7 @@ const buildReminderActivities = ({ reminders = [], viewedThroughAtMs = 0, nowMs 
 module.exports = {
   DAY_MS,
   LEVELS,
+  PK_CHALLENGE_LIMITS,
   POINT_RULES,
   REMINDER_VISIBLE_DAYS,
   buildAchievements,
@@ -521,10 +600,12 @@ module.exports = {
   buildLevel,
   buildReminderActivities,
   buildStudentScore,
+  getPkChallengeScore,
   getLearningDay,
   getStreakDays,
   getWeekWindow,
   isPkEligibleStudent,
   maskStudentName,
+  normalizePkChallengeProfile,
   parseDateKeyToLearningDay,
 };

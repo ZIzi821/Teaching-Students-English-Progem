@@ -308,6 +308,20 @@
   font-size: 23rpx;
 }
 
+.pk-relation-note {
+  margin-top: 12rpx;
+  padding: 14rpx 17rpx;
+  border-radius: 14rpx;
+  color: #5f675f;
+  background: #edf7f2;
+  font-size: 20rpx;
+  line-height: 1.55;
+}
+
+.pk-relation-note view + view {
+  margin-top: 5rpx;
+}
+
 .ranking-list {
   margin-top: 10rpx;
 }
@@ -356,11 +370,30 @@
   background: #e9c1a4;
 }
 
-.rank-name {
+.rank-copy {
+  min-width: 0;
   flex: 1;
+}
+
+.rank-name {
   color: #3e4944;
   font-size: 25rpx;
   font-weight: 700;
+}
+
+.rank-name text {
+  margin-left: 7rpx;
+  padding: 3rpx 8rpx;
+  border-radius: 999rpx;
+  color: #805b23;
+  background: #f7e4bc;
+  font-size: 16rpx;
+}
+
+.rank-source {
+  margin-top: 3rpx;
+  color: #918579;
+  font-size: 18rpx;
 }
 
 .rank-points {

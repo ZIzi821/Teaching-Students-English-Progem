@@ -102,7 +102,7 @@ const validateCatalogue = (sets = KET_MOCK_SETS) => {
     if (!set || !set.id) errors.push(`set ${setIndex + 1}: missing id`);
     if (ids.has(set && set.id)) errors.push(`duplicate set id: ${set.id}`);
     ids.add(set && set.id);
-    if (!["official_public_adapted", "current_format_original"].includes(set && set.sourceType)) {
+    if (!["official_public_adapted", "exclusive_original", "institution_exclusive_original"].includes(set && set.sourceType)) {
       errors.push(`${set && set.id}: invalid sourceType`);
     }
     const enhancedSet = Number(set && set.order || 0) >= 9;

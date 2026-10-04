@@ -16,8 +16,8 @@ assert.strictEqual(frontend.KET_MOCK_SETS.length, 12, "KET mock catalogue must e
 assert.strictEqual(cloudSets.length, 12, "Cloud KET mock catalogue must expose 12 sets");
 assert.deepStrictEqual(frontend.KET_MOCK_SETS, cloudSets, "Frontend and cloud KET mock catalogues must stay identical");
 assert.strictEqual(frontend.KET_MOCK_SETS[0].sourceType, "official_public_adapted", "Set 1 source boundary is missing");
-assert.ok(frontend.KET_MOCK_SETS.slice(1).every((set) => set.sourceType === "current_format_original"), "Sets 2-12 must be clearly labelled original");
-assert.ok(frontend.KET_MOCK_SETS.slice(1).every((set) => set.sourceBadge === "原创题"), "Sets 2-12 must use the concise original-question label");
+assert.ok(frontend.KET_MOCK_SETS.slice(1, 8).every((set) => set.sourceType === "exclusive_original" && set.sourceBadge === "独家原创题目"), "Sets 2-8 must use the exclusive-original category");
+assert.ok(frontend.KET_MOCK_SETS.slice(8).every((set) => set.sourceType === "institution_exclusive_original" && set.sourceBadge === "机构-独家原创题"), "Sets 9-12 must use the institution-grade exclusive-original category");
 assert.strictEqual(frontend.KET_MOCK_SETS.filter((set) => set.order >= 9).length, 4, "Four enhanced original sets are required");
 
 const cloudById = new Map(cloudSets.map((set) => [set.id, set]));
@@ -99,7 +99,7 @@ const recordingPracticeJs = read("miniprogram", "pages", "recording-practice", "
 assert.ok(addLessonJs.includes('value: "ket_mock"'), "Lesson creation cannot assign a full mock");
 assert.ok(lessonDetailJs.includes("/ket-mock/pages/exam/index?lessonId="), "Lesson detail does not open the mock exam");
 assert.ok(workbenchJs.includes("/ket-mock/pages/library/index"), "Teacher workbench does not open the audio library");
-assert.ok(libraryWxml.includes("“原创题”为本小程序自行编写"), "Teacher library does not explain the original-question label");
+assert.ok(libraryWxml.includes("官方公开样题结构改编") && libraryWxml.includes("独家原创题目") && libraryWxml.includes("机构-独家原创题"), "Teacher library does not explain all three source categories");
 assert.ok(libraryWxml.includes("教师备用追问 · 无需预录"), "Teacher library does not expose optional backup prompts");
 assert.ok(libraryWxml.includes("下一段提示音开头") && libraryWxml.includes("不要使用 “Good / 不错”"), "Teacher library lacks neutral transition guidance");
 assert.ok(examJs.includes("playReliableAudio") && examJs.includes("onEnded"), "Exam does not verify and advance after examiner audio ends");

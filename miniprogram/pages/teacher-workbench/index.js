@@ -104,4 +104,8 @@ Page({
   goKetMockLibrary() {
     wx.navigateTo({ url: "/ket-mock/pages/library/index" });
   },
+
+  goEngagementManager() {
+    wx.navigateTo({ url: "/engagement/pages/manager/index" });
+  },
 });

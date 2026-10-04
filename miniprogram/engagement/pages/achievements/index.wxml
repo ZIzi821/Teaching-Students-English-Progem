@@ -34,7 +34,7 @@
     <view class="summary-grid">
       <view class="summary-card">
         <view class="summary-number">{{dashboard.weeklyPoints}}</view>
-        <view class="summary-label">本周积分</view>
+        <view class="summary-label">本周学习积分</view>
       </view>
       <view class="summary-card">
         <view class="summary-number">{{dashboard.streakDays}}</view>
@@ -67,24 +67,31 @@
       <view class="pk-head">
         <view>
           <view class="section-title card-section-title">本周同学 PK</view>
-          <view class="section-hint">{{dashboard.weekLabel}} · 只比较本周可核验学习积分</view>
+          <view class="section-hint">{{dashboard.weekLabel}} · 真实学生按可核验积分，挑战选手会明确标注</view>
         </view>
         <view class="my-rank">{{dashboard.weeklyRank ? '第 ' + dashboard.weeklyRank + ' 名' : '暂不参与'}}</view>
       </view>
       <view class="pk-message">{{dashboard.pkMessage}}</view>
+      <view class="pk-relation-note">
+        <view>真实学生：本周学习积分 1:1 等于 PK 分，老师不能手动改分。</view>
+        <view wx:if="{{dashboard.challengeParticipantCount}}">挑战选手：由老师设置激励分数，不计入任何学生的总积分、等级或成就。</view>
+      </view>
       <view class="ranking-list">
         <view class="ranking-row {{item.isCurrent ? 'ranking-current' : ''}}" wx:for="{{dashboard.weeklyRanking}}" wx:key="rowKey">
           <view class="rank-mark rank-{{item.rank}}">{{item.rankMark}}</view>
-          <view class="rank-name">{{item.displayName}}</view>
-          <view class="rank-points">{{item.weeklyPoints}} 分</view>
+          <view class="rank-copy">
+            <view class="rank-name">{{item.displayName}} <text wx:if="{{item.isChallenge}}">挑战选手</text></view>
+            <view class="rank-source">{{item.participantLabel}}</view>
+          </view>
+          <view class="rank-points">{{item.pkScore}} PK 分</view>
         </view>
       </view>
-      <view class="privacy-note">为保护学生隐私，其他同学只显示简化名称；不能查看对方资料，也没有聊天功能。</view>
+      <view class="privacy-note">为保护学生隐私，其他真实同学只显示简化名称；挑战选手不是现实学生，不能查看任何对方资料，也没有聊天功能。</view>
     </view>
 
     <view class="card breakdown-card">
       <view class="section-title card-section-title">积分从哪里来？</view>
-      <view class="section-hint">积分自动从现有记录计算，不能手动领取或靠重复点按钮增加。</view>
+      <view class="section-hint">以下是学习积分，也是实际学生进入 PK 榜的唯一分数来源；不能手动领取或靠重复点按钮增加。</view>
       <view class="rule-summary">
         <view>英语单词 +{{dashboard.rules.vocabularyPerWord}} / 个（每天最多 {{dashboard.rules.vocabularyDailyCap}} 个）</view>
         <view>单词小测每天只计最好一轮：完成 +{{dashboard.rules.quizCompletion}}，正确率最多 +{{dashboard.rules.quizAccuracyMax}}</view>

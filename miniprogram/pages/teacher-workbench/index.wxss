@@ -119,6 +119,11 @@
   background: #f3e9ce;
 }
 
+.quick-mark-engagement {
+  color: #6f492b;
+  background: #f0cfaa;
+}
+
 .quick-title {
   color: #39332d;
   font-size: 25rpx;

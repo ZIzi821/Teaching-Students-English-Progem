@@ -34,6 +34,7 @@ const COLLECTIONS = [
   "ketMockSessions",
   "followReadingAssets",
   "studentReminders",
+  "pkChallengeProfiles",
   "systemLocks",
 ];
 const VOCABULARY_DAY_MS = 24 * 60 * 60 * 1000;
@@ -1542,6 +1543,176 @@ const loadStudentEngagementParticipant = async (student) => {
   };
 };
 
+const isStudentManagedByTeacher = (student, teacherIdentity) => {
+  const ownerOpenId = String(student && student.teacherOpenId || "").trim();
+  const teacherOpenId = String(teacherIdentity && teacherIdentity.openid || "").trim();
+  return !ownerOpenId || !teacherOpenId || ownerOpenId === teacherOpenId;
+};
+
+const loadTeacherPkChallengeProfiles = async (teacherOpenId) => {
+  await createOneCollection("pkChallengeProfiles");
+  return loadAllVocabularyDocuments("pkChallengeProfiles", { teacherOpenId: String(teacherOpenId || "").trim() });
+};
+
+const sanitizePkChallengeProfile = (profile, nowMs = Date.now()) => {
+  const normalized = studentEngagement.normalizePkChallengeProfile(profile);
+  const scoreState = studentEngagement.getPkChallengeScore(normalized, nowMs);
+  return Object.assign({}, normalized, {
+    currentScore: scoreState.score,
+    elapsedDays: scoreState.elapsedDays,
+    weekLabel: scoreState.week.label,
+    updatedAtMs: Math.max(0, Number(profile && profile.updatedAtMs) || 0),
+  });
+};
+
+const getTeacherEngagementManager = async () => {
+  const teacherIdentity = await ensureTeacher();
+  await Promise.all([
+    createOneCollection("vocabularyDailyStats"),
+    createOneCollection("vocabularyQuizSessions"),
+    createOneCollection("lessonSubmissions"),
+    createOneCollection("ketMockSessions"),
+    createOneCollection("frenchLearningProgress"),
+    createOneCollection("pkChallengeProfiles"),
+  ]);
+  const allStudents = await loadAllVocabularyDocuments("students", {});
+  const students = allStudents.filter((student) => isStudentManagedByTeacher(student, teacherIdentity));
+  const [participantRecords, challengeProfiles] = await Promise.all([
+    Promise.all(students.map(loadStudentEngagementParticipant)),
+    loadTeacherPkChallengeProfiles(teacherIdentity.openid),
+  ]);
+  const studentRows = participantRecords.map((participant) => {
+    const student = participant.student;
+    const score = studentEngagement.buildStudentScore(participant.records);
+    const achievements = studentEngagement.buildAchievements(score, student);
+    const status = String(student.status || "在读").trim() || "在读";
+    return {
+      _id: student._id,
+      name: String(student.name || "学生").trim(),
+      nickname: String(student.nickname || "").trim(),
+      grade: String(student.grade || "").trim(),
+      status,
+      teacherHidden: student.teacherHidden === true,
+      pkEnabled: student.pkEnabled !== false,
+      statusEligible: status === "在读" && student.teacherHidden !== true,
+      effectivePkEnabled: studentEngagement.isPkEligibleStudent(student),
+      weeklyPoints: score.weeklyPoints,
+      totalPoints: score.totalPoints,
+      completedLessonCount: Math.max(
+        Number(score.recordedLessonCount) || 0,
+        Number(student.completedLessonCount) || 0
+      ),
+      unlockedAchievementCount: achievements.filter((item) => item.unlocked).length,
+      achievementCount: achievements.length,
+    };
+  }).sort((left, right) => (
+    Number(right.effectivePkEnabled) - Number(left.effectivePkEnabled)
+    || left.name.localeCompare(right.name, "zh-CN")
+  ));
+  const nowMs = Date.now();
+  const profiles = challengeProfiles
+    .map((profile) => sanitizePkChallengeProfile(profile, nowMs))
+    .sort((left, right) => Number(right.enabled) - Number(left.enabled) || right.currentScore - left.currentScore);
+  return {
+    success: true,
+    week: studentEngagement.getWeekWindow(nowMs),
+    studentRows,
+    challengeProfiles: profiles,
+    limits: studentEngagement.PK_CHALLENGE_LIMITS,
+    pointRules: studentEngagement.POINT_RULES,
+  };
+};
+
+const saveStudentPkEligibility = async (event = {}) => {
+  const teacherIdentity = await ensureTeacher();
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请刷新后重试");
+  const studentRef = db.collection("students").doc(studentId);
+  const student = await getOptionalTransactionDocument(studentRef);
+  if (!student || !isStudentManagedByTeacher(student, teacherIdentity)) {
+    throw createError("PERMISSION_DENIED", "只能管理自己的学生 PK 设置");
+  }
+  const pkEnabled = data.pkEnabled === true;
+  await studentRef.update({
+    data: {
+      pkEnabled,
+      pkUpdatedAt: db.serverDate(),
+      pkUpdatedAtMs: Date.now(),
+      pkUpdatedBy: teacherIdentity.openid || "",
+    },
+  });
+  return { success: true, studentId, pkEnabled };
+};
+
+const normalizePkChallengeInput = (data = {}) => {
+  const name = String(data.name || "").trim();
+  if (!name) throw createError("INVALID_PK_CHALLENGE", "请填写挑战选手名称");
+  if (Array.from(name).length > studentEngagement.PK_CHALLENGE_LIMITS.nameLength) {
+    throw createError("INVALID_PK_CHALLENGE", `挑战选手名称最多 ${studentEngagement.PK_CHALLENGE_LIMITS.nameLength} 个字`);
+  }
+  const weeklyBaseScore = Number(data.weeklyBaseScore);
+  const dailyIncrement = Number(data.dailyIncrement);
+  if (!Number.isInteger(weeklyBaseScore) || weeklyBaseScore < 0 || weeklyBaseScore > studentEngagement.PK_CHALLENGE_LIMITS.weeklyBaseScoreMax) {
+    throw createError("INVALID_PK_CHALLENGE", `周一起始分须为 0–${studentEngagement.PK_CHALLENGE_LIMITS.weeklyBaseScoreMax} 的整数`);
+  }
+  if (!Number.isInteger(dailyIncrement) || dailyIncrement < 0 || dailyIncrement > studentEngagement.PK_CHALLENGE_LIMITS.dailyIncrementMax) {
+    throw createError("INVALID_PK_CHALLENGE", `每日增幅须为 0–${studentEngagement.PK_CHALLENGE_LIMITS.dailyIncrementMax} 的整数`);
+  }
+  return { name, weeklyBaseScore, dailyIncrement, enabled: data.enabled !== false };
+};
+
+const savePkChallengeProfile = async (event = {}) => {
+  const teacherIdentity = await ensureTeacher();
+  await createOneCollection("pkChallengeProfiles");
+  const data = event.data || {};
+  const profileId = String(data.profileId || "").trim();
+  if (profileId && !/^[a-zA-Z0-9_-]{1,120}$/.test(profileId)) {
+    throw createError("INVALID_PK_CHALLENGE", "挑战选手信息无效，请刷新后重试");
+  }
+  const input = normalizePkChallengeInput(data);
+  await assertContentSafe({ texts: [input.name] });
+  const nowMs = Date.now();
+  const targetId = profileId || `pk_challenge_${nowMs}_${crypto.randomBytes(6).toString("hex")}`;
+  const saved = await db.runTransaction(async (transaction) => {
+    const profileRef = transaction.collection("pkChallengeProfiles").doc(targetId);
+    const current = await getOptionalTransactionDocument(profileRef);
+    if (profileId && !current) throw createError("PK_CHALLENGE_NOT_FOUND", "挑战选手不存在或已删除");
+    if (current && String(current.teacherOpenId || "") !== String(teacherIdentity.openid || "")) {
+      throw createError("PERMISSION_DENIED", "只能修改自己创建的挑战选手");
+    }
+    const payload = Object.assign({}, input, {
+      teacherOpenId: teacherIdentity.openid || "",
+      updatedAt: db.serverDate(),
+      updatedAtMs: nowMs,
+    });
+    if (current) {
+      await profileRef.update({ data: payload });
+    } else {
+      await profileRef.set({ data: Object.assign({}, payload, { createdAt: db.serverDate(), createdAtMs: nowMs }) });
+    }
+    return Object.assign({}, current || {}, payload, { _id: targetId });
+  });
+  return { success: true, profile: sanitizePkChallengeProfile(saved, nowMs) };
+};
+
+const deletePkChallengeProfile = async (event = {}) => {
+  const teacherIdentity = await ensureTeacher();
+  await createOneCollection("pkChallengeProfiles");
+  const profileId = String(event.data && event.data.profileId || "").trim();
+  if (!profileId || !/^[a-zA-Z0-9_-]{1,120}$/.test(profileId)) {
+    throw createError("INVALID_PK_CHALLENGE", "挑战选手信息无效，请刷新后重试");
+  }
+  const profileRef = db.collection("pkChallengeProfiles").doc(profileId);
+  const current = await getOptionalTransactionDocument(profileRef);
+  if (!current) return { success: true, alreadyDeleted: true };
+  if (String(current.teacherOpenId || "") !== String(teacherIdentity.openid || "")) {
+    throw createError("PERMISSION_DENIED", "只能删除自己创建的挑战选手");
+  }
+  await profileRef.remove();
+  return { success: true, profileId };
+};
+
 const getStudentEngagement = async (event = {}) => {
   const identity = await getIdentity();
   const data = event.data || {};
@@ -1565,23 +1736,33 @@ const getStudentEngagement = async (event = {}) => {
     createOneCollection("lessonSubmissions"),
     createOneCollection("ketMockSessions"),
     createOneCollection("frenchLearningProgress"),
+    createOneCollection("pkChallengeProfiles"),
   ]);
-  const studentsRes = await db.collection("students").get();
-  const allStudents = studentsRes.data || [];
+  const allStudents = await loadAllVocabularyDocuments("students", {});
   const currentStudent = allStudents.find((student) => student._id === studentId);
   if (!currentStudent) throw createError("INVALID_STUDENT", "学生不存在或已删除");
   const currentTeacherOpenId = String(currentStudent.teacherOpenId || "").trim();
+  const configuredTeacherOpenId = Array.isArray(appConfig.teacherOpenIds)
+    ? String(appConfig.teacherOpenIds[0] || "").trim()
+    : "";
+  const rankingTeacherOpenId = currentTeacherOpenId || configuredTeacherOpenId;
   const participants = allStudents.filter((student) => {
     if (student._id === studentId) return true;
     if (!studentEngagement.isPkEligibleStudent(student)) return false;
     const participantTeacherOpenId = String(student.teacherOpenId || "").trim();
-    return !currentTeacherOpenId
+    return !rankingTeacherOpenId
       || !participantTeacherOpenId
-      || participantTeacherOpenId === currentTeacherOpenId;
+      || participantTeacherOpenId === rankingTeacherOpenId;
   });
-  const participantRecords = await Promise.all(participants.map(loadStudentEngagementParticipant));
+  const [participantRecords, challengeProfiles] = await Promise.all([
+    Promise.all(participants.map(loadStudentEngagementParticipant)),
+    rankingTeacherOpenId
+      ? loadTeacherPkChallengeProfiles(rankingTeacherOpenId)
+      : Promise.resolve([]),
+  ]);
   const dashboard = studentEngagement.buildEngagementDashboard({
     participants: participantRecords,
+    challengeProfiles,
     currentStudentId: studentId,
   });
   if (!dashboard) throw createError("ENGAGEMENT_UNAVAILABLE", "成就数据暂时无法计算，请稍后再试");
@@ -5362,6 +5543,14 @@ exports.main = async (event) => {
         return await withdrawStudentReminder(event);
       case "getStudentEngagement":
         return await getStudentEngagement(event);
+      case "getTeacherEngagementManager":
+        return await getTeacherEngagementManager();
+      case "saveStudentPkEligibility":
+        return await saveStudentPkEligibility(event);
+      case "savePkChallengeProfile":
+        return await savePkChallengeProfile(event);
+      case "deletePkChallengeProfile":
+        return await deletePkChallengeProfile(event);
       case "bindStudent":
       case "bindAccessCode":
         return await bindAccessCode(event);
