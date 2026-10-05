@@ -1,0 +1,54 @@
+<view class="ket-trend-card">
+  <view class="trend-head">
+    <view>
+      <view class="trend-title">KET 四维成绩趋势</view>
+      <view class="trend-subtitle">语法与词汇、发音、互动沟通、整体表现</view>
+    </view>
+    <view class="trend-count">{{trend && trend.reviewedCount || 0}} 次评分</view>
+  </view>
+
+  <view class="trend-empty" wx:if="{{!trend || !trend.hasData}}">
+    <view class="trend-empty-mark">KET</view>
+    <view>{{trend && trend.emptyMessage || '还没有老师完成评分的 KET 模拟；第一次评分会建立基线，第二次开始显示变化。'}}</view>
+  </view>
+
+  <block wx:else>
+    <view class="trend-summary">
+      <view>
+        <view class="trend-summary-label">最新平均练习分</view>
+        <view class="trend-summary-score">{{trend.latestAverageLabel}}<text>/ 5</text></view>
+      </view>
+      <view class="trend-change change-{{trend.averageChangeTone}}">
+        <view>{{trend.averageChangeLabel}}</view>
+        <text>{{trend.hasComparison ? '较上一次' : '等待下一次比较'}}</text>
+      </view>
+    </view>
+
+    <view class="dimension-row" wx:for="{{trend.dimensions}}" wx:key="key" wx:for-item="dimension">
+      <view class="dimension-head">
+        <view class="dimension-label">{{dimension.label}}</view>
+        <view class="dimension-latest">
+          <text>{{dimension.latestLabel}} / 5</text>
+          <view class="dimension-change change-{{dimension.changeTone}}">{{dimension.changeLabel}}</view>
+        </view>
+      </view>
+      <view class="bar-grid">
+        <view class="bar-column" wx:for="{{dimension.points}}" wx:key="key" wx:for-item="point">
+          <view class="bar-track">
+            <view class="bar-fill fill-{{dimension.tone}}" style="height: {{point.heightPercent}}%;"></view>
+          </view>
+          <view class="bar-score">{{point.scoreLabel}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="session-axis">
+      <view class="session-axis-item" wx:for="{{trend.sessions}}" wx:key="key">
+        <view>{{item.dateLabel || item.orderLabel}}</view>
+        <text>{{item.orderLabel}}</text>
+      </view>
+    </view>
+    <view class="trend-hidden-note" wx:if="{{trend.hiddenCount}}">当前显示最近 {{trend.visibleCount}} 次，另有 {{trend.hiddenCount}} 次较早评分。</view>
+    <view class="trend-notice">{{trend.notice}}</view>
+  </block>
+</view>

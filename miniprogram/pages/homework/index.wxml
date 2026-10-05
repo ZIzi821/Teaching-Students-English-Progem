@@ -61,6 +61,7 @@
           <view>
             <view class="task-date">{{task.lessonDate}} · 第 {{task.lessonNo || '—'}} 节</view>
             <view class="task-title">{{task.title}}</view>
+            <view class="task-course-type" wx:if="{{task.institutionCourse}}">机构课程</view>
           </view>
           <view class="status-pill status-{{section.tone}}">{{task.statusLabel}}</view>
         </view>
@@ -84,6 +85,7 @@
           <view>
             <view class="task-date">{{item.lessonDate}} · 第 {{item.lessonNo || '—'}} 节</view>
             <view class="task-title">{{item.title}}</view>
+            <view class="task-course-type" wx:if="{{item.institutionCourse}}">机构课程</view>
           </view>
           <view class="status-pill status-completed">{{item.statusLabel}}</view>
         </view>

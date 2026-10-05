@@ -133,6 +133,11 @@ assert(addLessonJs.includes("wx.redirectTo"), "New lesson does not open the cour
 assert(addLessonJs.includes("inferLessonTemplateKey"), "New lessons do not inherit the student template");
 assert(addLessonWxml.includes("上一节课对照") && addLessonWxml.includes("不会自动复制"), "Previous-lesson read-only reference is missing");
 assert(backend.includes("buildPreviousLessonReference"), "Previous lesson data is not returned by the protected teacher endpoint");
+assert(addLessonWxml.includes("机构课程") && lessonWxml.includes("机构课程"), "Institution-course controls are missing from lesson creation or editing");
+assert(addLessonJs.includes("institutionCourse: form.institutionCourse === true") && lessonJs.includes('"workspaceForm.institutionCourse"'), "Institution-course state is not submitted by both teacher forms");
+assert(backend.includes("countLessonProgressRecords") && backend.includes("sync lesson count after course type update failed"), "Institution courses do not trigger an authoritative lesson-progress recount");
+assert.strictEqual(courseWorkflow.countLessonProgressRecords([{}, { institutionCourse: true }, { institutionCourse: false }]), 2, "Institution courses must be the only lesson records excluded from progress");
+assert(homeWxml.includes("不计入个人课程进度") && studentWxml.includes("不计入个人课程进度"), "Institution courses are not labelled in English course records");
 assert(addLessonWxml.includes("录音作业期限") && lessonWxml.includes("录音作业期限"), "Teacher recording deadline controls are missing");
 assert(backend.includes("homeworkDueDays") && backend.includes("syncLessonSubmissionTiming"), "Homework deadline or late-submission state is not persisted");
 assert(homeworkWxml.includes("deadlineLabel") && lessonWxml.includes("逾期提交"), "Student deadline and late-submission labels are missing");

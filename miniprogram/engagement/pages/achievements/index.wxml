@@ -63,6 +63,8 @@
       </view>
     </view>
 
+    <ket-score-trend wx:if="{{student.lessonTemplateKey === 'molly_oral_ket' || dashboard.ketScoreTrend.hasData}}" trend="{{dashboard.ketScoreTrend}}"></ket-score-trend>
+
     <view class="card pk-card">
       <view class="pk-head">
         <view>

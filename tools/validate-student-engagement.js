@@ -6,6 +6,7 @@ const root = path.resolve(__dirname, "..");
 const read = (...parts) => fs.readFileSync(path.join(root, ...parts), "utf8");
 const app = JSON.parse(read("miniprogram", "app.json"));
 const backend = read("cloudfunctions", "quickstartFunctions", "index.js");
+const engagementSource = read("cloudfunctions", "quickstartFunctions", "studentEngagement.js");
 const engagementLogic = require(path.join(root, "cloudfunctions", "quickstartFunctions", "studentEngagement"));
 const homeJs = read("miniprogram", "pages", "index", "index.js");
 const homeWxml = read("miniprogram", "pages", "index", "index.wxml");
@@ -32,6 +33,11 @@ assert.strictEqual(
   app.usingComponents && app.usingComponents["student-tabbar"],
   "/components/student-tabbar/index",
   "Student tab bar must be globally registered"
+);
+assert.strictEqual(
+  app.usingComponents && app.usingComponents["ket-score-trend"],
+  "/components/ket-score-trend/index",
+  "KET score trend must be shared by the achievement and review surfaces"
 );
 assert(!app.tabBar, "Native tab bar would mix teacher and student identities");
 
@@ -64,10 +70,17 @@ assert(managerJs.includes('type: "savePkChallengeProfile"') && managerJs.include
 assert(managerWxml.includes("真实学生的 PK 分 = 本周可核验学习积分") && managerWxml.includes("教师不能手动改动"), "Teacher manager does not explain the fair real-student score rule");
 assert(managerWxml.includes("挑战选手") && achievementWxml.includes("挑战选手"), "Challenge participants are not clearly labelled on both sides");
 assert(achievementWxml.includes("本周学习积分 1:1 等于 PK 分"), "Student page does not explain the relationship between points and PK score");
+assert(achievementWxml.includes("ket-score-trend") && engagementSource.includes("ketScoreTrend"), "Student achievements do not include the reviewed KET four-dimension trend");
+assert(achievementWxml.includes("student.lessonTemplateKey === 'molly_oral_ket' || dashboard.ketScoreTrend.hasData"), "Students without KET learning or reviewed scores should not receive an irrelevant empty trend card");
 assert(engagementLogic.buildAchievements({ recordedLessonCount: 40 }, {}).some((item) => item.id === "lesson_forty" && item.unlocked), "Forty-lesson achievement is missing");
 
 assert.strictEqual(engagementLogic.POINT_RULES.vocabularyDailyCap, 30, "Vocabulary daily cap changed unexpectedly");
 assert.strictEqual(engagementLogic.POINT_RULES.frenchDailyCap, 10, "French daily cap changed unexpectedly");
 assert(engagementLogic.buildStudentScore && engagementLogic.buildEngagementDashboard, "Tested engagement aggregators are missing");
+const emptyStudentDashboard = engagementLogic.buildEngagementDashboard({
+  currentStudentId: "new-student",
+  participants: [{ student: { _id: "new-student", name: "新学生", status: "在读" }, records: {} }],
+});
+assert(emptyStudentDashboard && emptyStudentDashboard.ketScoreTrend && !emptyStudentDashboard.ketScoreTrend.hasData, "New students without history must receive a stable empty dashboard and KET trend");
 
 console.log("Student engagement validation passed: lesson milestones, teacher-managed opt-in PK, fair verified scores, labelled challenge participants, and read-only preview.");

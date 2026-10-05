@@ -141,6 +141,7 @@ Page({
     lessonTemplate: findTemplate("general"),
     workspaceForm: {
       title: "",
+      institutionCourse: false,
       lessonTemplateKey: "general",
       reviewContent: "",
       taughtContent: "",
@@ -375,6 +376,7 @@ Page({
     return Object.assign({}, lesson, {
       lessonTemplateKey: lessonTemplate.key,
       lessonTemplateLabel: lessonTemplate.label,
+      institutionCourse: lesson.institutionCourse === true,
       reviewContent: lesson.reviewContent || "",
       taughtContent: lesson.taughtContent || "",
       masterySummary: lesson.masterySummary || (!hasStructuredRecord ? lesson.summary || "" : ""),
@@ -442,6 +444,7 @@ Page({
   createWorkspaceForm(lesson) {
     return {
       title: lesson.title || "",
+      institutionCourse: lesson.institutionCourse === true,
       lessonTemplateKey: lesson.lessonTemplateKey || "general",
       reviewContent: lesson.reviewContent || "",
       taughtContent: lesson.taughtContent || "",
@@ -579,6 +582,10 @@ Page({
 
   onWorkspaceInput(e) {
     this.setData({ [`workspaceForm.${e.currentTarget.dataset.field}`]: e.detail.value });
+  },
+
+  onInstitutionCourseChange(e) {
+    this.setData({ "workspaceForm.institutionCourse": e.detail.value === true });
   },
 
   applyLessonTitleSuggestion(e) {

@@ -79,6 +79,7 @@ Page({
       subject: "英语",
       lessonDate: "",
       lessonNo: "",
+      institutionCourse: false,
       lessonTemplateKey: "general",
       reviewContent: "",
       taughtContent: "",
@@ -278,6 +279,10 @@ Page({
     }, () => this.checkKetWeeklyStatus());
   },
 
+  onInstitutionCourseChange(e) {
+    this.setData({ "form.institutionCourse": e.detail.value === true });
+  },
+
   toggleLessonRecord() {
     this.setData({ showLessonRecord: !this.data.showLessonRecord });
   },
@@ -475,6 +480,7 @@ Page({
             subject: form.subject,
             lessonDate: form.lessonDate,
             lessonNo: form.lessonNo,
+            institutionCourse: form.institutionCourse === true,
             summary: form.masterySummary || form.independentOutput || form.taughtContent || form.oralTopic,
             lessonTemplateKey: form.lessonTemplateKey,
             reviewContent: form.reviewContent,

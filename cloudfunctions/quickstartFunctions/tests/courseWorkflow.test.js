@@ -38,6 +38,42 @@ const customProgress = courseWorkflow.buildLessonProgress({
 assert.strictEqual(customProgress.lessonPackageSize, 4);
 assert.strictEqual(customProgress.progressTone, "complete");
 
+assert.strictEqual(
+  courseWorkflow.countLessonProgressRecords([
+    { _id: "personal-legacy" },
+    { _id: "personal-explicit", institutionCourse: false },
+    { _id: "institution", institutionCourse: true },
+  ]),
+  2,
+  "institution courses must stay in course records without increasing lesson progress"
+);
+assert.strictEqual(courseWorkflow.countsTowardLessonProgress({}), true, "legacy lessons must keep counting by default");
+assert.strictEqual(courseWorkflow.countsTowardLessonProgress({ institutionCourse: true }), false);
+assert.strictEqual(
+  courseWorkflow.getEffectiveCompletedLessonCount(
+    { completedLessonCount: 7, recordedLessonCount: 7 },
+    4
+  ),
+  4,
+  "marking three existing lessons as institution courses must remove them from progress"
+);
+assert.strictEqual(
+  courseWorkflow.getEffectiveCompletedLessonCount(
+    { completedLessonCount: 10, recordedLessonCount: 7 },
+    4
+  ),
+  7,
+  "manual lesson baseline must remain while institution lessons are excluded"
+);
+assert.strictEqual(
+  courseWorkflow.getEffectiveCompletedLessonCount(
+    { completedLessonCount: 4, recordedLessonCount: 4 },
+    5
+  ),
+  5,
+  "switching a lesson back to personal must restore one progress lesson"
+);
+
 const lesson = {
   lessonDate: "2026-10-03",
   recordingTaskEnabled: true,

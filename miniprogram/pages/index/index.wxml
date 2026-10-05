@@ -226,6 +226,7 @@
         <view class="lesson-title">{{item.title}}</view>
         <view class="lesson-meta">{{item.subject}} · {{item.lessonDate}}</view>
       </view>
+      <view class="institution-course-note" wx:if="{{item.institutionCourse}}"><text>机构课程</text>不计入个人课程进度</view>
       <view class="student-line" wx:if="{{isTeacher && item.studentName}}">学生：{{item.studentName}}</view>
       <view class="lesson-task-row" wx:if="{{item.homeworkTask || item.recordingTaskEnabled}}">
         <text class="lesson-task-badge" wx:if="{{item.homeworkTask}}">课后任务</text>

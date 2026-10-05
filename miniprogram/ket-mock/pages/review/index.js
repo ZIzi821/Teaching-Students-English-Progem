@@ -38,6 +38,7 @@ Page({
     scoreOptions: SCORE_OPTIONS,
     scoreFields: SCORE_FIELDS,
     scoreGuideExpanded: false,
+    scoreTrend: null,
     saving: false,
     assessmentForm: {
       grammarVocabulary: 3,
@@ -95,6 +96,7 @@ Page({
         part1Rows: rows.filter((row) => row.part === 1),
         part2Rows: rows.filter((row) => row.part === 2),
         assessmentForm: Object.assign({}, this.data.assessmentForm, assessment),
+        scoreTrend: result.scoreTrend || null,
         message: "",
       });
     }).catch((err) => {

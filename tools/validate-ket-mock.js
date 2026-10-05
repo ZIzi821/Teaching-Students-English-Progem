@@ -9,6 +9,7 @@ const directoryBytes = (directory) => fs.readdirSync(directory, { withFileTypes:
   return sum + (entry.isDirectory() ? directoryBytes(entryPath) : fs.statSync(entryPath).size);
 }, 0);
 const frontend = require(path.join(root, "miniprogram", "utils", "ketMockSets"));
+const ketMockLogic = require(path.join(root, "cloudfunctions", "quickstartFunctions", "ketMock"));
 const cloudSets = JSON.parse(read("cloudfunctions", "quickstartFunctions", "data", "ket-mock-sets.json"));
 const app = JSON.parse(read("miniprogram", "app.json"));
 
@@ -95,6 +96,8 @@ const examWxml = read("miniprogram", "ket-mock", "pages", "exam", "index.wxml");
 const reviewJs = read("miniprogram", "ket-mock", "pages", "review", "index.js");
 const reviewWxml = read("miniprogram", "ket-mock", "pages", "review", "index.wxml");
 const recordingPracticeJs = read("miniprogram", "pages", "recording-practice", "index.js");
+const trendWxml = read("miniprogram", "components", "ket-score-trend", "index.wxml");
+const trendWxss = read("miniprogram", "components", "ket-score-trend", "index.wxss");
 
 assert.ok(addLessonJs.includes('value: "ket_mock"'), "Lesson creation cannot assign a full mock");
 assert.ok(lessonDetailJs.includes("/ket-mock/pages/exam/index?lessonId="), "Lesson detail does not open the mock exam");
@@ -110,6 +113,11 @@ assert.ok(examWxml.includes("中途不能暂停、回放或重录"), "Exam rules
 assert.ok(examWxml.includes("虚拟搭档"), "Automated Part 2 boundary is not disclosed");
 assert.ok(!examWxml.includes("{{currentCue.script}}"), "Student exam must not display the examiner script");
 assert.ok(reviewJs.includes("grammarVocabulary") && reviewJs.includes("interactiveCommunication"), "Four-dimension scoring fields are missing");
+assert.ok(reviewJs.includes("scoreTrend") && reviewWxml.includes("ket-score-trend"), "KET review does not expose the multi-session score trend");
+assert.strictEqual(app.usingComponents && app.usingComponents["ket-score-trend"], "/components/ket-score-trend/index", "KET score trend component is not registered");
+assert.ok(trendWxml.includes("KET 四维成绩趋势") && trendWxml.includes("dimension.points"), "KET score trend does not render all four histories");
+assert.ok(trendWxss.includes("fill-grammar") && trendWxss.includes("fill-pronunciation") && trendWxss.includes("fill-interaction") && trendWxss.includes("fill-global"), "KET score dimensions are not visually distinguishable");
+assert.strictEqual(ketMockLogic.buildScoreTrend([]).hasData, false, "Empty KET histories must remain renderable");
 assert.ok(reviewWxml.includes("不是 Cambridge 官方考试成绩"), "Practice-score disclaimer is missing");
 assert.ok(reviewWxml.includes("A2 参考示范 · 不要求照背"), "Teacher review does not expose model-answer guidance");
 assert.ok(reviewWxml.includes("四项分数锚点"), "Teacher review does not expose scoring anchors");

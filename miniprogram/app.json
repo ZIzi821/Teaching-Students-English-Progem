@@ -67,7 +67,8 @@
   "usingComponents": {
     "teacher-preview-banner": "/components/teacher-preview-banner/index",
     "teacher-tabbar": "/components/teacher-tabbar/index",
-    "student-tabbar": "/components/student-tabbar/index"
+    "student-tabbar": "/components/student-tabbar/index",
+    "ket-score-trend": "/components/ket-score-trend/index"
   },
   "permission": {
     "scope.record": {

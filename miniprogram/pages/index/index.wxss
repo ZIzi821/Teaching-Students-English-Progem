@@ -736,6 +736,23 @@
   line-height: 1.6;
 }
 
+.institution-course-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: 12rpx;
+  padding: 7rpx 11rpx;
+  border-radius: 999rpx;
+  color: #7c6b55;
+  background: #f7eedf;
+  font-size: 20rpx;
+}
+
+.institution-course-note text {
+  color: #76562f;
+  font-weight: 800;
+}
+
 .lesson-task-row {
   display: flex;
   flex-wrap: wrap;

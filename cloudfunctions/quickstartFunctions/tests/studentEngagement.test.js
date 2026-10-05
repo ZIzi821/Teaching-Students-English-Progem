@@ -25,7 +25,7 @@ const score = engagement.buildStudentScore({
     { _id: "r3", lessonId: "lesson-2", homeworkTaskVersion: 1, kind: "audio", status: "需要重录", createdAtMs: atDay(today, 9) },
   ],
   lessons: [
-    { _id: "lesson-1", title: "第一课", homeworkTeacherReviewStatus: "completed", homeworkCompletedAtMs: atDay(today) },
+    { _id: "lesson-1", title: "第一课", institutionCourse: true, homeworkTeacherReviewStatus: "completed", homeworkCompletedAtMs: atDay(today) },
   ],
   ketMockSessions: [
     { _id: "k1", lessonId: "ket-lesson", homeworkTaskVersion: 1, status: "submitted", submittedAtMs: atDay(today - 1) },
@@ -40,6 +40,7 @@ assert.strictEqual(score.reviewedWordCount, 43, "English vocabulary points must 
 assert.strictEqual(score.quizDayCount, 1, "Only one quiz result may score per learning day");
 assert.strictEqual(score.recordingCount, 1, "Repeated recordings for the same task version must not farm points");
 assert.strictEqual(score.homeworkCount, 1, "Teacher-confirmed homework must score once");
+assert.strictEqual(score.recordedLessonCount, 1, "Institution courses must still remain valid learning records for achievements");
 assert.strictEqual(score.ketMockCount, 1, "Repeated KET records for one task version must score once");
 assert.strictEqual(score.frenchActivityCount, 10, "French activity points must respect the daily cap");
 assert.strictEqual(score.streakDays, 3, "Consecutive verified learning days should build a streak");
@@ -74,6 +75,21 @@ assert.strictEqual(dashboard.weeklyRanking[0].displayName, "冯同学", "Other s
 assert.strictEqual(dashboard.weeklyRanking[1].displayName, "我", "Current learner must be shown as me");
 assert.strictEqual(dashboard.distanceToNext, 7, "Distance to next rank should require strictly exceeding it");
 assert.strictEqual(dashboard.pkScore, dashboard.weeklyPoints, "A real student's PK score must equal verified weekly points");
+assert.strictEqual(dashboard.ketScoreTrend.hasData, false, "Students without reviewed KET sessions need an empty trend instead of an error");
+
+const newStudentDashboard = engagement.buildEngagementDashboard({
+  currentStudentId: "student-new",
+  nowMs,
+  participants: [{
+    student: { _id: "student-new", name: "徐浩成", status: "在读" },
+    records: {},
+  }],
+});
+assert.ok(newStudentDashboard, "A newly added student with no history must still receive an engagement dashboard");
+assert.strictEqual(newStudentDashboard.totalPoints, 0);
+assert.strictEqual(newStudentDashboard.weeklyPoints, 0);
+assert.strictEqual(newStudentDashboard.ketScoreTrend.hasData, false);
+assert.ok(Array.isArray(newStudentDashboard.achievements));
 
 const challengeState = engagement.getPkChallengeScore({
   _id: "challenge-1",

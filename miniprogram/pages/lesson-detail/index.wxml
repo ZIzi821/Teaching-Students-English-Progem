@@ -15,6 +15,10 @@
       </view>
       <view class="title">{{lesson.title}}</view>
       <view class="date">{{lesson.lessonDate}}</view>
+      <view class="institution-course-banner" wx:if="{{lesson.institutionCourse}}">
+        <text>机构课程</text>
+        <view>本节保留完整学习记录，但不计入个人课程进度。</view>
+      </view>
       <view class="preview-tip" wx:if="{{isTeacherPreview}}">教师预览：这里与学生实际看到的课程页面一致，不能提交录音。</view>
     </view>
 
@@ -121,12 +125,20 @@
         <view class="field-hint template-editor-hint">{{lessonTemplate.description}}</view>
       </view>
 
+      <view class="institution-course-setting">
+        <view>
+          <view class="label institution-course-setting-label">机构课程</view>
+          <view class="field-hint">只控制本节是否计入个人课程进度；作业、错题、录音、背词和成就记录均保持正常。</view>
+        </view>
+        <switch checked="{{workspaceForm.institutionCourse}}" color="#b18145" bindchange="onInstitutionCourseChange" />
+      </view>
+
       <view class="previous-lesson-reference" wx:if="{{previousLessonReference}}">
         <view class="previous-lesson-reference-head" bindtap="togglePreviousLessonReference">
           <view>
             <view class="previous-lesson-reference-kicker">上一节课对照</view>
             <view class="previous-lesson-reference-title">{{previousLessonReference.title || '上一节英语课'}}</view>
-            <view class="previous-lesson-reference-meta">{{previousLessonReference.lessonDate}} · 第 {{previousLessonReference.lessonNo || '—'}} 节</view>
+            <view class="previous-lesson-reference-meta">{{previousLessonReference.lessonDate}} · 第 {{previousLessonReference.lessonNo || '—'}} 节{{previousLessonReference.institutionCourse ? ' · 机构课程' : ''}}</view>
           </view>
           <view class="previous-lesson-reference-toggle">{{showPreviousLessonReference ? '收起' : '展开'}}</view>
         </view>

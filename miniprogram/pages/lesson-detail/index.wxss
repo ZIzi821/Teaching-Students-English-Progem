@@ -79,6 +79,28 @@
   line-height: 1.5;
 }
 
+.institution-course-banner {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 18rpx;
+  padding: 14rpx 16rpx;
+  border-radius: 14rpx;
+  color: #74644f;
+  background: #f7eedf;
+  font-size: 21rpx;
+  line-height: 1.45;
+}
+
+.institution-course-banner text {
+  flex-shrink: 0;
+  padding: 5rpx 10rpx;
+  border-radius: 999rpx;
+  color: #76562f;
+  background: #ead3ad;
+  font-weight: 800;
+}
+
 .section-head {
   align-items: flex-end;
   margin: 36rpx 0 18rpx;
@@ -323,6 +345,28 @@
   padding: 20rpx 0;
   border-top: 1rpx solid #eee5d9;
   border-bottom: 1rpx solid #eee5d9;
+}
+
+.institution-course-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 26rpx;
+  padding: 18rpx 20rpx;
+  border: 1rpx solid #e2d2b8;
+  border-radius: 15rpx;
+  background: #faf5e9;
+}
+
+.institution-course-setting > view {
+  min-width: 0;
+  flex: 1;
+}
+
+.institution-course-setting-label {
+  margin-bottom: 2rpx;
+  color: #765a35;
 }
 
 .previous-lesson-reference {

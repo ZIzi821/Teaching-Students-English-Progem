@@ -1,6 +1,7 @@
 const DAY_MS = 24 * 60 * 60 * 1000;
 const HONG_KONG_OFFSET_MS = 8 * 60 * 60 * 1000;
 const REMINDER_VISIBLE_DAYS = 30;
+const ketMock = require("./ketMock");
 
 const POINT_RULES = Object.freeze({
   vocabularyPerWord: 2,
@@ -464,6 +465,7 @@ const buildEngagementDashboard = ({ participants = [], challengeProfiles = [], c
     .filter((item) => item && item.student && item.student._id)
     .map((item) => ({
       student: item.student,
+      records: item.records || {},
       score: buildStudentScore(item.records || {}, nowMs),
       participantType: "student",
     }));
@@ -495,6 +497,7 @@ const buildEngagementDashboard = ({ participants = [], challengeProfiles = [], c
     realStudentRule: "真实学生 PK 分与本周可核验学习积分 1:1 相同，教师不能手动改分",
     challengeRule: "挑战选手由教师设置周一起始分和每日增幅，并在榜单中明确标注",
   };
+  const ketScoreTrend = ketMock.buildScoreTrend(current.records.ketMockSessions || []);
   if (!isPkEligibleStudent(current.student)) {
     const achievements = buildAchievements(current.score, current.student);
     const inactiveRanking = sortRanked(eligible);
@@ -523,6 +526,7 @@ const buildEngagementDashboard = ({ participants = [], challengeProfiles = [], c
       })),
       rules: POINT_RULES,
       pkPolicy,
+      ketScoreTrend,
     };
   }
   const ranked = sortRanked(eligible);
@@ -564,6 +568,7 @@ const buildEngagementDashboard = ({ participants = [], challengeProfiles = [], c
     })),
     rules: POINT_RULES,
     pkPolicy,
+    ketScoreTrend,
   };
 };
 

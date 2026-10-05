@@ -37,6 +37,33 @@
   line-height: 1.5;
 }
 
+.institution-course-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22rpx;
+  padding: 20rpx;
+  border: 1rpx solid #e2d2b8;
+  border-radius: 16rpx;
+  background: #faf5e9;
+}
+
+.institution-course-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.institution-course-label {
+  margin-bottom: 6rpx;
+  color: #765a35;
+}
+
+.institution-course-hint {
+  color: #84745f;
+  font-size: 21rpx;
+  line-height: 1.5;
+}
+
 .template-hint {
   margin-top: 10rpx;
   color: #39765d;

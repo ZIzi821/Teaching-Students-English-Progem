@@ -227,6 +227,17 @@
   font-weight: 800;
 }
 
+.task-course-type {
+  display: inline-flex;
+  margin-top: 9rpx;
+  padding: 5rpx 10rpx;
+  border-radius: 999rpx;
+  color: #76562f;
+  background: #f3e5cf;
+  font-size: 19rpx;
+  font-weight: 800;
+}
+
 .status-pill {
   flex-shrink: 0;
   padding: 7rpx 12rpx;

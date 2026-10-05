@@ -49,4 +49,55 @@ assert.throws(() => ketMock.normalizeAssessment({
   globalAchievement: 4,
 }));
 
+const emptyTrend = ketMock.buildScoreTrend([]);
+assert.strictEqual(emptyTrend.hasData, false, "A new student without KET history needs a stable empty trend");
+assert.strictEqual(emptyTrend.dimensions.length, 4);
+
+const scoreTrend = ketMock.buildScoreTrend([
+  {
+    _id: "newer",
+    status: "reviewed",
+    setId: "mock-2",
+    lessonDateSnapshot: "2026-10-05",
+    reviewedAtMs: 200,
+    assessment: {
+      grammarVocabulary: 3,
+      pronunciation: 3.5,
+      interactiveCommunication: 3.5,
+      globalAchievement: 4,
+    },
+  },
+  {
+    _id: "not-reviewed",
+    status: "submitted",
+    reviewedAtMs: 300,
+    assessment: {
+      grammarVocabulary: 5,
+      pronunciation: 5,
+      interactiveCommunication: 5,
+      globalAchievement: 5,
+    },
+  },
+  {
+    _id: "older",
+    status: "reviewed",
+    setId: "mock-1",
+    lessonDateSnapshot: "2026-09-28",
+    reviewedAtMs: 100,
+    assessment: {
+      grammarVocabulary: 2,
+      pronunciation: 2.5,
+      interactiveCommunication: 3,
+      globalAchievement: 2.5,
+    },
+  },
+]);
+assert.strictEqual(scoreTrend.hasComparison, true);
+assert.strictEqual(scoreTrend.reviewedCount, 2, "Only fully reviewed sessions may enter the score trend");
+assert.deepStrictEqual(scoreTrend.sessions.map((item) => item.key), ["older", "newer"]);
+assert.strictEqual(scoreTrend.latestAverage, 3.5);
+assert.strictEqual(scoreTrend.averageChangeLabel, "+1");
+assert.strictEqual(scoreTrend.dimensions.find((item) => item.key === "grammarVocabulary").changeLabel, "+1");
+assert.strictEqual(scoreTrend.sessions[1].dateLabel, "10/5");
+
 console.log("ket mock tests passed");

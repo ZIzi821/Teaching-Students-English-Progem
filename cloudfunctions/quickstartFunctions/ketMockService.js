@@ -399,9 +399,10 @@ const createKetMockService = ({
     }
     const set = ketMock.findSet(session.setId);
     if (!set) throw createError("KET_MOCK_SET_NOT_FOUND", "套题已经更新，暂时无法打开");
-    const [assets, responses] = await Promise.all([
+    const [assets, responses, studentSessions] = await Promise.all([
       loadSetAssets(set.id, true),
       attachAudioUrls(session.responses || []),
+      loadAllByField("ketMockSessions", "studentId", session.studentId),
     ]);
     const setWithAudio = identity.role === "teacher"
       ? Object.assign({}, set, {
@@ -423,6 +424,7 @@ const createKetMockService = ({
       }),
       set: setWithAudio,
       scoreFields: ketMock.SCORE_FIELDS,
+      scoreTrend: ketMock.buildScoreTrend(studentSessions),
       scoreNotice: "教师练习评分，用于后续学习调整，不是 Cambridge 官方考试成绩。",
     };
   };

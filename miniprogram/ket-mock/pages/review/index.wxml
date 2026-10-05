@@ -102,5 +102,7 @@
       <view class="feedback-block" wx:if="{{session.assessment.nextFocus}}"><view class="feedback-label">下一步重点</view><view>{{session.assessment.nextFocus}}</view></view>
       <view class="feedback-block" wx:if="{{session.assessment.comment}}"><view class="feedback-label">老师补充</view><view>{{session.assessment.comment}}</view></view>
     </view>
+
+    <ket-score-trend trend="{{scoreTrend}}"></ket-score-trend>
   </block>
 </view>

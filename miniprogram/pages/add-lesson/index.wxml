@@ -40,6 +40,14 @@
       <view class="field-tip" wx:if="{{lessonNoTip}}">{{lessonNoTip}}</view>
     </view>
 
+    <view class="institution-course-row">
+      <view class="institution-course-copy">
+        <view class="label institution-course-label">机构课程</view>
+        <view class="institution-course-hint">开启后仍保留本节课的课堂记录、作业、错题、录音和单词功能，但不会计入“已上 / 总课时”的课程进度。</view>
+      </view>
+      <switch checked="{{form.institutionCourse}}" color="#b18145" bindchange="onInstitutionCourseChange" />
+    </view>
+
   </view>
 
   <view class="card previous-reference-card" wx:if="{{previousLessonReference}}">
@@ -47,7 +55,7 @@
       <view>
         <view class="previous-reference-kicker">上一节课对照</view>
         <view class="previous-reference-title">{{previousLessonReference.title || '上一节英语课'}}</view>
-        <view class="previous-reference-meta">{{previousLessonReference.lessonDate}} · 第 {{previousLessonReference.lessonNo || '—'}} 节</view>
+        <view class="previous-reference-meta">{{previousLessonReference.lessonDate}} · 第 {{previousLessonReference.lessonNo || '—'}} 节{{previousLessonReference.institutionCourse ? ' · 机构课程' : ''}}</view>
       </view>
       <view class="previous-reference-toggle">{{showPreviousLessonReference ? '收起' : '展开'}}</view>
     </view>

@@ -560,24 +560,24 @@ const buildStudentProgressItem = (student) => {
 };
 
 const getStudentLessonCount = async (studentId) => {
-  const res = await db.collection("lessons").where({ studentId }).count();
-  return res.total || 0;
+  let lessonCount = 0;
+  const pageSize = 100;
+  for (let skip = 0; ; skip += pageSize) {
+    const res = await db.collection("lessons")
+      .where({ studentId })
+      .skip(skip)
+      .limit(pageSize)
+      .get();
+    const lessons = res.data || [];
+    lessonCount += courseWorkflow.countLessonProgressRecords(lessons);
+    if (lessons.length < pageSize) break;
+  }
+  return lessonCount;
 };
 
-const getEffectiveCompletedLessonCount = (student, lessonCount) => {
-  const storedRaw = Number(student && student.completedLessonCount ? student.completedLessonCount : 0);
-  const storedCount = Number.isFinite(storedRaw) && storedRaw > 0 ? storedRaw : 0;
-  const countedRaw = Number(lessonCount || 0);
-  const countedCount = Number.isFinite(countedRaw) && countedRaw > 0 ? countedRaw : 0;
-  const hasRecordedSnapshot = student
-    && Object.prototype.hasOwnProperty.call(student, "recordedLessonCount")
-    && Number.isFinite(Number(student.recordedLessonCount));
-  if (hasRecordedSnapshot) {
-    const previousRecordedCount = Math.max(0, Number(student.recordedLessonCount) || 0);
-    return Math.max(0, countedCount, storedCount + countedCount - previousRecordedCount);
-  }
-  return Math.max(storedCount, countedCount);
-};
+const getEffectiveCompletedLessonCount = (student, lessonCount) => (
+  courseWorkflow.getEffectiveCompletedLessonCount(student, lessonCount)
+);
 
 const attachSyncedLessonCount = async (student) => {
   if (!student || !student._id) return student;
@@ -3503,6 +3503,7 @@ const buildPreviousLessonReference = (lesson) => {
     subject: String(lesson.subject || appConfig.defaultSubject || "英语").trim(),
     lessonDate: String(lesson.lessonDate || "").trim(),
     lessonNo: String(lesson.lessonNo || "").trim(),
+    institutionCourse: lesson.institutionCourse === true,
     lessonTemplateKey: LESSON_TEMPLATE_KEYS.includes(lesson.lessonTemplateKey)
       ? lesson.lessonTemplateKey
       : "general",
@@ -3677,6 +3678,7 @@ const normalizeLessonWorkspacePayload = (data = {}) => {
   }
   return {
     title: normalizeLessonText(data.title, 100),
+    institutionCourse: data.institutionCourse === true,
     lessonTemplateKey,
     reviewContent: normalizeLessonText(data.reviewContent),
     taughtContent: normalizeLessonText(data.taughtContent),
@@ -3933,6 +3935,7 @@ const updateLessonWorkspace = async (event) => {
   const data = event.data || {};
   const lessonId = String(data.lessonId || "").trim();
   if (!lessonId) throw createError("INVALID_LESSON", "课程信息不完整，请返回后重试");
+  const institutionCourseProvided = Object.prototype.hasOwnProperty.call(data, "institutionCourse");
   const workspace = normalizeLessonWorkspacePayload(data);
   if (!workspace.title) throw createError("INVALID_LESSON_TITLE", "请填写课程名称");
   await assertContentSafe({
@@ -3953,6 +3956,16 @@ const updateLessonWorkspace = async (event) => {
       ...workspace.learningObservations.map((item) => [item.content, item.note]),
     ],
   });
+  const currentLessonRes = await db.collection("lessons").doc(lessonId).get();
+  if (!currentLessonRes.data || currentLessonRes.data.deleting === true) {
+    throw createError("LESSON_NOT_FOUND", "课程不存在或已删除");
+  }
+  const requestedInstitutionCourse = institutionCourseProvided
+    ? workspace.institutionCourse
+    : currentLessonRes.data.institutionCourse === true;
+  const progressCountingChanged = requestedInstitutionCourse !== (currentLessonRes.data.institutionCourse === true);
+  workspace.institutionCourse = requestedInstitutionCourse;
+  if (progressCountingChanged) await ensureStudentLessonCountSnapshot(currentLessonRes.data.studentId);
   const saved = await db.runTransaction(async (transaction) => {
     const lessonRef = transaction.collection("lessons").doc(lessonId);
     const lesson = await getOptionalTransactionDocument(lessonRef);
@@ -3978,9 +3991,22 @@ const updateLessonWorkspace = async (event) => {
       ).homeworkSubmittedLate;
     }
     await lessonRef.update({ data: updateData });
-    return { taskChanged, homeworkTaskVersion: updateData.homeworkTaskVersion || lesson.homeworkTaskVersion || 1 };
+    return {
+      taskChanged,
+      homeworkTaskVersion: updateData.homeworkTaskVersion || lesson.homeworkTaskVersion || 1,
+      studentId: lesson.studentId,
+      progressCountingChanged: workspace.institutionCourse !== (lesson.institutionCourse === true),
+    };
   });
-  return { success: true, lessonId, workspace, ...saved };
+  let completedLessonCount;
+  if (saved.progressCountingChanged) {
+    try {
+      completedLessonCount = await syncStudentCompletedLessonCount(saved.studentId);
+    } catch (err) {
+      console.error("sync lesson count after course type update failed", err);
+    }
+  }
+  return { success: true, lessonId, workspace, ...saved, completedLessonCount };
 };
 
 const loadAllLessonDocuments = async (collectionName, lessonId) => {

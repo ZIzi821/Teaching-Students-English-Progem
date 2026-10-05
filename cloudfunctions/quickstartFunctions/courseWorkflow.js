@@ -16,6 +16,22 @@ const toSafeCount = (value) => {
   return Number.isFinite(number) && number > 0 ? number : 0;
 };
 
+const countsTowardLessonProgress = (lesson = {}) => lesson.institutionCourse !== true;
+
+const countLessonProgressRecords = (lessons = []) => (
+  (Array.isArray(lessons) ? lessons : []).filter(countsTowardLessonProgress).length
+);
+
+const getEffectiveCompletedLessonCount = (student = {}, recordedLessonCount = 0) => {
+  const storedCount = toSafeCount(student.completedLessonCount);
+  const countedCount = toSafeCount(recordedLessonCount);
+  const hasRecordedSnapshot = Object.prototype.hasOwnProperty.call(student, "recordedLessonCount")
+    && Number.isFinite(Number(student.recordedLessonCount));
+  if (!hasRecordedSnapshot) return Math.max(storedCount, countedCount);
+  const previousRecordedCount = Math.max(0, Number(student.recordedLessonCount) || 0);
+  return Math.max(0, countedCount, storedCount + countedCount - previousRecordedCount);
+};
+
 const getDefaultLessonPackageSize = (student) => {
   const name = `${(student && student.name) || ""} ${(student && student.nickname) || ""}`
     .trim()
@@ -236,8 +252,11 @@ module.exports = {
   buildHomeworkDeadlineState,
   buildHomeworkListGrouping,
   buildLessonProgress,
+  countLessonProgressRecords,
+  countsTowardLessonProgress,
   formatHongKongDay,
   getDefaultLessonPackageSize,
+  getEffectiveCompletedLessonCount,
   getHomeworkDueDate,
   getHongKongDayEndMs,
   getHomeworkListGroup,
