@@ -30,6 +30,7 @@ Page({
     isTeacherManager: false,
     canSetDailyGoal: false,
     canReview: false,
+    catalogMode: true,
     loading: true,
     wordPageLoading: false,
     message: "",
@@ -51,6 +52,8 @@ Page({
     dailyGoalSaving: false,
     levels: [],
     units: [],
+    libraries: [],
+    mistakeWordsEnabled: false,
     selectedLevelLabel: "暂未选择基础词库",
     summary: {
       todayCount: 0,
@@ -101,7 +104,8 @@ Page({
   },
 
   onLoad(options) {
-    this.initPronunciationPlayer();
+    const catalogMode = String(options.view || "") !== "detail";
+    if (!catalogMode) this.initPronunciationPlayer();
     let savedPreference = {};
     try {
       savedPreference = wx.getStorageSync(VIEW_PREFERENCE_KEY) || {};
@@ -109,24 +113,33 @@ Page({
       savedPreference = {};
     }
     this.savedViewPreference = savedPreference;
-    const savedTab = WORD_TABS.some((item) => item.value === savedPreference.activeTab)
-      ? savedPreference.activeTab
-      : "all";
+    const requestedTab = String(options.tab || "");
+    const savedTab = WORD_TABS.some((item) => item.value === requestedTab)
+      ? requestedTab
+      : WORD_TABS.some((item) => item.value === savedPreference.activeTab)
+        ? savedPreference.activeTab
+        : "all";
     // 这是单词记录总览；今日三步流程只保留在学生首页，避免两个页面重复。
     const browsePanelOpen = true;
     this.setData({
       studentId: options.studentId || "",
       previewStudentId: options.previewStudentId || "",
       mode: options.mode || "",
+      catalogMode,
       browsePanelOpen,
       activeTab: savedTab === "today" ? "all" : savedTab,
       isStudyMode: false,
+    }, () => {
+      if (catalogMode) this.loadVocabularyCatalog();
+      else this.loadVocabularyData();
     });
-    this.loadVocabularyData();
   },
 
   onShow() {
-    if (this.hasShown && this.data.studentId) this.loadVocabularyData();
+    if (this.hasShown && this.data.studentId) {
+      if (this.data.catalogMode) this.loadVocabularyCatalog();
+      else this.loadVocabularyData();
+    }
     this.hasShown = true;
   },
 
@@ -151,6 +164,71 @@ Page({
     if (!this.dueRefreshTimer) return;
     clearTimeout(this.dueRefreshTimer);
     this.dueRefreshTimer = null;
+  },
+
+  retryLoad() {
+    if (this.data.catalogMode) this.loadVocabularyCatalog();
+    else this.loadVocabularyData();
+  },
+
+  loadVocabularyCatalog() {
+    if (!this.data.studentId) {
+      this.setData({ loading: false, message: "缺少学生信息" });
+      return Promise.resolve();
+    }
+    this.setData({ loading: true, message: "" });
+    return wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "getVocabularyCatalog",
+        data: {
+          studentId: this.data.studentId,
+          previewStudentId: this.data.previewStudentId,
+          mode: this.data.mode,
+        },
+      },
+    }).then((res) => {
+      const result = res.result || {};
+      if (!result.success) throw new Error(result.message || "暂时无法读取词库目录");
+      this.setData({
+        role: result.role || "",
+        readOnly: Boolean(result.readOnly || result.role === "teacher"),
+        student: result.student || null,
+        enabled: result.enabled === true,
+        settings: this.prepareSettings(result.settings, result.student),
+        dailyPlan: this.prepareDailyPlan(result.dailyPlan, result.settings || {}),
+        libraries: this.prepareCatalogLibraries(result.libraries || []),
+        mistakeWordsEnabled: result.mistakeWordsEnabled === true,
+        loading: false,
+        message: "",
+      });
+    }).catch((err) => {
+      console.error(err);
+      this.setData({ loading: false, message: err.message || "暂时无法读取词库目录" });
+    });
+  },
+
+  prepareCatalogLibraries(libraries) {
+    return libraries.map((item) => ({
+      id: String(item.id || ""),
+      label: String(item.label || "未命名词库"),
+      edition: String(item.edition || ""),
+      scopeLabel: (item.levelLabels || []).join("、"),
+    }));
+  },
+
+  openVocabularyDetail() {
+    if (!this.data.studentId) return;
+    const query = [
+      "view=detail",
+      "tab=all",
+      "studentId=" + encodeURIComponent(this.data.studentId),
+    ];
+    if (this.data.previewStudentId) {
+      query.push("previewStudentId=" + encodeURIComponent(this.data.previewStudentId));
+    }
+    if (this.data.mode) query.push("mode=" + encodeURIComponent(this.data.mode));
+    wx.navigateTo({ url: "/pages/vocabulary/index?" + query.join("&") });
   },
 
   scheduleDueRefresh() {
@@ -338,7 +416,7 @@ Page({
   getSelectedLevelLabel(levelIds, levels) {
     const selected = (levelIds || []).map((id) => levels.find((item) => item.id === id)).filter(Boolean);
     if (selected.length >= 6 && selected.every((item) => item.isTextbook)) {
-      return "译林牛津七至九年级 · 2012课标旧版";
+      return "译林牛津七至九年级 · 译林版 · 2012课标旧版";
     }
     const labels = (levelIds || []).map((id) => {
       const found = levels.find((item) => item.id === id);

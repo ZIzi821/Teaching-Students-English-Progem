@@ -1,85 +1,52 @@
-<view class="page vocabulary-detail-page">
+<view class="page vocabulary-catalog-page">
   <view class="page-head">
-    <view class="eyebrow">教师查看</view>
-    <view class="title">学生单词明细</view>
-    <view class="subtitle">这里显示真实背词记录。查看不会改变孩子的学习进度。</view>
+    <view class="eyebrow">教师管理</view>
+    <view class="title">学生词库</view>
+    <view class="subtitle">先看每名学生已经配置的词库；进入具体学生后，才读取学习记录和单词明细。</view>
   </view>
 
-  <view class="card state-card" wx:if="{{loadingStudents}}">正在读取学生列表…</view>
+  <view class="card state-card" wx:if="{{loading}}">正在读取词库目录…</view>
   <view class="card state-card state-error" wx:elif="{{noPermission}}">
     <view>{{message}}</view>
-    <view class="retry-link" bindtap="loadStudents">重新加载</view>
+    <view class="retry-link" bindtap="loadCatalog">重新加载</view>
   </view>
-  <view class="card state-card" wx:elif="{{!students.length}}">目前还没有可查看的学生。</view>
+  <view class="card state-card" wx:elif="{{!students.length}}">目前还没有可管理的学生。</view>
 
-  <block wx:else>
-    <picker mode="selector" range="{{students}}" range-key="name" value="{{studentIndex}}" bindchange="changeStudent">
-      <view class="card student-picker">
-        <view>
-          <view class="picker-label">当前学生</view>
-          <view class="picker-name">{{selectedStudent.name}}</view>
-          <view class="picker-meta">{{selectedStudent.grade}} · {{selectedStudent.vocabularyStateLabel}}</view>
+  <view
+    class="card student-catalog-card {{item.studentId === requestedStudentId ? 'student-catalog-focus' : ''}}"
+    wx:for="{{students}}"
+    wx:key="studentId"
+  >
+    <view class="student-head">
+      <view>
+        <view class="student-name">{{item.name}}</view>
+        <view class="student-meta">{{item.grade}} · {{item.libraryCount}} 个已配置词库</view>
+      </view>
+      <view class="state-pill {{item.enabled ? 'state-on' : 'state-off'}}">{{item.stateLabel}}</view>
+    </view>
+
+    <view class="disabled-note" wx:if="{{!item.enabled}}">当前只显示预配置；开启背词后才会出现在学生端。</view>
+
+    <view class="library-list" wx:if="{{item.libraries.length}}">
+      <view class="library-row" wx:for="{{item.libraries}}" wx:key="id" wx:for-item="library">
+        <view class="library-main">
+          <view class="library-name">{{library.label}}</view>
+          <view class="library-edition" wx:if="{{library.edition}}">{{library.edition}}</view>
+          <view class="library-scope" wx:if="{{library.scopeLabel}}">{{library.scopeLabel}}</view>
         </view>
-        <view class="picker-action">切换孩子⌄</view>
-      </view>
-    </picker>
-
-    <view class="disabled-tip" wx:if="{{!enabled}}">这位学生尚未开启背词，下面仍可查看其已配置词库；暂时不会产生新的学习记录。</view>
-
-    <view class="summary-grid">
-      <view class="summary-card summary-total"><view class="summary-number">{{summary.totalCount}}</view><view class="summary-label">词库总数</view></view>
-      <view class="summary-card"><view class="summary-number">{{summary.masteredCount}}</view><view class="summary-label">已掌握</view></view>
-      <view class="summary-card"><view class="summary-number">{{summary.learningCount}}</view><view class="summary-label">学习中</view></view>
-      <view class="summary-card summary-due"><view class="summary-number">{{summary.reviewDueCount}}</view><view class="summary-label">待复习</view></view>
-      <view class="summary-card"><view class="summary-number">{{summary.unlearnedCount}}</view><view class="summary-label">未学习</view></view>
-      <view class="summary-card"><view class="summary-number">{{summary.easyCount}}</view><view class="summary-label">太简单</view></view>
-    </view>
-
-    <view class="search-row">
-      <input class="search-input" value="{{searchKeyword}}" placeholder="搜索英文或中文释义" bindinput="inputSearch" confirm-type="search" />
-      <view class="clear-search" wx:if="{{searchKeyword}}" bindtap="clearSearch">清除</view>
-    </view>
-
-    <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false">
-      <view class="filter-row">
-        <view
-          wx:for="{{filters}}"
-          wx:key="value"
-          class="filter-chip {{activeFilter === item.value ? 'filter-chip-active' : ''}}"
-          data-filter="{{item.value}}"
-          bindtap="selectFilter"
-        >{{item.label}}</view>
-      </view>
-    </scroll-view>
-
-    <view class="result-line">共 {{browseTotal}} 个符合条件的单词</view>
-    <view class="card state-card" wx:if="{{loadingWords && !words.length}}">正在读取单词记录…</view>
-    <view class="card state-card state-error" wx:elif="{{message && !words.length}}">
-      <view>{{message}}</view>
-      <view class="retry-link" bindtap="loadWords">重新加载</view>
-    </view>
-    <view class="card state-card" wx:elif="{{!loadingWords && !words.length}}">没有符合当前条件的单词。</view>
-
-    <view class="card word-card" wx:for="{{words}}" wx:key="key">
-      <view class="word-head">
-        <view class="word-main">
-          <text class="word-text">{{item.word}}</text>
-          <text class="part-of-speech" wx:if="{{item.partOfSpeech}}">{{item.partOfSpeech}}</text>
-        </view>
-        <view class="status-pill status-{{item.statusKey}}">{{item.statusLabel}}</view>
-      </view>
-      <view class="meaning">{{item.meaning}}</view>
-      <view class="source-line">{{item.sourceLabel}}<text wx:if="{{item.bookLabel}}"> · {{item.bookLabel}}</text><text wx:if="{{item.unitLabel}}"> · {{item.unitLabel}}</text></view>
-      <view class="detail-grid">
-        <view class="detail-item"><view class="detail-label">复习表现</view><view class="detail-value">{{item.accuracyLabel}}</view></view>
-        <view class="detail-item"><view class="detail-label">最近结果</view><view class="detail-value">{{item.lastResultLabel}}</view></view>
-        <view class="detail-item"><view class="detail-label">上次学习</view><view class="detail-value">{{item.lastReviewedLabel}}</view></view>
-        <view class="detail-item"><view class="detail-label">下次复习</view><view class="detail-value">{{item.nextReviewLabel}}</view></view>
+        <view class="library-count"><text>{{library.wordCount}}</text> 词</view>
       </view>
     </view>
+    <view class="empty-library" wx:else>尚未选择课本或基础词库。</view>
 
-    <view class="load-more" wx:if="{{loadingMore}}">正在加载更多…</view>
-    <view class="load-more" wx:elif="{{hasMore}}">继续向下滑可加载更多</view>
-    <view class="load-more" wx:elif="{{words.length}}">已经显示全部 {{browseTotal}} 个单词</view>
-  </block>
+    <view class="mistake-source" wx:if="{{item.mistakeWordsEnabled}}">
+      <text>错题单词</text>
+      随学生错题自动整理，动态数量进入管理页后查看
+    </view>
+
+    <view class="manage-button" data-id="{{item.studentId}}" bindtap="openStudentVocabulary">
+      进入英语学习设置
+      <text>→</text>
+    </view>
+  </view>
 </view>

@@ -89,10 +89,12 @@ Page({
   onLoad(options) {
     const mode = options.mode || "";
     const previewStudentId = options.previewStudentId || "";
+    this.focusVocabularySettings = options.section === "vocabulary";
     this.setData({
       studentId: previewStudentId || options.id || "",
       previewStudentId,
       mode,
+      showVocabularySettings: this.focusVocabularySettings,
     });
     this.loadStudent();
   },
@@ -173,6 +175,10 @@ Page({
           weeklyChartPoints: overviewState.weeklyChartPoints,
           mistakeStatusSegments: this.prepareMistakeStatusSegments(analytics),
           message: "",
+        }, () => {
+          if (!this.focusVocabularySettings || !this.data.isTeacher) return;
+          this.focusVocabularySettings = false;
+          wx.pageScrollTo({ selector: "#vocabulary-settings", duration: 250 });
         });
       })
       .catch((err) => {
@@ -361,9 +367,12 @@ Page({
   goVocabulary() {
     const student = this.data.student;
     if (!student || !student._id) return;
-    const params = ["studentId=" + student._id];
+    const studentId = encodeURIComponent(student._id);
+    const params = ["studentId=" + studentId];
     if (this.data.isTeacherPreview) {
-      params.push("mode=teacherPreview", "previewStudentId=" + student._id);
+      params.push("mode=teacherPreview", "previewStudentId=" + studentId);
+    } else {
+      params.push("view=detail", "tab=all");
     }
     wx.navigateTo({
       url: "/pages/vocabulary/index?" + params.join("&"),

@@ -1,9 +1,57 @@
 <view class="page vocabulary-page">
   <view class="card message-card" wx:if="{{message}}">
     <view>{{message}}</view>
-    <view class="retry-action" bindtap="loadVocabularyData">重新加载</view>
+    <view class="retry-action" bindtap="retryLoad">重新加载</view>
   </view>
-  <view class="card loading-card" wx:elif="{{loading}}">正在准备单词…</view>
+  <view class="card loading-card" wx:elif="{{loading}}">{{catalogMode ? '正在读取词库目录…' : '正在准备单词…'}}</view>
+
+  <block wx:elif="{{catalogMode && student}}">
+    <view class="card catalog-hero">
+      <view class="catalog-eyebrow">{{student.name}} 的个性化词库</view>
+      <view class="catalog-title">我的单词库</view>
+      <view class="catalog-subtitle">老师为你准备的词库都在这里，需要时再查看全部单词和学习记录。</view>
+      <view class="catalog-goal" wx:if="{{enabled}}">老师设置的每日目标：{{dailyPlan.dailyGoal}} 个</view>
+    </view>
+
+    <view class="card feature-disabled-card" wx:if="{{!enabled}}">
+      <view class="disabled-title">背单词功能尚未开启</view>
+      <view class="disabled-hint">朱老师开启后，这些词库才会进入每日学习。</view>
+    </view>
+
+    <view class="catalog-section-head">
+      <view>
+        <view class="section-title">已开启的词库</view>
+        <view class="section-hint">先看看有哪些词库，需要时再打开全部单词。</view>
+      </view>
+      <view class="catalog-count">{{libraries.length}} 个词库</view>
+    </view>
+
+    <view class="catalog-library-card card" wx:for="{{libraries}}" wx:key="id">
+      <view class="catalog-library-mark">{{index + 1}}</view>
+      <view class="catalog-library-copy">
+        <view class="catalog-library-name">{{item.label}}</view>
+        <view class="catalog-library-edition" wx:if="{{item.edition}}">{{item.edition}}</view>
+        <view class="catalog-library-scope" wx:if="{{item.scopeLabel}}">{{item.scopeLabel}}</view>
+      </view>
+      <view class="catalog-library-state">已配置</view>
+    </view>
+
+    <view class="catalog-source-note" wx:if="{{mistakeWordsEnabled}}">
+      错题单词也已加入；进入全部单词后，可在“错题”分类中查看。
+    </view>
+
+    <view class="card catalog-empty" wx:if="{{!libraries.length}}">
+      {{mistakeWordsEnabled ? '暂未单独选择课本或基础词库，错题单词可在全部单词中查看。' : '老师暂时还没有为你选择词库。'}}
+    </view>
+
+    <view class="catalog-detail-button" wx:if="{{enabled}}" bindtap="openVocabularyDetail">
+      <view>
+        <view class="catalog-detail-title">查看全部单词</view>
+        <view class="catalog-detail-hint">进入后可按全部、课本、错题、没记牢和已掌握分类查看</view>
+      </view>
+      <text>→</text>
+    </view>
+  </block>
 
   <block wx:elif="{{student}}">
     <view class="card vocabulary-hero">

@@ -161,7 +161,7 @@
     <view class="management-grid">
       <view class="ghost-btn" bindtap="goAddLesson">记录课程</view>
       <view class="ghost-btn" bindtap="goAddMistake">快速记错题</view>
-      <view class="ghost-btn" bindtap="goVocabularyDetail">单词明细</view>
+      <view class="ghost-btn" bindtap="goVocabularyDetail">学生词库</view>
       <view class="ghost-btn" bindtap="goAddStudent">添加学生</view>
     </view>
   </view>

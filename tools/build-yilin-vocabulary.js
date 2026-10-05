@@ -214,7 +214,7 @@ BOOKS.forEach((book) => {
     order: book.order,
     collectionId: "yilin-junior-old",
     collectionLabel: "译林牛津初中英语",
-    edition: "2012课标旧版",
+    edition: "译林版 · 2012课标旧版",
     grade: book.grade,
     semester: book.semester,
     bookTitle: `译林版牛津英语初中英语${book.label}册`,
@@ -280,7 +280,7 @@ const output = {
   collection: {
     id: "yilin-junior-old",
     label: "译林牛津初中英语",
-    edition: "2012课标旧版",
+    edition: "译林版 · 2012课标旧版",
     notice: "与任轩楠现有错题所用教材词汇一致；新版教材应另建词库，不与本词库混用。",
   },
   levels,

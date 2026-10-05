@@ -22,6 +22,33 @@ assert(beginnerWords.every((word) => vocabulary.getVocabularyAudioInfo(word.key)
 assert(beginnerWords.every((word) => vocabulary.getVocabularyAudioInfo(word.key).directDurationMs > 0));
 assert(!vocabulary.getRecommendedVocabularySettings({ name: "普通学生" }, library).levelIds.includes("0A"));
 
+const beginnerCatalog = vocabulary.buildVocabularyCatalog({
+  library,
+  settings: { levelIds: ["0A"] },
+});
+assert.strictEqual(beginnerCatalog.length, 1);
+assert.strictEqual(beginnerCatalog[0].id, "primary-beginner");
+assert.strictEqual(beginnerCatalog[0].wordCount, 89);
+
+const yilinLevelIds = library.levels
+  .filter((level) => level.id.indexOf("yilin-old-") === 0)
+  .map((level) => level.id);
+const yilinCatalog = vocabulary.buildVocabularyCatalog({
+  library,
+  settings: { levelIds: yilinLevelIds },
+});
+assert.strictEqual(yilinCatalog.length, 1, "Selected Yilin volumes must be grouped as one library");
+assert.strictEqual(yilinCatalog[0].id, "yilin-junior-old");
+assert.strictEqual(yilinCatalog[0].edition, "译林版 · 2012课标旧版");
+assert.strictEqual(yilinCatalog[0].wordCount, 2183);
+assert.deepStrictEqual(yilinCatalog[0].levelIds, yilinLevelIds);
+
+assert.deepStrictEqual(
+  vocabulary.buildVocabularyCatalog({ library, settings: { levelIds: [] } }),
+  [],
+  "An empty selection must not expose default libraries"
+);
+
 const beginnerView = vocabulary.buildVocabularyView({
   library,
   settings: {
@@ -106,6 +133,7 @@ const root = path.resolve(__dirname, "..", "..", "..");
 const indexSource = fs.readFileSync(path.join(root, "cloudfunctions", "quickstartFunctions", "index.js"), "utf8");
 const app = JSON.parse(fs.readFileSync(path.join(root, "miniprogram", "app.json"), "utf8"));
 assert(indexSource.includes('case "getVocabularyData"'));
+assert(indexSource.includes('case "getVocabularyCatalog"'));
 assert(indexSource.includes('case "reviewVocabularyWord"'));
 assert(indexSource.includes('case "updateVocabularySettings"'));
 assert(app.pages.includes("pages/vocabulary/index"));

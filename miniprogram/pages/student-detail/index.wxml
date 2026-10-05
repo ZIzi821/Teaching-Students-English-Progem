@@ -130,7 +130,7 @@
       </view>
     </view>
 
-    <view class="card vocabulary-settings-card" wx:if="{{isTeacher}}">
+    <view id="vocabulary-settings" class="card vocabulary-settings-card" wx:if="{{isTeacher}}">
       <view class="vocabulary-settings-head">
         <view>
           <view class="progress-title">英语学习功能</view>

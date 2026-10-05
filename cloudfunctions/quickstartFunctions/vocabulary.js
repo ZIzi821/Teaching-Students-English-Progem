@@ -319,6 +319,59 @@ const normalizeVocabularySettings = (settings, library = loadVocabularyLibrary()
   };
 };
 
+const buildVocabularyCatalog = ({ library = loadVocabularyLibrary(), settings = {} } = {}) => {
+  const selectedLevelIds = new Set(
+    Array.isArray(settings.levelIds) ? settings.levelIds.map(asText).filter(Boolean) : []
+  );
+  const groups = new Map();
+  (library.levels || [])
+    .filter((level) => !level.isReferenceOnly && selectedLevelIds.has(level.id))
+    .forEach((level) => {
+      const id = level.collectionId || level.id;
+      if (!groups.has(id)) {
+        groups.set(id, {
+          id,
+          label: level.collectionLabel || level.label || id,
+          edition: level.edition || "",
+          isTextbook: level.isTextbook === true,
+          order: Number(level.order || 0),
+          levelIds: [],
+          levelLabels: [],
+          bookTitles: [],
+          wordKeys: new Set(),
+        });
+      }
+      const group = groups.get(id);
+      group.order = Math.min(group.order, Number(level.order || group.order || 0));
+      group.isTextbook = group.isTextbook || level.isTextbook === true;
+      group.levelIds.push(level.id);
+      group.levelLabels.push(level.label || level.id);
+      if (level.bookTitle && group.bookTitles.indexOf(level.bookTitle) < 0) {
+        group.bookTitles.push(level.bookTitle);
+      }
+    });
+  const groupByLevelId = new Map();
+  groups.forEach((group) => {
+    group.levelIds.forEach((levelId) => groupByLevelId.set(levelId, group));
+  });
+  (library.words || []).forEach((word) => {
+    const group = groupByLevelId.get(word.levelId);
+    if (group && word.key) group.wordKeys.add(word.key);
+  });
+  return Array.from(groups.values())
+    .sort((left, right) => left.order - right.order || left.label.localeCompare(right.label))
+    .map((group) => ({
+      id: group.id,
+      label: group.label,
+      edition: group.edition,
+      isTextbook: group.isTextbook,
+      levelIds: group.levelIds,
+      levelLabels: group.levelLabels,
+      bookTitles: group.bookTitles,
+      wordCount: group.wordKeys.size,
+    }));
+};
+
 const getLearningDay = (nowMs = Date.now()) => (
   Math.floor((Number(nowMs) + LEARNING_DAY_OFFSET_MS) / DAY_MS)
 );
@@ -811,6 +864,7 @@ module.exports = {
   getDefaultVocabularySettings,
   getRecommendedVocabularySettings,
   normalizeVocabularySettings,
+  buildVocabularyCatalog,
   getLearningDay,
   normalizeVocabularyDailyPlan,
   normalizeQuizAnswerMode,

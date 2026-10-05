@@ -2460,6 +2460,70 @@ const getVocabularyLibrary = () => {
   return library;
 };
 
+const buildStudentVocabularyCatalog = (studentData, options = {}) => {
+  const library = getVocabularyLibrary();
+  const configuredSettings = vocabulary.normalizeVocabularySettings(
+    studentData.vocabularySettings,
+    library,
+    studentData
+  );
+  const dailyPlan = vocabulary.normalizeVocabularyDailyPlan(
+    studentData.vocabularyDailyPlan,
+    configuredSettings.dailyGoal
+  );
+  const settings = Object.assign({}, configuredSettings, { dailyGoal: dailyPlan.dailyGoal });
+  const libraries = vocabulary.buildVocabularyCatalog({ library, settings }).map((item) => {
+    if (options.includeCounts === true) return item;
+    const safeItem = Object.assign({}, item);
+    delete safeItem.wordCount;
+    return safeItem;
+  });
+  const enabled = studentData.vocabularyEnabled === true;
+  return {
+    student: sanitizeStudent(
+      Object.assign({}, studentData, { vocabularyEnabled: enabled, vocabularySettings: settings }),
+      options.includePrivate === true
+    ),
+    enabled,
+    settings,
+    dailyPlan,
+    libraries,
+    libraryCount: libraries.length,
+    mistakeWordsEnabled: settings.includeMistakeWords === true,
+  };
+};
+
+const getVocabularyCatalog = async (event) => {
+  const identity = await getIdentity();
+  if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
+  const data = event.data || {};
+  if (data.scope === "teacher") {
+    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "仅教师端可查看学生词库目录");
+    const res = await db.collection("students").orderBy("createdAt", "desc").get();
+    const students = (res.data || [])
+      .filter((student) => !isStudentHiddenFromTeacher(student))
+      .map((student) => buildStudentVocabularyCatalog(student, {
+        includeCounts: true,
+        includePrivate: true,
+      }));
+    return { success: true, role: "teacher", scope: "teacher", students };
+  }
+
+  const requestedStudentId = String(data.previewStudentId || data.studentId || "").trim();
+  const studentId = identity.role === "student" && identity.student
+    ? identity.student._id
+    : requestedStudentId;
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  await ensureStudentAccess(studentId);
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  return Object.assign({
+    success: true,
+    role: identity.role,
+    readOnly: identity.role !== "student",
+  }, buildStudentVocabularyCatalog(studentRes.data));
+};
+
 const validateVocabularySettings = (data, library, student) => {
   if (typeof data.enabled !== "boolean") {
     throw createError("INVALID_VOCABULARY_SETTINGS", "请先选择是否开启英语背单词");
@@ -5605,6 +5669,8 @@ exports.main = async (event) => {
         return await setVocabularyDailyGoal(event);
       case "getVocabularyData":
         return await getVocabularyData(event);
+      case "getVocabularyCatalog":
+        return await getVocabularyCatalog(event);
       case "reviewVocabularyWord":
         return await reviewVocabularyWord(event);
       case "reviewVocabularyQuizAnswer":
