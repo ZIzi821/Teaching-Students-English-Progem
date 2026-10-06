@@ -962,11 +962,16 @@ Page({
         return this.downloadLocalMaterial(item).then((file) => {
           return this.uploadSelectedFile(file, manifest.files.length, index)
             .then(() => { successCount += 1; })
-            .catch((err) => { console.error(err); failedFiles.push(item.name); })
+            .catch((err) => {
+              console.error(err);
+              failedFiles.push({ name: item.name, message: this.getMaterialUploadFailureMessage(err) });
+            })
             .finally(() => this.removeTemporaryFile(file.filePath));
         }).catch((err) => {
           console.error(err);
-          failedFiles.push(item.name);
+          const readErr = err && typeof err === "object" ? err : new Error(String(err || "电脑资料读取失败"));
+          readErr.materialUploadStage = "local-read";
+          failedFiles.push({ name: item.name, message: this.getMaterialUploadFailureMessage(readErr) });
         });
       });
     });
@@ -977,9 +982,11 @@ Page({
       this.setData({ uploadingMaterial: false, "paperForm.paperTitle": "" });
       if (successCount) this.loadLesson();
       if (failedFiles.length) {
+        const failedNames = failedFiles.map((item) => item.name);
+        const failureMessages = Array.from(new Set(failedFiles.map((item) => item.message).filter(Boolean)));
         wx.showModal({
           title: `已上传 ${successCount} 个，失败 ${failedFiles.length} 个`,
-          content: `未成功：${failedFiles.slice(0, 8).join("、")}${failedFiles.length > 8 ? "等" : ""}\n请不要离开本页，重新选择这些文件。`,
+          content: `未成功：${failedNames.slice(0, 8).join("、")}${failedNames.length > 8 ? "等" : ""}\n原因：${failureMessages.join("；") || "上传未完成"}\n请不要离开本页，重新选择这些文件。`,
           showCancel: false,
         });
       } else {
@@ -1027,6 +1034,28 @@ Page({
     });
   },
 
+  getMaterialUploadFailureMessage(err) {
+    const stage = String((err && err.materialUploadStage) || "");
+    const code = String((err && (err.code || err.errCode || err.errcode)) || "").toUpperCase();
+    const rawMessage = String((err && (err.message || err.errMsg)) || "");
+    if (code === "CONTENT_RISK" || rawMessage.indexOf("内容可能不符合规范") >= 0) {
+      return "内容安全检查未通过，请更换文件后重试";
+    }
+    if (code === "CONTENT_CHECK_FAILED" || rawMessage.indexOf("暂时无法检查内容") >= 0) {
+      return "内容检查暂不可用，请稍后重试";
+    }
+    if (stage === "local-read") {
+      return "电脑资料读取失败，请保持电脑助手窗口开启后重试";
+    }
+    if (stage === "original-upload") {
+      return "原文件上传到云存储失败，请检查网络后重试";
+    }
+    if (stage === "register") {
+      return "文件已上传，但资料登记失败，请稍后重试";
+    }
+    return "上传未完成，请检查网络后重试";
+  },
+
   uploadSelectedFiles(files) {
     if (!files.length || this.data.uploadingMaterial) return;
     this.currentMaterialBatchId = `batch_${Date.now()}`;
@@ -1039,7 +1068,10 @@ Page({
         wx.showLoading({ title: `上传 ${index + 1}/${files.length}`, mask: true });
         return this.uploadSelectedFile(file, files.length, index)
           .then(() => { successCount += 1; })
-          .catch((err) => { console.error(err); failedFiles.push(file.fileName); });
+          .catch((err) => {
+            console.error(err);
+            failedFiles.push({ name: file.fileName, message: this.getMaterialUploadFailureMessage(err) });
+          });
       });
     });
     task.finally(() => {
@@ -1048,9 +1080,11 @@ Page({
       this.setData({ uploadingMaterial: false, "paperForm.paperTitle": "" });
       if (successCount) this.loadLesson();
       if (failedFiles.length) {
+        const failedNames = failedFiles.map((item) => item.name);
+        const failureMessages = Array.from(new Set(failedFiles.map((item) => item.message).filter(Boolean)));
         wx.showModal({
           title: `已上传 ${successCount} 个，失败 ${failedFiles.length} 个`,
-          content: `未成功：${failedFiles.slice(0, 8).join("、")}${failedFiles.length > 8 ? "等" : ""}\n请重新选择这些文件。`,
+          content: `未成功：${failedNames.slice(0, 8).join("、")}${failedNames.length > 8 ? "等" : ""}\n原因：${failureMessages.join("；") || "上传未完成"}\n请重新选择这些文件。`,
           showCancel: false,
         });
       } else {
@@ -1082,6 +1116,25 @@ Page({
     });
   },
 
+  uploadMaterialFileToCloud(cloudPath, filePath, stage) {
+    return wx.cloud.uploadFile({ cloudPath, filePath })
+      .then((res) => {
+        if (res && res.fileID) return res;
+        const err = new Error("云存储未返回文件信息");
+        err.materialUploadStage = stage;
+        throw err;
+      })
+      .catch((err) => {
+        if (err && typeof err === "object") {
+          if (!err.materialUploadStage) err.materialUploadStage = stage;
+          throw err;
+        }
+        const wrapped = new Error(String(err || "云存储上传失败"));
+        wrapped.materialUploadStage = stage;
+        throw wrapped;
+      });
+  },
+
   uploadSelectedFile(file, selectedCount, selectedIndex) {
     if (!this.data.lesson) return Promise.reject(new Error("课程尚未加载"));
     const fileExtension = getFileExtension(file.fileName) || (file.type === "image" ? "jpg" : "bin");
@@ -1090,19 +1143,22 @@ Page({
     const cloudBase = `lesson-materials/${this.data.lesson.studentId}/${this.data.lessonId}/${uploadBatchId}-${padMaterialIndex(selectedIndex + 1)}`;
     const cloudPath = `${cloudBase}-original.${fileExtension}`;
     let previewUpload;
-    return wx.cloud.uploadFile({ cloudPath, filePath: file.filePath })
+    return this.uploadMaterialFileToCloud(cloudPath, file.filePath, "original-upload")
       .then((res) => {
         if (file.type !== "image") return res;
         return this.compressMaterialImage(file).then((previewPath) => {
           if (!previewPath || previewPath === file.filePath) return res;
-          return wx.cloud.uploadFile({
-            cloudPath: `${cloudBase}-preview.jpg`,
-            filePath: previewPath,
-          }).then((previewRes) => {
-            previewUpload = previewRes;
-            this.removeTemporaryFile(previewPath);
-            return res;
-          });
+          return this.uploadMaterialFileToCloud(`${cloudBase}-preview.jpg`, previewPath, "preview-upload")
+            .then((previewRes) => {
+              previewUpload = previewRes;
+              return res;
+            })
+            .catch((err) => {
+              // 原图已上传时，预览图只是加速显示的附加文件；手机临时图不兼容不能阻断资料登记。
+              console.warn("material preview upload failed; using original", err);
+              return res;
+            })
+            .finally(() => this.removeTemporaryFile(previewPath));
         });
       })
       .then((res) => {
@@ -1133,12 +1189,19 @@ Page({
               uploadedAtMs: Date.now(),
             },
           },
+        }).then((callRes) => {
+          const result = callRes.result || {};
+          if (result.success === false) throw new Error(result.message || "保存失败");
+          return result;
+        }).catch((err) => {
+          if (err && typeof err === "object") {
+            err.materialUploadStage = "register";
+            throw err;
+          }
+          const wrapped = new Error(String(err || "资料登记失败"));
+          wrapped.materialUploadStage = "register";
+          throw wrapped;
         });
-      })
-      .then((res) => {
-        const result = res.result || {};
-        if (result.success === false) throw new Error(result.message || "保存失败");
-        return result;
       });
   },
 
