@@ -1038,6 +1038,7 @@ Page({
     const stage = String((err && err.materialUploadStage) || "");
     const code = String((err && (err.code || err.errCode || err.errcode)) || "").toUpperCase();
     const rawMessage = String((err && (err.message || err.errMsg)) || "");
+    const displayMessage = rawMessage.replace(/\s+/g, " ").trim().slice(0, 80);
     if (code === "CONTENT_RISK" || rawMessage.indexOf("内容可能不符合规范") >= 0) {
       return "内容安全检查未通过，请更换文件后重试";
     }
@@ -1051,6 +1052,9 @@ Page({
       return "原文件上传到云存储失败，请检查网络后重试";
     }
     if (stage === "register") {
+      if (displayMessage && !/cloud\.callFunction|function.*fail/i.test(displayMessage)) {
+        return `资料登记失败：${displayMessage}`;
+      }
       return "文件已上传，但资料登记失败，请稍后重试";
     }
     return "上传未完成，请检查网络后重试";
@@ -1191,7 +1195,11 @@ Page({
           },
         }).then((callRes) => {
           const result = callRes.result || {};
-          if (result.success === false) throw new Error(result.message || "保存失败");
+          if (result.success === false) {
+            const err = new Error(result.message || "保存失败");
+            err.code = result.code || "";
+            throw err;
+          }
           return result;
         }).catch((err) => {
           if (err && typeof err === "object") {

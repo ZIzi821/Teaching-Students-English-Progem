@@ -234,8 +234,9 @@ const getImageContentType = (fileID) => {
   return "image/png";
 };
 
-const checkImageFile = async (fileID) => {
+const checkImageFile = async (fileID, options) => {
   if (!fileID) return;
+  const safeOptions = options || {};
   try {
     const download = await cloud.downloadFile({ fileID });
     const fileContent = download.fileContent;
@@ -248,6 +249,13 @@ const checkImageFile = async (fileID) => {
         value: fileContent,
       },
     });
+    if (isSecurityReviewResult(res) && safeOptions.allowReview) {
+      console.warn("imgSecCheck manual review accepted", {
+        context: safeOptions.contextLabel || "",
+        result: getSecurityResultSummary(res),
+      });
+      return;
+    }
     if (isRiskySecurityResult(res)) {
       throw createError("CONTENT_RISK", CONTENT_RISK_MESSAGE);
     }
@@ -294,11 +302,14 @@ const deleteUnreferencedMistakeFiles = async (fileIDs) => {
   await deleteUnsafeFiles(unreferenced);
 };
 
-const assertContentSafe = async ({ texts, imageFileIds }) => {
+const assertContentSafe = async ({ texts, imageFileIds, allowImageReview, contextLabel }) => {
   await checkTextContent(texts);
   const fileIDs = uniqueValues((imageFileIds || []).filter((fileID) => fileID));
   for (let i = 0; i < fileIDs.length; i++) {
-    await checkImageFile(fileIDs[i]);
+    await checkImageFile(fileIDs[i], {
+      allowReview: allowImageReview === true,
+      contextLabel,
+    });
   }
 };
 
@@ -4414,6 +4425,8 @@ const addPaper = async (event) => {
     await assertContentSafe({
       texts: [data.title, data.paperTitle, data.term, data.fileName],
       imageFileIds: data.type === "image" || data.type === "canva" ? [data.fileID] : [],
+      allowImageReview: true,
+      contextLabel: "教师课程资料",
     });
   } catch (err) {
     await deleteUnsafeFiles([data.fileID, data.previewFileID]);
@@ -4528,6 +4541,8 @@ const replacePaperFile = async (event) => {
     await assertContentSafe({
       texts: [fileName],
       imageFileIds: type === "image" || type === "canva" ? [fileID] : [],
+      allowImageReview: true,
+      contextLabel: "教师替换课程资料",
     });
     await db.collection("papers").doc(paperId).update({
       data: {
