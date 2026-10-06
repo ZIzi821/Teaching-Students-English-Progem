@@ -8,6 +8,7 @@ const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), "u
 const backend = read("cloudfunctions/quickstartFunctions/index.js");
 const reminderBackend = read("cloudfunctions/lessonReminder/index.js");
 const reminderPackage = JSON.parse(read("cloudfunctions/lessonReminder/package.json"));
+const quickstartPackage = JSON.parse(read("cloudfunctions/quickstartFunctions/package.json"));
 const homeWxml = read("miniprogram/pages/index/index.wxml");
 const homeJs = read("miniprogram/pages/index/index.js");
 const lessonJs = read("miniprogram/pages/lesson-detail/index.js");
@@ -58,6 +59,13 @@ assert(backend.includes("molly_oral_ket"), "Molly lesson template is missing");
 assert(backend.includes("cloud.getTempFileURL"), "Authorized recording playback URLs are not generated server-side");
 assert(backend.includes("attachLessonPaperUrls"), "Course materials do not receive authorized preview/download URLs");
 assert(backend.includes("previewFileID"), "Image materials do not keep a fast preview copy");
+assert(backend.includes("getMaterialSafetyImageFileID"), "Course material safety checks do not use the matching compressed preview");
+assert(backend.includes("buildLessonPaperId"), "Course material registration is not idempotent");
+assert(lessonJs.includes("registerUploadedMaterial") && lessonJs.includes("currentAttempt >= 2"), "Course material registration does not retry transient failures");
+assert(
+  Number(quickstartPackage["cloudfunction-config"] && quickstartPackage["cloudfunction-config"].timeout) >= 60,
+  "quickstartFunctions timeout is too short for image safety checks"
+);
 assert(backend.includes("buildReadableRecordingCloudPath"), "Legacy recordings do not have a readable migration path");
 assert(lessonJs.includes("item.paperTitle || item.title"), "Displayed material title does not prefer paperTitle");
 assert(lessonJs.includes("submission.audioUrl"), "Teacher playback does not use the authorized recording URL");
@@ -71,6 +79,7 @@ assert(lessonJs.includes("readComputerMaterials"), "Desktop material reader is m
 assert(lessonJs.includes("127.0.0.1:3211"), "Desktop material bridge is not isolated on localhost");
 assert(lessonJs.includes('"pptx"') && lessonJs.includes('"document"'), "PPT/PPTX courseware support is missing");
 assert(lessonJs.includes("wx.compressImage"), "Image preview compression is missing");
+assert(lessonJs.includes("compressedWidth") && lessonJs.includes("compressedHeight") && lessonJs.includes("maxEdge = 1600"), "Image safety previews are not resized before upload");
 assert(lessonJs.includes("wx.saveImageToPhotosAlbum"), "Parent image saving is missing");
 assert(lessonWxml.includes('class="material-image-preview"'), "Course images are not displayed inline");
 assert(lessonWxml.includes('bindtap="openMaterial"'), "Inline course images cannot open full-screen preview");

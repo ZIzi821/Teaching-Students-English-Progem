@@ -1110,13 +1110,33 @@ Page({
 
   compressMaterialImage(file) {
     if (!file || file.type !== "image" || typeof wx.compressImage !== "function") return Promise.resolve(file.filePath);
-    return new Promise((resolve) => {
-      wx.compressImage({
+    const compress = (sizeOptions) => new Promise((resolve, reject) => {
+      wx.compressImage(Object.assign({
         src: file.filePath,
-        quality: 72,
+        quality: 55,
         success: (res) => resolve(res.tempFilePath || file.filePath),
-        fail: () => resolve(file.filePath),
+        fail: reject,
+      }, sizeOptions || {}));
+    });
+    if (typeof wx.getImageInfo !== "function") {
+      return compress().catch(() => file.filePath);
+    }
+    return new Promise((resolve) => {
+      wx.getImageInfo({
+        src: file.filePath,
+        success: resolve,
+        fail: () => resolve(null),
       });
+    }).then((info) => {
+      const width = Math.max(0, Number(info && info.width) || 0);
+      const height = Math.max(0, Number(info && info.height) || 0);
+      const maxEdge = 1600;
+      const sizeOptions = width >= height && width > maxEdge
+        ? { compressedWidth: maxEdge }
+        : height > maxEdge
+          ? { compressedHeight: maxEdge }
+          : {};
+      return compress(sizeOptions).catch(() => compress().catch(() => file.filePath));
     });
   },
 
@@ -1137,6 +1157,38 @@ Page({
         wrapped.materialUploadStage = stage;
         throw wrapped;
       });
+  },
+
+  callMaterialRegistration(registrationData) {
+    return wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "addPaper",
+        data: registrationData,
+      },
+    }).then((callRes) => {
+      const result = callRes.result || {};
+      if (result.success === false) {
+        const err = new Error(result.message || "保存失败");
+        err.code = result.code || "";
+        err.materialRegistrationResponse = true;
+        throw err;
+      }
+      return result;
+    });
+  },
+
+  registerUploadedMaterial(registrationData, attemptNo) {
+    const currentAttempt = Math.max(1, Number(attemptNo) || 1);
+    return this.callMaterialRegistration(registrationData).catch((err) => {
+      const code = String((err && (err.code || err.errCode || err.errcode)) || "").toUpperCase();
+      const isStructuredFailure = !!(err && err.materialRegistrationResponse);
+      const canRetry = code === "CONTENT_CHECK_FAILED" || !isStructuredFailure;
+      if (!canRetry || currentAttempt >= 2) throw err;
+      console.warn("material registration failed; retrying once", err);
+      return new Promise((resolve) => setTimeout(resolve, 800))
+        .then(() => this.registerUploadedMaterial(registrationData, currentAttempt + 1));
+    });
   },
 
   uploadSelectedFile(file, selectedCount, selectedIndex) {
@@ -1167,41 +1219,28 @@ Page({
       })
       .then((res) => {
         const purpose = this.data.selectedPurpose;
-        return wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: {
-            type: "addPaper",
-            data: {
-              studentId: this.data.lesson.studentId,
-              lessonId: this.data.lessonId,
-              title: this.createMaterialDisplayName(file, selectedCount, selectedIndex),
-              paperTitle: this.createMaterialDisplayName(file, selectedCount, selectedIndex),
-              type: file.type,
-              purpose,
-              studentVisible: purpose !== "teacher_only",
-              paperType: purpose === "listening" ? "listening" : purpose === "school_exam" ? "written" : "mixed",
-              source: purpose === "school_exam" ? "school_exam" : "practice",
-              term: this.data.paperForm.term,
-              fileID: res.fileID,
-              previewFileID: previewUpload ? previewUpload.fileID : res.fileID,
-              fileName: file.fileName,
-              originalFileName: file.fileName,
-              fileExtension,
-              fileSize: file.fileSize,
-              uploadBatchId,
-              batchIndex: selectedIndex,
-              uploadedAtMs: Date.now(),
-            },
-          },
-        }).then((callRes) => {
-          const result = callRes.result || {};
-          if (result.success === false) {
-            const err = new Error(result.message || "保存失败");
-            err.code = result.code || "";
-            throw err;
-          }
-          return result;
-        }).catch((err) => {
+        const displayName = this.createMaterialDisplayName(file, selectedCount, selectedIndex);
+        return this.registerUploadedMaterial({
+          studentId: this.data.lesson.studentId,
+          lessonId: this.data.lessonId,
+          title: displayName,
+          paperTitle: displayName,
+          type: file.type,
+          purpose,
+          studentVisible: purpose !== "teacher_only",
+          paperType: purpose === "listening" ? "listening" : purpose === "school_exam" ? "written" : "mixed",
+          source: purpose === "school_exam" ? "school_exam" : "practice",
+          term: this.data.paperForm.term,
+          fileID: res.fileID,
+          previewFileID: previewUpload ? previewUpload.fileID : res.fileID,
+          fileName: file.fileName,
+          originalFileName: file.fileName,
+          fileExtension,
+          fileSize: file.fileSize,
+          uploadBatchId,
+          batchIndex: selectedIndex,
+          uploadedAtMs: Date.now(),
+        }, 1).catch((err) => {
           if (err && typeof err === "object") {
             err.materialUploadStage = "register";
             throw err;

@@ -12,6 +12,11 @@ const ketMock = require("./ketMock");
 const { createKetMockService } = require("./ketMockService");
 const followReading = require("./followReading");
 const { createFollowReadingService } = require("./followReadingService");
+const {
+  buildLessonPaperId,
+  getMaterialSafetyImageFileID,
+  isSameLessonPaperUpload,
+} = require("./materialUpload");
 const KET_SPEAKING_TASKS = require("./data/ket-speaking-tasks.json");
 
 cloud.init({
@@ -4421,18 +4426,30 @@ const addPaper = async (event) => {
   if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
     throw createError("INVALID_PAPER", "所选课程不属于这位学生，请重新选择");
   }
+  const paperId = buildLessonPaperId(data);
+  const existingPaper = await getOptionalTransactionDocument(db.collection("papers").doc(paperId));
+  if (existingPaper) {
+    if (isSameLessonPaperUpload(existingPaper, data)) {
+      return { success: true, _id: paperId, reused: true };
+    }
+    throw createError("PAPER_UPLOAD_CONFLICT", "这份资料的上传编号已被使用，请重新选择文件");
+  }
   try {
     await assertContentSafe({
       texts: [data.title, data.paperTitle, data.term, data.fileName],
-      imageFileIds: data.type === "image" || data.type === "canva" ? [data.fileID] : [],
+      imageFileIds: data.type === "image" || data.type === "canva"
+        ? [getMaterialSafetyImageFileID(data)]
+        : [],
       allowImageReview: true,
       contextLabel: "教师课程资料",
     });
   } catch (err) {
-    await deleteUnsafeFiles([data.fileID, data.previewFileID]);
+    // 只有明确判定违规才删除；临时检查失败时保留文件，供同一上传请求安全重试。
+    if (err.code === "CONTENT_RISK") {
+      await deleteUnsafeFiles([data.fileID, data.previewFileID]);
+    }
     throw err;
   }
-  const paperId = `paper_${Date.now()}_${crypto.randomBytes(8).toString("hex")}`;
   const paperData = {
     studentId: data.studentId,
     lessonId: data.lessonId,
@@ -4458,14 +4475,22 @@ const addPaper = async (event) => {
     createdAt: db.serverDate(),
   };
   return await db.runTransaction(async (transaction) => {
+    const paperRef = transaction.collection("papers").doc(paperId);
+    const currentPaper = await getOptionalTransactionDocument(paperRef);
+    if (currentPaper) {
+      if (isSameLessonPaperUpload(currentPaper, data)) {
+        return { success: true, _id: paperId, reused: true };
+      }
+      throw createError("PAPER_UPLOAD_CONFLICT", "这份资料的上传编号已被使用，请重新选择文件");
+    }
     await getWritableLessonInTransaction(
       transaction,
       data.lessonId,
       data.studentId,
       "INVALID_PAPER"
     );
-    await transaction.collection("papers").doc(paperId).set({ data: paperData });
-    return { _id: paperId };
+    await paperRef.set({ data: paperData });
+    return { success: true, _id: paperId, reused: false };
   });
 };
 
