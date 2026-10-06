@@ -17,6 +17,7 @@ const {
   getMaterialSafetyImageFileID,
   isSameLessonPaperUpload,
 } = require("./materialUpload");
+const { isTransactionBusyError, runTransactionWithRetry } = require("./transactionRetry");
 const KET_SPEAKING_TASKS = require("./data/ket-speaking-tasks.json");
 
 cloud.init({
@@ -5300,6 +5301,32 @@ const updateMistake = async (event) => {
   return { success: true };
 };
 
+const runMistakeImportTransaction = async (transactionCallback, importItemIndex) => {
+  try {
+    return await runTransactionWithRetry(
+      () => db.runTransaction(transactionCallback),
+      {
+        retryDelaysMs: [200, 500, 1000],
+        onRetry: ({ attempt, maxAttempts, waitMs, error }) => {
+          console.warn("batch mistake import transaction busy; retrying", {
+            importItemIndex,
+            attempt,
+            maxAttempts,
+            waitMs,
+            message: (error && (error.errMsg || error.message)) || "",
+          });
+        },
+      }
+    );
+  } catch (err) {
+    if (!isTransactionBusyError(err)) throw err;
+    throw createError(
+      "TRANSACTION_BUSY",
+      "云数据库暂时繁忙，已自动重试，请稍后重新导入；已写入的错题不会重复创建"
+    );
+  }
+};
+
 const batchImportMistakes = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
@@ -5377,7 +5404,7 @@ const batchImportMistakes = async (event) => {
     const importItemIndex = importItemOffset + i;
     const existingItem = existingItemsByIndex.get(importItemIndex);
     if (existingItem) {
-      const existingResult = await db.runTransaction(async (transaction) => {
+      const existingResult = await runMistakeImportTransaction(async (transaction) => {
         const existingRef = transaction.collection("mistakes").doc(existingItem._id);
         const [current] = await Promise.all([
           getOptionalTransactionDocument(existingRef),
@@ -5420,7 +5447,7 @@ const batchImportMistakes = async (event) => {
           skipped: !hasUpdates,
           unusedImageFileId,
         };
-      });
+      }, importItemIndex);
       if (!existingResult.missing) {
         if (existingResult.updatedImage) updatedImageCount += 1;
         if (existingResult.skipped) skippedCount += 1;
@@ -5463,7 +5490,7 @@ const batchImportMistakes = async (event) => {
         vocabularyCandidatesVersion: item.vocabularyCandidatesVersion,
         createdAt: db.serverDate(),
       };
-    const upsertResult = await db.runTransaction(async (transaction) => {
+    const upsertResult = await runMistakeImportTransaction(async (transaction) => {
       const ref = transaction.collection("mistakes").doc(importDocumentId);
       const [current] = await Promise.all([
         getOptionalTransactionDocument(ref),
@@ -5509,7 +5536,7 @@ const batchImportMistakes = async (event) => {
         skipped: !hasUpdates,
         unusedImageFileId,
       };
-    });
+    }, importItemIndex);
     if (upsertResult.created) addedCount += 1;
     if (upsertResult.updatedImage) updatedImageCount += 1;
     if (upsertResult.skipped) skippedCount += 1;

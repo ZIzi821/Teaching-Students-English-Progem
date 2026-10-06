@@ -2,6 +2,7 @@ const LOCAL_BRIDGE_ORIGIN = "http://127.0.0.1:3210";
 const LOCAL_BRIDGE_PROTOCOL_VERSION = 1;
 const LOCAL_BRIDGE_TOKEN = "8393a7c9ed00a70b5cb76a3b466dfb1a198e73a8a9393a3f";
 const IMPORT_CHUNK_SIZE = 5;
+const IMPORT_TRANSACTION_RETRY_DELAYS_MS = [800, 1600];
 
 Page({
   data: {
@@ -596,6 +597,53 @@ Page({
     });
   },
 
+  isImportTransactionBusyError(err) {
+    const code = String((err && (err.code || err.errCode || err.errcode)) || "").toUpperCase();
+    const message = String((err && (err.message || err.errMsg)) || "");
+    return code === "TRANSACTION_BUSY"
+      || code === "-501001"
+      || /\btransaction\s+(?:is\s+)?busy\b/i.test(message);
+  },
+
+  waitForImportRetry(waitMs) {
+    return new Promise((resolve) => setTimeout(resolve, waitMs));
+  },
+
+  async requestMistakeImportChunk(payload, batchNo, batchTotal) {
+    let lastError;
+    for (let attempt = 0; attempt <= IMPORT_TRANSACTION_RETRY_DELAYS_MS.length; attempt += 1) {
+      try {
+        const res = await wx.cloud.callFunction({
+          name: "quickstartFunctions",
+          data: {
+            type: "batchImportMistakes",
+            data: payload,
+          },
+        });
+        const batchResult = res.result || {};
+        if (!batchResult.success) {
+          const error = new Error(batchResult.message || "第 " + batchNo + " 批导入失败");
+          error.code = batchResult.code || "";
+          throw error;
+        }
+        return batchResult;
+      } catch (err) {
+        lastError = err;
+        if (!this.isImportTransactionBusyError(err) || attempt >= IMPORT_TRANSACTION_RETRY_DELAYS_MS.length) {
+          throw err;
+        }
+        const waitMs = IMPORT_TRANSACTION_RETRY_DELAYS_MS[attempt];
+        this.setData({
+          uploadProgressText: "云端繁忙，正在自动重试第 " + batchNo + "/" + batchTotal
+            + " 批（" + (attempt + 1) + "/" + IMPORT_TRANSACTION_RETRY_DELAYS_MS.length + "）",
+        });
+        wx.showLoading({ title: "正在重试 " + batchNo + "/" + batchTotal, mask: true });
+        await this.waitForImportRetry(waitMs);
+      }
+    }
+    throw lastError;
+  },
+
   async importMistakeChunks(items, importBatchId) {
     const batchTotal = Math.ceil(items.length / IMPORT_CHUNK_SIZE);
     const result = {
@@ -619,22 +667,16 @@ Page({
       });
       wx.showLoading({ title: "导入 " + batchNo + "/" + batchTotal, mask: true });
 
-      const res = await wx.cloud.callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "batchImportMistakes",
-          data: {
-            studentId: this.data.studentId,
-            lessonId: this.data.lessonId,
-            importBatchId,
-            importItemOffset: start,
-            items: items.slice(start, end),
-          },
-        },
-      });
-      const batchResult = res.result || {};
-      if (!batchResult.success) {
-        const error = new Error(batchResult.message || "第 " + batchNo + " 批导入失败");
+      let batchResult;
+      try {
+        batchResult = await this.requestMistakeImportChunk({
+          studentId: this.data.studentId,
+          lessonId: this.data.lessonId,
+          importBatchId,
+          importItemOffset: start,
+          items: items.slice(start, end),
+        }, batchNo, batchTotal);
+      } catch (error) {
         error.importedItemCount = start;
         error.batchNo = batchNo;
         error.batchTotal = batchTotal;

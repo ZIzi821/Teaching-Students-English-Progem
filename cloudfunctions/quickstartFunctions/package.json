@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/courseWorkflow.test.js && node tests/teacherTodos.test.js && node tests/recordingFeedback.test.js && node tests/studentEngagement.test.js && node tests/ketMock.test.js && node tests/followReading.test.js && node tests/materialUpload.test.js && npm run test:french && node ../../tools/validate-ket-mock.js && node ../../tools/validate-follow-reading.js && node ../../tools/validate-student-engagement.js && node ../../tools/validate-identity-and-vocabulary-flow.js && node ../../tools/validate-vocabulary-audio-player.js",
+    "test": "node tests/courseWorkflow.test.js && node tests/teacherTodos.test.js && node tests/recordingFeedback.test.js && node tests/studentEngagement.test.js && node tests/ketMock.test.js && node tests/followReading.test.js && node tests/materialUpload.test.js && node tests/transactionRetry.test.js && node tests/batchImportTransactionRetry.test.js && npm run test:french && node ../../tools/validate-ket-mock.js && node ../../tools/validate-follow-reading.js && node ../../tools/validate-student-engagement.js && node ../../tools/validate-identity-and-vocabulary-flow.js && node ../../tools/validate-vocabulary-audio-player.js",
     "test:french": "node tests/frenchReviewEngine.test.js && node tests/frenchAnalytics.test.js && node tests/frenchLearning.test.js && node tests/englishVocabularyRegression.test.js && node tests/englishVocabularyQuiz.test.js"
   },
   "author": "",
