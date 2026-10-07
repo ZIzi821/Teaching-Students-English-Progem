@@ -4,6 +4,7 @@ const {
 } = require("../../utils/lessonTemplates");
 const { KET_SPEAKING_TASKS, findKetSpeakingTask } = require("../../utils/ketSpeakingTasks");
 const { KET_MOCK_SETS, findKetMockSet } = require("../../utils/ketMockSets");
+const { buildNextLessonTitleSuggestion } = require("../../utils/lessonTitle");
 
 const HOMEWORK_REMINDER_TEMPLATE_ID = "Ih535VWa2FCNlCCvZUYFJOt8fOA3EY3l7Pxoa9rszYA";
 const MATERIAL_PREFERENCES_KEY = "lessonMaterialPreferencesV2";
@@ -125,6 +126,7 @@ Page({
     deletingLesson: false,
     savingWorkspace: false,
     showWorkspaceEditor: false,
+    lessonTitleSuggestion: "",
     previousLessonReference: null,
     showPreviousLessonReference: true,
     showMaterialUploader: false,
@@ -298,6 +300,7 @@ Page({
       const ketSpeakingTaskIndex = Math.max(0, KET_SPEAKING_TASKS.findIndex((item) => item.id === selectedKetSpeakingTask.id));
       const selectedKetMockSet = findKetMockSet(lesson.ketMockSetId) || KET_MOCK_SETS[0];
       const ketMockSetIndex = Math.max(0, KET_MOCK_SETS.findIndex((item) => item.id === selectedKetMockSet.id));
+      const previousLessonReference = result.previousLesson || null;
       this.setData({
         role: result.role,
         isTeacher,
@@ -305,8 +308,11 @@ Page({
         isStudent: result.role === "student",
         mistakeLearningEnabled: result.mistakeLearningEnabled !== false,
         lesson,
-        previousLessonReference: result.previousLesson || null,
-        showPreviousLessonReference: Boolean(result.previousLesson),
+        lessonTitleSuggestion: buildNextLessonTitleSuggestion(
+          previousLessonReference && previousLessonReference.title
+        ),
+        previousLessonReference,
+        showPreviousLessonReference: Boolean(previousLessonReference),
         student: result.student || null,
         materialGroups: this.groupPapers(papers),
         hasPapers: papers.length > 0,

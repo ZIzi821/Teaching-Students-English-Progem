@@ -5,6 +5,7 @@ const {
 } = require("../../utils/lessonTemplates");
 const { KET_SPEAKING_TASKS } = require("../../utils/ketSpeakingTasks");
 const { KET_MOCK_SETS } = require("../../utils/ketMockSets");
+const { buildNextLessonTitleSuggestion } = require("../../utils/lessonTitle");
 
 const BASIC_RECORDING_TASK_TYPE_OPTIONS = [
   { value: "manual", label: "独立朗读（不播放示范）" },
@@ -63,6 +64,7 @@ Page({
     homeworkDueOptions: HOMEWORK_DUE_OPTIONS,
     homeworkDueIndex: 8,
     lessonNoTip: "",
+    lessonTitleSuggestion: "",
     previousLessonReference: null,
     showPreviousLessonReference: true,
     message: "",
@@ -163,6 +165,7 @@ Page({
     this.setData({
       studentIndex,
       selectedStudentName: student ? student.name : "请选择学生",
+      lessonTitleSuggestion: "",
       previousLessonReference: null,
     }, () => {
       this.applyLessonTemplate(student);
@@ -220,6 +223,7 @@ Page({
     if (!student) {
       this.setData({
         lessonNoTip: "",
+        lessonTitleSuggestion: "",
         previousLessonReference: null,
         "form.lessonNo": "",
       });
@@ -253,10 +257,14 @@ Page({
         const lessonNoTip = result.hasHistory
           ? `上次是第 ${result.maxLessonNo} 节，本次可填第 ${nextLessonNo} 节`
           : "还没有课程记录，可从第 1 节开始";
+        const previousLessonReference = result.previousLesson || null;
         const updates = {
           lessonNoTip,
-          previousLessonReference: result.previousLesson || null,
-          showPreviousLessonReference: Boolean(result.previousLesson),
+          lessonTitleSuggestion: buildNextLessonTitleSuggestion(
+            previousLessonReference && previousLessonReference.title
+          ),
+          previousLessonReference,
+          showPreviousLessonReference: Boolean(previousLessonReference),
         };
         if (!this.lessonNoManuallyChanged) {
           updates["form.lessonNo"] = String(nextLessonNo);
@@ -268,9 +276,15 @@ Page({
         console.error(err);
         this.setData({
           lessonNoTip: "",
+          lessonTitleSuggestion: "",
           message: "服务暂时不可用，请稍后再试",
         });
       });
+  },
+
+  applyLessonTitleSuggestion(e) {
+    const title = String(e.currentTarget.dataset.title || "").trim();
+    if (title) this.setData({ "form.title": title });
   },
 
   onDateChange(e) {

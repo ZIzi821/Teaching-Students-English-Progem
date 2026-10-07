@@ -25,6 +25,10 @@
     <view class="field">
       <view class="label">课程标题</view>
       <input class="input" placeholder="{{lessonTemplate.titlePlaceholder}}" value="{{form.title}}" data-field="title" bindinput="onInput" />
+      <view class="lesson-title-suggestions" wx:if="{{lessonTitleSuggestion}}">
+        <view class="lesson-title-suggestion" data-title="{{lessonTitleSuggestion}}" bindtap="applyLessonTitleSuggestion">{{lessonTitleSuggestion}}</view>
+      </view>
+      <view class="lesson-title-sequence-hint">根据上一节名称自动顺延；换阶段时可直接输入“单词阶段-1”。</view>
     </view>
 
     <view class="field">

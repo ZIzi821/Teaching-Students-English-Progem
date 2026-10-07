@@ -110,11 +110,10 @@
     <view class="card workspace-editor" wx:if="{{isTeacher && showWorkspaceEditor}}">
       <view class="field">
         <view class="label">课程名称</view>
-        <input class="input" maxlength="100" placeholder="例如：基础句型与个人表达-1" value="{{workspaceForm.title}}" data-field="title" bindinput="onWorkspaceInput" />
-        <view class="field-hint">修改后，教师端和学生端都会显示新名称。</view>
-        <view class="lesson-title-suggestions" wx:if="{{student.name === 'Molly'}}">
-          <view class="lesson-title-suggestion" data-title="基础句型与个人表达-1" bindtap="applyLessonTitleSuggestion">基础句型与个人表达-1</view>
-          <view class="lesson-title-suggestion" data-title="基础句型与个人表达-2" bindtap="applyLessonTitleSuggestion">基础句型与个人表达-2</view>
+        <input class="input" maxlength="100" placeholder="例如：单词阶段-1" value="{{workspaceForm.title}}" data-field="title" bindinput="onWorkspaceInput" />
+        <view class="field-hint">修改后两端都会显示新名称；换阶段时可直接输入“单词阶段-1”。</view>
+        <view class="lesson-title-suggestions" wx:if="{{lessonTitleSuggestion}}">
+          <view class="lesson-title-suggestion" data-title="{{lessonTitleSuggestion}}" bindtap="applyLessonTitleSuggestion">{{lessonTitleSuggestion}}</view>
         </view>
       </view>
       <view class="field">

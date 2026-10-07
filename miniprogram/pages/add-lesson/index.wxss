@@ -37,6 +37,30 @@
   line-height: 1.5;
 }
 
+.lesson-title-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 14rpx;
+}
+
+.lesson-title-suggestion {
+  padding: 11rpx 15rpx;
+  border: 1rpx solid #c9ddd3;
+  border-radius: 999rpx;
+  color: #36795e;
+  background: #edf7f2;
+  font-size: 22rpx;
+  line-height: 1.35;
+}
+
+.lesson-title-sequence-hint {
+  margin-top: 10rpx;
+  color: #817669;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
 .institution-course-row {
   display: flex;
   align-items: center;

@@ -26,6 +26,7 @@ const lessonTemplates = require(path.join(root, "miniprogram", "utils", "lessonT
 const { KET_SPEAKING_TASKS } = require(path.join(root, "miniprogram", "utils", "ketSpeakingTasks"));
 const cloudKetTasks = JSON.parse(read("cloudfunctions/quickstartFunctions/data/ket-speaking-tasks.json"));
 const courseWorkflow = require(path.join(root, "cloudfunctions", "quickstartFunctions", "courseWorkflow"));
+const { buildNextLessonTitleSuggestion } = require(path.join(root, "miniprogram", "utils", "lessonTitle"));
 
 [
   "setEnglishCourseSettings",
@@ -142,6 +143,11 @@ assert(addLessonJs.includes("wx.redirectTo"), "New lesson does not open the cour
 assert(addLessonJs.includes("inferLessonTemplateKey"), "New lessons do not inherit the student template");
 assert(addLessonWxml.includes("上一节课对照") && addLessonWxml.includes("不会自动复制"), "Previous-lesson read-only reference is missing");
 assert(backend.includes("buildPreviousLessonReference"), "Previous lesson data is not returned by the protected teacher endpoint");
+assert.strictEqual(buildNextLessonTitleSuggestion("基础句型与个人表达-5"), "基础句型与个人表达-6", "Lesson title sequence did not advance");
+assert.strictEqual(buildNextLessonTitleSuggestion("单词阶段-1"), "单词阶段-2", "A teacher-created lesson stage did not advance");
+assert.strictEqual(buildNextLessonTitleSuggestion("Unit 09"), "Unit 10", "Padded lesson title sequence did not advance");
+assert.strictEqual(buildNextLessonTitleSuggestion("没有编号的课程"), "", "A title without a trailing number should not be guessed");
+assert(addLessonJs.includes("lessonTitleSuggestion") && addLessonWxml.includes("lessonTitleSuggestion"), "New lessons do not show the previous-title sequence suggestion");
 assert(addLessonWxml.includes("机构课程") && lessonWxml.includes("机构课程"), "Institution-course controls are missing from lesson creation or editing");
 assert(addLessonJs.includes("institutionCourse: form.institutionCourse === true") && lessonJs.includes('"workspaceForm.institutionCourse"'), "Institution-course state is not submitted by both teacher forms");
 assert(backend.includes("countLessonProgressRecords") && backend.includes("sync lesson count after course type update failed"), "Institution courses do not trigger an authoritative lesson-progress recount");
@@ -177,8 +183,9 @@ assert(addLessonWxml.includes('maxlength="2000"'), "New-lesson recording prompt 
 assert(lessonWxml.includes('maxlength="2000"'), "Lesson-edit recording prompt limit is too short");
 assert(backend.includes("normalizeLessonText(data.recordingPrompt, 2000)"), "Cloud recording prompt limit is too short");
 assert(lessonWxml.includes('data-field="title"'), "Teacher course editor cannot change the lesson title");
-assert(lessonWxml.includes("基础句型与个人表达-1") && lessonWxml.includes("基础句型与个人表达-2"), "Molly title shortcuts are missing");
-assert(lessonJs.includes('"workspaceForm.title": title'), "Molly title shortcut does not update the course form");
+assert(lessonJs.includes("buildNextLessonTitleSuggestion") && lessonWxml.includes("lessonTitleSuggestion"), "Lesson title shortcuts are not derived from the previous lesson");
+assert(!lessonWxml.includes('student.name === \'Molly\''), "Lesson title suggestions are still restricted to one student");
+assert(lessonJs.includes('"workspaceForm.title": title'), "Lesson title shortcut does not update the course form");
 assert(lessonJs.includes("title: lesson.title || \"\""), "Existing course title is not loaded into the teacher editor");
 assert(backend.includes("title: normalizeLessonText(data.title, 100)"), "Updated course title is not normalized server-side");
 assert(backend.includes('if (!workspace.title) throw createError("INVALID_LESSON_TITLE"'), "Blank course titles are not rejected");
