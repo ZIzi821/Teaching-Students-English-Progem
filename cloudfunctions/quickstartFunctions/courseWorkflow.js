@@ -10,6 +10,10 @@ const HOMEWORK_LIST_GROUPS = Object.freeze({
   awaitingReview: "awaitingReview",
   completed: "completed",
 });
+const LESSON_ACCOUNTING_MODES = Object.freeze({
+  lesson: "lesson",
+  minute: "minute",
+});
 
 const toSafeCount = (value) => {
   const number = Number(value || 0);
@@ -22,6 +26,36 @@ const countLessonProgressRecords = (lessons = []) => (
   (Array.isArray(lessons) ? lessons : []).filter(countsTowardLessonProgress).length
 );
 
+const getLessonAccountingMode = (student = {}) => {
+  if (student.lessonAccountingMode === LESSON_ACCOUNTING_MODES.minute) return LESSON_ACCOUNTING_MODES.minute;
+  if (student.lessonAccountingMode === LESSON_ACCOUNTING_MODES.lesson) return LESSON_ACCOUNTING_MODES.lesson;
+  const name = `${student.name || ""} ${student.nickname || ""}`.trim().toLowerCase();
+  return name.includes("徐浩成") ? LESSON_ACCOUNTING_MODES.minute : LESSON_ACCOUNTING_MODES.lesson;
+};
+
+const normalizeLessonDurationMinutes = (value) => {
+  const minutes = Number(value);
+  if (!Number.isInteger(minutes) || minutes <= 0 || minutes > 300 || minutes % 5 !== 0) return 0;
+  return minutes;
+};
+
+const countLessonProgressMinutes = (lessons = [], legacyLessonMinutes = 0) => (
+  (Array.isArray(lessons) ? lessons : []).reduce((total, lesson) => {
+    if (!countsTowardLessonProgress(lesson)) return total;
+    const duration = normalizeLessonDurationMinutes(lesson && lesson.durationMinutes);
+    if (duration) return total + duration;
+    const rawDuration = lesson && lesson.durationMinutes;
+    const isLegacyMissingDuration = rawDuration === undefined
+      || rawDuration === null
+      || rawDuration === ""
+      || Number(rawDuration) === 0;
+    const fallback = isLegacyMissingDuration
+      ? normalizeLessonDurationMinutes(legacyLessonMinutes)
+      : 0;
+    return total + fallback;
+  }, 0)
+);
+
 const getEffectiveCompletedLessonCount = (student = {}, recordedLessonCount = 0) => {
   const storedCount = toSafeCount(student.completedLessonCount);
   const countedCount = toSafeCount(recordedLessonCount);
@@ -30,6 +64,38 @@ const getEffectiveCompletedLessonCount = (student = {}, recordedLessonCount = 0)
   if (!hasRecordedSnapshot) return Math.max(storedCount, countedCount);
   const previousRecordedCount = Math.max(0, Number(student.recordedLessonCount) || 0);
   return Math.max(0, countedCount, storedCount + countedCount - previousRecordedCount);
+};
+
+const getEffectiveCompletedLessonMinutes = (student = {}, recordedLessonMinutes = 0) => {
+  const storedMinutes = Object.prototype.hasOwnProperty.call(student, "completedLessonMinutes")
+    && Number.isFinite(Number(student.completedLessonMinutes))
+    ? Math.max(0, Number(student.completedLessonMinutes) || 0)
+    : toSafeCount(student.completedLessonCount) * 60;
+  const countedMinutes = Math.max(0, Number(recordedLessonMinutes) || 0);
+  const hasRecordedSnapshot = Object.prototype.hasOwnProperty.call(student, "recordedLessonMinutes")
+    && Number.isFinite(Number(student.recordedLessonMinutes));
+  if (!hasRecordedSnapshot) return Math.max(storedMinutes, countedMinutes);
+  const previousRecordedMinutes = Math.max(0, Number(student.recordedLessonMinutes) || 0);
+  return Math.max(0, countedMinutes, storedMinutes + countedMinutes - previousRecordedMinutes);
+};
+
+const getPlannedLessonMinutes = (student = {}) => {
+  if (
+    Object.prototype.hasOwnProperty.call(student, "plannedLessonMinutes")
+    && Number.isFinite(Number(student.plannedLessonMinutes))
+  ) {
+    return Math.max(0, Number(student.plannedLessonMinutes) || 0);
+  }
+  return toSafeCount(student.plannedLessonCount) * 60;
+};
+
+const formatLessonMinutes = (value) => {
+  const minutes = Math.max(0, Math.round(Number(value) || 0));
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  if (!remainder) return `${hours} 小时`;
+  if (!hours) return `${remainder} 分钟`;
+  return `${hours} 小时 ${remainder} 分钟`;
 };
 
 const getDefaultLessonPackageSize = (student) => {
@@ -48,8 +114,56 @@ const getLessonPackageSize = (student) => {
 };
 
 const buildLessonProgress = (student = {}) => {
+  const lessonAccountingMode = getLessonAccountingMode(student);
   const plannedLessonCount = toSafeCount(student.plannedLessonCount);
   const completedLessonCount = toSafeCount(student.completedLessonCount);
+  if (lessonAccountingMode === LESSON_ACCOUNTING_MODES.minute) {
+    const plannedLessonMinutes = getPlannedLessonMinutes(student);
+    const completedLessonMinutes = Object.prototype.hasOwnProperty.call(student, "completedLessonMinutes")
+      && Number.isFinite(Number(student.completedLessonMinutes))
+      ? Math.max(0, Number(student.completedLessonMinutes) || 0)
+      : completedLessonCount * 60;
+    const remainingLessonMinutes = plannedLessonMinutes
+      ? Math.max(0, plannedLessonMinutes - completedLessonMinutes)
+      : 0;
+    const lessonReminderThresholdMinutes = plannedLessonMinutes > 60 ? 60 : 0;
+    const showProgressMarker = lessonReminderThresholdMinutes > 0;
+    const progressMarkerPercent = showProgressMarker
+      ? Math.max(0, Math.min(100, Math.round(
+        ((plannedLessonMinutes - lessonReminderThresholdMinutes) / plannedLessonMinutes) * 100
+      )))
+      : 0;
+    let progressTone = plannedLessonMinutes > 0 ? "normal" : "unset";
+    if (plannedLessonMinutes > 0 && remainingLessonMinutes === 0) progressTone = "complete";
+    else if (lessonReminderThresholdMinutes && remainingLessonMinutes <= lessonReminderThresholdMinutes) {
+      progressTone = "near-end";
+    }
+    const completedLabel = formatLessonMinutes(completedLessonMinutes);
+    const plannedLabel = formatLessonMinutes(plannedLessonMinutes);
+    return {
+      lessonAccountingMode,
+      progressUnit: "minute",
+      progressUnitLabel: "小时",
+      plannedLessonCount,
+      completedLessonCount,
+      plannedLessonMinutes,
+      completedLessonMinutes,
+      remainingLessonMinutes,
+      progressPercent: plannedLessonMinutes
+        ? Math.min(100, Math.round((completedLessonMinutes / plannedLessonMinutes) * 100))
+        : 0,
+      progressText: `${completedLabel} / ${plannedLabel}`,
+      progressLabel: plannedLessonMinutes
+        ? `已上 ${completedLabel} / ${plannedLabel}`
+        : `已上 ${completedLabel}，总课时未设置`,
+      lessonPackageSize: 0,
+      remainingLessonCount: 0,
+      lessonReminderThreshold: 0,
+      showProgressMarker,
+      progressMarkerPercent,
+      progressTone,
+    };
+  }
   const progressPercent = plannedLessonCount
     ? Math.min(100, Math.round((completedLessonCount / plannedLessonCount) * 100))
     : 0;
@@ -77,10 +191,16 @@ const buildLessonProgress = (student = {}) => {
   ) progressTone = "near-end";
 
   return {
+    lessonAccountingMode,
+    progressUnit: "lesson",
+    progressUnitLabel: "节",
     plannedLessonCount,
     completedLessonCount,
     progressPercent,
     progressText: `${completedLessonCount} / ${plannedLessonCount}`,
+    progressLabel: plannedLessonCount
+      ? `已上 ${completedLessonCount} / ${plannedLessonCount} 节`
+      : `已上 ${completedLessonCount} 节，总课时未设置`,
     lessonPackageSize,
     remainingLessonCount,
     lessonReminderThreshold,
@@ -248,18 +368,25 @@ module.exports = {
   DAY_MS,
   HOMEWORK_LIST_GROUPS,
   MAX_HOMEWORK_DUE_DAYS,
+  LESSON_ACCOUNTING_MODES,
   addDays,
   buildHomeworkDeadlineState,
   buildHomeworkListGrouping,
   buildLessonProgress,
+  countLessonProgressMinutes,
   countLessonProgressRecords,
   countsTowardLessonProgress,
   formatHongKongDay,
+  formatLessonMinutes,
   getDefaultLessonPackageSize,
   getEffectiveCompletedLessonCount,
+  getEffectiveCompletedLessonMinutes,
   getHomeworkDueDate,
   getHongKongDayEndMs,
   getHomeworkListGroup,
   getLessonPackageSize,
+  getLessonAccountingMode,
+  getPlannedLessonMinutes,
   isLateHomeworkSubmission,
+  normalizeLessonDurationMinutes,
 };

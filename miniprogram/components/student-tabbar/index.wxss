@@ -24,7 +24,7 @@
 .tab-item {
   position: relative;
   display: flex;
-  width: 45%;
+  width: 31%;
   height: 90rpx;
   align-items: center;
   justify-content: center;
@@ -119,4 +119,39 @@
 .medal-ribbon-right {
   right: 12rpx;
   transform: skewX(15deg);
+}
+
+.schedule-body {
+  position: absolute;
+  right: 3rpx;
+  bottom: 1rpx;
+  left: 3rpx;
+  display: flex;
+  box-sizing: border-box;
+  height: 28rpx;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 0 5rpx 5rpx;
+  border: 3rpx solid currentColor;
+  border-radius: 5rpx;
+}
+
+.schedule-ring {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  width: 3rpx;
+  height: 10rpx;
+  border-radius: 999rpx;
+  background: currentColor;
+}
+
+.schedule-ring-left { left: 12rpx; }
+.schedule-ring-right { right: 12rpx; }
+
+.schedule-dot {
+  width: 4rpx;
+  height: 4rpx;
+  border-radius: 50%;
+  background: currentColor;
 }

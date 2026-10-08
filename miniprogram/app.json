@@ -55,6 +55,20 @@
         "pages/audio-manager/index",
         "pages/practice/index"
       ]
+    },
+    {
+      "name": "schedule",
+      "root": "schedule",
+      "pages": [
+        "pages/index/index"
+      ]
+    },
+    {
+      "name": "mistakeExport",
+      "root": "mistake-export",
+      "pages": [
+        "pages/index/index"
+      ]
     }
   ],
   "window": {

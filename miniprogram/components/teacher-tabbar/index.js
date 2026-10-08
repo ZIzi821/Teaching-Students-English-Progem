@@ -2,6 +2,7 @@ const TABS = {
   home: "/pages/index/index",
   todos: "/pages/teacher-todos/index",
   workbench: "/pages/teacher-workbench/index",
+  schedule: "/schedule/pages/index/index",
 };
 
 Component({

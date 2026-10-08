@@ -58,18 +58,32 @@
     </view>
 
     <view class="card progress-editor" wx:if="{{showProgressEditor}}">
-      <view class="field">
+      <view class="field" wx:if="{{student.progressUnit !== 'minute'}}">
         <view class="label">计划课时</view>
         <input class="input" type="number" value="{{progressForm.plannedLessonCount}}" data-field="plannedLessonCount" bindinput="onProgressInput" />
       </view>
-      <view class="field">
+      <view class="field" wx:if="{{student.progressUnit !== 'minute'}}">
         <view class="label">已上课时</view>
         <input class="input" type="number" value="{{progressForm.completedLessonCount}}" data-field="completedLessonCount" bindinput="onProgressInput" />
       </view>
-      <view class="field">
+      <view class="field" wx:if="{{student.progressUnit === 'minute'}}">
+        <view class="label">总课时（小时）</view>
+        <input class="input" type="digit" value="{{progressForm.plannedLessonHours}}" data-field="plannedLessonHours" bindinput="onProgressInput" />
+      </view>
+      <view class="field" wx:if="{{student.progressUnit === 'minute'}}">
+        <view class="label">已上时长（小时）</view>
+        <input class="input" type="digit" value="{{progressForm.completedLessonHours}}" data-field="completedLessonHours" bindinput="onProgressInput" />
+        <view class="progress-editor-hint">课程中填写的实际分钟会自动累计；这里可用于修正历史基数。</view>
+      </view>
+      <view class="field" wx:if="{{student.progressUnit !== 'minute'}}">
         <view class="label">常用加课数量</view>
         <input class="input" type="number" value="{{progressForm.lessonPackageSize}}" data-field="lessonPackageSize" bindinput="onProgressInput" />
         <view class="progress-editor-hint">只用于进度条的末段提示；Molly 默认 5 节，冯嘉文默认 3 节。填 0 可关闭。</view>
+      </view>
+      <view class="field">
+        <view class="label">预约单节时长（分钟）</view>
+        <input class="input" type="number" value="{{progressForm.bookingDurationMinutes}}" data-field="bookingDurationMinutes" bindinput="onProgressInput" />
+        <view class="progress-editor-hint">家长选择开始时间后，日程会按这里的时长自动算出结束时间。</view>
       </view>
       <view class="editor-actions">
         <view class="ghost-btn editor-btn" bindtap="hideProgressEditor">取消</view>
@@ -292,6 +306,13 @@
       <view class="tags analysis-tags" wx:if="{{analytics.topSkillTags.length}}">
         <text class="tag" wx:for="{{analytics.topSkillTags}}" wx:key="label">{{item.label}} {{item.count}}</text>
       </view>
+      <view class="mistake-export-entry" wx:if="{{isTeacher}}" bindtap="goMistakeExport">
+        <view>
+          <view class="mistake-export-title">导出错题汇总</view>
+          <view class="mistake-export-hint">按课程范围生成 Word，并可排除以前导出的错题。</view>
+        </view>
+        <view class="mistake-export-arrow">→</view>
+      </view>
     </view>
 
     <view class="primary-btn add-btn" wx:if="{{isTeacher}}" bindtap="goAddLesson">添加英语课记录</view>
@@ -303,7 +324,7 @@
           <view class="lesson-title">{{item.title}}</view>
           <view class="date">{{item.lessonDate}}</view>
         </view>
-        <view class="subject">{{item.subject}}<text wx:if="{{item.lessonNo}}"> · 第 {{item.lessonNo}} 节</text></view>
+        <view class="subject">{{item.subject}}<text wx:if="{{item.lessonNo}}"> · 第 {{item.lessonNo}} 节</text><text wx:if="{{item.durationMinutes}}"> · {{item.durationMinutes}} 分钟</text></view>
         <view class="institution-course-note" wx:if="{{item.institutionCourse}}"><text>机构课程</text>本节不计入个人课程进度</view>
         <view class="lesson-task-chips" wx:if="{{item.homeworkTask || item.recordingTaskEnabled}}">
           <text class="lesson-task-chip" wx:if="{{item.homeworkTask}}">有课后任务</text>

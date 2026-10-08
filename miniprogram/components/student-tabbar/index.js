@@ -1,6 +1,7 @@
 const ROUTES = {
   learning: "/pages/index/index",
   achievements: "/engagement/pages/achievements/index",
+  schedule: "/schedule/pages/index/index",
 };
 
 Component({

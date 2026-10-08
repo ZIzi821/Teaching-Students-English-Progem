@@ -617,6 +617,37 @@
   margin-top: 22rpx;
 }
 
+.mistake-export-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-top: 24rpx;
+  padding: 20rpx;
+  border: 1rpx solid #c9ded2;
+  border-radius: 14rpx;
+  background: #edf7f1;
+}
+
+.mistake-export-title {
+  color: #2f7158;
+  font-size: 26rpx;
+  font-weight: 800;
+}
+
+.mistake-export-hint {
+  margin-top: 6rpx;
+  color: #64776e;
+  font-size: 21rpx;
+  line-height: 1.45;
+}
+
+.mistake-export-arrow {
+  color: #3f8366;
+  font-size: 32rpx;
+  font-weight: 800;
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;

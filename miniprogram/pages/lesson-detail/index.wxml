@@ -11,7 +11,8 @@
           <view class="subject">{{lesson.subject}}</view>
           <view class="template-badge">{{lesson.lessonTemplateLabel}}</view>
         </view>
-        <view class="lesson-badge">第 {{lesson.lessonNo || '—'}} 节</view>
+        <view class="lesson-badge" wx:if="{{lesson.lessonNo}}">第 {{lesson.lessonNo}} 节</view>
+        <view class="lesson-badge" wx:elif="{{lesson.durationMinutes}}">{{lesson.durationMinutes}} 分钟</view>
       </view>
       <view class="title">{{lesson.title}}</view>
       <view class="date">{{lesson.lessonDate}}</view>
@@ -33,7 +34,11 @@
     </view>
 
     <view class="card record-card" wx:if="{{!showWorkspaceEditor}}">
-      <view class="empty-record" wx:if="{{!lesson.hasStructuredRecord && !lesson.summary}}">
+      <view class="empty-record" wx:if="{{lesson.lessonTemplateKey === 'vocabulary_coaching'}}">
+        <view class="empty-record-title">本次单词陪练已记录 {{lesson.durationMinutes}} 分钟</view>
+        <view class="empty-record-hint">单词陪练不需要填写课后整理，时长已计入小时进度。</view>
+      </view>
+      <view class="empty-record" wx:elif="{{!lesson.hasStructuredRecord && !lesson.summary}}">
         <view class="empty-record-title">还没有填写课后记录</view>
         <view class="empty-record-hint" wx:if="{{isTeacher}}">点击“编辑课程”，可以修改课程名称并补充学习内容、掌握情况和下节复习。</view>
       </view>
@@ -123,6 +128,11 @@
         </picker>
         <view class="field-hint template-editor-hint">{{lessonTemplate.description}}</view>
       </view>
+      <view class="field" wx:if="{{workspaceForm.lessonTemplateKey === 'vocabulary_coaching' || student.progressUnit === 'minute'}}">
+        <view class="label">本次上课时长（分钟）</view>
+        <input class="input" type="number" maxlength="3" placeholder="请输入 5 的倍数，例如 35" value="{{workspaceForm.durationMinutes}}" data-field="durationMinutes" bindinput="onWorkspaceInput" />
+        <view class="field-hint">用于徐浩成的小时进度计算；5–300 分钟且必须是 5 的倍数。普通机构课程可留空，单词陪练仍记录实际时长。</view>
+      </view>
 
       <view class="institution-course-setting">
         <view>
@@ -137,7 +147,7 @@
           <view>
             <view class="previous-lesson-reference-kicker">上一节课对照</view>
             <view class="previous-lesson-reference-title">{{previousLessonReference.title || '上一节英语课'}}</view>
-            <view class="previous-lesson-reference-meta">{{previousLessonReference.lessonDate}} · 第 {{previousLessonReference.lessonNo || '—'}} 节{{previousLessonReference.institutionCourse ? ' · 机构课程' : ''}}</view>
+            <view class="previous-lesson-reference-meta">{{previousLessonReference.lessonDate}}<text wx:if="{{previousLessonReference.lessonNo}}"> · 第 {{previousLessonReference.lessonNo}} 节</text><text wx:if="{{previousLessonReference.durationMinutes}}"> · {{previousLessonReference.durationMinutes}} 分钟</text>{{previousLessonReference.institutionCourse ? ' · 机构课程' : ''}}</view>
           </view>
           <view class="previous-lesson-reference-toggle">{{showPreviousLessonReference ? '收起' : '展开'}}</view>
         </view>
@@ -159,7 +169,11 @@
         </view>
       </view>
 
-      <block wx:if="{{workspaceForm.lessonTemplateKey === 'feng_beginner'}}">
+      <block wx:if="{{workspaceForm.lessonTemplateKey === 'vocabulary_coaching'}}">
+        <view class="field-hint">单词陪练只记录名称和实际时长，不填写第几节课，也不生成课后整理。</view>
+      </block>
+
+      <block wx:elif="{{workspaceForm.lessonTemplateKey === 'feng_beginner'}}">
       <view class="field">
         <view class="label">今日复习</view>
         <textarea class="textarea" placeholder="先记录旧内容，例如 A–I 和数字 1–3" value="{{workspaceForm.reviewContent}}" data-field="reviewContent" bindinput="onWorkspaceInput"></textarea>
@@ -207,6 +221,7 @@
         <textarea class="textarea" placeholder="学生最关键的表现" value="{{workspaceForm.masterySummary}}" data-field="masterySummary" bindinput="onWorkspaceInput"></textarea>
       </view>
       </block>
+      <block wx:if="{{workspaceForm.lessonTemplateKey !== 'vocabulary_coaching'}}">
       <view class="field">
         <view class="label">下节需要复习</view>
         <textarea class="textarea" placeholder="下次开课先做什么" value="{{workspaceForm.nextReview}}" data-field="nextReview" bindinput="onWorkspaceInput"></textarea>
@@ -339,9 +354,10 @@
         </picker>
         <input class="observation-note-input" placeholder="补充说明（可不填）" value="{{item.note}}" data-index="{{index}}" data-field="note" bindinput="onObservationInput" />
       </view>
+      </block>
 
       <view class="primary-btn save-record-btn {{savingWorkspace ? 'disabled-action' : ''}}" bindtap="saveWorkspace">
-        {{savingWorkspace ? '保存中…' : '保存课后记录'}}
+        {{savingWorkspace ? '保存中…' : workspaceForm.lessonTemplateKey === 'vocabulary_coaching' ? '保存课程' : '保存课后记录'}}
       </view>
     </view>
 

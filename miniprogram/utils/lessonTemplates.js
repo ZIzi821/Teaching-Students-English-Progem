@@ -23,6 +23,17 @@ const LESSON_TEMPLATE_OPTIONS = [
     titlePlaceholder: "例如：My school day 口语表达",
     recordingPlaceholder: "例如：用今天的目标表达说 5 句话",
   },
+  {
+    key: "vocabulary_coaching",
+    label: "单词陪练",
+    shortLabel: "单词陪练",
+    description: "按实际分钟记录陪练时长，不填写第几节课，也不需要课后整理。",
+    titlePlaceholder: "例如：单词陪练-1",
+    recordingPlaceholder: "例如：朗读今天练习的单词",
+    requiresLessonNo: false,
+    showPostLessonRecord: false,
+    requiresDurationMinutes: true,
+  },
 ];
 
 const findTemplate = (key) => LESSON_TEMPLATE_OPTIONS.find((item) => item.key === key)

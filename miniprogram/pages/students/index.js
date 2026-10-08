@@ -62,7 +62,7 @@ Page({
         bindStatus: boundAccountCount
           ? `已绑定 ${boundAccountCount}/${bindLimit || "不限"}`
           : `待绑定 · 最多 ${bindLimit || "不限"} 个`,
-        progressLabel: "已上 " + (item.completedLessonCount || 0) + " / " + (item.plannedLessonCount || 0) + " 节",
+        progressLabel: item.progressLabel || "课程进度暂未设置",
         progressPercent: item.progressPercent || 0,
       });
     });

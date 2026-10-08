@@ -284,7 +284,11 @@ Page({
     const lessonDate = sanitizePathSegment(lesson.lessonDate, "未标日期", 16);
     const lessonNo = sanitizePathSegment(lesson.lessonNo, "未编号", 10);
     const lessonTitle = sanitizePathSegment(lesson.title, "英语课", 28);
-    const lessonFolder = `${lessonDate}-第${lessonNo}节-${lessonTitle}-${shortId(lesson._id || this.data.lessonId)}`;
+    const durationMinutes = Math.max(0, Number(lesson.durationMinutes) || 0);
+    const lessonMarker = lesson.lessonNo
+      ? `第${lessonNo}节`
+      : durationMinutes ? `${durationMinutes}分钟` : lessonNo;
+    const lessonFolder = `${lessonDate}-${lessonMarker}-${lessonTitle}-${shortId(lesson._id || this.data.lessonId)}`;
     return `lesson-submissions/${studentFolder}/${lessonFolder}/第${attemptNo}次-${formatPathTime()}-reading.mp3`;
   },
 

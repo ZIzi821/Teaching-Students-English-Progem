@@ -59,7 +59,7 @@
       >
         <view class="task-top">
           <view>
-            <view class="task-date">{{task.lessonDate}} · 第 {{task.lessonNo || '—'}} 节</view>
+            <view class="task-date">{{task.lessonDate}}<text wx:if="{{task.lessonNo}}"> · 第 {{task.lessonNo}} 节</text><text wx:if="{{task.durationMinutes}}"> · {{task.durationMinutes}} 分钟</text></view>
             <view class="task-title">{{task.title}}</view>
             <view class="task-course-type" wx:if="{{task.institutionCourse}}">机构课程</view>
           </view>
@@ -83,7 +83,7 @@
       <view class="card task-card task-completed" wx:for="{{completedLessons}}" wx:key="_id" data-id="{{item._id}}" bindtap="goLesson">
         <view class="task-top">
           <view>
-            <view class="task-date">{{item.lessonDate}} · 第 {{item.lessonNo || '—'}} 节</view>
+            <view class="task-date">{{item.lessonDate}}<text wx:if="{{item.lessonNo}}"> · 第 {{item.lessonNo}} 节</text><text wx:if="{{item.durationMinutes}}"> · {{item.durationMinutes}} 分钟</text></view>
             <view class="task-title">{{item.title}}</view>
             <view class="task-course-type" wx:if="{{item.institutionCourse}}">机构课程</view>
           </view>

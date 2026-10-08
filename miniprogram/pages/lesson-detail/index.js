@@ -145,6 +145,7 @@ Page({
       title: "",
       institutionCourse: false,
       lessonTemplateKey: "general",
+      durationMinutes: "",
       reviewContent: "",
       taughtContent: "",
       masterySummary: "",
@@ -383,6 +384,7 @@ Page({
       lessonTemplateKey: lessonTemplate.key,
       lessonTemplateLabel: lessonTemplate.label,
       institutionCourse: lesson.institutionCourse === true,
+      durationMinutes: Math.max(0, Number(lesson.durationMinutes) || 0),
       reviewContent: lesson.reviewContent || "",
       taughtContent: lesson.taughtContent || "",
       masterySummary: lesson.masterySummary || (!hasStructuredRecord ? lesson.summary || "" : ""),
@@ -452,6 +454,7 @@ Page({
       title: lesson.title || "",
       institutionCourse: lesson.institutionCourse === true,
       lessonTemplateKey: lesson.lessonTemplateKey || "general",
+      durationMinutes: lesson.durationMinutes ? String(lesson.durationMinutes) : "",
       reviewContent: lesson.reviewContent || "",
       taughtContent: lesson.taughtContent || "",
       masterySummary: lesson.masterySummary || "",
@@ -616,6 +619,14 @@ Page({
       recordingTaskTypeIndex: Math.max(0, recordingTaskTypeOptions.findIndex((item) => item.value === safeType)),
       "workspaceForm.recordingTaskType": safeType,
     };
+    if (
+      option.key !== "vocabulary_coaching"
+      && this.data.student
+      && this.data.student.progressUnit === "minute"
+      && !Number(this.data.workspaceForm.durationMinutes)
+    ) {
+      updates["workspaceForm.durationMinutes"] = "60";
+    }
     if (safeType === "manual" && currentType !== "manual") {
       Object.assign(updates, {
         ketWeeklyHint: "",
@@ -810,6 +821,20 @@ Page({
     if (!String(form.title || "").trim()) {
       wx.showToast({ title: "请填写课程名称", icon: "none" });
       return;
+    }
+    if (
+      form.lessonTemplateKey === "vocabulary_coaching"
+      || (
+        this.data.student
+        && this.data.student.progressUnit === "minute"
+        && form.institutionCourse !== true
+      )
+    ) {
+      const durationMinutes = Number(form.durationMinutes);
+      if (!Number.isInteger(durationMinutes) || durationMinutes < 5 || durationMinutes > 300 || durationMinutes % 5 !== 0) {
+        wx.showToast({ title: "时长请填写 5–300 的 5 倍数", icon: "none" });
+        return;
+      }
     }
     if (form.recordingTaskEnabled && form.recordingTaskType === "follow_reading") {
       const itemCount = String(form.followReadingContent || "").split(/\r?\n/).filter((line) => line.trim()).length;

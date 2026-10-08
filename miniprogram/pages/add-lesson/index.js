@@ -48,6 +48,10 @@ Page({
     lessonTemplateOptions: LESSON_TEMPLATE_OPTIONS,
     lessonTemplateIndex: 0,
     lessonTemplate: findTemplate("general"),
+    requiresLessonNo: true,
+    showPostLessonRecord: true,
+    showDurationMinutes: false,
+    usesMinuteAccounting: false,
     recordingRepeatOptions: [1, 2, 3, 4, 5],
     recordingPreparationOptions: [0, 3, 5, 10, 15],
     recordingRepeatIndex: 1,
@@ -81,6 +85,7 @@ Page({
       subject: "英语",
       lessonDate: "",
       lessonNo: "",
+      durationMinutes: "",
       institutionCourse: false,
       lessonTemplateKey: "general",
       reviewContent: "",
@@ -153,9 +158,10 @@ Page({
       studentIndex,
       selectedStudentName: students[studentIndex] ? students[studentIndex].name : "请选择学生",
     }, () => {
-      this.applyLessonTemplate(students[studentIndex]);
-      this.updateLessonNoSuggestion();
-      this.checkKetWeeklyStatus();
+      this.applyLessonTemplate(students[studentIndex], "", () => {
+        this.updateLessonNoSuggestion();
+        this.checkKetWeeklyStatus();
+      });
     });
   },
 
@@ -168,14 +174,16 @@ Page({
       lessonTitleSuggestion: "",
       previousLessonReference: null,
     }, () => {
-      this.applyLessonTemplate(student);
-      this.updateLessonNoSuggestion();
-      this.checkKetWeeklyStatus();
+      this.applyLessonTemplate(student, "", () => {
+        this.updateLessonNoSuggestion();
+        this.checkKetWeeklyStatus();
+      });
     });
   },
 
-  applyLessonTemplate(student, explicitKey) {
-    const key = explicitKey || inferLessonTemplateKey(student);
+  applyLessonTemplate(student, explicitKey, callback) {
+    const activeStudent = student || this.data.students[this.data.studentIndex] || null;
+    const key = explicitKey || inferLessonTemplateKey(activeStudent);
     const index = Math.max(0, LESSON_TEMPLATE_OPTIONS.findIndex((item) => item.key === key));
     const recordingTaskTypeOptions = key === "molly_oral_ket"
       ? KET_RECORDING_TASK_TYPE_OPTIONS
@@ -191,7 +199,20 @@ Page({
       recordingTaskTypeOptions,
       recordingTaskTypeIndex: Math.max(0, recordingTaskTypeOptions.findIndex((item) => item.value === safeType)),
       "form.recordingTaskType": safeType,
+      requiresLessonNo: findTemplate(key).requiresLessonNo !== false,
+      showPostLessonRecord: findTemplate(key).showPostLessonRecord !== false,
+      usesMinuteAccounting: Boolean(activeStudent && activeStudent.progressUnit === "minute"),
+      showDurationMinutes: key === "vocabulary_coaching"
+        || Boolean(activeStudent && activeStudent.progressUnit === "minute"),
     };
+    if (key === "vocabulary_coaching") {
+      updates["form.lessonNo"] = "";
+      if (this.data.form.lessonTemplateKey !== "vocabulary_coaching") {
+        updates["form.durationMinutes"] = "";
+      }
+    } else if (activeStudent && activeStudent.progressUnit === "minute" && !this.data.form.durationMinutes) {
+      updates["form.durationMinutes"] = "60";
+    }
     if (safeType === "manual" && currentType !== "manual") {
       Object.assign(updates, {
         ketWeeklyHint: "",
@@ -199,12 +220,16 @@ Page({
         "form.ketMockSetId": "",
       });
     }
-    this.setData(updates);
+    this.setData(updates, callback);
   },
 
   onLessonTemplateChange(e) {
     const option = LESSON_TEMPLATE_OPTIONS[Number(e.detail.value)] || LESSON_TEMPLATE_OPTIONS[0];
-    this.applyLessonTemplate(null, option.key);
+    const student = this.data.students[this.data.studentIndex];
+    this.applyLessonTemplate(student, option.key, () => {
+      this.updateLessonNoSuggestion();
+      this.checkKetWeeklyStatus();
+    });
   },
 
   onInput(e) {
@@ -239,6 +264,7 @@ Page({
           type: "getNextLessonNo",
           data: {
             studentId: student._id,
+            lessonTemplateKey: this.data.form.lessonTemplateKey,
           },
         },
       })
@@ -262,12 +288,14 @@ Page({
           lessonNoTip,
           lessonTitleSuggestion: buildNextLessonTitleSuggestion(
             previousLessonReference && previousLessonReference.title
-          ),
+          ) || (this.data.form.lessonTemplateKey === "vocabulary_coaching" ? "单词陪练-1" : ""),
           previousLessonReference,
           showPreviousLessonReference: Boolean(previousLessonReference),
         };
-        if (!this.lessonNoManuallyChanged) {
+        if (!this.lessonNoManuallyChanged && this.data.requiresLessonNo) {
           updates["form.lessonNo"] = String(nextLessonNo);
+        } else if (!this.data.requiresLessonNo) {
+          updates["form.lessonNo"] = "";
         }
         this.setData(updates);
       })
@@ -459,12 +487,19 @@ Page({
     if (this.data.saving) return;
     const student = this.data.students[this.data.studentIndex];
     const form = this.data.form;
-    if (!student || !form.title || !form.lessonDate || !form.lessonNo) {
+    if (!student || !form.title || !form.lessonDate || (this.data.requiresLessonNo && !form.lessonNo)) {
       wx.showToast({
         title: "请填写课程信息",
         icon: "none",
       });
       return;
+    }
+    if (this.data.showDurationMinutes && (!form.institutionCourse || form.lessonTemplateKey === "vocabulary_coaching")) {
+      const durationMinutes = Number(form.durationMinutes);
+      if (!Number.isInteger(durationMinutes) || durationMinutes < 5 || durationMinutes > 300 || durationMinutes % 5 !== 0) {
+        wx.showToast({ title: "时长请按 5 分钟填写", icon: "none" });
+        return;
+      }
     }
     if (form.recordingTaskEnabled && form.recordingTaskType === "follow_reading") {
       const itemCount = String(form.followReadingContent || "").split(/\r?\n/).filter((line) => line.trim()).length;
@@ -494,6 +529,7 @@ Page({
             subject: form.subject,
             lessonDate: form.lessonDate,
             lessonNo: form.lessonNo,
+            durationMinutes: form.durationMinutes,
             institutionCourse: form.institutionCourse === true,
             summary: form.masterySummary || form.independentOutput || form.taughtContent || form.oralTopic,
             lessonTemplateKey: form.lessonTemplateKey,

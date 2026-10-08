@@ -31,7 +31,10 @@ Page({
     progressForm: {
       plannedLessonCount: "",
       completedLessonCount: "",
+      plannedLessonHours: "",
+      completedLessonHours: "",
       lessonPackageSize: "",
+      bookingDurationMinutes: "",
     },
     vocabularyLevels: FALLBACK_VOCABULARY_LEVELS.map((item) => Object.assign({}, item, { checked: false })),
     dailyGoalOptions: DAILY_GOAL_OPTIONS,
@@ -264,14 +267,9 @@ Page({
   },
 
   prepareStudent(student) {
-    const plannedLessonCount = student.plannedLessonCount || 0;
-    const completedLessonCount = student.completedLessonCount || 0;
-    const progressLabel = plannedLessonCount
-      ? "已上 " + completedLessonCount + " / " + plannedLessonCount + " 节"
-      : "已上 " + completedLessonCount + " 节 · 总课时未设置";
     return Object.assign({}, student, {
       initial: student && student.name ? student.name.substr(0, 1) : "学",
-      progressLabel,
+      progressLabel: student.progressLabel || "课程进度暂未设置",
     });
   },
 
@@ -361,6 +359,14 @@ Page({
       url += "&mode=teacherPreview&previewStudentId=" + this.data.student._id;
     }
     wx.navigateTo({ url });
+  },
+
+  goMistakeExport() {
+    const student = this.data.student;
+    if (!this.data.isTeacher || !student || !student._id) return;
+    wx.navigateTo({
+      url: "/mistake-export/pages/index/index?studentId=" + encodeURIComponent(student._id),
+    });
   },
 
 
@@ -645,12 +651,20 @@ Page({
   },
 
   showProgressEditor() {
+    const student = this.data.student;
+    const toHours = (minutes) => {
+      const value = Math.max(0, Number(minutes) || 0) / 60;
+      return Number.isInteger(value) ? String(value) : String(Number(value.toFixed(2)));
+    };
     this.setData({
       showProgressEditor: true,
       progressForm: {
-        plannedLessonCount: String(this.data.student.plannedLessonCount || 0),
-        completedLessonCount: String(this.data.student.completedLessonCount || 0),
-        lessonPackageSize: String(this.data.student.lessonPackageSize || 0),
+        plannedLessonCount: String(student.plannedLessonCount || 0),
+        completedLessonCount: String(student.completedLessonCount || 0),
+        plannedLessonHours: toHours(student.plannedLessonMinutes),
+        completedLessonHours: toHours(student.completedLessonMinutes),
+        lessonPackageSize: String(student.lessonPackageSize || 0),
+        bookingDurationMinutes: String(student.bookingDurationMinutes || 60),
       },
     });
   },
@@ -669,18 +683,36 @@ Page({
   },
 
   submitProgress() {
+    const isMinute = this.data.student.progressUnit === "minute";
+    const payload = {
+      studentId: this.data.student._id,
+      plannedLessonCount: this.data.progressForm.plannedLessonCount,
+      completedLessonCount: this.data.progressForm.completedLessonCount,
+      lessonPackageSize: this.data.progressForm.lessonPackageSize,
+      bookingDurationMinutes: this.data.progressForm.bookingDurationMinutes,
+    };
+    if (isMinute) {
+      const plannedMinutes = Math.round(Number(this.data.progressForm.plannedLessonHours || 0) * 60);
+      const completedMinutes = Math.round(Number(this.data.progressForm.completedLessonHours || 0) * 60);
+      if (
+        !Number.isFinite(plannedMinutes)
+        || !Number.isFinite(completedMinutes)
+        || plannedMinutes % 5
+        || completedMinutes % 5
+      ) {
+        wx.showToast({ title: "小时数需对应 5 分钟的倍数", icon: "none" });
+        return;
+      }
+      payload.plannedLessonMinutes = plannedMinutes;
+      payload.completedLessonMinutes = completedMinutes;
+    }
     wx.showLoading({ title: "保存中" });
     wx.cloud
       .callFunction({
         name: "quickstartFunctions",
         data: {
           type: "updateStudentProgress",
-          data: {
-            studentId: this.data.student._id,
-            plannedLessonCount: this.data.progressForm.plannedLessonCount,
-            completedLessonCount: this.data.progressForm.completedLessonCount,
-            lessonPackageSize: this.data.progressForm.lessonPackageSize,
-          },
+          data: payload,
         },
       })
       .then((res) => {

@@ -15,5 +15,13 @@
       </view>
       <view class="tab-label">成就</view>
     </view>
+    <view class="tab-item {{current === 'schedule' ? 'tab-active' : ''}}" data-key="schedule" bindtap="switchTab">
+      <view class="tab-symbol schedule-symbol">
+        <view class="schedule-ring schedule-ring-left"></view>
+        <view class="schedule-ring schedule-ring-right"></view>
+        <view class="schedule-body"><view class="schedule-dot"></view><view class="schedule-dot"></view><view class="schedule-dot"></view></view>
+      </view>
+      <view class="tab-label">日程</view>
+    </view>
   </view>
 </view>

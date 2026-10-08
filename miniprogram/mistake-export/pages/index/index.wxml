@@ -1,0 +1,82 @@
+<view class="page">
+  <view class="state-card" wx:if="{{loading}}">正在读取课程与错题…</view>
+  <view class="state-card error-card" wx:elif="{{message}}">
+    <view>{{message}}</view>
+    <view class="retry" bindtap="loadWorkspace">重新加载</view>
+  </view>
+
+  <block wx:elif="{{student}}">
+    <view class="hero-card">
+      <view class="eyebrow">TEACHER EXPORT</view>
+      <view class="hero-title">{{student.name}}的错题汇总</view>
+      <view class="hero-copy">选择课程范围后生成 Word。题目与原图在前，答案与解析集中放在后面，方便继续交给 AI 生成试卷。</view>
+      <view class="hero-stats">
+        <view><text>{{totalMistakeCount}}</text><label>现有错题</label></view>
+        <view><text>{{exportedMistakeCount}}</text><label>曾导出</label></view>
+        <view><text>{{historyCount}}</text><label>导出记录</label></view>
+      </view>
+    </view>
+
+    <view class="card export-card">
+      <view class="section-title">1. 选择课程范围</view>
+      <picker mode="selector" range="{{selectionModes}}" range-key="label" value="{{selectionModeIndex}}" bindchange="onSelectionModeChange">
+        <view class="picker-value">{{selectionModes[selectionModeIndex].label}}<text>⌄</text></view>
+      </picker>
+
+      <view class="range-grid" wx:if="{{selectionMode === 'range' && lessonOptions.length}}">
+        <view>
+          <view class="field-label">从这节课开始</view>
+          <picker mode="selector" range="{{lessonOptions}}" range-key="label" value="{{startLessonIndex}}" bindchange="onStartLessonChange">
+            <view class="lesson-picker">{{startLessonLabel}}</view>
+          </picker>
+        </view>
+        <view>
+          <view class="field-label">到这节课结束</view>
+          <picker mode="selector" range="{{lessonOptions}}" range-key="label" value="{{endLessonIndex}}" bindchange="onEndLessonChange">
+            <view class="lesson-picker">{{endLessonLabel}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="empty-lessons" wx:if="{{!lessonOptions.length}}">这位学生还没有课程记录，暂时无法按课程导出错题。</view>
+
+      <view class="section-title second-title">2. 是否排除以前导出的内容</view>
+      <picker mode="selector" range="{{excludeOptions}}" range-key="label" value="{{excludePolicyIndex}}" bindchange="onExcludePolicyChange">
+        <view class="picker-value">{{excludeOptions[excludePolicyIndex].label}}<text>⌄</text></view>
+      </picker>
+      <view class="policy-hint">{{excludePolicyHint}}</view>
+
+      <view class="estimate-card">
+        <view>
+          <view class="estimate-label">预计本次导出</view>
+          <view class="estimate-value">{{estimateMistakeCount}} 道错题</view>
+        </view>
+        <view class="estimate-lessons">涉及 {{estimateLessonCount}} 节候选课程</view>
+      </view>
+
+      <view class="primary-btn {{creating || !estimateMistakeCount ? 'disabled' : ''}}" bindtap="createExport">
+        {{creating ? '正在生成 Word…' : '生成并打开错题汇总'}}
+      </view>
+      <view class="download-hint">Word 打开后可点右上角菜单转发或保存。生成成功后也会永久留在下方记录里。</view>
+    </view>
+
+    <view class="history-title">导出历史</view>
+    <view class="empty-history" wx:if="{{!history.length}}">还没有导出记录。</view>
+    <view class="card history-card" wx:for="{{history}}" wx:key="_id">
+      <view class="history-head">
+        <view>
+          <view class="history-date">{{item.createdLabel}}</view>
+          <view class="history-range">{{item.selectionLabel}}</view>
+        </view>
+        <view class="status status-{{item.status}}">{{item.statusLabel}}</view>
+      </view>
+      <view class="history-meta">{{item.mistakeCount}} 道错题 · {{item.lessonCount}} 节课程</view>
+      <view class="history-policy">{{item.excludePolicyLabel}}<text wx:if="{{item.excludedMistakeCount}}"> · 已排除 {{item.excludedMistakeCount}} 道</text><text wx:if="{{item.excludedLessonCount}}"> · 已排除 {{item.excludedLessonCount}} 节</text></view>
+      <view class="failure" wx:if="{{item.status === 'failed'}}">{{item.failureMessage}}</view>
+      <view class="open-btn {{openingId ? 'disabled' : ''}}" wx:if="{{item.status === 'ready'}}" data-index="{{index}}" bindtap="openHistory">
+        {{openingId === item._id ? '正在打开…' : '打开 Word 文件'}}
+      </view>
+      <view class="generating-note" wx:elif="{{item.status === 'generating'}}">文件仍在生成中，请稍后重新进入本页查看。</view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,122 @@
+<view class="page schedule-page {{isTeacher ? 'has-teacher-tabbar' : ''}} {{isStudent ? 'has-student-tabbar' : ''}}">
+  <view class="preview-banner" wx:if="{{isTeacherPreview}}">
+    <view>
+      <view class="preview-title">正在查看 {{student.name}} 的学生日程</view>
+      <view class="preview-hint">界面与家长看到的一样，但预约和取消不会保存。</view>
+    </view>
+    <view class="preview-action" bindtap="goBackToTeacher">返回教师端</view>
+  </view>
+
+  <view class="schedule-hero">
+    <view class="hero-kicker">WEEKLY SCHEDULE</view>
+    <view class="hero-title">每周上课日程</view>
+    <view class="hero-hint" wx:if="{{isTeacher}}">固定课程、个人安排和学生预约都在同一张周表里。</view>
+    <view class="hero-hint" wx:elif="{{student}}">先看老师有没有空，再为 {{student.name}} 选择每周固定上课时间。</view>
+  </view>
+
+  <view class="card loading-card" wx:if="{{loading}}">正在整理本周日程…</view>
+  <view class="card error-card" wx:elif="{{message}}">{{message}}</view>
+
+  <block wx:else>
+    <scroll-view class="day-strip" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="day-strip-inner">
+        <view
+          class="day-pill {{selectedWeekday === item.weekday ? 'day-pill-active' : ''}}"
+          wx:for="{{days}}"
+          wx:key="weekday"
+          data-weekday="{{item.weekday}}"
+          bindtap="selectDay"
+        >
+          <view class="day-week">{{item.label}}</view>
+          <view class="day-count">{{item.eventCount ? item.eventCount + ' 项' : '空闲'}}</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="schedule-summary">
+      <view>
+        <view class="summary-title">{{selectedDayLabel}}</view>
+        <view class="summary-hint">时间相接不会冲突；有重叠时系统会阻止重复预约。</view>
+      </view>
+      <view class="schedule-add" wx:if="{{canWrite && !isTeacherPreview}}" bindtap="openForm">{{isTeacher ? '＋ 添加安排' : '＋ 预约上课'}}</view>
+    </view>
+
+    <view class="legend-row">
+      <view class="legend-item"><view class="legend-dot legend-monash"></view>MONASH</view>
+      <view class="legend-item"><view class="legend-dot legend-teacher"></view>老师安排</view>
+      <view class="legend-item"><view class="legend-dot legend-student"></view>学生课程</view>
+    </view>
+
+    <view class="timeline-card">
+      <view class="timeline-empty" wx:if="{{!selectedDayEvents.length}}">这一天目前没有安排，可以选择时间预约。</view>
+      <view class="timeline" style="height: {{timelineHeight}}rpx;">
+        <view class="hour-line" wx:for="{{timelineHours}}" wx:key="label" style="top: {{item.topRpx}}rpx;">
+          <view class="hour-label">{{item.label}}</view>
+          <view class="hour-rule"></view>
+        </view>
+        <view
+          class="schedule-event event-{{item.colorKey}} {{item.canCancel ? 'schedule-event-actionable' : ''}}"
+          wx:for="{{selectedDayEvents}}"
+          wx:key="_id"
+          style="top: {{item.topRpx}}rpx; height: {{item.heightRpx}}rpx;"
+          data-id="{{item._id}}"
+          bindtap="handleEventTap"
+        >
+          <view class="event-time">{{item.timeLabel}}</view>
+          <view class="event-title">{{item.title}}</view>
+          <view class="event-note" wx:if="{{item.note}}">{{item.note}}</view>
+          <view class="event-action" wx:if="{{item.canCancel}}">点按可取消</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="modal-mask" wx:if="{{showForm}}" bindtap="closeForm">
+    <view class="schedule-modal" catchtap="stopPropagation">
+      <view class="modal-title">{{formMode === 'teacher' ? '添加每周安排' : '预约每周上课时间'}}</view>
+      <view class="modal-hint" wx:if="{{formMode === 'booking'}}">{{student.name}} 每节 {{student.bookingDurationMinutes}} 分钟；结束时间由系统自动计算。</view>
+      <view class="modal-hint" wx:else>这段时间会直接显示在家长看到的日程表中。</view>
+
+      <view class="field">
+        <view class="field-label">星期</view>
+        <picker mode="selector" range="{{days}}" range-key="label" value="{{form.weekdayIndex}}" bindchange="onFormDayChange">
+          <view class="picker-value">{{days[form.weekdayIndex].label}}</view>
+        </picker>
+      </view>
+      <view class="time-grid">
+        <view class="field time-field">
+          <view class="field-label">开始时间</view>
+          <picker mode="time" start="06:00" end="22:55" value="{{form.startTime}}" bindchange="onStartTimeChange">
+            <view class="picker-value">{{form.startTime}}</view>
+          </picker>
+        </view>
+        <view class="field time-field" wx:if="{{formMode === 'teacher'}}">
+          <view class="field-label">结束时间</view>
+          <picker mode="time" start="06:05" end="23:00" value="{{form.endTime}}" bindchange="onEndTimeChange">
+            <view class="picker-value">{{form.endTime}}</view>
+          </picker>
+        </view>
+        <view class="field time-field" wx:else>
+          <view class="field-label">自动结束</view>
+          <view class="picker-value picker-readonly">{{bookingEndTime}}</view>
+        </view>
+      </view>
+      <view class="field" wx:if="{{formMode === 'teacher'}}">
+        <view class="field-label">事项名称</view>
+        <input class="text-input" maxlength="50" placeholder="例如：备课、外出、回家" value="{{form.title}}" data-field="title" bindinput="onFormInput" />
+      </view>
+      <view class="field">
+        <view class="field-label">备注（可选）</view>
+        <input class="text-input" maxlength="100" placeholder="补充说明" value="{{form.note}}" data-field="note" bindinput="onFormInput" />
+      </view>
+      <view class="weekly-note">保存后会作为每周固定时间显示；如有变化，可以点按对应板块取消。</view>
+      <view class="modal-actions">
+        <view class="modal-cancel" bindtap="closeForm">返回</view>
+        <view class="modal-confirm {{saving ? 'modal-confirm-disabled' : ''}}" bindtap="submitForm">{{saving ? '保存中…' : formMode === 'teacher' ? '加入日程' : '确认预约'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <teacher-tabbar wx:if="{{isTeacher}}" current="schedule"></teacher-tabbar>
+  <student-tabbar wx:if="{{isStudent}}" current="schedule" mode="{{mode}}" preview-student-id="{{previewStudentId}}"></student-tabbar>
+</view>

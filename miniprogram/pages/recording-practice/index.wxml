@@ -14,7 +14,7 @@
     <view class="practice-head">
       <view class="eyebrow">{{isKetTask ? 'KET SPEAKING PRACTICE' : 'READING PRACTICE'}}</view>
       <view class="practice-title">{{isKetTask ? '像考试一样，听清再回答' : '独立朗读，不播放示范音'}}</view>
-      <view class="lesson-name">{{lesson.title}} · 第 {{lesson.lessonNo || '—'}} 节</view>
+      <view class="lesson-name">{{lesson.title}}<text wx:if="{{lesson.lessonNo}}"> · 第 {{lesson.lessonNo}} 节</text><text wx:if="{{lesson.durationMinutes}}"> · {{lesson.durationMinutes}} 分钟</text></view>
     </view>
 
     <view class="card prompt-card">

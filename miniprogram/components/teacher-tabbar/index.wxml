@@ -16,5 +16,12 @@
       <view class="tab-symbol tab-symbol-workbench"><view class="workbench-cell"></view><view class="workbench-cell"></view><view class="workbench-cell"></view><view class="workbench-cell"></view></view>
       <view class="tab-label">管理</view>
     </view>
+    <view class="tab-item {{current === 'schedule' ? 'tab-active' : ''}}" data-key="schedule" bindtap="switchTab">
+      <view class="tab-symbol tab-symbol-schedule">
+        <view class="calendar-top"></view>
+        <view class="calendar-grid"><view></view><view></view><view></view><view></view></view>
+      </view>
+      <view class="tab-label">日程</view>
+    </view>
   </view>
 </view>

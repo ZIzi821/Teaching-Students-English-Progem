@@ -74,6 +74,77 @@ assert.strictEqual(
   "switching a lesson back to personal must restore one progress lesson"
 );
 
+assert.strictEqual(courseWorkflow.getLessonAccountingMode({ name: "徐浩成" }), "minute");
+assert.strictEqual(
+  courseWorkflow.getLessonAccountingMode({ name: "徐浩成", lessonAccountingMode: "lesson" }),
+  "lesson",
+  "an explicit accounting mode must override the compatibility name rule"
+);
+const xuCompatibilityProgress = courseWorkflow.buildLessonProgress({
+  name: "徐浩成",
+  plannedLessonCount: 10,
+  completedLessonCount: 1,
+});
+assert.strictEqual(xuCompatibilityProgress.plannedLessonMinutes, 600);
+assert.strictEqual(xuCompatibilityProgress.completedLessonMinutes, 60);
+assert.strictEqual(xuCompatibilityProgress.progressText, "1 小时 / 10 小时");
+assert.strictEqual(xuCompatibilityProgress.progressUnit, "minute");
+assert.strictEqual(
+  courseWorkflow.countLessonProgressMinutes([
+    { durationMinutes: 35 },
+    { durationMinutes: 45 },
+    { durationMinutes: 60, institutionCourse: true },
+    { durationMinutes: 7 },
+  ]),
+  80,
+  "only valid five-minute private durations may consume the hour package"
+);
+assert.strictEqual(
+  courseWorkflow.countLessonProgressMinutes([
+    {},
+    { durationMinutes: "" },
+    { durationMinutes: 60, institutionCourse: true },
+    { durationMinutes: 7 },
+  ], 60),
+  120,
+  "legacy private lessons without a duration must count as one hour, while institution and invalid explicit durations do not"
+);
+assert.strictEqual(
+  courseWorkflow.getEffectiveCompletedLessonMinutes(
+    { completedLessonMinutes: 80, recordedLessonMinutes: 80 },
+    90
+  ),
+  90,
+  "editing a recorded duration from 35 to 45 minutes must add ten minutes"
+);
+assert.strictEqual(
+  courseWorkflow.getEffectiveCompletedLessonMinutes(
+    { completedLessonMinutes: 80, recordedLessonMinutes: 80 },
+    45
+  ),
+  45,
+  "marking one duration lesson as institution course must remove its minutes"
+);
+const legacyMinuteLessons = [{}, {}, {}];
+const legacyBefore = courseWorkflow.countLessonProgressMinutes(legacyMinuteLessons, 60);
+const legacyAfter = courseWorkflow.countLessonProgressMinutes([
+  { institutionCourse: true },
+  {},
+  {},
+], 60);
+assert.strictEqual(legacyBefore, 180);
+assert.strictEqual(
+  courseWorkflow.getEffectiveCompletedLessonMinutes(
+    { completedLessonMinutes: legacyBefore, recordedLessonMinutes: legacyBefore },
+    legacyAfter
+  ),
+  120,
+  "marking a legacy Xu lesson as an institution course must subtract one hour"
+);
+assert.strictEqual(courseWorkflow.normalizeLessonDurationMinutes(35), 35);
+assert.strictEqual(courseWorkflow.normalizeLessonDurationMinutes(7), 0);
+assert.strictEqual(courseWorkflow.normalizeLessonDurationMinutes(0), 0);
+
 const lesson = {
   lessonDate: "2026-10-03",
   recordingTaskEnabled: true,

@@ -1,0 +1,286 @@
+page {
+  min-height: 100%;
+  background: #f7f3ea;
+  color: #253b33;
+}
+
+.page {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 28rpx 24rpx 64rpx;
+}
+
+.hero-card,
+.card,
+.state-card,
+.empty-history {
+  box-sizing: border-box;
+  border: 1rpx solid #e5dacb;
+  border-radius: 20rpx;
+  background: #fffdfa;
+  box-shadow: 0 8rpx 24rpx rgba(76, 61, 44, 0.05);
+}
+
+.state-card,
+.empty-history {
+  padding: 36rpx 28rpx;
+  color: #756b60;
+  text-align: center;
+}
+
+.error-card {
+  color: #875f50;
+}
+
+.retry {
+  margin-top: 16rpx;
+  color: #39785f;
+  font-weight: 700;
+}
+
+.hero-card {
+  padding: 30rpx;
+  border-color: #bfd7cb;
+  background: linear-gradient(135deg, #edf7f1 0%, #fff7dc 100%);
+}
+
+.eyebrow {
+  color: #4a8a70;
+  font-size: 21rpx;
+  font-weight: 800;
+  letter-spacing: 4rpx;
+}
+
+.hero-title {
+  margin-top: 10rpx;
+  font-size: 42rpx;
+  font-weight: 800;
+}
+
+.hero-copy {
+  margin-top: 14rpx;
+  color: #586a62;
+  font-size: 25rpx;
+  line-height: 1.7;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12rpx;
+  margin-top: 24rpx;
+}
+
+.hero-stats view {
+  padding: 16rpx 8rpx;
+  border-radius: 14rpx;
+  background: rgba(255, 255, 255, 0.72);
+  text-align: center;
+}
+
+.hero-stats text,
+.hero-stats label {
+  display: block;
+}
+
+.hero-stats text {
+  color: #2e7258;
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.hero-stats label {
+  margin-top: 3rpx;
+  color: #77837d;
+  font-size: 21rpx;
+}
+
+.card {
+  margin-top: 22rpx;
+  padding: 28rpx;
+}
+
+.section-title,
+.history-title {
+  font-size: 29rpx;
+  font-weight: 800;
+}
+
+.second-title {
+  margin-top: 30rpx;
+}
+
+.picker-value,
+.lesson-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  min-height: 82rpx;
+  margin-top: 14rpx;
+  padding: 18rpx 20rpx;
+  border: 1rpx solid #d9cdbf;
+  border-radius: 14rpx;
+  background: #fbf8f2;
+  color: #30483f;
+  font-size: 25rpx;
+  line-height: 1.45;
+}
+
+.picker-value text {
+  color: #7f8b84;
+}
+
+.range-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18rpx;
+  margin-top: 22rpx;
+}
+
+.field-label {
+  color: #746b61;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.lesson-picker {
+  display: block;
+  min-height: 94rpx;
+}
+
+.policy-hint,
+.download-hint,
+.empty-lessons,
+.history-policy,
+.generating-note {
+  margin-top: 12rpx;
+  color: #7c746a;
+  font-size: 22rpx;
+  line-height: 1.6;
+}
+
+.empty-lessons {
+  padding: 18rpx;
+  border-radius: 12rpx;
+  background: #fff1d2;
+  color: #8a6a37;
+}
+
+.estimate-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+  margin-top: 28rpx;
+  padding: 22rpx;
+  border-radius: 16rpx;
+  background: #eef6f1;
+}
+
+.estimate-label {
+  color: #64776e;
+  font-size: 22rpx;
+}
+
+.estimate-value {
+  margin-top: 4rpx;
+  color: #2e7258;
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.estimate-lessons {
+  color: #557167;
+  font-size: 22rpx;
+  text-align: right;
+}
+
+.primary-btn,
+.open-btn {
+  margin-top: 22rpx;
+  padding: 22rpx;
+  border-radius: 14rpx;
+  background: #4f9275;
+  color: #fff;
+  font-size: 27rpx;
+  font-weight: 800;
+  text-align: center;
+}
+
+.disabled {
+  opacity: 0.45;
+}
+
+.history-title {
+  margin: 34rpx 4rpx 8rpx;
+}
+
+.history-card {
+  padding: 24rpx;
+}
+
+.history-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.history-date {
+  color: #2f473e;
+  font-size: 27rpx;
+  font-weight: 800;
+}
+
+.history-range {
+  margin-top: 8rpx;
+  color: #6f6960;
+  font-size: 22rpx;
+  line-height: 1.55;
+}
+
+.status {
+  flex: none;
+  padding: 7rpx 14rpx;
+  border-radius: 999rpx;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
+.status-ready {
+  color: #2f795b;
+  background: #e5f3eb;
+}
+
+.status-generating {
+  color: #8d681e;
+  background: #fff1c8;
+}
+
+.status-failed {
+  color: #9a5549;
+  background: #fce8e2;
+}
+
+.history-meta {
+  margin-top: 18rpx;
+  color: #365f4e;
+  font-size: 25rpx;
+  font-weight: 700;
+}
+
+.failure {
+  margin-top: 14rpx;
+  padding: 14rpx;
+  border-radius: 10rpx;
+  background: #fff0eb;
+  color: #955d52;
+  font-size: 22rpx;
+  line-height: 1.55;
+}
+
+.open-btn {
+  padding: 17rpx;
+  font-size: 24rpx;
+}

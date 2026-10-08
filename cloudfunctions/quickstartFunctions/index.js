@@ -12,6 +12,9 @@ const ketMock = require("./ketMock");
 const { createKetMockService } = require("./ketMockService");
 const followReading = require("./followReading");
 const { createFollowReadingService } = require("./followReadingService");
+const { createWeeklyScheduleService } = require("./scheduleService");
+const scheduleWorkflow = require("./schedule");
+const { createMistakeExportService } = require("./mistakeExportService");
 const {
   buildLessonPaperId,
   getMaterialSafetyImageFileID,
@@ -41,6 +44,8 @@ const COLLECTIONS = [
   "followReadingAssets",
   "studentReminders",
   "pkChallengeProfiles",
+  "scheduleEvents",
+  "mistakeExports",
   "systemLocks",
 ];
 const VOCABULARY_DAY_MS = 24 * 60 * 60 * 1000;
@@ -491,13 +496,22 @@ const toRankList = (stats, limit) => {
 
 const buildCycleStatus = (student) => {
   const progress = buildProgress(student);
-  const hasPlan = progress.plannedLessonCount > 0;
-  const isReviewPhase = hasPlan && progress.completedLessonCount >= progress.plannedLessonCount;
+  const hasPlan = progress.progressUnit === "minute"
+    ? progress.plannedLessonMinutes > 0
+    : progress.plannedLessonCount > 0;
+  const isReviewPhase = hasPlan && (
+    progress.progressUnit === "minute"
+      ? progress.completedLessonMinutes >= progress.plannedLessonMinutes
+      : progress.completedLessonCount >= progress.plannedLessonCount
+  );
   return {
     hasPlan,
     isReviewPhase,
     label: !hasPlan ? "还没设置总课时" : isReviewPhase ? "本轮课程已完成，可以开始复习了" : "课程进行中",
-    nextAction: !hasPlan ? "设置总课时" : isReviewPhase ? "开始复习" : `继续第 ${progress.completedLessonCount + 1} 节课`,
+    nextAction: !hasPlan
+      ? "设置总课时"
+      : isReviewPhase ? "开始复习"
+      : progress.progressUnit === "minute" ? "继续安排课程" : `继续第 ${progress.completedLessonCount + 1} 节课`,
   };
 };
 
@@ -513,6 +527,23 @@ const toLessonPackageSize = (value) => {
   const number = Number(value || 0);
   if (!Number.isInteger(number) || number < 0 || number > 100) {
     throw createError("INVALID_PROGRESS", "常用加课数量必须是 0–100 的整数");
+  }
+  return number;
+};
+
+const toLessonMinutes = (value, fieldName) => {
+  const number = Number(value || 0);
+  if (!Number.isInteger(number) || number < 0 || number > 60000 || number % 5 !== 0) {
+    throw createError("INVALID_PROGRESS", `${fieldName} 必须是 5 分钟的整数倍`);
+  }
+  return number;
+};
+
+const toBookingDurationMinutes = (value, fallback) => {
+  const candidate = value === undefined || value === null || value === "" ? fallback : value;
+  const number = Number(candidate);
+  if (!Number.isInteger(number) || number < 20 || number > 180 || number % 5 !== 0) {
+    throw createError("INVALID_PROGRESS", "预约单节时长必须是 20–180 分钟，并按 5 分钟递增");
   }
   return number;
 };
@@ -539,10 +570,17 @@ const buildProgress = (student) => courseWorkflow.buildLessonProgress(student);
 const summarizeProgress = (students) => {
   let plannedLessonCount = 0;
   let completedLessonCount = 0;
+  let plannedLessonMinutes = 0;
+  let completedLessonMinutes = 0;
   students.forEach((student) => {
     const progress = buildProgress(student);
-    plannedLessonCount += progress.plannedLessonCount;
-    completedLessonCount += progress.completedLessonCount;
+    if (progress.progressUnit === "minute") {
+      plannedLessonMinutes += progress.plannedLessonMinutes;
+      completedLessonMinutes += progress.completedLessonMinutes;
+    } else {
+      plannedLessonCount += progress.plannedLessonCount;
+      completedLessonCount += progress.completedLessonCount;
+    }
   });
   const progressPercent = plannedLessonCount ? Math.min(100, Math.round((completedLessonCount / plannedLessonCount) * 100)) : 0;
   return {
@@ -550,12 +588,17 @@ const summarizeProgress = (students) => {
     completedLessonCount,
     progressPercent,
     progressText: `${completedLessonCount} / ${plannedLessonCount}`,
+    plannedLessonMinutes,
+    completedLessonMinutes,
+    timeProgressText: `${courseWorkflow.formatLessonMinutes(completedLessonMinutes)} / ${courseWorkflow.formatLessonMinutes(plannedLessonMinutes)}`,
   };
 };
 
 const buildStudentProgressItem = (student) => {
   const safeStudent = sanitizeStudent(student, false);
-  const hasPlannedLessonCount = safeStudent.plannedLessonCount > 0;
+  const hasPlannedLessonCount = safeStudent.progressUnit === "minute"
+    ? safeStudent.plannedLessonMinutes > 0
+    : safeStudent.plannedLessonCount > 0;
   return {
     _id: safeStudent._id,
     name: safeStudent.name,
@@ -569,15 +612,17 @@ const buildStudentProgressItem = (student) => {
     showProgressMarker: safeStudent.showProgressMarker,
     progressMarkerPercent: safeStudent.progressMarkerPercent,
     progressTone: safeStudent.progressTone,
+    progressUnit: safeStudent.progressUnit,
+    progressUnitLabel: safeStudent.progressUnitLabel,
+    plannedLessonMinutes: safeStudent.plannedLessonMinutes || 0,
+    completedLessonMinutes: safeStudent.completedLessonMinutes || 0,
     hasPlannedLessonCount,
-    progressLabel: hasPlannedLessonCount
-      ? `已上 ${safeStudent.completedLessonCount} / ${safeStudent.plannedLessonCount} 节`
-      : `已上 ${safeStudent.completedLessonCount} 节，总课时未设置`,
+    progressLabel: safeStudent.progressLabel,
   };
 };
 
-const getStudentLessonCount = async (studentId) => {
-  let lessonCount = 0;
+const getStudentLessonMetrics = async (studentId) => {
+  const lessons = [];
   const pageSize = 100;
   for (let skip = 0; ; skip += pageSize) {
     const res = await db.collection("lessons")
@@ -585,12 +630,21 @@ const getStudentLessonCount = async (studentId) => {
       .skip(skip)
       .limit(pageSize)
       .get();
-    const lessons = res.data || [];
-    lessonCount += courseWorkflow.countLessonProgressRecords(lessons);
-    if (lessons.length < pageSize) break;
+    const page = res.data || [];
+    lessons.push(...page);
+    if (page.length < pageSize) break;
   }
-  return lessonCount;
+  return {
+    recordedLessonCount: courseWorkflow.countLessonProgressRecords(lessons),
+    // Legacy 徐浩成 lessons did not store duration. Treat each missing duration as
+    // one hour so marking an old lesson as an institution course can subtract it.
+    recordedLessonMinutes: courseWorkflow.countLessonProgressMinutes(lessons, 60),
+  };
 };
+
+const getStudentLessonCount = async (studentId) => (
+  (await getStudentLessonMetrics(studentId)).recordedLessonCount
+);
 
 const getEffectiveCompletedLessonCount = (student, lessonCount) => (
   courseWorkflow.getEffectiveCompletedLessonCount(student, lessonCount)
@@ -598,9 +652,15 @@ const getEffectiveCompletedLessonCount = (student, lessonCount) => (
 
 const attachSyncedLessonCount = async (student) => {
   if (!student || !student._id) return student;
-  const recordedLessonCount = await getStudentLessonCount(student._id);
+  const { recordedLessonCount, recordedLessonMinutes } = await getStudentLessonMetrics(student._id);
   const completedLessonCount = getEffectiveCompletedLessonCount(student, recordedLessonCount);
-  return Object.assign({}, student, { completedLessonCount, recordedLessonCount });
+  const completedLessonMinutes = courseWorkflow.getEffectiveCompletedLessonMinutes(student, recordedLessonMinutes);
+  return Object.assign({}, student, {
+    completedLessonCount,
+    recordedLessonCount,
+    completedLessonMinutes,
+    recordedLessonMinutes,
+  });
 };
 
 const attachSyncedLessonCounts = async (students) => {
@@ -608,13 +668,19 @@ const attachSyncedLessonCounts = async (students) => {
 };
 
 const syncStudentCompletedLessonCount = async (studentId) => {
-  const recordedLessonCount = await getStudentLessonCount(studentId);
+  const { recordedLessonCount, recordedLessonMinutes } = await getStudentLessonMetrics(studentId);
   const studentRes = await db.collection("students").doc(studentId).get();
   const completedLessonCount = getEffectiveCompletedLessonCount(studentRes.data, recordedLessonCount);
+  const completedLessonMinutes = courseWorkflow.getEffectiveCompletedLessonMinutes(
+    studentRes.data,
+    recordedLessonMinutes
+  );
   await db.collection("students").doc(studentId).update({
     data: {
       completedLessonCount,
       recordedLessonCount,
+      completedLessonMinutes,
+      recordedLessonMinutes,
     },
   });
   return completedLessonCount;
@@ -623,21 +689,36 @@ const syncStudentCompletedLessonCount = async (studentId) => {
 const ensureStudentLessonCountSnapshot = async (studentId) => {
   const studentRes = await db.collection("students").doc(studentId).get();
   if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
-  if (
-    Object.prototype.hasOwnProperty.call(studentRes.data, "recordedLessonCount")
-    && Number.isFinite(Number(studentRes.data.recordedLessonCount))
-  ) {
+  const countSnapshotReady = Object.prototype.hasOwnProperty.call(studentRes.data, "recordedLessonCount")
+    && Number.isFinite(Number(studentRes.data.recordedLessonCount));
+  const minuteSnapshotReady = courseWorkflow.getLessonAccountingMode(studentRes.data) !== "minute"
+    || (
+      Object.prototype.hasOwnProperty.call(studentRes.data, "recordedLessonMinutes")
+      && Number.isFinite(Number(studentRes.data.recordedLessonMinutes))
+    );
+  if (countSnapshotReady && minuteSnapshotReady) {
     return studentRes.data;
   }
-  const recordedLessonCount = await getStudentLessonCount(studentId);
+  const { recordedLessonCount, recordedLessonMinutes } = await getStudentLessonMetrics(studentId);
   const completedLessonCount = getEffectiveCompletedLessonCount(studentRes.data, recordedLessonCount);
+  const completedLessonMinutes = courseWorkflow.getEffectiveCompletedLessonMinutes(
+    studentRes.data,
+    recordedLessonMinutes
+  );
   await db.collection("students").doc(studentId).update({
     data: {
       completedLessonCount,
       recordedLessonCount,
+      completedLessonMinutes,
+      recordedLessonMinutes,
     },
   });
-  return Object.assign({}, studentRes.data, { completedLessonCount, recordedLessonCount });
+  return Object.assign({}, studentRes.data, {
+    completedLessonCount,
+    recordedLessonCount,
+    completedLessonMinutes,
+    recordedLessonMinutes,
+  });
 };
 
 const getOpenIdFromContext = () => cloud.getWXContext().OPENID;
@@ -777,7 +858,7 @@ const isEnglishCourseEnabled = (student) => {
 
 const isStudentHiddenFromTeacher = (student) => Boolean(student && student.teacherHidden === true);
 
-const LESSON_TEMPLATE_KEYS = ["general", "feng_beginner", "molly_oral_ket"];
+const LESSON_TEMPLATE_KEYS = ["general", "feng_beginner", "molly_oral_ket", "vocabulary_coaching"];
 
 const getStudentLessonTemplateKey = (student) => {
   if (student && LESSON_TEMPLATE_KEYS.includes(student.lessonTemplateKey)) {
@@ -813,6 +894,7 @@ const sanitizeStudent = (student, includePrivate) => {
     mistakeLearningEnabled: isMistakeLearningEnabled(student),
     frenchLearningEnabled: student.frenchLearningEnabled === true,
     lessonTemplateKey: getStudentLessonTemplateKey(student),
+    bookingDurationMinutes: scheduleWorkflow.getDefaultBookingDurationMinutes(student),
     vocabularySettings,
     vocabularyDailyPlan: vocabulary.normalizeVocabularyDailyPlan(
       student.vocabularyDailyPlan,
@@ -2038,6 +2120,13 @@ const addStudent = async (event) => {
   if (plannedLessonCount > 0 && completedLessonCount > plannedLessonCount) {
     throw createError("INVALID_PROGRESS", "已上课时不能大于总课时");
   }
+  const lessonAccountingMode = courseWorkflow.getLessonAccountingMode(data);
+  const plannedLessonMinutes = lessonAccountingMode === "minute" ? plannedLessonCount * 60 : 0;
+  const completedLessonMinutes = lessonAccountingMode === "minute" ? completedLessonCount * 60 : 0;
+  const bookingDurationMinutes = toBookingDurationMinutes(
+    data.bookingDurationMinutes,
+    scheduleWorkflow.getDefaultBookingDurationMinutes(data)
+  );
   await createOneCollection("systemLocks");
   const studentId = crypto.randomBytes(16).toString("hex");
   const initialStudentOpenId = String(data.studentOpenId || "").trim();
@@ -2057,6 +2146,11 @@ const addStudent = async (event) => {
     plannedLessonCount,
     completedLessonCount,
     lessonPackageSize,
+    lessonAccountingMode,
+    plannedLessonMinutes,
+    completedLessonMinutes,
+    recordedLessonMinutes: 0,
+    bookingDurationMinutes,
     recordedLessonCount: 0,
     vocabularyEnabled: false,
     englishCourseEnabled: true,
@@ -2128,16 +2222,48 @@ const updateStudentProgress = async (event) => {
   if (!data.studentId) {
     throw createError("INVALID_PROGRESS", "学生信息不完整，请返回后重试");
   }
+  const [lessonMetrics, studentRes] = await Promise.all([
+    getStudentLessonMetrics(data.studentId),
+    db.collection("students").doc(data.studentId).get(),
+  ]);
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const lessonAccountingMode = courseWorkflow.getLessonAccountingMode(studentRes.data);
+  const bookingDurationMinutes = toBookingDurationMinutes(
+    data.bookingDurationMinutes,
+    scheduleWorkflow.getDefaultBookingDurationMinutes(studentRes.data)
+  );
+  if (lessonAccountingMode === "minute") {
+    const plannedLessonMinutes = toLessonMinutes(
+      Object.prototype.hasOwnProperty.call(data, "plannedLessonMinutes")
+        ? data.plannedLessonMinutes
+        : Number(data.plannedLessonCount || 0) * 60,
+      "总课时"
+    );
+    const completedLessonMinutes = toLessonMinutes(
+      Object.prototype.hasOwnProperty.call(data, "completedLessonMinutes")
+        ? data.completedLessonMinutes
+        : Number(data.completedLessonCount || 0) * 60,
+      "已上课时"
+    );
+    if (plannedLessonMinutes > 0 && completedLessonMinutes > plannedLessonMinutes) {
+      throw createError("INVALID_PROGRESS", "已上时长不能大于总时长");
+    }
+    const updateData = {
+      lessonAccountingMode: "minute",
+      plannedLessonMinutes,
+      completedLessonMinutes,
+      recordedLessonCount: lessonMetrics.recordedLessonCount,
+      recordedLessonMinutes: lessonMetrics.recordedLessonMinutes,
+      bookingDurationMinutes,
+    };
+    await db.collection("students").doc(data.studentId).update({ data: updateData });
+    return Object.assign({ success: true }, buildProgress(Object.assign({}, studentRes.data, updateData)));
+  }
   const plannedLessonCount = toNonNegativeNumber(data.plannedLessonCount, "总课时");
   const completedLessonCount = toNonNegativeNumber(data.completedLessonCount, "已上课时");
   if (plannedLessonCount > 0 && completedLessonCount > plannedLessonCount) {
     throw createError("INVALID_PROGRESS", "已上课时不能大于总课时");
   }
-  const [recordedLessonCount, studentRes] = await Promise.all([
-    getStudentLessonCount(data.studentId),
-    db.collection("students").doc(data.studentId).get(),
-  ]);
-  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
   const lessonPackageSize = Object.prototype.hasOwnProperty.call(data, "lessonPackageSize")
     ? toLessonPackageSize(data.lessonPackageSize)
     : courseWorkflow.getLessonPackageSize(studentRes.data);
@@ -2146,13 +2272,15 @@ const updateStudentProgress = async (event) => {
       plannedLessonCount,
       completedLessonCount,
       lessonPackageSize,
-      recordedLessonCount,
+      recordedLessonCount: lessonMetrics.recordedLessonCount,
+      bookingDurationMinutes,
     },
   });
   return Object.assign({ success: true }, buildProgress({
     plannedLessonCount,
     completedLessonCount,
     lessonPackageSize,
+    bookingDurationMinutes,
   }));
 };
 
@@ -3588,6 +3716,7 @@ const buildPreviousLessonReference = (lesson) => {
     lessonTemplateKey: LESSON_TEMPLATE_KEYS.includes(lesson.lessonTemplateKey)
       ? lesson.lessonTemplateKey
       : "general",
+    durationMinutes: courseWorkflow.normalizeLessonDurationMinutes(lesson.durationMinutes),
     reviewContent: String(lesson.reviewContent || "").trim(),
     taughtContent: String(lesson.taughtContent || "").trim(),
     masterySummary: String(lesson.masterySummary || lesson.summary || "").trim(),
@@ -3663,6 +3792,9 @@ const getNextLessonNo = async (event) => {
 
   let maxLessonNo = 0;
   let previousLesson = null;
+  const requestedTemplateKey = LESSON_TEMPLATE_KEYS.includes(data.lessonTemplateKey)
+    ? data.lessonTemplateKey
+    : "";
   const pageSize = 100;
   const lessonsQuery = db.collection("lessons").where({ studentId });
   const countRes = await lessonsQuery.count();
@@ -3673,11 +3805,23 @@ const getNextLessonNo = async (event) => {
       if (lessonNo && lessonNo > maxLessonNo) {
         maxLessonNo = lessonNo;
       }
+      const candidateTemplateKey = LESSON_TEMPLATE_KEYS.includes(lesson.lessonTemplateKey)
+        ? lesson.lessonTemplateKey
+        : "general";
+      if (requestedTemplateKey && candidateTemplateKey !== requestedTemplateKey) return;
       const previousLessonNo = previousLesson ? toLessonNoInteger(previousLesson.lessonNo) : null;
       const hasLaterLessonNo = lessonNo && (!previousLessonNo || lessonNo > previousLessonNo);
       const sameLessonNo = lessonNo && previousLessonNo && lessonNo === previousLessonNo;
-      const hasLaterDate = String(lesson.lessonDate || "") > String(previousLesson && previousLesson.lessonDate || "");
-      if (!previousLesson || hasLaterLessonNo || (sameLessonNo && hasLaterDate) || (!lessonNo && !previousLessonNo && hasLaterDate)) {
+      const lessonDate = String(lesson.lessonDate || "");
+      const previousDate = String(previousLesson && previousLesson.lessonDate || "");
+      const hasLaterDate = lessonDate > previousDate;
+      const sameDateIsNewer = lessonDate === previousDate && getCreatedTime(lesson) > getCreatedTime(previousLesson);
+      if (
+        !previousLesson
+        || hasLaterLessonNo
+        || (sameLessonNo && (hasLaterDate || sameDateIsNewer))
+        || (!lessonNo && !previousLessonNo && (hasLaterDate || sameDateIsNewer))
+      ) {
         previousLesson = lesson;
       }
     });
@@ -3687,7 +3831,7 @@ const getNextLessonNo = async (event) => {
     success: true,
     maxLessonNo,
     nextLessonNo: maxLessonNo + 1,
-    hasHistory: maxLessonNo > 0,
+    hasHistory: Boolean(maxLessonNo > 0 || previousLesson),
     previousLesson: buildPreviousLessonReference(previousLesson),
   };
 };
@@ -3698,6 +3842,15 @@ const HONG_KONG_OFFSET_MS = 8 * 60 * 60 * 1000;
 const HOMEWORK_REMINDER_HOUR = 18;
 
 const normalizeLessonText = (value, limit = 1200) => String(value || "").trim().slice(0, limit);
+
+const normalizeLessonDurationInput = (value) => {
+  if (value === undefined || value === null || value === "") return 0;
+  const durationMinutes = courseWorkflow.normalizeLessonDurationMinutes(value);
+  if (!durationMinutes) {
+    throw createError("INVALID_LESSON_DURATION", "本次时长必须是 5–300 分钟，并按 5 分钟递增");
+  }
+  return durationMinutes;
+};
 
 const normalizeRecordingRepeatCount = (value) => {
   const count = Math.trunc(Number(value));
@@ -3736,7 +3889,9 @@ const normalizeLessonWorkspacePayload = (data = {}) => {
   const lessonTemplateKey = LESSON_TEMPLATE_KEYS.includes(data.lessonTemplateKey)
     ? data.lessonTemplateKey
     : "general";
-  const recordingTaskEnabled = data.recordingTaskEnabled === true;
+  const recordingTaskEnabled = lessonTemplateKey === "vocabulary_coaching"
+    ? false
+    : data.recordingTaskEnabled === true;
   const requestedTaskType = ["follow_reading", "ket_official", "ket_mock"].includes(data.recordingTaskType)
     ? data.recordingTaskType
     : "manual";
@@ -3761,16 +3916,17 @@ const normalizeLessonWorkspacePayload = (data = {}) => {
     title: normalizeLessonText(data.title, 100),
     institutionCourse: data.institutionCourse === true,
     lessonTemplateKey,
-    reviewContent: normalizeLessonText(data.reviewContent),
-    taughtContent: normalizeLessonText(data.taughtContent),
-    masterySummary: normalizeLessonText(data.masterySummary),
-    oralTopic: normalizeLessonText(data.oralTopic),
-    targetExpression: normalizeLessonText(data.targetExpression),
-    independentOutput: normalizeLessonText(data.independentOutput),
-    correctionNotes: normalizeLessonText(data.correctionNotes),
-    ketSkill: normalizeLessonText(data.ketSkill, 300),
-    nextReview: normalizeLessonText(data.nextReview),
-    homeworkTask: normalizeLessonText(data.homeworkTask),
+    durationMinutes: normalizeLessonDurationInput(data.durationMinutes),
+    reviewContent: lessonTemplateKey === "vocabulary_coaching" ? "" : normalizeLessonText(data.reviewContent),
+    taughtContent: lessonTemplateKey === "vocabulary_coaching" ? "" : normalizeLessonText(data.taughtContent),
+    masterySummary: lessonTemplateKey === "vocabulary_coaching" ? "" : normalizeLessonText(data.masterySummary),
+    oralTopic: lessonTemplateKey === "vocabulary_coaching" ? "" : normalizeLessonText(data.oralTopic),
+    targetExpression: lessonTemplateKey === "vocabulary_coaching" ? "" : normalizeLessonText(data.targetExpression),
+    independentOutput: lessonTemplateKey === "vocabulary_coaching" ? "" : normalizeLessonText(data.independentOutput),
+    correctionNotes: lessonTemplateKey === "vocabulary_coaching" ? "" : normalizeLessonText(data.correctionNotes),
+    ketSkill: lessonTemplateKey === "vocabulary_coaching" ? "" : normalizeLessonText(data.ketSkill, 300),
+    nextReview: lessonTemplateKey === "vocabulary_coaching" ? "" : normalizeLessonText(data.nextReview),
+    homeworkTask: lessonTemplateKey === "vocabulary_coaching" ? "" : normalizeLessonText(data.homeworkTask),
     recordingTaskEnabled,
     homeworkDueDays: normalizeHomeworkDueDays(data.homeworkDueDays, recordingTaskEnabled),
     recordingTaskType,
@@ -3816,7 +3972,9 @@ const normalizeLessonWorkspacePayload = (data = {}) => {
       formatLabel: mockSet.formatLabel,
       expectedMinutes: mockSet.expectedMinutes,
     } : null,
-    learningObservations: normalizeLearningObservations(data.learningObservations),
+    learningObservations: lessonTemplateKey === "vocabulary_coaching"
+      ? []
+      : normalizeLearningObservations(data.learningObservations),
   };
 };
 
@@ -3944,6 +4102,17 @@ const addLesson = async (event) => {
   if (!lessonPayload.studentId || !lessonPayload.title || !lessonPayload.lessonDate) {
     throw createError("INVALID_LESSON", "请填写学生、课程标题和日期");
   }
+  const targetStudentRes = await db.collection("students").doc(lessonPayload.studentId).get();
+  if (!targetStudentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const usesMinuteAccounting = courseWorkflow.getLessonAccountingMode(targetStudentRes.data) === "minute";
+  if (lessonPayload.lessonTemplateKey === "vocabulary_coaching") {
+    lessonPayload.lessonNo = "";
+    if (!lessonPayload.durationMinutes) {
+      throw createError("INVALID_LESSON_DURATION", "请填写本次单词陪练的实际分钟数");
+    }
+  } else if (usesMinuteAccounting && lessonPayload.institutionCourse !== true && !lessonPayload.durationMinutes) {
+    lessonPayload.durationMinutes = 60;
+  }
   await assertContentSafe({
     texts: [
       lessonPayload.title,
@@ -4017,6 +4186,7 @@ const updateLessonWorkspace = async (event) => {
   const lessonId = String(data.lessonId || "").trim();
   if (!lessonId) throw createError("INVALID_LESSON", "课程信息不完整，请返回后重试");
   const institutionCourseProvided = Object.prototype.hasOwnProperty.call(data, "institutionCourse");
+  const durationMinutesProvided = Object.prototype.hasOwnProperty.call(data, "durationMinutes");
   const workspace = normalizeLessonWorkspacePayload(data);
   if (!workspace.title) throw createError("INVALID_LESSON_TITLE", "请填写课程名称");
   await assertContentSafe({
@@ -4041,12 +4211,29 @@ const updateLessonWorkspace = async (event) => {
   if (!currentLessonRes.data || currentLessonRes.data.deleting === true) {
     throw createError("LESSON_NOT_FOUND", "课程不存在或已删除");
   }
+  const targetStudentRes = await db.collection("students").doc(currentLessonRes.data.studentId).get();
+  if (!targetStudentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
   const requestedInstitutionCourse = institutionCourseProvided
     ? workspace.institutionCourse
     : currentLessonRes.data.institutionCourse === true;
   const progressCountingChanged = requestedInstitutionCourse !== (currentLessonRes.data.institutionCourse === true);
   workspace.institutionCourse = requestedInstitutionCourse;
-  if (progressCountingChanged) await ensureStudentLessonCountSnapshot(currentLessonRes.data.studentId);
+  workspace.durationMinutes = durationMinutesProvided
+    ? workspace.durationMinutes
+    : courseWorkflow.normalizeLessonDurationMinutes(currentLessonRes.data.durationMinutes);
+  const usesMinuteAccounting = courseWorkflow.getLessonAccountingMode(targetStudentRes.data) === "minute";
+  if (workspace.lessonTemplateKey === "vocabulary_coaching" && !workspace.durationMinutes) {
+    throw createError("INVALID_LESSON_DURATION", "请填写本次单词陪练的实际分钟数");
+  }
+  if (usesMinuteAccounting && workspace.institutionCourse !== true && !workspace.durationMinutes) {
+    workspace.durationMinutes = 60;
+  }
+  const durationCountingChanged = usesMinuteAccounting
+    && workspace.institutionCourse !== true
+    && workspace.durationMinutes !== courseWorkflow.normalizeLessonDurationMinutes(currentLessonRes.data.durationMinutes);
+  if (progressCountingChanged || durationCountingChanged) {
+    await ensureStudentLessonCountSnapshot(currentLessonRes.data.studentId);
+  }
   const saved = await db.runTransaction(async (transaction) => {
     const lessonRef = transaction.collection("lessons").doc(lessonId);
     const lesson = await getOptionalTransactionDocument(lessonRef);
@@ -4076,7 +4263,12 @@ const updateLessonWorkspace = async (event) => {
       taskChanged,
       homeworkTaskVersion: updateData.homeworkTaskVersion || lesson.homeworkTaskVersion || 1,
       studentId: lesson.studentId,
-      progressCountingChanged: workspace.institutionCourse !== (lesson.institutionCourse === true),
+      progressCountingChanged: workspace.institutionCourse !== (lesson.institutionCourse === true)
+        || (
+          usesMinuteAccounting
+          && workspace.institutionCourse !== true
+          && workspace.durationMinutes !== courseWorkflow.normalizeLessonDurationMinutes(lesson.durationMinutes)
+        ),
     };
   });
   let completedLessonCount;
@@ -4641,7 +4833,11 @@ const buildReadableRecordingCloudPath = ({ student, lesson, submission, attemptN
   const lessonDate = normalizeCloudPathSegment(lesson && lesson.lessonDate, "未标日期", 16);
   const lessonNo = normalizeCloudPathSegment(lesson && lesson.lessonNo, "未编号", 10);
   const lessonTitle = normalizeCloudPathSegment(lesson && lesson.title, "英语课", 28);
-  const lessonFolder = `${lessonDate}-第${lessonNo}节-${lessonTitle}-${shortRecordId(lesson && lesson._id)}`;
+  const durationMinutes = courseWorkflow.normalizeLessonDurationMinutes(lesson && lesson.durationMinutes);
+  const lessonMarker = lesson && lesson.lessonNo
+    ? `第${lessonNo}节`
+    : durationMinutes ? `${durationMinutes}分钟` : lessonNo;
+  const lessonFolder = `${lessonDate}-${lessonMarker}-${lessonTitle}-${shortRecordId(lesson && lesson._id)}`;
   const durationSeconds = Math.max(0, Math.round((Number(submission && submission.duration) || 0) / 1000));
   const recordedAt = formatRecordingPathTime(getCreatedTime(submission) || Date.now());
   return `lesson-submissions/${studentFolder}/${lessonFolder}/第${attemptNo}次-${recordedAt}-${durationSeconds}秒-reading.mp3`;
@@ -5671,6 +5867,24 @@ const followReadingService = createFollowReadingService({
   getOptionalTransactionDocument,
 });
 
+const weeklyScheduleService = createWeeklyScheduleService({
+  db,
+  createError,
+  createOneCollection,
+  getIdentity,
+  getOptionalTransactionDocument,
+  assertContentSafe,
+});
+
+const mistakeExportService = createMistakeExportService({
+  db,
+  cloud,
+  createError,
+  createOneCollection,
+  ensureTeacher,
+  getOptionalTransactionDocument,
+});
+
 exports.main = async (event) => {
   try {
     switch (event.type) {
@@ -5683,6 +5897,14 @@ exports.main = async (event) => {
         return await initCollections();
       case "getHomeData":
         return await getHomeData(event);
+      case "getWeeklySchedule":
+        return await weeklyScheduleService.getWeeklySchedule(event);
+      case "createScheduleBooking":
+        return await weeklyScheduleService.createScheduleBooking(event);
+      case "saveTeacherScheduleBlock":
+        return await weeklyScheduleService.saveTeacherScheduleBlock(event);
+      case "cancelScheduleEvent":
+        return await weeklyScheduleService.cancelScheduleEvent(event);
       case "markHomeworkActivitiesViewed":
       case "markLearningActivitiesViewed":
         return await markHomeworkActivitiesViewed(event);
@@ -5856,6 +6078,10 @@ exports.main = async (event) => {
         return await checkUploadedImage(event);
       case "listMistakes":
         return await listMistakes(event);
+      case "getMistakeExportWorkspace":
+        return await mistakeExportService.getMistakeExportWorkspace(event);
+      case "createMistakeExport":
+        return await mistakeExportService.createMistakeExport(event);
       case "addMistake":
         return await addMistake(event);
       case "updateMistake":

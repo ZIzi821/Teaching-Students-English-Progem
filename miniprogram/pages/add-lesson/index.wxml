@@ -1,7 +1,7 @@
 <view class="page">
   <view class="form-head">
     <view class="title">建立英语课记录</view>
-    <view class="subtitle">先建立课次；课后观察、复习提醒和任务可以现在填写，也可以进入课程后补充。</view>
+    <view class="subtitle">{{showPostLessonRecord ? '先建立课次；课后观察、复习提醒和任务可以现在填写，也可以进入课程后补充。' : '记录实际陪练日期和分钟即可，不需要填写课后整理。'}}</view>
   </view>
 
   <view class="card message-card" wx:if="{{message}}">{{message}}</view>
@@ -38,10 +38,16 @@
       </picker>
     </view>
 
-    <view class="field">
+    <view class="field" wx:if="{{requiresLessonNo}}">
       <view class="label">第几节课</view>
       <input class="input" type="number" placeholder="例如：1" value="{{form.lessonNo}}" data-field="lessonNo" bindinput="onInput" />
       <view class="field-tip" wx:if="{{lessonNoTip}}">{{lessonNoTip}}</view>
+    </view>
+
+    <view class="field" wx:if="{{showDurationMinutes}}">
+      <view class="label">本次上课时长（分钟）</view>
+      <input class="input" type="number" placeholder="例如：35" value="{{form.durationMinutes}}" data-field="durationMinutes" bindinput="onInput" />
+      <view class="field-tip">按实际时长填写 5 的倍数；个人课程会累计到 10 小时课包，普通机构课程可留空，单词陪练仍记录实际时长。</view>
     </view>
 
     <view class="institution-course-row">
@@ -59,7 +65,7 @@
       <view>
         <view class="previous-reference-kicker">上一节课对照</view>
         <view class="previous-reference-title">{{previousLessonReference.title || '上一节英语课'}}</view>
-        <view class="previous-reference-meta">{{previousLessonReference.lessonDate}} · 第 {{previousLessonReference.lessonNo || '—'}} 节{{previousLessonReference.institutionCourse ? ' · 机构课程' : ''}}</view>
+        <view class="previous-reference-meta">{{previousLessonReference.lessonDate}}<text wx:if="{{previousLessonReference.lessonNo}}"> · 第 {{previousLessonReference.lessonNo}} 节</text><text wx:if="{{previousLessonReference.durationMinutes}}"> · {{previousLessonReference.durationMinutes}} 分钟</text>{{previousLessonReference.institutionCourse ? ' · 机构课程' : ''}}</view>
       </view>
       <view class="previous-reference-toggle">{{showPreviousLessonReference ? '收起' : '展开'}}</view>
     </view>
@@ -89,7 +95,7 @@
     </view>
   </view>
 
-  <view class="card optional-card">
+  <view class="card optional-card" wx:if="{{showPostLessonRecord}}">
     <view class="optional-head" bindtap="toggleLessonRecord">
       <view>
         <view class="optional-title">课后整理</view>
@@ -262,5 +268,5 @@
     </block>
   </view>
 
-  <view class="primary-btn {{saving ? 'action-disabled' : ''}}" bindtap="submitLesson">{{saving ? '保存中…' : '保存并进入课程'}}</view>
+  <view class="primary-btn {{saving ? 'action-disabled' : ''}}" bindtap="submitLesson">{{saving ? '保存中…' : showPostLessonRecord ? '保存并进入课程' : '保存课程'}}</view>
 </view>
