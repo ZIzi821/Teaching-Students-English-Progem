@@ -1,5 +1,6 @@
 const assert = require("assert");
 const schedule = require("../schedule");
+const scheduleCalendar = require("../../../miniprogram/utils/scheduleCalendar");
 
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "Molly" }), 45);
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "冯嘉文" }), 40);
@@ -8,6 +9,29 @@ assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "新学生"
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "徐浩成", bookingDurationMinutes: 55 }), 55);
 assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "xu", name: "徐浩成" }), true);
 assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "ren", name: "任轩楠", teacherHidden: true }), false);
+assert.strictEqual(schedule.canManageScheduleEvent({ actorRole: "teacher", event: { eventType: "teacher_busy" } }), true);
+assert.strictEqual(schedule.canManageScheduleEvent({
+  actorRole: "teacher",
+  mode: "teacherPreview",
+  previewStudentId: "molly",
+  event: { eventType: "lesson_booking", studentId: "molly" },
+}), true);
+assert.strictEqual(schedule.canManageScheduleEvent({
+  actorRole: "teacher",
+  mode: "teacherPreview",
+  previewStudentId: "molly",
+  event: { eventType: "lesson_booking", studentId: "feng" },
+}), false);
+assert.strictEqual(schedule.canManageScheduleEvent({
+  actorRole: "student",
+  actorStudentId: "molly",
+  event: { eventType: "lesson_booking", studentId: "molly" },
+}), true);
+assert.strictEqual(schedule.canManageScheduleEvent({
+  actorRole: "student",
+  actorStudentId: "molly",
+  event: { eventType: "lesson_booking", studentId: "feng" },
+}), false);
 
 assert.deepStrictEqual(
   schedule.buildBookingRange({ name: "Molly" }, 1, "16:00"),
@@ -47,5 +71,13 @@ const assignedColors = schedule.assignStudentColorKeys([
 ]);
 assert.strictEqual(assignedColors.size, 2);
 assert.notStrictEqual(assignedColors.get("student-a"), assignedColors.get("student-b"));
+
+const thursdayWeek = scheduleCalendar.buildWeekDays(new Date(2026, 9, 8, 12, 0, 0));
+assert.deepStrictEqual(
+  thursdayWeek.map((item) => item.dateLabel),
+  ["10月5日", "10月6日", "10月7日", "10月8日", "10月9日", "10月10日", "10月11日"]
+);
+assert.strictEqual(thursdayWeek[3].fullLabel, "周四 · 10月8日");
+assert.strictEqual(thursdayWeek[3].isToday, true);
 
 console.log("schedule tests passed");

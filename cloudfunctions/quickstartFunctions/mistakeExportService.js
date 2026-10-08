@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const mistakeExport = require("./mistakeExport");
 const { buildMistakeExportDocx } = require("./mistakeExportDocx");
+const { buildMistakeExportMarkdown } = require("./mistakeExportMarkdown");
 const { runTransactionWithRetry } = require("./transactionRetry");
 const { withoutDocumentId } = require("./databasePayload");
 
@@ -9,6 +10,11 @@ const EXCLUDE_POLICY_LABELS = Object.freeze({
   exported_mistakes: "排除以前已导出的错题",
   exported_lessons: "排除以前已导出的整节课程",
 });
+const EXPORT_FORMAT_LABELS = Object.freeze({
+  docx: "Word",
+  markdown: "Markdown",
+});
+const normalizeExportFormat = (value) => (value === "markdown" ? "markdown" : "docx");
 
 const createMistakeExportService = ({
   db,
@@ -69,10 +75,13 @@ const createMistakeExportService = ({
     const staleGenerating = row.status === "generating"
       && Date.now() - Number(row.updatedAtMs || row.createdAtMs || 0) >= 3 * 60 * 1000;
     const status = staleGenerating ? "failed" : row.status || "failed";
+    const exportFormat = normalizeExportFormat(row.exportFormat);
     return {
       _id: row._id || "",
       status,
       statusLabel: status === "ready" ? "已生成" : status === "generating" ? "生成中" : "生成失败",
+      exportFormat,
+      exportFormatLabel: EXPORT_FORMAT_LABELS[exportFormat],
       createdAtMs: Number(row.createdAtMs) || 0,
       createdLabel: formatHongKongDateTime(row.createdAtMs),
       selectionMode: row.selectionMode || "all",
@@ -91,7 +100,7 @@ const createMistakeExportService = ({
     };
   };
 
-  const loadWorkspaceData = async (studentId) => {
+  const loadWorkspaceData = async (studentId, exportFormat = "docx") => {
     const [student, lessons, mistakes, history] = await Promise.all([
       loadStudent(studentId),
       loadAll("lessons", { studentId }),
@@ -99,7 +108,10 @@ const createMistakeExportService = ({
       loadAll("mistakeExports", { studentId }),
     ]);
     const sortedLessons = mistakeExport.sortLessons(lessons);
-    const readyHistory = history.filter((item) => item.status === "ready");
+    const normalizedFormat = normalizeExportFormat(exportFormat);
+    const readyHistory = history.filter((item) => (
+      item.status === "ready" && normalizeExportFormat(item.exportFormat) === normalizedFormat
+    ));
     const exportedSets = mistakeExport.getExportedIdSets(readyHistory);
     const mistakeCountByLesson = new Map();
     const exportedMistakeCountByLesson = new Map();
@@ -128,14 +140,15 @@ const createMistakeExportService = ({
         allCurrentMistakesExported: Boolean(mistakeCount && exportedMistakeCount >= mistakeCount),
       };
     });
-    return { student, lessons: sortedLessons, mistakes, history, readyHistory, lessonOptions };
+    return { student, lessons: sortedLessons, mistakes, history, readyHistory, lessonOptions, exportFormat: normalizedFormat };
   };
 
   const getMistakeExportWorkspace = async (event) => {
     await ensureTeacher();
     await ensureCollections();
     const studentId = String(event.data && event.data.studentId || "").trim();
-    const workspace = await loadWorkspaceData(studentId);
+    const exportFormat = normalizeExportFormat(event.data && event.data.exportFormat);
+    const workspace = await loadWorkspaceData(studentId, exportFormat);
     const history = workspace.history
       .slice()
       .sort((left, right) => Number(right.createdAtMs || 0) - Number(left.createdAtMs || 0))
@@ -154,6 +167,8 @@ const createMistakeExportService = ({
       exportedMistakeCount: workspace.mistakes.filter((item) => exportedMistakeIds.has(String(item._id))).length,
       historyCount: workspace.history.length,
       history,
+      exportFormat,
+      exportFormatLabel: EXPORT_FORMAT_LABELS[exportFormat],
     };
   };
 
@@ -186,8 +201,9 @@ const createMistakeExportService = ({
     return result;
   };
 
-  const buildFingerprint = (studentId, plan) => crypto.createHash("sha1").update(JSON.stringify({
+  const buildFingerprint = (studentId, plan, exportFormat) => crypto.createHash("sha1").update(JSON.stringify({
     studentId,
+    exportFormat,
     selectionMode: plan.selectionMode,
     startLessonId: plan.startLessonId,
     endLessonId: plan.endLessonId,
@@ -197,7 +213,6 @@ const createMistakeExportService = ({
   })).digest("hex");
 
   const updateFailedExport = async (exportId, fingerprint, err) => {
-    let uploadedFileID = "";
     try {
       await runTransactionWithRetry(() => db.runTransaction(async (transaction) => {
         const ref = transaction.collection("mistakeExports").doc(exportId);
@@ -220,13 +235,15 @@ const createMistakeExportService = ({
   };
 
   const createMistakeExport = async (event) => {
+    let uploadedFileID = "";
     await ensureTeacher();
     await ensureCollections();
     const data = event.data || {};
     const studentId = String(data.studentId || "").trim();
+    const exportFormat = normalizeExportFormat(data.exportFormat);
     const requestId = String(data.requestId || "").trim().slice(0, 100);
     if (!requestId) throw createError("INVALID_REQUEST", "导出请求已失效，请重新点击导出");
-    const workspace = await loadWorkspaceData(studentId);
+    const workspace = await loadWorkspaceData(studentId, exportFormat);
     let plan;
     try {
       plan = mistakeExport.buildExportPlan({
@@ -259,7 +276,7 @@ const createMistakeExportService = ({
       ...lesson,
       exportLabel: mistakeExport.formatLessonLabel(lesson),
     })));
-    const fingerprint = buildFingerprint(studentId, plan);
+    const fingerprint = buildFingerprint(studentId, plan, exportFormat);
     const exportId = `mistake_export_${crypto.createHash("sha1").update(`${studentId}\n${requestId}`).digest("hex")}`;
     const nowMs = Date.now();
     const baseRecord = {
@@ -267,6 +284,7 @@ const createMistakeExportService = ({
       studentId,
       studentNameSnapshot: workspace.student.name || "",
       status: "generating",
+      exportFormat,
       selectionMode: plan.selectionMode,
       startLessonId: plan.startLessonId,
       endLessonId: plan.endLessonId,
@@ -317,21 +335,29 @@ const createMistakeExportService = ({
     if (claim.inProgress) throw createError("EXPORT_IN_PROGRESS", "这份错题汇总正在生成，请稍后刷新导出记录");
 
     try {
-      const imageBuffers = await downloadMistakeImages(plan.mistakes);
       const createdLabel = formatHongKongDateTime(nowMs);
-      const fileContent = await buildMistakeExportDocx({
-        student: workspace.student,
-        lessons: exportLessons,
-        mistakes: plan.mistakes,
-        imageBuffers,
-        exportLabel: selectionLabel,
-        createdLabel,
-      });
+      const fileContent = exportFormat === "markdown"
+        ? Buffer.from(buildMistakeExportMarkdown({
+          student: workspace.student,
+          lessons: exportLessons,
+          mistakes: plan.mistakes,
+          exportLabel: selectionLabel,
+          createdLabel,
+        }), "utf8")
+        : await buildMistakeExportDocx({
+          student: workspace.student,
+          lessons: exportLessons,
+          mistakes: plan.mistakes,
+          imageBuffers: await downloadMistakeImages(plan.mistakes),
+          exportLabel: selectionLabel,
+          createdLabel,
+        });
       const dateToken = createdLabel.slice(0, 10).replace(/-/g, "");
       const safeStudentId = studentId.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 60) || "student";
-      const fileName = `${String(workspace.student.name || "学生").replace(/[\\/:*?"<>|]/g, "-")}-英语错题汇总-${dateToken}.docx`;
+      const extension = exportFormat === "markdown" ? "md" : "docx";
+      const fileName = `${String(workspace.student.name || "学生").replace(/[\\/:*?"<>|]/g, "-")}-英语错题汇总-${dateToken}.${extension}`;
       const upload = await cloud.uploadFile({
-        cloudPath: `mistake-exports/${safeStudentId}/${exportId}/mistakes.docx`,
+        cloudPath: `mistake-exports/${safeStudentId}/${exportId}/mistakes.${extension}`,
         fileContent,
       });
       if (!upload || !upload.fileID) throw createError("EXPORT_UPLOAD_FAILED", "错题文件生成后上传失败，请重试");
@@ -379,5 +405,7 @@ const createMistakeExportService = ({
 
 module.exports = {
   EXCLUDE_POLICY_LABELS,
+  EXPORT_FORMAT_LABELS,
   createMistakeExportService,
+  normalizeExportFormat,
 };

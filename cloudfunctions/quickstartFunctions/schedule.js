@@ -128,6 +128,29 @@ const isStudentBookingEnabled = (student = {}) => Boolean(
   student && student._id && student.teacherHidden !== true
 );
 
+const canManageScheduleEvent = ({
+  actorRole,
+  actorStudentId = "",
+  mode = "",
+  previewStudentId = "",
+  event = {},
+} = {}) => {
+  if (actorRole === "teacher") {
+    if (mode !== "teacherPreview") return true;
+    return Boolean(
+      previewStudentId
+      && event.eventType === "lesson_booking"
+      && String(event.studentId || "") === String(previewStudentId)
+    );
+  }
+  return Boolean(
+    actorRole === "student"
+    && actorStudentId
+    && event.eventType === "lesson_booking"
+    && String(event.studentId || "") === String(actorStudentId)
+  );
+};
+
 const hashString = (value) => {
   let hash = 0;
   const text = String(value || "");
@@ -189,6 +212,7 @@ module.exports = {
   STUDENT_COLOR_KEYS,
   assignStudentColorKeys,
   buildBookingRange,
+  canManageScheduleEvent,
   decorateEvent,
   formatMinute,
   getDefaultBookingDurationMinutes,

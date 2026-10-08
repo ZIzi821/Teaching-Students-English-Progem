@@ -9,7 +9,7 @@
     <view class="hero-card">
       <view class="eyebrow">TEACHER EXPORT</view>
       <view class="hero-title">{{student.name}}的错题汇总</view>
-      <view class="hero-copy">选择课程范围后生成 Word。题目与原图在前，答案与解析集中放在后面，方便继续交给 AI 生成试卷。</view>
+      <view class="hero-copy">可生成保留原题图片的 Word，也可生成更适合 AI 读取的 Markdown。两种格式分别记录，互不影响后续去重。</view>
       <view class="hero-stats">
         <view><text>{{totalMistakeCount}}</text><label>现有错题</label></view>
         <view><text>{{exportedMistakeCount}}</text><label>曾导出</label></view>
@@ -18,7 +18,13 @@
     </view>
 
     <view class="card export-card">
-      <view class="section-title">1. 选择课程范围</view>
+      <view class="section-title">1. 选择导出格式</view>
+      <picker mode="selector" range="{{exportFormats}}" range-key="label" value="{{exportFormatIndex}}" bindchange="onExportFormatChange">
+        <view class="picker-value">{{exportFormats[exportFormatIndex].label}}<text>⌄</text></view>
+      </picker>
+      <view class="policy-hint">{{exportFormatHint}}</view>
+
+      <view class="section-title second-title">2. 选择课程范围</view>
       <picker mode="selector" range="{{selectionModes}}" range-key="label" value="{{selectionModeIndex}}" bindchange="onSelectionModeChange">
         <view class="picker-value">{{selectionModes[selectionModeIndex].label}}<text>⌄</text></view>
       </picker>
@@ -40,7 +46,7 @@
 
       <view class="empty-lessons" wx:if="{{!lessonOptions.length}}">这位学生还没有课程记录，暂时无法按课程导出错题。</view>
 
-      <view class="section-title second-title">2. 是否排除以前导出的内容</view>
+      <view class="section-title second-title">3. 是否排除同格式以前导出的内容</view>
       <picker mode="selector" range="{{excludeOptions}}" range-key="label" value="{{excludePolicyIndex}}" bindchange="onExcludePolicyChange">
         <view class="picker-value">{{excludeOptions[excludePolicyIndex].label}}<text>⌄</text></view>
       </picker>
@@ -55,9 +61,10 @@
       </view>
 
       <view class="primary-btn {{creating || !estimateMistakeCount ? 'disabled' : ''}}" bindtap="createExport">
-        {{creating ? '正在生成 Word…' : '生成并打开错题汇总'}}
+        {{creating ? '正在生成' + exportFormatLabel + '…' : '生成' + exportFormatLabel + '错题汇总'}}
       </view>
-      <view class="download-hint">Word 打开后可点右上角菜单转发或保存。生成成功后也会永久留在下方记录里。</view>
+      <view class="download-hint" wx:if="{{exportFormat === 'docx'}}">Word 打开后可点右上角菜单转发或保存。生成成功后也会永久留在下方记录里。</view>
+      <view class="download-hint" wx:else>生成后会自动复制 Markdown 内容，可直接粘贴给 AI；下方历史还可以再次复制或转发 .md 文件。</view>
     </view>
 
     <view class="history-title">导出历史</view>
@@ -70,11 +77,14 @@
         </view>
         <view class="status status-{{item.status}}">{{item.statusLabel}}</view>
       </view>
-      <view class="history-meta">{{item.mistakeCount}} 道错题 · {{item.lessonCount}} 节课程</view>
+      <view class="history-meta">{{item.exportFormatLabel}} · {{item.mistakeCount}} 道错题 · {{item.lessonCount}} 节课程</view>
       <view class="history-policy">{{item.excludePolicyLabel}}<text wx:if="{{item.excludedMistakeCount}}"> · 已排除 {{item.excludedMistakeCount}} 道</text><text wx:if="{{item.excludedLessonCount}}"> · 已排除 {{item.excludedLessonCount}} 节</text></view>
       <view class="failure" wx:if="{{item.status === 'failed'}}">{{item.failureMessage}}</view>
-      <view class="open-btn {{openingId ? 'disabled' : ''}}" wx:if="{{item.status === 'ready'}}" data-index="{{index}}" bindtap="openHistory">
-        {{openingId === item._id ? '正在打开…' : '打开 Word 文件'}}
+      <view class="history-actions" wx:if="{{item.status === 'ready'}}">
+        <view class="open-btn {{openingId ? 'disabled' : ''}}" data-index="{{index}}" bindtap="openHistory">
+          {{openingId === item._id ? '正在处理…' : item.exportFormat === 'markdown' ? '复制 Markdown 内容' : '打开 Word 文件'}}
+        </view>
+        <view class="share-btn {{openingId ? 'disabled' : ''}}" wx:if="{{item.exportFormat === 'markdown'}}" data-index="{{index}}" bindtap="shareMarkdown">转发 .md 文件</view>
       </view>
       <view class="generating-note" wx:elif="{{item.status === 'generating'}}">文件仍在生成中，请稍后重新进入本页查看。</view>
     </view>

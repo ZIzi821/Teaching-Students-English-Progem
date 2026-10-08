@@ -83,6 +83,7 @@
       <view class="result-tip" wx:elif="{{incorrectCount}}">答错的词已加入复习，可以趁热再练一次。</view>
       <view class="result-tip" wx:else>全对！继续完成今天的单词吧。</view>
       <view class="result-actions">
+        <view class="result-primary" wx:if="{{student.englishCourseEnabled}}" bindtap="goHomeworkTasks">③ 查看课后任务</view>
         <view class="result-primary" wx:if="{{incorrectCount}}" bindtap="retryMistakes">再练答错的词</view>
         <view class="result-secondary" bindtap="restartSession">再做一轮</view>
         <view class="result-secondary" bindtap="goBack">返回单词页</view>

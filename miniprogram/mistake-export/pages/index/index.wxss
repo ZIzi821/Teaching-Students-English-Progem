@@ -284,3 +284,20 @@ page {
   padding: 17rpx;
   font-size: 24rpx;
 }
+
+.history-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12rpx;
+}
+
+.share-btn {
+  padding: 17rpx;
+  border: 1rpx solid #84ac99;
+  border-radius: 14rpx;
+  color: #39785f;
+  background: #eef7f2;
+  font-size: 24rpx;
+  font-weight: 800;
+  text-align: center;
+}

@@ -2,7 +2,7 @@
   <view class="preview-banner" wx:if="{{isTeacherPreview}}">
     <view>
       <view class="preview-title">正在查看 {{student.name}} 的学生日程</view>
-      <view class="preview-hint">界面与家长看到的一样，但预约和取消不会保存。</view>
+      <view class="preview-hint">界面与家长看到的一样；教师可在这里代为预约、编辑或取消该学生的课程。</view>
     </view>
     <view class="preview-action" bindtap="goBackToTeacher">返回教师端</view>
   </view>
@@ -28,6 +28,7 @@
           bindtap="selectDay"
         >
           <view class="day-week">{{item.label}}</view>
+          <view class="day-date">{{item.dateLabel}}<text wx:if="{{item.isToday}}"> · 今天</text></view>
           <view class="day-count">{{item.eventCount ? item.eventCount + ' 项' : '空闲'}}</view>
         </view>
       </view>
@@ -38,7 +39,7 @@
         <view class="summary-title">{{selectedDayLabel}}</view>
         <view class="summary-hint">时间相接不会冲突；有重叠时系统会阻止重复预约。</view>
       </view>
-      <view class="schedule-add" wx:if="{{canWrite && !isTeacherPreview}}" bindtap="openForm">{{isTeacher ? '＋ 添加安排' : '＋ 预约上课'}}</view>
+      <view class="schedule-add" wx:if="{{canWrite}}" bindtap="openForm">{{isTeacher ? '＋ 添加安排' : isTeacherPreview ? '＋ 帮学生预约' : '＋ 预约上课'}}</view>
     </view>
 
     <view class="legend-row">
@@ -55,7 +56,7 @@
           <view class="hour-rule"></view>
         </view>
         <view
-          class="schedule-event event-{{item.colorKey}} {{item.canCancel ? 'schedule-event-actionable' : ''}}"
+          class="schedule-event event-{{item.colorKey}} {{item.actionable ? 'schedule-event-actionable' : ''}}"
           wx:for="{{selectedDayEvents}}"
           wx:key="_id"
           style="top: {{item.topRpx}}rpx; height: {{item.heightRpx}}rpx;"
@@ -65,7 +66,7 @@
           <view class="event-time">{{item.timeLabel}}</view>
           <view class="event-title">{{item.title}}</view>
           <view class="event-note" wx:if="{{item.note}}">{{item.note}}</view>
-          <view class="event-action" wx:if="{{item.canCancel}}">点按可取消</view>
+          <view class="event-action" wx:if="{{item.actionable}}">点按可编辑</view>
         </view>
       </view>
     </view>
@@ -73,9 +74,22 @@
 
   <view class="modal-mask" wx:if="{{showForm}}" bindtap="closeForm">
     <view class="schedule-modal" catchtap="stopPropagation">
-      <view class="modal-title">{{formMode === 'teacher' ? '添加每周安排' : '预约每周上课时间'}}</view>
-      <view class="modal-hint" wx:if="{{formMode === 'booking'}}">{{student.name}} 每节 {{student.bookingDurationMinutes}} 分钟；结束时间由系统自动计算。</view>
+      <view class="modal-title">{{editingId ? '编辑每周日程' : formMode === 'teacher' ? '添加每周安排' : '预约每周上课时间'}}</view>
+      <view class="modal-hint" wx:if="{{formMode === 'booking' && bookingStudent}}">{{bookingStudent.name}} 每节 {{bookingStudent.bookingDurationMinutes}} 分钟；结束时间由系统自动计算。</view>
       <view class="modal-hint" wx:else>这段时间会直接显示在家长看到的日程表中。</view>
+
+      <view class="field" wx:if="{{isTeacher && !editingId}}">
+        <view class="field-label">安排类型</view>
+        <picker mode="selector" range="{{arrangementTypes}}" range-key="label" value="{{formModeIndex}}" bindchange="onFormModeChange">
+          <view class="picker-value">{{arrangementTypes[formModeIndex].label}}</view>
+        </picker>
+      </view>
+      <view class="field" wx:if="{{isTeacher && formMode === 'booking'}}">
+        <view class="field-label">预约学生</view>
+        <picker mode="selector" range="{{students}}" range-key="name" value="{{formStudentIndex}}" bindchange="onFormStudentChange" disabled="{{editingId}}">
+          <view class="picker-value">{{bookingStudent ? bookingStudent.name : '请选择学生'}}</view>
+        </picker>
+      </view>
 
       <view class="field">
         <view class="field-label">星期</view>
@@ -109,10 +123,10 @@
         <view class="field-label">备注（可选）</view>
         <input class="text-input" maxlength="100" placeholder="补充说明" value="{{form.note}}" data-field="note" bindinput="onFormInput" />
       </view>
-      <view class="weekly-note">保存后会作为每周固定时间显示；如有变化，可以点按对应板块取消。</view>
+      <view class="weekly-note">保存后会作为每周固定时间显示；如有变化，可点按对应板块继续编辑或取消。</view>
       <view class="modal-actions">
         <view class="modal-cancel" bindtap="closeForm">返回</view>
-        <view class="modal-confirm {{saving ? 'modal-confirm-disabled' : ''}}" bindtap="submitForm">{{saving ? '保存中…' : formMode === 'teacher' ? '加入日程' : '确认预约'}}</view>
+        <view class="modal-confirm {{saving ? 'modal-confirm-disabled' : ''}}" bindtap="submitForm">{{saving ? '保存中…' : editingId ? '保存修改' : formMode === 'teacher' ? '加入日程' : '确认预约'}}</view>
       </view>
     </view>
   </view>

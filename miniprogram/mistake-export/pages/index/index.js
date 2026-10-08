@@ -3,6 +3,11 @@ const SELECTION_MODES = [
   { value: "range", label: "选择课程范围" },
 ];
 
+const EXPORT_FORMATS = [
+  { value: "docx", label: "Word（保留原题图片）", shortLabel: "Word", hint: "适合打印、查看原题图片和直接保存文件。" },
+  { value: "markdown", label: "Markdown（适合交给 AI）", shortLabel: "Markdown", hint: "按题目、答案和解析分区；可一键复制内容或转发 .md 文件。图片题会提醒同时附上原图。" },
+];
+
 const EXCLUDE_OPTIONS = [
   { value: "exported_mistakes", label: "排除以前已导出的错题（推荐）", hint: "同一节课后来新增的错题仍可继续导出。" },
   { value: "exported_lessons", label: "排除以前已导出的整节课程", hint: "适合按月份或阶段一次性整理，不再重复旧课程。" },
@@ -22,6 +27,11 @@ Page({
     historyCount: 0,
     totalMistakeCount: 0,
     exportedMistakeCount: 0,
+    exportFormats: EXPORT_FORMATS,
+    exportFormatIndex: 0,
+    exportFormat: "docx",
+    exportFormatLabel: "Word",
+    exportFormatHint: EXPORT_FORMATS[0].hint,
     selectionModes: SELECTION_MODES,
     selectionModeIndex: 0,
     selectionMode: "all",
@@ -52,7 +62,7 @@ Page({
       name: "quickstartFunctions",
       data: {
         type: "getMistakeExportWorkspace",
-        data: { studentId: this.data.studentId },
+        data: { studentId: this.data.studentId, exportFormat: this.data.exportFormat },
       },
     }).then((res) => {
       const result = res.result || {};
@@ -78,6 +88,17 @@ Page({
       console.error(err);
       this.setData({ loading: false, message: err.message || "服务暂时不可用，请稍后再试" });
     });
+  },
+
+  onExportFormatChange(e) {
+    const index = Number(e.detail.value) || 0;
+    const option = EXPORT_FORMATS[index] || EXPORT_FORMATS[0];
+    this.setData({
+      exportFormatIndex: index,
+      exportFormat: option.value,
+      exportFormatLabel: option.shortLabel,
+      exportFormatHint: option.hint,
+    }, () => this.loadWorkspace());
   },
 
   onSelectionModeChange(e) {
@@ -145,7 +166,7 @@ Page({
     const end = this.data.lessonOptions[this.data.endLessonIndex];
     const requestId = `mistake_export_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
     this.setData({ creating: true });
-    wx.showLoading({ title: "正在生成 Word", mask: true });
+    wx.showLoading({ title: `正在生成${this.data.exportFormatLabel}`, mask: true });
     wx.cloud.callFunction({
       name: "quickstartFunctions",
       data: {
@@ -153,6 +174,7 @@ Page({
         data: {
           studentId: this.data.studentId,
           requestId,
+          exportFormat: this.data.exportFormat,
           selectionMode: this.data.selectionMode,
           startLessonId: start ? start._id : "",
           endLessonId: end ? end._id : "",
@@ -162,7 +184,7 @@ Page({
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "错题汇总生成失败");
-      wx.showToast({ title: "Word 已生成", icon: "success" });
+      wx.showToast({ title: `${this.data.exportFormatLabel} 已生成`, icon: "success" });
       this.loadWorkspace();
       if (result.export && result.export.fileID) this.openExportFile(result.export);
     }).catch((err) => {
@@ -190,14 +212,60 @@ Page({
     this.setData({ openingId: item._id || item.fileID });
     wx.showLoading({ title: "正在打开", mask: true });
     wx.cloud.downloadFile({ fileID: item.fileID })
-      .then((download) => wx.openDocument({
-        filePath: download.tempFilePath,
-        fileType: "docx",
-        showMenu: true,
-      }))
+      .then((download) => {
+        if (item.exportFormat === "markdown") return this.copyMarkdownFromPath(download.tempFilePath);
+        return wx.openDocument({
+          filePath: download.tempFilePath,
+          fileType: "docx",
+          showMenu: true,
+        });
+      })
       .catch((err) => {
         console.error(err);
         wx.showToast({ title: "文件打开失败，请稍后重试", icon: "none" });
+      })
+      .finally(() => {
+        wx.hideLoading();
+        this.setData({ openingId: "" });
+      });
+  },
+
+  copyMarkdownFromPath(filePath) {
+    return new Promise((resolve, reject) => {
+      wx.getFileSystemManager().readFile({
+        filePath,
+        encoding: "utf8",
+        success: (result) => {
+          wx.setClipboardData({
+            data: String(result.data || ""),
+            success: () => {
+              wx.showToast({ title: "Markdown 已复制", icon: "success" });
+              resolve();
+            },
+            fail: reject,
+          });
+        },
+        fail: reject,
+      });
+    });
+  },
+
+  shareMarkdown(e) {
+    const item = this.data.history[Number(e.currentTarget.dataset.index)];
+    if (!item || item.status !== "ready" || item.exportFormat !== "markdown" || !item.fileID || this.data.openingId) return;
+    this.setData({ openingId: item._id || item.fileID });
+    wx.showLoading({ title: "正在准备文件", mask: true });
+    wx.cloud.downloadFile({ fileID: item.fileID })
+      .then((download) => {
+        if (typeof wx.shareFileMessage !== "function") return this.copyMarkdownFromPath(download.tempFilePath);
+        return wx.shareFileMessage({
+          filePath: download.tempFilePath,
+          fileName: item.fileName || "英语错题汇总.md",
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        wx.showToast({ title: "文件转发失败，请改用复制内容", icon: "none" });
       })
       .finally(() => {
         wx.hideLoading();

@@ -1,5 +1,6 @@
 const sampleData = require("../../utils/sampleData");
 const { prefetchVocabularyAudio } = require("../../utils/vocabularyAudio");
+const { buildPrimaryLearningAction } = require("../../utils/studentLearningFlow");
 
 const formatHomeworkActivityTime = (timestamp) => {
   const date = new Date(Number(timestamp || 0));
@@ -54,6 +55,14 @@ Page({
       progressPercent: 0,
       completed: false,
     },
+    vocabularyQuizPulse: {
+      completed: false,
+      attemptCount: 0,
+      bestAccuracy: 0,
+      bestCorrectCount: 0,
+      bestTotalQuestions: 0,
+    },
+    studentPrimaryAction: null,
     showStudentSwitcher: false,
     errorMessage: "",
   },
@@ -146,6 +155,7 @@ Page({
           studentPlanSteps: this.buildStudentPlanSteps(
             currentStudent,
             result.vocabularyPulse,
+            result.vocabularyQuizPulse,
             result.pendingHomework,
             result.homeworkSummary
           ),
@@ -160,6 +170,21 @@ Page({
             progressPercent: 0,
             completed: false,
           },
+          vocabularyQuizPulse: result.vocabularyQuizPulse || {
+            completed: false,
+            attemptCount: 0,
+            bestAccuracy: 0,
+            bestCorrectCount: 0,
+            bestTotalQuestions: 0,
+          },
+          studentPrimaryAction: buildPrimaryLearningAction({
+            student: currentStudent || {},
+            vocabularyPulse: result.vocabularyPulse || {},
+            vocabularyQuizPulse: result.vocabularyQuizPulse || {},
+            homeworkSummary: result.homeworkSummary || {},
+            englishCourseEnabled,
+            mistakeLearningEnabled,
+          }),
           showStudentSwitcher: role === "teacher" && !isTeacherPreview ? this.data.showStudentSwitcher : false,
           errorMessage: "",
         });
@@ -213,6 +238,14 @@ Page({
         progressPercent: 0,
         completed: false,
       },
+      vocabularyQuizPulse: {
+        completed: false,
+        attemptCount: 0,
+        bestAccuracy: 0,
+        bestCorrectCount: 0,
+        bestTotalQuestions: 0,
+      },
+      studentPrimaryAction: null,
       showStudentSwitcher: false,
     });
   },
@@ -249,15 +282,17 @@ Page({
     });
   },
 
-  buildStudentPlanSteps(student, vocabularyPulse, pendingHomework, homeworkSummary) {
+  buildStudentPlanSteps(student, vocabularyPulse, vocabularyQuizPulse, pendingHomework, homeworkSummary) {
     if (!student) return [];
     const steps = [];
     const pulse = vocabularyPulse || {};
+    const quizPulse = vocabularyQuizPulse || {};
     if (student.vocabularyEnabled === true) {
       steps.push({
         action: "study",
         tone: "green",
-        title: "先背今天的单词",
+        completed: pulse.completed === true,
+        title: pulse.completed ? "今天的单词已完成" : "先背今天的单词",
         hint: pulse.completed
           ? "今天已经完成，可以重新查看背词流程"
           : `一次一个：先回忆，再看答案；还差 ${Number(pulse.remainingCount) || 0} 个`,
@@ -266,9 +301,12 @@ Page({
       steps.push({
         action: "quiz",
         tone: "sand",
-        title: "背完后做单词小测",
-        hint: "系统会按今日接触、薄弱词和复习时间安排选择、补缺与默写题",
-        actionLabel: "去小测 →",
+        completed: quizPulse.completed === true,
+        title: quizPulse.completed ? "今天的单词小测已完成" : "背完后做单词小测",
+        hint: quizPulse.completed
+          ? `今天已完成 ${Number(quizPulse.attemptCount) || 1} 轮，最好成绩 ${Number(quizPulse.bestAccuracy) || 0}%`
+          : "系统会按今日接触、薄弱词和复习时间安排选择、补缺与默写题",
+        actionLabel: quizPulse.completed ? "再练 →" : "去小测 →",
       });
     }
     const courseEnabled = typeof student.englishCourseEnabled === "boolean"
@@ -296,6 +334,15 @@ Page({
     if (action === "study") this.goVocabularyStudy();
     else if (action === "quiz") this.goVocabularyChallenge();
     else if (action === "homework") this.goHomeworkTasks();
+  },
+
+  handlePrimaryLearningAction() {
+    const action = this.data.studentPrimaryAction && this.data.studentPrimaryAction.action;
+    if (action === "study") this.goVocabularyStudy();
+    else if (action === "quiz") this.goVocabularyChallenge();
+    else if (action === "homework") this.goHomeworkTasks();
+    else if (action === "mistakes") this.goMistakeReview();
+    else if (action === "french") this.goFrenchLearning();
   },
 
   toggleStudentSwitcher() {

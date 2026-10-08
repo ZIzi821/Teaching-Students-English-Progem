@@ -10,6 +10,7 @@ const app = JSON.parse(read("miniprogram", "app.json"));
 const backend = read("cloudfunctions", "quickstartFunctions", "index.js");
 const homeJs = read("miniprogram", "pages", "index", "index.js");
 const homeWxml = read("miniprogram", "pages", "index", "index.wxml");
+const studentLearningFlow = read("miniprogram", "utils", "studentLearningFlow.js");
 const detailWxml = read("miniprogram", "pages", "student-detail", "index.wxml");
 const vocabularyWxml = read("miniprogram", "pages", "vocabulary", "index.wxml");
 const studyJs = read("miniprogram", "pages", "vocabulary-study", "index.js");
@@ -17,7 +18,10 @@ const studyWxml = read("miniprogram", "pages", "vocabulary-study", "index.wxml")
 
 assert(app.pages.includes("pages/vocabulary-study/index"), "focused vocabulary study page is not registered");
 assert(homeJs.includes("/pages/vocabulary-study/index?studentId="), "student home does not open focused study first");
-assert(homeWxml.includes("① 开始背单词"), "student home is missing the first-step learning label");
+assert(
+  homeWxml.includes("studentPrimaryAction.label") && studentLearningFlow.includes("① 开始背单词"),
+  "student home is missing the first-step learning label"
+);
 assert(homeWxml.includes("退出绑定"), "home is missing the identity exit entry");
 assert(detailWxml.includes("建议顺序：先背单词，再做小测"), "student detail does not explain learning order");
 assert(!vocabularyWxml.includes("今天怎么学？"), "vocabulary overview duplicates the guided route from student home");

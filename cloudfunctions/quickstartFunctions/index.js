@@ -1086,6 +1086,7 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
     teacherName: appConfig.teacherName,
     currentStudent: sanitizeStudent(syncedStudent, false),
     vocabularyPulse: buildVocabularyTodayPulse(syncedStudent, todayStats[0]),
+    vocabularyQuizPulse: vocabularyQuiz.buildTodayQuizPulse(quizSessions, learningDay),
     canShowStudentCount: false,
     stats: {
       mistakeCount: mistakeCount.total,
@@ -5903,6 +5904,8 @@ exports.main = async (event) => {
         return await weeklyScheduleService.createScheduleBooking(event);
       case "saveTeacherScheduleBlock":
         return await weeklyScheduleService.saveTeacherScheduleBlock(event);
+      case "updateScheduleEvent":
+        return await weeklyScheduleService.updateScheduleEvent(event);
       case "cancelScheduleEvent":
         return await weeklyScheduleService.cancelScheduleEvent(event);
       case "markHomeworkActivitiesViewed":

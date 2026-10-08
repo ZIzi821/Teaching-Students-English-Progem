@@ -106,4 +106,15 @@ const enough = quiz.buildTeacherVocabularyAlerts({
 });
 assert(enough.some((item) => item.activityType === "quiz_algorithm_review"));
 
+const todayPulse = quiz.buildTodayQuizPulse([
+  { learningDay: 123, accuracy: 75, correctCount: 6, totalQuestions: 8, completedAtMs: 100 },
+  { learningDay: 123, accuracy: 90, correctCount: 9, totalQuestions: 10, completedAtMs: 200 },
+  { learningDay: 122, accuracy: 100, correctCount: 8, totalQuestions: 8, completedAtMs: 300 },
+], 123);
+assert.strictEqual(todayPulse.completed, true);
+assert.strictEqual(todayPulse.attemptCount, 2);
+assert.strictEqual(todayPulse.bestAccuracy, 90);
+assert.strictEqual(todayPulse.bestCorrectCount, 9);
+assert.strictEqual(quiz.buildTodayQuizPulse([], 123).completed, false);
+
 console.log("englishVocabularyQuiz.test.js: passed");

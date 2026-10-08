@@ -296,6 +296,14 @@ Page({
     this.startSession(this.data.scope);
   },
 
+  goHomeworkTasks() {
+    const query = [];
+    if (this.data.studentId) query.push(`studentId=${encodeURIComponent(this.data.studentId)}`);
+    if (this.data.previewStudentId) query.push(`previewStudentId=${encodeURIComponent(this.data.previewStudentId)}`);
+    if (this.data.mode) query.push(`mode=${encodeURIComponent(this.data.mode)}`);
+    wx.redirectTo({ url: `/pages/homework/index?${query.join("&")}` });
+  },
+
   startSmartChallenge() {
     this.setData({ scope: "smart", message: "" }, () => this.loadChallenge());
   },

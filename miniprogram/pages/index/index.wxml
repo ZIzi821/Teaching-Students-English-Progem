@@ -108,13 +108,13 @@
       <view class="today-plan-time">约 10～25 分钟</view>
     </view>
     <view
-      class="today-plan-step plan-step-{{item.tone}}"
+      class="today-plan-step plan-step-{{item.tone}} {{item.completed ? 'plan-step-completed' : ''}}"
       wx:for="{{studentPlanSteps}}"
       wx:key="action"
       data-action="{{item.action}}"
       bindtap="handlePlanStep"
     >
-      <view class="today-plan-number">{{item.number}}</view>
+      <view class="today-plan-number">{{item.completed ? '✓' : item.number}}</view>
       <view class="today-plan-copy">
         <view class="today-plan-step-title">{{item.title}}</view>
         <view class="today-plan-step-hint">{{item.hint}}</view>
@@ -167,12 +167,9 @@
   </view>
 
   <view class="actions" wx:if="{{isStudent}}">
-    <view class="primary-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabularyStudy">
-      {{vocabularyPulse.completed ? '查看今日背词结果' : '① 开始背单词 · 还差 ' + vocabularyPulse.remainingCount + ' 个'}}
+    <view class="primary-btn" wx:if="{{studentPrimaryAction}}" bindtap="handlePrimaryLearningAction">
+      {{studentPrimaryAction.label}}
     </view>
-    <view class="primary-btn" wx:elif="{{englishCourseEnabled}}" bindtap="goHomeworkTasks">查看全部课后任务</view>
-    <view class="primary-btn" wx:elif="{{mistakeLearningEnabled}}" bindtap="goMistakeReview">开始错题复习</view>
-    <view class="primary-btn french-primary-btn" wx:elif="{{currentStudent.frenchLearningEnabled}}" bindtap="goFrenchLearning">进入法语学习</view>
     <view class="disabled-home-action" wx:else>老师暂时还没有开启学习功能</view>
     <view class="student-action-grid">
       <view class="ghost-btn" wx:if="{{currentStudent.vocabularyEnabled}}" bindtap="goVocabulary">单词学习记录</view>

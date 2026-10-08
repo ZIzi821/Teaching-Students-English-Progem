@@ -296,6 +296,14 @@
   background: #fff3d9;
 }
 
+.plan-step-completed {
+  opacity: 0.72;
+}
+
+.plan-step-completed .today-plan-number {
+  background: #6e9a85;
+}
+
 .today-plan-number {
   display: flex;
   flex: 0 0 54rpx;

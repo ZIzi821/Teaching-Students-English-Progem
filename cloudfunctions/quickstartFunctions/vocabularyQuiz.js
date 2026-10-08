@@ -226,10 +226,30 @@ const buildTeacherVocabularyAlerts = ({ students, sessions, nowMs = Date.now() }
   return alerts.sort((left, right) => asNumber(right.activityAtMs) - asNumber(left.activityAtMs));
 };
 
+const buildTodayQuizPulse = (sessions = [], learningDay) => {
+  const today = (Array.isArray(sessions) ? sessions : [])
+    .filter((item) => item && Number(item.learningDay) === Number(learningDay))
+    .sort((left, right) => asNumber(right.completedAtMs) - asNumber(left.completedAtMs));
+  const best = today.slice().sort((left, right) => (
+    asNumber(right.accuracy) - asNumber(left.accuracy)
+    || asNumber(right.correctCount) - asNumber(left.correctCount)
+    || asNumber(right.completedAtMs) - asNumber(left.completedAtMs)
+  ))[0] || null;
+  return {
+    completed: today.length > 0,
+    attemptCount: today.length,
+    bestAccuracy: best ? Math.max(0, Math.min(100, asNumber(best.accuracy))) : 0,
+    bestCorrectCount: best ? Math.max(0, asNumber(best.correctCount)) : 0,
+    bestTotalQuestions: best ? Math.max(0, asNumber(best.totalQuestions)) : 0,
+    latestCompletedAtMs: today.length ? Math.max(0, asNumber(today[0].completedAtMs)) : 0,
+  };
+};
+
 module.exports = {
   ALGORITHM_VERSION,
   buildPersonalizedQuizPlan,
   buildTeacherVocabularyAlerts,
+  buildTodayQuizPulse,
   getQuestionTarget,
   isWeakWord,
 };

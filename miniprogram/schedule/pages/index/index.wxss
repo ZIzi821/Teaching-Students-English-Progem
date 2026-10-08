@@ -73,8 +73,8 @@
 
 .day-pill {
   box-sizing: border-box;
-  width: 118rpx;
-  padding: 18rpx 10rpx;
+  width: 144rpx;
+  padding: 15rpx 8rpx;
   border: 1rpx solid #e5dacd;
   border-radius: 18rpx;
   background: #fffdfa;
@@ -88,8 +88,10 @@
 }
 
 .day-week { font-size: 25rpx; font-weight: 800; }
+.day-date { margin-top: 3rpx; color: #665f57; font-size: 18rpx; white-space: nowrap; }
 .day-count { margin-top: 4rpx; color: #887d70; font-size: 20rpx; }
 .day-pill-active .day-count { color: #39765d; }
+.day-pill-active .day-date { color: #39765d; }
 
 .schedule-summary {
   display: flex;
@@ -209,6 +211,8 @@
 .schedule-modal {
   box-sizing: border-box;
   width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
   padding: 34rpx 30rpx calc(34rpx + env(safe-area-inset-bottom));
   border-radius: 28rpx 28rpx 0 0;
   background: #fffdfa;
