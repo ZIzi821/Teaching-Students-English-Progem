@@ -1,8 +1,12 @@
-const { buildWeekDays } = require("../../../utils/scheduleCalendar");
+const { WEEKDAY_LABELS, buildScheduleDays } = require("../../../utils/scheduleCalendar");
 
-const TIMELINE_START_MINUTE = 6 * 60;
+const TIMELINE_START_MINUTE = 9 * 60;
 const TIMELINE_END_MINUTE = 23 * 60;
 const PIXELS_PER_MINUTE = 1.8;
+const WEEKDAY_OPTIONS = WEEKDAY_LABELS.map((label, index) => ({
+  weekday: index + 1,
+  label,
+}));
 const ARRANGEMENT_TYPES = [
   { value: "teacher", label: "老师安排" },
   { value: "booking", label: "帮学生预约" },
@@ -37,8 +41,10 @@ Page({
     availabilitySaving: false,
     student: null,
     students: [],
-    days: buildWeekDays(),
+    days: buildScheduleDays(),
+    weekdayOptions: WEEKDAY_OPTIONS,
     selectedWeekday: 1,
+    selectedDayWeekLabel: "",
     selectedDayLabel: "",
     selectedDayEvents: [],
     timelineHours: [],
@@ -66,7 +72,7 @@ Page({
   onLoad(options) {
     this.mode = options.mode || "";
     this.previewStudentId = options.previewStudentId || options.studentId || "";
-    const days = buildWeekDays(new Date());
+    const days = buildScheduleDays(new Date());
     const today = days.find((item) => item.isToday) || days[0];
     const timelineHours = [];
     for (let hour = TIMELINE_START_MINUTE / 60; hour <= TIMELINE_END_MINUTE / 60; hour += 1) {
@@ -106,7 +112,7 @@ Page({
       if (!result.success) throw new Error(result.message || "日程暂时无法加载");
       this.events = result.events || [];
       const availabilityByWeekday = new Map((result.dayAvailability || []).map((item) => [Number(item.weekday), item]));
-      const days = buildWeekDays(new Date()).map((day) => {
+      const days = buildScheduleDays(new Date()).map((day) => {
         const availability = availabilityByWeekday.get(day.weekday) || { bookingOpen: true, statusLabel: "开放预约" };
         return {
           ...day,
@@ -153,7 +159,7 @@ Page({
 
   refreshSelectedDay() {
     const weekday = Number(this.data.selectedWeekday) || 1;
-    const day = (this.data.days || [])[weekday - 1] || {};
+    const day = (this.data.days || []).find((item) => Number(item.weekday) === weekday) || {};
     const selectedDayEvents = (this.events || [])
       .filter((item) => Number(item.weekday) === weekday)
       .map((item) => ({
@@ -164,6 +170,7 @@ Page({
       }));
     this.setData({
       selectedDayLabel: day.fullLabel || day.label || "",
+      selectedDayWeekLabel: day.label || "",
       selectedDayEvents,
       selectedDayBookingOpen: day.bookingOpen !== false,
       selectedDayAvailabilityLabel: day.availabilityLabel || "开放预约",
@@ -292,7 +299,8 @@ Page({
 
   refreshBookingEndTime() {
     const student = this.data.bookingStudent;
-    const formDay = (this.data.days || [])[Number(this.data.form.weekdayIndex) || 0] || {};
+    const formWeekday = (Number(this.data.form.weekdayIndex) || 0) + 1;
+    const formDay = (this.data.days || []).find((item) => Number(item.weekday) === formWeekday) || {};
     const formDayBookingOpen = formDay.bookingOpen !== false;
     if (!student || this.data.formMode !== "booking") {
       this.setData({ bookingEndTime: "", formDayBookingOpen });
@@ -424,7 +432,7 @@ Page({
   toggleSelectedDayAvailability() {
     if (!this.data.isTeacher || this.data.availabilitySaving) return;
     const weekday = Number(this.data.selectedWeekday) || 1;
-    const day = this.data.days[weekday - 1] || {};
+    const day = (this.data.days || []).find((item) => Number(item.weekday) === weekday) || {};
     const nextBookingOpen = day.bookingOpen === false;
     wx.showModal({
       title: nextBookingOpen ? `重新开放每${day.label || "周"}预约？` : `暂停每${day.label || "周"}预约？`,

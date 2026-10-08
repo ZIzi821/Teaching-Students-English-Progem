@@ -38,6 +38,7 @@ assert.deepStrictEqual(
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "Molly" }), 45);
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "冯嘉文" }), 40);
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "徐浩成" }), 60);
+assert.strictEqual(schedule.EARLIEST_MINUTE, 9 * 60, "Schedule bookings must not start before 09:00");
 assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "active-student" }), true);
 assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "hidden-student", teacherHidden: true }), false);
 assert(scheduleService.includes("withoutDocumentId(source)"), "Schedule seeds must not write _id inside document data");
@@ -57,10 +58,14 @@ assert(schedulePageWxml.includes("帮学生预约") && schedulePageWxml.includes
 assert(schedulePageWxml.includes("空白时段均可预约") && schedulePageWxml.includes("暂停预约"), "Schedule availability messaging or teacher control is missing");
 assert(schedulePageWxml.includes("暂停学生自助预约；教师仍可代为安排"), "Closed-day teacher override message is missing");
 assert(schedulePageWxml.includes("item.dateLabel"), "Current-week month/day labels are missing");
+assert(schedulePageJs.includes("buildScheduleDays") && schedulePageJs.includes("TIMELINE_START_MINUTE = 9 * 60"), "Schedule does not use the rolling seven-day window or 09:00 timeline");
+assert(schedulePageWxml.includes('start="09:00"') && schedulePageWxml.includes('start="09:05"'), "Schedule time pickers still allow pre-09:00 times");
+assert(schedulePageWxml.includes("09:00–23:00 的空白时段均可预约"), "Schedule does not explain the visible booking window");
 assert(backend.includes("buildTeacherScheduleActivities"), "Student schedule bookings are missing from teacher activities");
 assert(homePageJs.includes('activityType.indexOf("schedule_")') && homePageWxml.includes("item.actionLabel"), "Teacher schedule activity navigation is missing");
-const calendarDays = scheduleCalendar.buildWeekDays(new Date(2026, 9, 8, 12));
-assert.strictEqual(calendarDays[3].fullLabel, "周四 · 10月8日", "Schedule current-week date calculation is incorrect");
+const calendarDays = scheduleCalendar.buildScheduleDays(new Date(2026, 9, 9, 12));
+assert.deepStrictEqual(calendarDays.map((item) => item.weekday), [4, 5, 6, 7, 1, 2, 3], "Schedule rolling-date window does not cross weeks correctly");
+assert.strictEqual(calendarDays[1].fullLabel, "周五 · 10月9日", "Schedule rolling-date labels are incorrect");
 
 ["getMistakeExportWorkspace", "createMistakeExport"].forEach((action) => {
   assert(backend.includes(`case "${action}"`), `Missing mistake export cloud action: ${action}`);

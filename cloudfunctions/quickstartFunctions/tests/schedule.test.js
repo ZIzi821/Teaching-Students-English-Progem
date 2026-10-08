@@ -71,6 +71,8 @@ assert.deepStrictEqual(
 );
 assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 1001, endMinute: 1060 }).valid, false);
 assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 1080, endMinute: 1080 }).valid, false);
+assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 8 * 60 + 55, endMinute: 9 * 60 + 55 }).valid, false);
+assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 9 * 60, endMinute: 9 * 60 + 5 }).valid, true);
 const assignedColors = schedule.assignStudentColorKeys([
   { eventType: "lesson_booking", studentId: "student-b" },
   { eventType: "lesson_booking", studentId: "student-a" },
@@ -165,12 +167,14 @@ assert.deepStrictEqual(
   []
 );
 
-const thursdayWeek = scheduleCalendar.buildWeekDays(new Date(2026, 9, 8, 12, 0, 0));
+const fridayWindow = scheduleCalendar.buildScheduleDays(new Date(2026, 9, 9, 12, 0, 0));
 assert.deepStrictEqual(
-  thursdayWeek.map((item) => item.dateLabel),
-  ["10月5日", "10月6日", "10月7日", "10月8日", "10月9日", "10月10日", "10月11日"]
+  fridayWindow.map((item) => item.dateLabel),
+  ["10月8日", "10月9日", "10月10日", "10月11日", "10月12日", "10月13日", "10月14日"]
 );
-assert.strictEqual(thursdayWeek[3].fullLabel, "周四 · 10月8日");
-assert.strictEqual(thursdayWeek[3].isToday, true);
+assert.deepStrictEqual(fridayWindow.map((item) => item.weekday), [4, 5, 6, 7, 1, 2, 3]);
+assert.strictEqual(fridayWindow[0].isYesterday, true);
+assert.strictEqual(fridayWindow[1].fullLabel, "周五 · 10月9日");
+assert.strictEqual(fridayWindow[1].isToday, true);
 
 console.log("schedule tests passed");

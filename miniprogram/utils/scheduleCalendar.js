@@ -27,8 +27,37 @@ const buildWeekDays = (value = new Date()) => {
   });
 };
 
+const buildScheduleDays = (value = new Date()) => {
+  const today = value instanceof Date ? new Date(value.getTime()) : new Date(value);
+  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  return Array.from({ length: 7 }, (_, index) => {
+    const dayOffset = index - 1;
+    const date = new Date(
+      todayStart.getFullYear(),
+      todayStart.getMonth(),
+      todayStart.getDate() + dayOffset
+    );
+    const jsDay = date.getDay();
+    const weekday = jsDay === 0 ? 7 : jsDay;
+    const label = WEEKDAY_LABELS[weekday - 1];
+    const dateLabel = `${date.getMonth() + 1}月${date.getDate()}日`;
+    return {
+      weekday,
+      short: label.slice(1),
+      label,
+      dateLabel,
+      dateKey: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+      fullLabel: `${label} · ${dateLabel}`,
+      isYesterday: dayOffset === -1,
+      isToday: dayOffset === 0,
+      eventCount: 0,
+    };
+  });
+};
+
 module.exports = {
   WEEKDAY_LABELS,
+  buildScheduleDays,
   buildWeekDays,
   getMonday,
 };

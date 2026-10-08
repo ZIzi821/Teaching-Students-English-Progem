@@ -1,5 +1,5 @@
 const MINUTE_STEP = 5;
-const EARLIEST_MINUTE = 6 * 60;
+const EARLIEST_MINUTE = 9 * 60;
 const LATEST_MINUTE = 23 * 60;
 const WEEKDAY_LABELS = Object.freeze(["周一", "周二", "周三", "周四", "周五", "周六", "周日"]);
 const STUDENT_COLOR_KEYS = Object.freeze([
@@ -118,7 +118,7 @@ const validateTimeRange = ({ weekday, startMinute, endMinute }) => {
     return { valid: false, message: "时间请按 5 分钟为单位填写" };
   }
   if (safeStart < EARLIEST_MINUTE || safeEnd > LATEST_MINUTE || safeEnd <= safeStart) {
-    return { valid: false, message: "时间需在 06:00–23:00 内，且结束时间晚于开始时间" };
+    return { valid: false, message: "时间需在 09:00–23:00 内，且结束时间晚于开始时间" };
   }
   return {
     valid: true,

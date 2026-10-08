@@ -23,12 +23,12 @@
         <view
           class="day-pill {{selectedWeekday === item.weekday ? 'day-pill-active' : ''}}"
           wx:for="{{days}}"
-          wx:key="weekday"
+          wx:key="dateKey"
           data-weekday="{{item.weekday}}"
           bindtap="selectDay"
         >
           <view class="day-week">{{item.label}}</view>
-          <view class="day-date">{{item.dateLabel}}<text wx:if="{{item.isToday}}"> · 今天</text></view>
+          <view class="day-date">{{item.dateLabel}}<text wx:if="{{item.isYesterday}}"> · 昨天</text><text wx:elif="{{item.isToday}}"> · 今天</text></view>
           <view class="day-count {{!item.bookingOpen ? 'day-count-closed' : ''}}">{{!item.bookingOpen ? '暂停预约' : item.eventCount ? item.eventCount + ' 项' : '可预约'}}</view>
         </view>
       </view>
@@ -37,12 +37,12 @@
     <view class="schedule-summary">
       <view>
         <view class="summary-title">{{selectedDayLabel}}</view>
-        <view class="summary-hint" wx:if="{{selectedDayBookingOpen}}">空白时段均可预约；有重叠时系统会阻止重复预约。</view>
+        <view class="summary-hint" wx:if="{{selectedDayBookingOpen}}">09:00–23:00 的空白时段均可预约；有重叠时系统会阻止重复预约。</view>
         <view class="summary-hint summary-hint-closed" wx:else>朱老师已暂停这一天的新预约，已有课程仍会保留。</view>
       </view>
       <view class="summary-actions">
         <view class="availability-toggle {{selectedDayBookingOpen ? '' : 'availability-toggle-closed'}}" wx:if="{{isTeacher}}" bindtap="toggleSelectedDayAvailability">
-          {{availabilitySaving ? '保存中…' : selectedDayBookingOpen ? '每' + days[selectedWeekday - 1].label + '可预约' : '每' + days[selectedWeekday - 1].label + '已暂停'}}
+          {{availabilitySaving ? '保存中…' : selectedDayBookingOpen ? '每' + selectedDayWeekLabel + '可预约' : '每' + selectedDayWeekLabel + '已暂停'}}
         </view>
         <view class="schedule-add" wx:if="{{canWrite && (actorRole === 'teacher' || selectedDayBookingOpen)}}" bindtap="openForm">{{isTeacher ? '＋ 添加安排' : isTeacherPreview ? '＋ 帮学生预约' : '＋ 预约上课'}}</view>
         <view class="schedule-closed" wx:elif="{{actorRole !== 'teacher' && !selectedDayBookingOpen}}">暂停预约</view>
@@ -56,7 +56,7 @@
     </view>
 
     <view class="timeline-card">
-      <view class="timeline-empty" wx:if="{{!selectedDayEvents.length && selectedDayBookingOpen}}">这一天没有已占用安排，空白时段均可预约。</view>
+      <view class="timeline-empty" wx:if="{{!selectedDayEvents.length && selectedDayBookingOpen}}">这一天没有已占用安排，09:00 后的空白时段均可预约。</view>
       <view class="timeline-empty timeline-empty-closed" wx:elif="{{!selectedDayEvents.length}}">这一天暂停接受新的预约。</view>
       <view class="timeline" style="height: {{timelineHeight}}rpx;">
         <view class="hour-line" wx:for="{{timelineHours}}" wx:key="label" style="top: {{item.topRpx}}rpx;">
@@ -85,7 +85,7 @@
       <view class="modal-title">{{editingId ? '编辑每周日程' : formMode === 'teacher' ? '添加每周安排' : '预约每周上课时间'}}</view>
       <view class="modal-hint" wx:if="{{formMode === 'booking' && bookingStudent}}">{{bookingStudent.name}} 每节 {{bookingStudent.bookingDurationMinutes}} 分钟；结束时间由系统自动计算。</view>
       <view class="modal-hint" wx:else>这段时间会直接显示在家长看到的日程表中。</view>
-      <view class="booking-closed-note" wx:if="{{formMode === 'booking' && !formDayBookingOpen}}">{{actorRole === 'teacher' ? days[form.weekdayIndex].label + '已暂停学生自助预约；教师仍可代为安排。' : days[form.weekdayIndex].label + '已暂停预约，请更换星期。'}}</view>
+      <view class="booking-closed-note" wx:if="{{formMode === 'booking' && !formDayBookingOpen}}">{{actorRole === 'teacher' ? weekdayOptions[form.weekdayIndex].label + '已暂停学生自助预约；教师仍可代为安排。' : weekdayOptions[form.weekdayIndex].label + '已暂停预约，请更换星期。'}}</view>
 
       <view class="field" wx:if="{{isTeacher && !editingId}}">
         <view class="field-label">安排类型</view>
@@ -102,20 +102,20 @@
 
       <view class="field">
         <view class="field-label">星期</view>
-        <picker mode="selector" range="{{days}}" range-key="label" value="{{form.weekdayIndex}}" bindchange="onFormDayChange">
-          <view class="picker-value">{{days[form.weekdayIndex].label}}</view>
+        <picker mode="selector" range="{{weekdayOptions}}" range-key="label" value="{{form.weekdayIndex}}" bindchange="onFormDayChange">
+          <view class="picker-value">{{weekdayOptions[form.weekdayIndex].label}}</view>
         </picker>
       </view>
       <view class="time-grid">
         <view class="field time-field">
           <view class="field-label">开始时间</view>
-          <picker mode="time" start="06:00" end="22:55" value="{{form.startTime}}" bindchange="onStartTimeChange">
+          <picker mode="time" start="09:00" end="22:55" value="{{form.startTime}}" bindchange="onStartTimeChange">
             <view class="picker-value">{{form.startTime}}</view>
           </picker>
         </view>
         <view class="field time-field" wx:if="{{formMode === 'teacher'}}">
           <view class="field-label">结束时间</view>
-          <picker mode="time" start="06:05" end="23:00" value="{{form.endTime}}" bindchange="onEndTimeChange">
+          <picker mode="time" start="09:05" end="23:00" value="{{form.endTime}}" bindchange="onEndTimeChange">
             <view class="picker-value">{{form.endTime}}</view>
           </picker>
         </view>
