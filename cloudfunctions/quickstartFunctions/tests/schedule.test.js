@@ -3,15 +3,18 @@ const schedule = require("../schedule");
 
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "Molly" }), 45);
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "冯嘉文" }), 40);
-assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "任轩楠" }), 60);
+assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "徐浩成" }), 60);
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "新学生", bookingDurationMinutes: 50 }), 50);
+assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "徐浩成", bookingDurationMinutes: 55 }), 55);
+assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "xu", name: "徐浩成" }), true);
+assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "ren", name: "任轩楠", teacherHidden: true }), false);
 
 assert.deepStrictEqual(
   schedule.buildBookingRange({ name: "Molly" }, 1, "16:00"),
   { valid: true, weekday: 1, startMinute: 960, endMinute: 1005, durationMinutes: 45 }
 );
 assert.strictEqual(schedule.buildBookingRange({ name: "冯嘉文" }, 2, "19:30").endMinute, 1210);
-assert.strictEqual(schedule.buildBookingRange({ name: "任轩楠" }, 6, "20:00").endMinute, 1260);
+assert.strictEqual(schedule.buildBookingRange({ name: "徐浩成" }, 6, "20:00").endMinute, 1260);
 
 assert.strictEqual(
   schedule.rangesOverlap(

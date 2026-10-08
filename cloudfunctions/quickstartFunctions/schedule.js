@@ -120,9 +120,13 @@ const getDefaultBookingDurationMinutes = (student = {}) => {
   const name = `${student.name || ""} ${student.nickname || ""}`.trim().toLowerCase();
   if (name.includes("molly")) return 45;
   if (name.includes("冯嘉文")) return 40;
-  if (name.includes("任轩楠")) return 60;
+  if (name.includes("徐浩成")) return 60;
   return 60;
 };
+
+const isStudentBookingEnabled = (student = {}) => Boolean(
+  student && student._id && student.teacherHidden !== true
+);
 
 const hashString = (value) => {
   let hash = 0;
@@ -188,6 +192,7 @@ module.exports = {
   decorateEvent,
   formatMinute,
   getDefaultBookingDurationMinutes,
+  isStudentBookingEnabled,
   getStudentColorKey,
   normalizeWeekday,
   parseTime,

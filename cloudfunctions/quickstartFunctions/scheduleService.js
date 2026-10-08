@@ -175,7 +175,9 @@ const createWeeklyScheduleService = ({
         ? { ...item, colorKey: studentColorKeys.get(String(item.studentId)) }
         : item
     ));
-    const canWrite = identity.role === "student" && !isTeacherPreview;
+    const canWrite = identity.role === "student"
+      && !isTeacherPreview
+      && schedule.isStudentBookingEnabled(student);
     return {
       success: true,
       role: isTeacherPreview ? "student" : identity.role,
@@ -256,6 +258,9 @@ const createWeeklyScheduleService = ({
     await ensureDefaults();
     const student = await loadStudent(identity.student._id);
     if (!student) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+    if (!schedule.isStudentBookingEnabled(student)) {
+      throw createError("BOOKING_NOT_AVAILABLE", "该学生当前未开放预约");
+    }
     const range = schedule.buildBookingRange(student, data.weekday, data.startTime);
     if (!range.valid) throw createError("INVALID_SCHEDULE_TIME", range.message);
     const requestId = String(data.requestId || "").trim().slice(0, 100);

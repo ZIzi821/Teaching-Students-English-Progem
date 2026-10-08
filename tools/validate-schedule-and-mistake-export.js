@@ -33,7 +33,9 @@ assert.deepStrictEqual(
 );
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "Molly" }), 45);
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "冯嘉文" }), 40);
-assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "任轩楠" }), 60);
+assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "徐浩成" }), 60);
+assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "active-student" }), true);
+assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "hidden-student", teacherHidden: true }), false);
 ["getWeeklySchedule", "createScheduleBooking", "saveTeacherScheduleBlock", "cancelScheduleEvent"].forEach((action) => {
   assert(backend.includes(`case "${action}"`), `Missing schedule cloud action: ${action}`);
 });
