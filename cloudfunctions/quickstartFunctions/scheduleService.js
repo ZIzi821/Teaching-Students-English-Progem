@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const schedule = require("./schedule");
 const { runTransactionWithRetry } = require("./transactionRetry");
+const { withoutDocumentId } = require("./databasePayload");
 
 const SCHEDULE_LOCK_ID = "weekly_schedule_state_v1";
 const SCHEDULE_SEED_REVISION = 1;
@@ -45,7 +46,7 @@ const createWeeklyScheduleService = ({
         if (existing) continue;
         await eventRef.set({
           data: {
-            ...source,
+            ...withoutDocumentId(source),
             recordType: "weeklyScheduleEvent",
             recurrence: "weekly",
             status: "active",

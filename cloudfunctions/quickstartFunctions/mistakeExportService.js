@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const mistakeExport = require("./mistakeExport");
 const { buildMistakeExportDocx } = require("./mistakeExportDocx");
 const { runTransactionWithRetry } = require("./transactionRetry");
+const { withoutDocumentId } = require("./databasePayload");
 
 const EXCLUDE_POLICY_LABELS = Object.freeze({
   none: "不排除历史记录",
@@ -342,7 +343,7 @@ const createMistakeExportService = ({
           throw createError("EXPORT_REQUEST_CONFLICT", "导出记录已变化，请刷新后查看");
         }
         const ready = {
-          ...current,
+          ...withoutDocumentId(current),
           status: "ready",
           fileID: upload.fileID,
           fileName,

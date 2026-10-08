@@ -36,6 +36,8 @@ assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "冯嘉文"
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "徐浩成" }), 60);
 assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "active-student" }), true);
 assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "hidden-student", teacherHidden: true }), false);
+assert(scheduleService.includes("withoutDocumentId(source)"), "Schedule seeds must not write _id inside document data");
+assert(mistakeService.includes("withoutDocumentId(current)"), "Mistake export updates must not write queried _id back into document data");
 ["getWeeklySchedule", "createScheduleBooking", "saveTeacherScheduleBlock", "cancelScheduleEvent"].forEach((action) => {
   assert(backend.includes(`case "${action}"`), `Missing schedule cloud action: ${action}`);
 });
