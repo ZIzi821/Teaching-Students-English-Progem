@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const mistakeExport = require("./mistakeExport");
+const courseWorkflow = require("./courseWorkflow");
 const { buildMistakeExportDocx } = require("./mistakeExportDocx");
 const { buildMistakeExportMarkdown } = require("./mistakeExportMarkdown");
 const { runTransactionWithRetry } = require("./transactionRetry");
@@ -107,7 +108,9 @@ const createMistakeExportService = ({
       loadAll("mistakes", { studentId }),
       loadAll("mistakeExports", { studentId }),
     ]);
-    const sortedLessons = mistakeExport.sortLessons(lessons);
+    const sortedLessons = mistakeExport.sortLessons(lessons.map((lesson) => (
+      courseWorkflow.withApplicableLessonDuration(lesson, student)
+    )));
     const normalizedFormat = normalizeExportFormat(exportFormat);
     const readyHistory = history.filter((item) => (
       item.status === "ready" && normalizeExportFormat(item.exportFormat) === normalizedFormat

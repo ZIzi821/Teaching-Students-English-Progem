@@ -33,11 +33,22 @@ const getLessonAccountingMode = (student = {}) => {
   return name.includes("徐浩成") ? LESSON_ACCOUNTING_MODES.minute : LESSON_ACCOUNTING_MODES.lesson;
 };
 
+const usesLessonDurationMinutes = (student = {}, lessonTemplateKey = "") => (
+  String(lessonTemplateKey || "") === "vocabulary_coaching"
+  || getLessonAccountingMode(student) === LESSON_ACCOUNTING_MODES.minute
+);
+
 const normalizeLessonDurationMinutes = (value) => {
   const minutes = Number(value);
   if (!Number.isInteger(minutes) || minutes <= 0 || minutes > 300 || minutes % 5 !== 0) return 0;
   return minutes;
 };
+
+const withApplicableLessonDuration = (lesson = {}, student = {}) => (
+  usesLessonDurationMinutes(student, lesson.lessonTemplateKey)
+    ? lesson
+    : Object.assign({}, lesson, { durationMinutes: 0 })
+);
 
 const countLessonProgressMinutes = (lessons = [], legacyLessonMinutes = 0) => (
   (Array.isArray(lessons) ? lessons : []).reduce((total, lesson) => {
@@ -389,4 +400,6 @@ module.exports = {
   getPlannedLessonMinutes,
   isLateHomeworkSubmission,
   normalizeLessonDurationMinutes,
+  usesLessonDurationMinutes,
+  withApplicableLessonDuration,
 };

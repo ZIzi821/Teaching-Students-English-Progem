@@ -27,6 +27,7 @@ const { KET_SPEAKING_TASKS } = require(path.join(root, "miniprogram", "utils", "
 const cloudKetTasks = JSON.parse(read("cloudfunctions/quickstartFunctions/data/ket-speaking-tasks.json"));
 const courseWorkflow = require(path.join(root, "cloudfunctions", "quickstartFunctions", "courseWorkflow"));
 const { buildNextLessonTitleSuggestion } = require(path.join(root, "miniprogram", "utils", "lessonTitle"));
+const lessonDuration = require(path.join(root, "miniprogram", "utils", "lessonDuration"));
 
 [
   "setEnglishCourseSettings",
@@ -150,6 +151,15 @@ assert.strictEqual(buildNextLessonTitleSuggestion("没有编号的课程"), "", 
 assert(addLessonJs.includes("lessonTitleSuggestion") && addLessonWxml.includes("lessonTitleSuggestion"), "New lessons do not show the previous-title sequence suggestion");
 assert(addLessonWxml.includes("机构课程") && lessonWxml.includes("机构课程"), "Institution-course controls are missing from lesson creation or editing");
 assert(addLessonJs.includes("institutionCourse: form.institutionCourse === true") && lessonJs.includes('"workspaceForm.institutionCourse"'), "Institution-course state is not submitted by both teacher forms");
+assert.strictEqual(lessonDuration.usesLessonDurationMinutes({ name: "冯嘉文", progressUnit: "lesson" }, "feng_beginner"), false);
+assert.strictEqual(lessonDuration.usesLessonDurationMinutes({ name: "冯嘉文", progressUnit: "lesson" }, "vocabulary_coaching"), true);
+assert.strictEqual(lessonDuration.usesLessonDurationMinutes({ name: "徐浩成", progressUnit: "minute" }, "general"), true);
+assert(addLessonJs.includes("if (!showDurationMinutes)") && addLessonJs.includes("if (durationApplies) lessonPayload.durationMinutes"), "New-lesson duration state can leak into an unrelated student or template");
+assert(lessonJs.includes("if (!durationApplies) delete workspacePayload.durationMinutes"), "Lesson editing still submits a hidden duration field");
+assert(backend.includes("options.acceptDurationMinutes === false") && backend.includes("courseWorkflow.usesLessonDurationMinutes"), "Cloud lesson writes do not enforce contextual duration ownership");
+assert(backend.includes("courseWorkflow.withApplicableLessonDuration"), "Existing stray duration values are not hidden from unrelated lesson views");
+assert(backend.includes('progressUnit: lessonAccountingMode === "minute" ? "minute" : "lesson"'), "Lesson detail does not expose Xu Haocheng's minute-accounting mode to the editor");
+assert(backend.includes("Number(value) === 0"), "Normalized empty lesson durations cannot be fingerprinted safely");
 assert(backend.includes("countLessonProgressRecords") && backend.includes("sync lesson count after course type update failed"), "Institution courses do not trigger an authoritative lesson-progress recount");
 assert.strictEqual(courseWorkflow.countLessonProgressRecords([{}, { institutionCourse: true }, { institutionCourse: false }]), 2, "Institution courses must be the only lesson records excluded from progress");
 assert(homeWxml.includes("不计入个人课程进度") && studentWxml.includes("不计入个人课程进度"), "Institution courses are not labelled in English course records");

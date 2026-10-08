@@ -5,6 +5,7 @@ const {
 const { KET_SPEAKING_TASKS, findKetSpeakingTask } = require("../../utils/ketSpeakingTasks");
 const { KET_MOCK_SETS, findKetMockSet } = require("../../utils/ketMockSets");
 const { buildNextLessonTitleSuggestion } = require("../../utils/lessonTitle");
+const { usesLessonDurationMinutes } = require("../../utils/lessonDuration");
 
 const HOMEWORK_REMINDER_TEMPLATE_ID = "Ih535VWa2FCNlCCvZUYFJOt8fOA3EY3l7Pxoa9rszYA";
 const MATERIAL_PREFERENCES_KEY = "lessonMaterialPreferencesV2";
@@ -280,7 +281,8 @@ Page({
       }
       const isTeacherPreview = result.role === "teacher" && this.data.mode === "teacherPreview";
       const isTeacher = result.role === "teacher" && !isTeacherPreview;
-      const lesson = this.prepareLesson(result.lesson || {});
+      const student = result.student || null;
+      const lesson = this.prepareLesson(result.lesson || {}, student);
       const papers = this.preparePapers(result.papers || []);
       const lessonTemplate = findTemplate(lesson.lessonTemplateKey);
       const lessonTemplateIndex = Math.max(0, LESSON_TEMPLATE_OPTIONS.findIndex((item) => item.key === lessonTemplate.key));
@@ -301,7 +303,13 @@ Page({
       const ketSpeakingTaskIndex = Math.max(0, KET_SPEAKING_TASKS.findIndex((item) => item.id === selectedKetSpeakingTask.id));
       const selectedKetMockSet = findKetMockSet(lesson.ketMockSetId) || KET_MOCK_SETS[0];
       const ketMockSetIndex = Math.max(0, KET_MOCK_SETS.findIndex((item) => item.id === selectedKetMockSet.id));
-      const previousLessonReference = result.previousLesson || null;
+      const previousLessonReference = result.previousLesson
+        ? Object.assign({}, result.previousLesson, {
+          durationMinutes: usesLessonDurationMinutes(student, result.previousLesson.lessonTemplateKey)
+            ? Math.max(0, Number(result.previousLesson.durationMinutes) || 0)
+            : 0,
+        })
+        : null;
       this.setData({
         role: result.role,
         isTeacher,
@@ -314,7 +322,7 @@ Page({
         ),
         previousLessonReference,
         showPreviousLessonReference: Boolean(previousLessonReference),
-        student: result.student || null,
+        student,
         materialGroups: this.groupPapers(papers),
         hasPapers: papers.length > 0,
         materialCount: papers.length,
@@ -365,7 +373,7 @@ Page({
     }, 80);
   },
 
-  prepareLesson(lesson) {
+  prepareLesson(lesson, student) {
     const hasStructuredRecord = Boolean(
       lesson.reviewContent
       || lesson.taughtContent
@@ -384,7 +392,9 @@ Page({
       lessonTemplateKey: lessonTemplate.key,
       lessonTemplateLabel: lessonTemplate.label,
       institutionCourse: lesson.institutionCourse === true,
-      durationMinutes: Math.max(0, Number(lesson.durationMinutes) || 0),
+      durationMinutes: usesLessonDurationMinutes(student, lessonTemplate.key)
+        ? Math.max(0, Number(lesson.durationMinutes) || 0)
+        : 0,
       reviewContent: lesson.reviewContent || "",
       taughtContent: lesson.taughtContent || "",
       masterySummary: lesson.masterySummary || (!hasStructuredRecord ? lesson.summary || "" : ""),
@@ -611,6 +621,7 @@ Page({
     const safeType = recordingTaskTypeOptions.some((item) => item.value === currentType)
       ? currentType
       : "manual";
+    const durationApplies = usesLessonDurationMinutes(this.data.student, option.key);
     const updates = {
       lessonTemplateIndex: LESSON_TEMPLATE_OPTIONS.indexOf(option),
       lessonTemplate: option,
@@ -619,7 +630,9 @@ Page({
       recordingTaskTypeIndex: Math.max(0, recordingTaskTypeOptions.findIndex((item) => item.value === safeType)),
       "workspaceForm.recordingTaskType": safeType,
     };
-    if (
+    if (!durationApplies) {
+      updates["workspaceForm.durationMinutes"] = "";
+    } else if (
       option.key !== "vocabulary_coaching"
       && this.data.student
       && this.data.student.progressUnit === "minute"
@@ -818,18 +831,14 @@ Page({
   saveWorkspace() {
     if (!this.data.isTeacher || this.data.savingWorkspace) return;
     const form = this.data.workspaceForm;
+    const durationApplies = usesLessonDurationMinutes(this.data.student, form.lessonTemplateKey);
     if (!String(form.title || "").trim()) {
       wx.showToast({ title: "请填写课程名称", icon: "none" });
       return;
     }
-    if (
-      form.lessonTemplateKey === "vocabulary_coaching"
-      || (
-        this.data.student
-        && this.data.student.progressUnit === "minute"
-        && form.institutionCourse !== true
-      )
-    ) {
+    const durationRequired = form.lessonTemplateKey === "vocabulary_coaching"
+      || (durationApplies && form.institutionCourse !== true);
+    if (durationApplies && (durationRequired || String(form.durationMinutes || "").trim())) {
       const durationMinutes = Number(form.durationMinutes);
       if (!Number.isInteger(durationMinutes) || durationMinutes < 5 || durationMinutes > 300 || durationMinutes % 5 !== 0) {
         wx.showToast({ title: "时长请填写 5–300 的 5 倍数", icon: "none" });
@@ -847,15 +856,17 @@ Page({
         return;
       }
     }
+    const workspacePayload = Object.assign({ lessonId: this.data.lessonId }, form, {
+      learningObservations: form.learningObservations.filter((item) => String(item.content || "").trim()),
+    });
+    if (!durationApplies) delete workspacePayload.durationMinutes;
     this.setData({ savingWorkspace: true });
     wx.showLoading({ title: "保存中", mask: true });
     wx.cloud.callFunction({
       name: "quickstartFunctions",
       data: {
         type: "updateLessonWorkspace",
-        data: Object.assign({ lessonId: this.data.lessonId }, form, {
-          learningObservations: form.learningObservations.filter((item) => String(item.content || "").trim()),
-        }),
+        data: workspacePayload,
       },
     }).then((res) => {
       const result = res.result || {};

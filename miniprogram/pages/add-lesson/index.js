@@ -6,6 +6,7 @@ const {
 const { KET_SPEAKING_TASKS } = require("../../utils/ketSpeakingTasks");
 const { KET_MOCK_SETS } = require("../../utils/ketMockSets");
 const { buildNextLessonTitleSuggestion } = require("../../utils/lessonTitle");
+const { usesLessonDurationMinutes } = require("../../utils/lessonDuration");
 
 const BASIC_RECORDING_TASK_TYPE_OPTIONS = [
   { value: "manual", label: "独立朗读（不播放示范）" },
@@ -192,6 +193,7 @@ Page({
     const safeType = recordingTaskTypeOptions.some((item) => item.value === currentType)
       ? currentType
       : "manual";
+    const showDurationMinutes = usesLessonDurationMinutes(activeStudent, key);
     const updates = {
       lessonTemplateIndex: index,
       lessonTemplate: findTemplate(key),
@@ -202,10 +204,11 @@ Page({
       requiresLessonNo: findTemplate(key).requiresLessonNo !== false,
       showPostLessonRecord: findTemplate(key).showPostLessonRecord !== false,
       usesMinuteAccounting: Boolean(activeStudent && activeStudent.progressUnit === "minute"),
-      showDurationMinutes: key === "vocabulary_coaching"
-        || Boolean(activeStudent && activeStudent.progressUnit === "minute"),
+      showDurationMinutes,
     };
-    if (key === "vocabulary_coaching") {
+    if (!showDurationMinutes) {
+      updates["form.durationMinutes"] = "";
+    } else if (key === "vocabulary_coaching") {
       updates["form.lessonNo"] = "";
       if (this.data.form.lessonTemplateKey !== "vocabulary_coaching") {
         updates["form.durationMinutes"] = "";
@@ -487,6 +490,7 @@ Page({
     if (this.data.saving) return;
     const student = this.data.students[this.data.studentIndex];
     const form = this.data.form;
+    const durationApplies = usesLessonDurationMinutes(student, form.lessonTemplateKey);
     if (!student || !form.title || !form.lessonDate || (this.data.requiresLessonNo && !form.lessonNo)) {
       wx.showToast({
         title: "请填写课程信息",
@@ -494,7 +498,9 @@ Page({
       });
       return;
     }
-    if (this.data.showDurationMinutes && (!form.institutionCourse || form.lessonTemplateKey === "vocabulary_coaching")) {
+    const durationRequired = form.lessonTemplateKey === "vocabulary_coaching"
+      || (durationApplies && form.institutionCourse !== true);
+    if (durationApplies && (durationRequired || String(form.durationMinutes || "").trim())) {
       const durationMinutes = Number(form.durationMinutes);
       if (!Number.isInteger(durationMinutes) || durationMinutes < 5 || durationMinutes > 300 || durationMinutes % 5 !== 0) {
         wx.showToast({ title: "时长请按 5 分钟填写", icon: "none" });
@@ -516,6 +522,42 @@ Page({
     if (!this.lessonRequestId) {
       this.lessonRequestId = `lesson-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
     }
+    const lessonPayload = {
+      studentId: student._id,
+      title: form.title,
+      subject: form.subject,
+      lessonDate: form.lessonDate,
+      lessonNo: form.lessonNo,
+      institutionCourse: form.institutionCourse === true,
+      summary: form.masterySummary || form.independentOutput || form.taughtContent || form.oralTopic,
+      lessonTemplateKey: form.lessonTemplateKey,
+      reviewContent: form.reviewContent,
+      taughtContent: form.taughtContent,
+      masterySummary: form.masterySummary,
+      oralTopic: form.oralTopic,
+      targetExpression: form.targetExpression,
+      independentOutput: form.independentOutput,
+      correctionNotes: form.correctionNotes,
+      ketSkill: form.ketSkill,
+      nextReview: form.nextReview,
+      homeworkTask: form.homeworkTask,
+      recordingTaskEnabled: form.recordingTaskEnabled,
+      homeworkDueDays: form.homeworkDueDays,
+      recordingTaskType: form.recordingTaskType,
+      recordingPrompt: form.recordingPrompt,
+      recordingRepeatCount: form.recordingRepeatCount,
+      recordingPreparationSeconds: form.recordingPreparationSeconds,
+      followReadingMode: form.followReadingMode,
+      followReadingGapSeconds: form.followReadingGapSeconds,
+      followReadingResponseSeconds: form.followReadingResponseSeconds,
+      followReadingContent: form.followReadingContent,
+      ketSpeakingTaskId: form.ketSpeakingTaskId,
+      ketMockSetId: form.ketMockSetId,
+      learningObservations: [],
+      paperFileIds: [],
+      requestId: this.lessonRequestId,
+    };
+    if (durationApplies) lessonPayload.durationMinutes = form.durationMinutes;
     this.setData({ saving: true });
     wx.showLoading({ title: "保存中", mask: true });
     wx.cloud
@@ -523,42 +565,7 @@ Page({
         name: "quickstartFunctions",
         data: {
           type: "addLesson",
-          data: {
-            studentId: student._id,
-            title: form.title,
-            subject: form.subject,
-            lessonDate: form.lessonDate,
-            lessonNo: form.lessonNo,
-            durationMinutes: form.durationMinutes,
-            institutionCourse: form.institutionCourse === true,
-            summary: form.masterySummary || form.independentOutput || form.taughtContent || form.oralTopic,
-            lessonTemplateKey: form.lessonTemplateKey,
-            reviewContent: form.reviewContent,
-            taughtContent: form.taughtContent,
-            masterySummary: form.masterySummary,
-            oralTopic: form.oralTopic,
-            targetExpression: form.targetExpression,
-            independentOutput: form.independentOutput,
-            correctionNotes: form.correctionNotes,
-            ketSkill: form.ketSkill,
-            nextReview: form.nextReview,
-            homeworkTask: form.homeworkTask,
-            recordingTaskEnabled: form.recordingTaskEnabled,
-            homeworkDueDays: form.homeworkDueDays,
-            recordingTaskType: form.recordingTaskType,
-            recordingPrompt: form.recordingPrompt,
-            recordingRepeatCount: form.recordingRepeatCount,
-            recordingPreparationSeconds: form.recordingPreparationSeconds,
-            followReadingMode: form.followReadingMode,
-            followReadingGapSeconds: form.followReadingGapSeconds,
-            followReadingResponseSeconds: form.followReadingResponseSeconds,
-            followReadingContent: form.followReadingContent,
-            ketSpeakingTaskId: form.ketSpeakingTaskId,
-            ketMockSetId: form.ketMockSetId,
-            learningObservations: [],
-            paperFileIds: [],
-            requestId: this.lessonRequestId,
-          },
+          data: lessonPayload,
         },
       })
       .then((res) => {

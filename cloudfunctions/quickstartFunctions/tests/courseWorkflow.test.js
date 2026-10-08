@@ -76,6 +76,36 @@ assert.strictEqual(
 
 assert.strictEqual(courseWorkflow.getLessonAccountingMode({ name: "徐浩成" }), "minute");
 assert.strictEqual(
+  courseWorkflow.usesLessonDurationMinutes({ name: "徐浩成" }, "general"),
+  true,
+  "Xu Haocheng's ordinary lessons must keep minute accounting"
+);
+assert.strictEqual(
+  courseWorkflow.usesLessonDurationMinutes({ name: "冯嘉文" }, "vocabulary_coaching"),
+  true,
+  "vocabulary coaching must record its actual duration for every student"
+);
+assert.strictEqual(
+  courseWorkflow.usesLessonDurationMinutes({ name: "冯嘉文" }, "feng_beginner"),
+  false,
+  "Feng Jiawen's ordinary lessons must not receive the minute-only field"
+);
+assert.deepStrictEqual(
+  courseWorkflow.withApplicableLessonDuration(
+    { lessonTemplateKey: "feng_beginner", durationMinutes: 60 },
+    { name: "冯嘉文" }
+  ),
+  { lessonTemplateKey: "feng_beginner", durationMinutes: 0 },
+  "legacy stray duration values must be hidden outside their valid context"
+);
+assert.strictEqual(
+  courseWorkflow.withApplicableLessonDuration(
+    { lessonTemplateKey: "general", durationMinutes: 45 },
+    { name: "徐浩成" }
+  ).durationMinutes,
+  45
+);
+assert.strictEqual(
   courseWorkflow.getLessonAccountingMode({ name: "徐浩成", lessonAccountingMode: "lesson" }),
   "lesson",
   "an explicit accounting mode must override the compatibility name rule"
