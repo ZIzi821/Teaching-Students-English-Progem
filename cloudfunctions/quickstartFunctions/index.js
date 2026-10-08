@@ -1132,6 +1132,7 @@ const getHomeData = async (event = {}) => {
       createOneCollection("vocabularyDailyStats"),
       createOneCollection("vocabularyQuizSessions"),
       createOneCollection("studentReminders"),
+      createOneCollection("scheduleEvents"),
     ]);
   }
   const data = event.data || {};
@@ -1150,12 +1151,13 @@ const getHomeData = async (event = {}) => {
 
   const learningDay = vocabulary.getLearningDay();
   if (identity.role === "teacher") {
-    const [studentsRes, todayStats, homeworkActivityState] = await Promise.all([
+    const [studentsRes, todayStats, homeworkActivityState, scheduleEvents] = await Promise.all([
       db.collection("students").get(),
       loadAllVocabularyDocuments("vocabularyDailyStats", { learningDay }),
       getOptionalTransactionDocument(
         db.collection("systemLocks").doc(getTeacherHomeworkActivityStateId(identity.openid))
       ),
+      loadAllVocabularyDocuments("scheduleEvents", {}),
     ]);
     const visibleStudents = (studentsRes.data || []).filter((student) => !isStudentHiddenFromTeacher(student));
     const students = attachVocabularyTodayPulses(
@@ -1196,8 +1198,14 @@ const getHomeData = async (event = {}) => {
       students,
       sessions: quizSessionResults.flatMap((items) => items || []),
     }).filter((item) => Number(item.activityAtMs || 0) > activityCutoffAtMs);
+    const scheduleActivities = scheduleWorkflow.buildTeacherScheduleActivities({
+      events: scheduleEvents,
+      students,
+      viewedThroughAtMs: Number(homeworkActivityState && homeworkActivityState.viewedThroughAtMs || 0),
+    });
     const learningActivityNotices = homeworkCompletionNotices
       .concat(vocabularyAlerts)
+      .concat(scheduleActivities)
       .sort((left, right) => Number(right.activityAtMs || 0) - Number(left.activityAtMs || 0))
       .slice(0, 8);
     const progressOverview = summarizeProgress(students);
@@ -5908,6 +5916,8 @@ exports.main = async (event) => {
         return await weeklyScheduleService.updateScheduleEvent(event);
       case "cancelScheduleEvent":
         return await weeklyScheduleService.cancelScheduleEvent(event);
+      case "setScheduleDayAvailability":
+        return await weeklyScheduleService.setScheduleDayAvailability(event);
       case "markHomeworkActivitiesViewed":
       case "markLearningActivitiesViewed":
         return await markHomeworkActivitiesViewed(event);

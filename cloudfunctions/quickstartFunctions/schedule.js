@@ -1,6 +1,7 @@
 const MINUTE_STEP = 5;
 const EARLIEST_MINUTE = 6 * 60;
 const LATEST_MINUTE = 23 * 60;
+const WEEKDAY_LABELS = Object.freeze(["周一", "周二", "周三", "周四", "周五", "周六", "周日"]);
 const STUDENT_COLOR_KEYS = Object.freeze([
   "sage",
   "rose",
@@ -82,6 +83,27 @@ const parseTime = (value) => {
 const normalizeWeekday = (value) => {
   const weekday = Number(value);
   return Number.isInteger(weekday) && weekday >= 1 && weekday <= 7 ? weekday : 0;
+};
+
+const normalizeClosedWeekdays = (values = []) => Array.from(new Set(
+  (Array.isArray(values) ? values : [])
+    .map(normalizeWeekday)
+    .filter(Boolean)
+)).sort((left, right) => left - right);
+
+const isWeekdayBookingOpen = (closedWeekdays, weekday) => {
+  const safeWeekday = normalizeWeekday(weekday);
+  return Boolean(safeWeekday && !normalizeClosedWeekdays(closedWeekdays).includes(safeWeekday));
+};
+
+const buildWeekdayAvailability = (closedWeekdays = []) => {
+  const closed = new Set(normalizeClosedWeekdays(closedWeekdays));
+  return WEEKDAY_LABELS.map((label, index) => ({
+    weekday: index + 1,
+    label,
+    bookingOpen: !closed.has(index + 1),
+    statusLabel: closed.has(index + 1) ? "暂停预约" : "开放预约",
+  }));
 };
 
 const validateTimeRange = ({ weekday, startMinute, endMinute }) => {
@@ -204,20 +226,72 @@ const decorateEvent = (event = {}) => ({
   durationMinutes: Math.max(0, Number(event.endMinute) - Number(event.startMinute)),
 });
 
+const buildTeacherScheduleActivities = ({
+  events = [],
+  students = [],
+  viewedThroughAtMs = 0,
+  nowMs = Date.now(),
+} = {}) => {
+  const cutoffAtMs = Math.max(
+    Math.max(0, Number(viewedThroughAtMs) || 0),
+    Math.max(0, Number(nowMs) || Date.now()) - 30 * 24 * 60 * 60 * 1000
+  );
+  const studentById = new Map((students || []).map((student) => [String(student._id || ""), student]));
+  return (events || []).map((event) => {
+    if (!event || event.eventType !== "lesson_booking") return null;
+    const createdAtMs = Math.max(0, Number(event.createdAtMs) || 0);
+    const updatedAtMs = Math.max(0, Number(event.updatedAtMs) || 0);
+    let activityType = "";
+    let activityText = "";
+    let activityAtMs = 0;
+    if (event.status === "cancelled") {
+      if (event.cancelledByRole !== "student") return null;
+      activityType = "schedule_cancelled";
+      activityText = "取消了每周上课预约";
+      activityAtMs = Math.max(0, Number(event.cancelledAtMs) || updatedAtMs);
+    } else if (event.editedByRole === "student" && updatedAtMs > createdAtMs) {
+      activityType = "schedule_updated";
+      activityText = "修改了每周上课预约";
+      activityAtMs = updatedAtMs;
+    } else if (event.createdByRole === "student") {
+      activityType = "schedule_booking";
+      activityText = "预约了每周上课时间";
+      activityAtMs = createdAtMs;
+    }
+    if (!activityType || activityAtMs <= cutoffAtMs) return null;
+    const weekday = normalizeWeekday(event.weekday);
+    const student = studentById.get(String(event.studentId || ""));
+    return {
+      _id: `schedule:${event._id || event.clientRequestId || activityAtMs}:${activityType}:${activityAtMs}`,
+      studentId: String(event.studentId || ""),
+      studentName: String(student && (student.name || student.nickname) || event.studentNameSnapshot || "学生"),
+      activityType,
+      title: `${WEEKDAY_LABELS[weekday - 1] || "每周"} ${formatMinute(event.startMinute)}–${formatMinute(event.endMinute)}`,
+      activityText,
+      activityAtMs,
+    };
+  }).filter(Boolean).sort((left, right) => right.activityAtMs - left.activityAtMs);
+};
+
 module.exports = {
   DEFAULT_WEEKLY_EVENTS,
   EARLIEST_MINUTE,
   LATEST_MINUTE,
   MINUTE_STEP,
   STUDENT_COLOR_KEYS,
+  WEEKDAY_LABELS,
   assignStudentColorKeys,
   buildBookingRange,
+  buildTeacherScheduleActivities,
+  buildWeekdayAvailability,
   canManageScheduleEvent,
   decorateEvent,
   formatMinute,
   getDefaultBookingDurationMinutes,
   isStudentBookingEnabled,
+  isWeekdayBookingOpen,
   getStudentColorKey,
+  normalizeClosedWeekdays,
   normalizeWeekday,
   parseTime,
   rangesOverlap,

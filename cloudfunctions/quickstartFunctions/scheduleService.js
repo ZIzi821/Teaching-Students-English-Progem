@@ -4,6 +4,7 @@ const { runTransactionWithRetry } = require("./transactionRetry");
 const { withoutDocumentId } = require("./databasePayload");
 
 const SCHEDULE_LOCK_ID = "weekly_schedule_state_v1";
+const SCHEDULE_AVAILABILITY_ID = "weekly_schedule_availability_v1";
 const SCHEDULE_SEED_REVISION = 1;
 
 const createWeeklyScheduleService = ({
@@ -109,6 +110,10 @@ const createWeeklyScheduleService = ({
     return result.data || null;
   };
 
+  const loadAvailabilityState = async () => (
+    getOptionalTransactionDocument(db.collection("systemLocks").doc(SCHEDULE_AVAILABILITY_ID))
+  );
+
   const sanitizeStudent = (student) => ({
     _id: student._id,
     name: student.name || student.nickname || "学生",
@@ -156,7 +161,7 @@ const createWeeklyScheduleService = ({
         endTime: decorated.endTime,
         timeLabel: decorated.timeLabel,
         durationMinutes: decorated.durationMinutes,
-        title: "已有课程",
+        title: "其他学生已预约",
         note: "",
         colorKey: decorated.colorKey || "occupied",
         version: Number(decorated.version) || 1,
@@ -209,7 +214,12 @@ const createWeeklyScheduleService = ({
       if (!student) throw createError("INVALID_STUDENT", "学生不存在或已删除");
     }
     await ensureDefaults();
-    const events = schedule.sortEvents(await loadAllEvents({ status: "active" }));
+    const [activeEvents, availabilityState] = await Promise.all([
+      loadAllEvents({ status: "active" }),
+      loadAvailabilityState(),
+    ]);
+    const events = schedule.sortEvents(activeEvents);
+    const closedWeekdays = schedule.normalizeClosedWeekdays(availabilityState && availabilityState.closedWeekdays);
     const studentColorKeys = schedule.assignStudentColorKeys(events);
     const displayEvents = events.map((item) => (
       item.eventType === "lesson_booking" && studentColorKeys.has(String(item.studentId || ""))
@@ -232,6 +242,8 @@ const createWeeklyScheduleService = ({
       actorRole: identity.role,
       isTeacherPreview,
       canWrite,
+      availabilityVersion: Math.max(0, Number(availabilityState && availabilityState.version) || 0),
+      dayAvailability: schedule.buildWeekdayAvailability(closedWeekdays),
       student: student ? sanitizeStudent(student) : null,
       students,
       events: identity.role === "teacher" && !isTeacherPreview
@@ -240,22 +252,31 @@ const createWeeklyScheduleService = ({
     };
   };
 
-  const saveScheduleEvent = async ({ eventId, fingerprint, eventData }) => {
+  const saveScheduleEvent = async ({ eventId, fingerprint, eventData, enforceBookingOpen = false }) => {
     return withScheduleTransaction(async (transaction) => {
       const lockRef = transaction.collection("systemLocks").doc(SCHEDULE_LOCK_ID);
       const eventRef = transaction.collection("scheduleEvents").doc(eventId);
-      const [state, existing, activeResult] = await Promise.all([
+      const [state, existing, activeResult, availabilityState] = await Promise.all([
         getOptionalTransactionDocument(lockRef),
         getOptionalTransactionDocument(eventRef),
         transaction.collection("scheduleEvents")
           .where({ status: "active", weekday: eventData.weekday })
           .get(),
+        enforceBookingOpen
+          ? getOptionalTransactionDocument(transaction.collection("systemLocks").doc(SCHEDULE_AVAILABILITY_ID))
+          : Promise.resolve(null),
       ]);
       if (existing) {
         if (existing.requestFingerprint !== fingerprint) {
           throw createError("SCHEDULE_REQUEST_CONFLICT", "这次提交的内容已经变化，请重新确认");
         }
         if (existing.status === "active") return { created: false, event: existing };
+      }
+      if (enforceBookingOpen && !schedule.isWeekdayBookingOpen(
+        availabilityState && availabilityState.closedWeekdays,
+        eventData.weekday
+      )) {
+        throw createError("DAY_BOOKING_CLOSED", `${schedule.WEEKDAY_LABELS[eventData.weekday - 1]}当前暂停预约，请选择其他时间`);
       }
       const conflict = (activeResult.data || []).find((item) => (
         item._id !== eventId && schedule.rangesOverlap(item, eventData)
@@ -334,7 +355,7 @@ const createWeeklyScheduleService = ({
         endMinute: range.endMinute,
         durationMinutes: range.durationMinutes,
         title: `${student.name || "学生"}课程`,
-        publicTitle: "已有课程",
+        publicTitle: "其他学生已预约",
         note,
         studentId: student._id,
         studentNameSnapshot: student.name || "",
@@ -344,6 +365,7 @@ const createWeeklyScheduleService = ({
         createdByRole: identity.role,
         createdByOpenId: identity.openid || "",
       },
+      enforceBookingOpen: identity.role !== "teacher",
     });
     return {
       success: true,
@@ -438,7 +460,7 @@ const createWeeklyScheduleService = ({
         endMinute: range.endMinute,
         durationMinutes: range.durationMinutes,
         title: `${student.name || "学生"}课程`,
-        publicTitle: "已有课程",
+        publicTitle: "其他学生已预约",
         note,
         studentNameSnapshot: student.name || "",
         colorKey: schedule.getStudentColorKey(student),
@@ -471,18 +493,27 @@ const createWeeklyScheduleService = ({
     const updated = await withScheduleTransaction(async (transaction) => {
       const lockRef = transaction.collection("systemLocks").doc(SCHEDULE_LOCK_ID);
       const eventRef = transaction.collection("scheduleEvents").doc(eventId);
-      const [state, current, activeResult] = await Promise.all([
+      const [state, current, activeResult, availabilityState] = await Promise.all([
         getOptionalTransactionDocument(lockRef),
         getOptionalTransactionDocument(eventRef),
         transaction.collection("scheduleEvents")
           .where({ status: "active", weekday: eventData.weekday })
           .get(),
+        initial.eventType === "lesson_booking"
+          ? getOptionalTransactionDocument(transaction.collection("systemLocks").doc(SCHEDULE_AVAILABILITY_ID))
+          : Promise.resolve(null),
       ]);
       if (!current || current.status !== "active") throw createError("INVALID_SCHEDULE_EVENT", "这段日程已不存在，请刷新后重试");
       if (!canManageEvent({ identity, data, current })) throw createError("PERMISSION_DENIED", "你没有权限编辑这段日程");
       if (Number(current.version) !== expectedVersion) throw createError("SCHEDULE_VERSION_CONFLICT", "这段日程刚被修改过，请刷新后再编辑");
       if (current.eventType !== initial.eventType || String(current.studentId || "") !== String(initial.studentId || "")) {
         throw createError("SCHEDULE_VERSION_CONFLICT", "这段日程内容已变化，请刷新后再编辑");
+      }
+      if (initial.eventType === "lesson_booking" && identity.role !== "teacher" && !schedule.isWeekdayBookingOpen(
+        availabilityState && availabilityState.closedWeekdays,
+        eventData.weekday
+      )) {
+        throw createError("DAY_BOOKING_CLOSED", `${schedule.WEEKDAY_LABELS[eventData.weekday - 1]}当前暂停预约，请选择其他时间`);
       }
       const conflict = (activeResult.data || []).find((item) => (
         item._id !== eventId && schedule.rangesOverlap(item, eventData)
@@ -571,17 +602,59 @@ const createWeeklyScheduleService = ({
     return { success: true, cancelled, eventId };
   };
 
+  const setScheduleDayAvailability = async (event) => {
+    const identity = await getIdentity();
+    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "仅教师端可调整预约开放状态");
+    const data = event.data || {};
+    if (data.mode === "teacherPreview") throw createError("PERMISSION_DENIED", "请返回教师日程调整预约开放状态");
+    const weekday = schedule.normalizeWeekday(data.weekday);
+    if (!weekday || typeof data.bookingOpen !== "boolean") {
+      throw createError("INVALID_AVAILABILITY", "请选择需要调整的星期");
+    }
+    await ensureDefaults();
+    const expectedVersion = Math.max(0, Number(data.expectedVersion) || 0);
+    const saved = await withScheduleTransaction(async (transaction) => {
+      const ref = transaction.collection("systemLocks").doc(SCHEDULE_AVAILABILITY_ID);
+      const current = await getOptionalTransactionDocument(ref);
+      const currentVersion = Math.max(0, Number(current && current.version) || 0);
+      if (currentVersion !== expectedVersion) {
+        throw createError("SCHEDULE_VERSION_CONFLICT", "预约开放状态刚被修改，请刷新后再操作");
+      }
+      const closedWeekdays = new Set(schedule.normalizeClosedWeekdays(current && current.closedWeekdays));
+      if (data.bookingOpen) closedWeekdays.delete(weekday);
+      else closedWeekdays.add(weekday);
+      const nowMs = Date.now();
+      const next = {
+        recordType: "weeklyScheduleAvailability",
+        closedWeekdays: Array.from(closedWeekdays).sort((left, right) => left - right),
+        version: currentVersion + 1,
+        updatedByOpenId: identity.openid || "",
+        updatedAt: db.serverDate(),
+        updatedAtMs: nowMs,
+      };
+      await ref.set({ data: next });
+      return next;
+    });
+    return {
+      success: true,
+      availabilityVersion: saved.version,
+      dayAvailability: schedule.buildWeekdayAvailability(saved.closedWeekdays),
+    };
+  };
+
   return {
     getWeeklySchedule,
     createScheduleBooking,
     saveTeacherScheduleBlock,
     updateScheduleEvent,
     cancelScheduleEvent,
+    setScheduleDayAvailability,
   };
 };
 
 module.exports = {
   SCHEDULE_LOCK_ID,
+  SCHEDULE_AVAILABILITY_ID,
   SCHEDULE_SEED_REVISION,
   createWeeklyScheduleService,
 };

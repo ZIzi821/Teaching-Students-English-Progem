@@ -126,7 +126,7 @@
   <view class="card teacher-homework-notice-card" wx:if="{{isTeacher && learningActivityNotices.length}}">
     <view class="teacher-homework-notice-head">
       <view>
-        <view class="teacher-homework-notice-kicker">英语学习动态</view>
+        <view class="teacher-homework-notice-kicker">学生最新动态</view>
         <view class="teacher-homework-notice-title">待查看的新动态</view>
       </view>
       <view class="teacher-homework-notice-actions">
@@ -150,7 +150,7 @@
           {{item.activityText}}<text wx:if="{{item.activityType === 'recording' && item.recordingCount > 1}}">（{{item.recordingCount}}份）</text> · {{item.activityLabel}}
         </view>
       </view>
-      <view class="teacher-homework-link">查看 →</view>
+      <view class="teacher-homework-link">{{item.actionLabel || '查看 →'}}</view>
     </view>
   </view>
 

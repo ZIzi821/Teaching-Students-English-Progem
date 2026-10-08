@@ -9,6 +9,13 @@ assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "新学生"
 assert.strictEqual(schedule.getDefaultBookingDurationMinutes({ name: "徐浩成", bookingDurationMinutes: 55 }), 55);
 assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "xu", name: "徐浩成" }), true);
 assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "ren", name: "任轩楠", teacherHidden: true }), false);
+assert.deepStrictEqual(schedule.normalizeClosedWeekdays([5, "2", 5, 0, 8]), [2, 5]);
+assert.strictEqual(schedule.isWeekdayBookingOpen([2, 5], 2), false);
+assert.strictEqual(schedule.isWeekdayBookingOpen([2, 5], 3), true);
+assert.deepStrictEqual(
+  schedule.buildWeekdayAvailability([5]).map((item) => item.bookingOpen),
+  [true, true, true, true, false, true, true]
+);
 assert.strictEqual(schedule.canManageScheduleEvent({ actorRole: "teacher", event: { eventType: "teacher_busy" } }), true);
 assert.strictEqual(schedule.canManageScheduleEvent({
   actorRole: "teacher",
@@ -71,6 +78,92 @@ const assignedColors = schedule.assignStudentColorKeys([
 ]);
 assert.strictEqual(assignedColors.size, 2);
 assert.notStrictEqual(assignedColors.get("student-a"), assignedColors.get("student-b"));
+
+const activityNow = new Date(2026, 9, 8, 12, 0, 0).getTime();
+const scheduleActivities = schedule.buildTeacherScheduleActivities({
+  nowMs: activityNow,
+  students: [{ _id: "molly", name: "Molly" }],
+  events: [
+    {
+      _id: "booking-created",
+      eventType: "lesson_booking",
+      status: "active",
+      studentId: "molly",
+      studentNameSnapshot: "Molly",
+      weekday: 5,
+      startMinute: 16 * 60,
+      endMinute: 16 * 60 + 45,
+      createdByRole: "student",
+      createdAtMs: activityNow - 1000,
+      updatedAtMs: activityNow - 1000,
+    },
+    {
+      _id: "booking-teacher",
+      eventType: "lesson_booking",
+      status: "active",
+      studentId: "molly",
+      weekday: 6,
+      startMinute: 16 * 60,
+      endMinute: 16 * 60 + 45,
+      createdByRole: "teacher",
+      createdAtMs: activityNow - 900,
+    },
+    {
+      _id: "booking-updated",
+      eventType: "lesson_booking",
+      status: "active",
+      studentId: "molly",
+      weekday: 6,
+      startMinute: 18 * 60,
+      endMinute: 18 * 60 + 45,
+      createdByRole: "student",
+      createdAtMs: activityNow - 6000,
+      editedByRole: "student",
+      updatedAtMs: activityNow - 750,
+    },
+    {
+      _id: "booking-cancelled",
+      eventType: "lesson_booking",
+      status: "cancelled",
+      studentId: "molly",
+      weekday: 7,
+      startMinute: 10 * 60,
+      endMinute: 10 * 60 + 45,
+      createdByRole: "student",
+      createdAtMs: activityNow - 5000,
+      cancelledByRole: "student",
+      cancelledAtMs: activityNow - 500,
+      updatedAtMs: activityNow - 500,
+    },
+  ],
+});
+assert.deepStrictEqual(
+  scheduleActivities.map((item) => item.activityType),
+  ["schedule_cancelled", "schedule_updated", "schedule_booking"]
+);
+assert.strictEqual(scheduleActivities[2].studentName, "Molly");
+assert.strictEqual(scheduleActivities[2].title, "周五 16:00–16:45");
+assert.deepStrictEqual(
+  schedule.buildTeacherScheduleActivities({
+    nowMs: activityNow,
+    viewedThroughAtMs: activityNow - 600,
+    students: [{ _id: "molly", name: "Molly" }],
+    events: [
+      {
+        _id: "already-viewed",
+        eventType: "lesson_booking",
+        status: "active",
+        studentId: "molly",
+        weekday: 5,
+        startMinute: 960,
+        endMinute: 1005,
+        createdByRole: "student",
+        createdAtMs: activityNow - 1000,
+      },
+    ],
+  }),
+  []
+);
 
 const thursdayWeek = scheduleCalendar.buildWeekDays(new Date(2026, 9, 8, 12, 0, 0));
 assert.deepStrictEqual(

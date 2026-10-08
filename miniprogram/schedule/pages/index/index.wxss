@@ -92,6 +92,8 @@
 .day-count { margin-top: 4rpx; color: #887d70; font-size: 20rpx; }
 .day-pill-active .day-count { color: #39765d; }
 .day-pill-active .day-date { color: #39765d; }
+.day-count-closed,
+.day-pill-active .day-count-closed { color: #a4574e; font-weight: 800; }
 
 .schedule-summary {
   display: flex;
@@ -102,6 +104,32 @@
 
 .summary-title { color: #203d32; font-size: 32rpx; font-weight: 800; }
 .summary-hint { max-width: 440rpx; margin-top: 4rpx; color: #8a8076; font-size: 20rpx; line-height: 1.45; }
+.summary-hint-closed { color: #a4574e; }
+
+.summary-actions {
+  display: flex;
+  margin-left: 16rpx;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10rpx;
+}
+
+.availability-toggle {
+  padding: 11rpx 16rpx;
+  border: 1rpx solid #82aa97;
+  border-radius: 999rpx;
+  background: #edf6f1;
+  color: #39765d;
+  font-size: 19rpx;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.availability-toggle-closed {
+  border-color: #d4a49d;
+  background: #fff0ed;
+  color: #a4574e;
+}
 
 .schedule-add {
   padding: 15rpx 20rpx;
@@ -109,6 +137,16 @@
   background: #4f8f73;
   color: #fff;
   font-size: 22rpx;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.schedule-closed {
+  padding: 14rpx 18rpx;
+  border-radius: 999rpx;
+  background: #eee8e2;
+  color: #9b5d55;
+  font-size: 21rpx;
   font-weight: 800;
   white-space: nowrap;
 }
@@ -141,6 +179,7 @@
   color: #8d8276;
   font-size: 22rpx;
 }
+.timeline-empty-closed { background: #fff0ed; color: #9b5d55; }
 
 .timeline { position: relative; }
 
@@ -220,6 +259,7 @@
 
 .modal-title { color: #203d32; font-size: 34rpx; font-weight: 800; }
 .modal-hint { margin: 8rpx 0 24rpx; color: #7e746a; font-size: 22rpx; line-height: 1.5; }
+.booking-closed-note { margin: -8rpx 0 20rpx; padding: 15rpx 18rpx; border-radius: 12rpx; background: #fff0ed; color: #9b5149; font-size: 21rpx; line-height: 1.55; }
 .field { margin-top: 20rpx; }
 .field-label { margin-bottom: 9rpx; color: #4d5d55; font-size: 22rpx; font-weight: 700; }
 .picker-value,

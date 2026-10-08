@@ -30,6 +30,11 @@ Page({
     isStudent: false,
     isTeacherPreview: false,
     canWrite: false,
+    availabilityVersion: 0,
+    selectedDayBookingOpen: true,
+    selectedDayAvailabilityLabel: "开放预约",
+    formDayBookingOpen: true,
+    availabilitySaving: false,
     student: null,
     students: [],
     days: buildWeekDays(),
@@ -100,10 +105,16 @@ Page({
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "日程暂时无法加载");
       this.events = result.events || [];
-      const days = buildWeekDays(new Date()).map((day) => ({
-        ...day,
-        eventCount: this.events.filter((item) => Number(item.weekday) === day.weekday).length,
-      }));
+      const availabilityByWeekday = new Map((result.dayAvailability || []).map((item) => [Number(item.weekday), item]));
+      const days = buildWeekDays(new Date()).map((day) => {
+        const availability = availabilityByWeekday.get(day.weekday) || { bookingOpen: true, statusLabel: "开放预约" };
+        return {
+          ...day,
+          bookingOpen: availability.bookingOpen !== false,
+          availabilityLabel: availability.statusLabel || (availability.bookingOpen === false ? "暂停预约" : "开放预约"),
+          eventCount: this.events.filter((item) => Number(item.weekday) === day.weekday).length,
+        };
+      });
       const students = result.students || [];
       const previousStudentId = this.data.bookingStudent && this.data.bookingStudent._id;
       const bookingStudent = result.student
@@ -119,6 +130,7 @@ Page({
         isStudent: result.role === "student",
         isTeacherPreview: result.isTeacherPreview === true,
         canWrite: result.canWrite === true,
+        availabilityVersion: Math.max(0, Number(result.availabilityVersion) || 0),
         student: result.student || null,
         students,
         days,
@@ -153,6 +165,8 @@ Page({
     this.setData({
       selectedDayLabel: day.fullLabel || day.label || "",
       selectedDayEvents,
+      selectedDayBookingOpen: day.bookingOpen !== false,
+      selectedDayAvailabilityLabel: day.availabilityLabel || "开放预约",
     });
   },
 
@@ -167,6 +181,10 @@ Page({
   openForm() {
     if (!this.data.canWrite) {
       wx.showToast({ title: "当前学生暂未开放预约", icon: "none" });
+      return;
+    }
+    if (this.data.actorRole !== "teacher" && !this.data.selectedDayBookingOpen) {
+      wx.showToast({ title: "朱老师已暂停这一天的预约", icon: "none" });
       return;
     }
     const formMode = this.data.isTeacher ? "teacher" : "booking";
@@ -274,13 +292,15 @@ Page({
 
   refreshBookingEndTime() {
     const student = this.data.bookingStudent;
+    const formDay = (this.data.days || [])[Number(this.data.form.weekdayIndex) || 0] || {};
+    const formDayBookingOpen = formDay.bookingOpen !== false;
     if (!student || this.data.formMode !== "booking") {
-      this.setData({ bookingEndTime: "" });
+      this.setData({ bookingEndTime: "", formDayBookingOpen });
       return;
     }
     const startMinute = parseTime(this.data.form.startTime);
     const duration = Number(student.bookingDurationMinutes) || 60;
-    this.setData({ bookingEndTime: formatMinute(startMinute + duration) });
+    this.setData({ bookingEndTime: formatMinute(startMinute + duration), formDayBookingOpen });
   },
 
   submitForm() {
@@ -298,6 +318,11 @@ Page({
     }
     if (!isTeacherBlock && !this.data.bookingStudent) {
       wx.showToast({ title: "请选择需要预约的学生", icon: "none" });
+      return;
+    }
+    if (!isTeacherBlock && this.data.actorRole !== "teacher" && !this.data.formDayBookingOpen) {
+      const day = this.data.days[Number(form.weekdayIndex) || 0] || {};
+      wx.showToast({ title: `${day.label || "这一天"}已暂停预约`, icon: "none" });
       return;
     }
     if (!isEditing && !this.scheduleRequestId) {
@@ -394,6 +419,44 @@ Page({
       console.error(err);
       wx.showToast({ title: err.message || "取消失败", icon: "none" });
     }).finally(() => this.setData({ cancellingId: "" }));
+  },
+
+  toggleSelectedDayAvailability() {
+    if (!this.data.isTeacher || this.data.availabilitySaving) return;
+    const weekday = Number(this.data.selectedWeekday) || 1;
+    const day = this.data.days[weekday - 1] || {};
+    const nextBookingOpen = day.bookingOpen === false;
+    wx.showModal({
+      title: nextBookingOpen ? `重新开放每${day.label || "周"}预约？` : `暂停每${day.label || "周"}预约？`,
+      content: nextBookingOpen
+        ? "开放后，学生可以在这一天的空白时段预约。"
+        : "暂停后学生不能新增或改到这一天；已经存在的课程不会被删除。这个设置会按星期持续生效。",
+      confirmText: nextBookingOpen ? "重新开放" : "暂停预约",
+      confirmColor: nextBookingOpen ? "#4f8f73" : "#b4544d",
+      success: (modal) => {
+        if (!modal.confirm) return;
+        this.setData({ availabilitySaving: true });
+        wx.cloud.callFunction({
+          name: "quickstartFunctions",
+          data: {
+            type: "setScheduleDayAvailability",
+            data: {
+              weekday,
+              bookingOpen: nextBookingOpen,
+              expectedVersion: this.data.availabilityVersion,
+            },
+          },
+        }).then((res) => {
+          const result = res.result || {};
+          if (!result.success) throw new Error(result.message || "预约状态保存失败");
+          wx.showToast({ title: nextBookingOpen ? "已开放预约" : "已暂停预约", icon: "success" });
+          this.loadSchedule();
+        }).catch((err) => {
+          console.error(err);
+          wx.showToast({ title: err.message || "预约状态保存失败", icon: "none" });
+        }).finally(() => this.setData({ availabilitySaving: false }));
+      },
+    });
   },
 
   goBackToTeacher() {

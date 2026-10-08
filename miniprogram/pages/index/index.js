@@ -146,6 +146,7 @@ Page({
           })),
           learningActivityNotices: (result.learningActivityNotices || []).map((item) => Object.assign({}, item, {
             activityLabel: formatHomeworkActivityTime(item.activityAtMs),
+            actionLabel: String(item.activityType || "").indexOf("schedule_") === 0 ? "查看日程 →" : "查看 →",
           })),
           studentLearningActivities: (result.studentLearningActivities || []).map((item) => Object.assign({}, item, {
             activityLabel: formatHomeworkActivityTime(item.activityAtMs),
@@ -429,6 +430,8 @@ Page({
       wx.navigateTo({ url: "/pages/lesson-detail/index?id=" + lessonId });
     } else if (studentId && activityType.indexOf("quiz_") === 0) {
       wx.navigateTo({ url: "/pages/teacher-vocabulary-detail/index?studentId=" + encodeURIComponent(studentId) });
+    } else if (activityType.indexOf("schedule_") === 0) {
+      wx.reLaunch({ url: "/schedule/pages/index/index" });
     }
   },
 
