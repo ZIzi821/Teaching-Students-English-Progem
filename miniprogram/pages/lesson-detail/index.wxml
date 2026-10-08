@@ -53,9 +53,9 @@
             <view class="record-label">今日新内容</view>
             <view class="record-value">{{lesson.taughtContent}}</view>
           </view>
-          <view class="record-item" wx:if="{{lesson.masterySummary || lesson.summary}}">
+          <view class="record-item" wx:if="{{lesson.masterySummary}}">
             <view class="record-label">掌握情况</view>
-            <view class="record-value">{{lesson.masterySummary || lesson.summary}}</view>
+            <view class="record-value">{{lesson.masterySummary}}</view>
           </view>
         </block>
         <block wx:elif="{{lesson.lessonTemplateKey === 'molly_oral_ket'}}">
@@ -85,9 +85,9 @@
           <view class="record-label">今天学了什么</view>
           <view class="record-value">{{lesson.taughtContent}}</view>
         </view>
-        <view class="record-item" wx:if="{{lesson.masterySummary || lesson.summary}}">
+        <view class="record-item" wx:if="{{lesson.masterySummary}}">
           <view class="record-label">掌握情况</view>
-          <view class="record-value">{{lesson.masterySummary || lesson.summary}}</view>
+          <view class="record-value">{{lesson.masterySummary}}</view>
         </view>
         <view class="record-item" wx:if="{{lesson.nextReview}}">
           <view class="record-label">下节需要复习</view>

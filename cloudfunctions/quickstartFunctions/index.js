@@ -3741,7 +3741,7 @@ const buildPreviousLessonReference = (lesson, student = {}) => {
       : 0,
     reviewContent: String(lesson.reviewContent || "").trim(),
     taughtContent: String(lesson.taughtContent || "").trim(),
-    masterySummary: String(lesson.masterySummary || lesson.summary || "").trim(),
+    masterySummary: courseWorkflow.getLessonMasterySummary(lesson),
     oralTopic: String(lesson.oralTopic || "").trim(),
     targetExpression: String(lesson.targetExpression || "").trim(),
     independentOutput: String(lesson.independentOutput || "").trim(),

@@ -137,6 +137,8 @@ assert(homeJs.includes("prefetchVocabularyAudio(todayWords"), "Student home does
 assert(homeWxml.includes("真实学生首页"), "Teacher preview does not identify the shared student home");
 assert(lessonWxml.includes("学习观察"), "Learning observation UI is missing");
 assert(lessonWxml.includes("课件与资料"), "Collapsed material area is missing");
+assert(!lessonWxml.includes("lesson.masterySummary || lesson.summary"), "Generic lesson summary is still mislabeled as mastery");
+assert(backend.includes("courseWorkflow.getLessonMasterySummary(lesson)"), "Previous-lesson reference still duplicates the generic summary as mastery");
 assert(studentJs.includes("onCourseLearningChange"), "Course feature switch handler is missing");
 assert(studentJs.includes("onStudentLessonTemplateChange"), "Student lesson template handler is missing");
 assert(studentWxml.includes("英语课程与作业功能"), "Course feature switch UI is missing");

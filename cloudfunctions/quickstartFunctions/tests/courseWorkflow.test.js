@@ -175,6 +175,29 @@ assert.strictEqual(courseWorkflow.normalizeLessonDurationMinutes(35), 35);
 assert.strictEqual(courseWorkflow.normalizeLessonDurationMinutes(7), 0);
 assert.strictEqual(courseWorkflow.normalizeLessonDurationMinutes(0), 0);
 
+assert.strictEqual(
+  courseWorkflow.getLessonMasterySummary({
+    taughtContent: "今天简单认识了英文中的 Be 动词",
+    summary: "今天简单认识了英文中的 Be 动词",
+  }),
+  "",
+  "structured taught content must not be repeated as mastery"
+);
+assert.strictEqual(
+  courseWorkflow.getLessonMasterySummary({
+    taughtContent: "今天学习了新内容",
+    masterySummary: "能够独立完成",
+    summary: "能够独立完成",
+  }),
+  "能够独立完成",
+  "explicit mastery must remain visible"
+);
+assert.strictEqual(
+  courseWorkflow.getLessonMasterySummary({ summary: "旧版课程摘要" }),
+  "旧版课程摘要",
+  "legacy summary-only lessons must remain readable"
+);
+
 const lesson = {
   lessonDate: "2026-10-03",
   recordingTaskEnabled: true,

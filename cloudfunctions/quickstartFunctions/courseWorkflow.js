@@ -50,6 +50,24 @@ const withApplicableLessonDuration = (lesson = {}, student = {}) => (
     : Object.assign({}, lesson, { durationMinutes: 0 })
 );
 
+const getLessonMasterySummary = (lesson = {}) => {
+  const explicitMastery = String(lesson.masterySummary || "").trim();
+  if (explicitMastery) return explicitMastery;
+  const hasStructuredRecord = Boolean(
+    String(lesson.reviewContent || "").trim()
+    || String(lesson.taughtContent || "").trim()
+    || String(lesson.oralTopic || "").trim()
+    || String(lesson.targetExpression || "").trim()
+    || String(lesson.independentOutput || "").trim()
+    || String(lesson.correctionNotes || "").trim()
+    || String(lesson.ketSkill || "").trim()
+    || String(lesson.nextReview || "").trim()
+    || String(lesson.homeworkTask || "").trim()
+    || (Array.isArray(lesson.learningObservations) && lesson.learningObservations.length)
+  );
+  return hasStructuredRecord ? "" : String(lesson.summary || "").trim();
+};
+
 const countLessonProgressMinutes = (lessons = [], legacyLessonMinutes = 0) => (
   (Array.isArray(lessons) ? lessons : []).reduce((total, lesson) => {
     if (!countsTowardLessonProgress(lesson)) return total;
@@ -397,6 +415,7 @@ module.exports = {
   getHomeworkListGroup,
   getLessonPackageSize,
   getLessonAccountingMode,
+  getLessonMasterySummary,
   getPlannedLessonMinutes,
   isLateHomeworkSubmission,
   normalizeLessonDurationMinutes,
