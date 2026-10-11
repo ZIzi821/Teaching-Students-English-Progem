@@ -42,11 +42,33 @@ const downloadVocabularyAudioFile = (fileId) => {
 const prefetchVocabularyAudio = (sources, options) => {
   const settings = options || {};
   const concurrency = Math.max(1, Math.min(4, Math.trunc(Number(settings.concurrency) || 3)));
-  const fileIds = Array.from(new Set((Array.isArray(sources) ? sources : [])
-    .map((source) => asText(source && (
+  const includeFallback = settings.includeFallback === true;
+  const configuredFallbackLimit = Number(settings.maxFallbackFiles);
+  const maxFallbackFiles = includeFallback
+    ? Math.max(0, Math.min(4, Number.isFinite(configuredFallbackLimit)
+      ? Math.trunc(configuredFallbackLimit)
+      : 1))
+    : 0;
+  const fileIds = [];
+  const selectedFileIds = new Set();
+  const selectedFallbackIds = new Set();
+  (Array.isArray(sources) ? sources : []).forEach((source) => {
+    const directFileId = asText(source && (
       source.pronunciationDirectFileId || source.directFileId
-    )))
-    .filter(Boolean)));
+    ));
+    const fallbackFileId = asText(source && (
+      source.pronunciationFileId || source.fallbackFileId
+    ));
+    let fileId = directFileId;
+    if (!fileId && includeFallback && fallbackFileId) {
+      if (!selectedFallbackIds.has(fallbackFileId) && selectedFallbackIds.size >= maxFallbackFiles) return;
+      selectedFallbackIds.add(fallbackFileId);
+      fileId = fallbackFileId;
+    }
+    if (!fileId || selectedFileIds.has(fileId)) return;
+    selectedFileIds.add(fileId);
+    fileIds.push(fileId);
+  });
   const summary = {
     requested: fileIds.length,
     cached: fileIds.filter((fileId) => downloadedFileCache.has(fileId)).length,
@@ -135,11 +157,16 @@ const createVocabularyAudioPlayer = (options) => {
       };
       // iOS 微信对短 WAV 的远程流式播放偶尔只触发 onPlay 却没有声音。
       // 短音频优先下载到本机再播放；长合辑仍先走临时 URL，避免每次下载大文件。
-      if (kind === "direct" && normalizedFileId && canDownload) {
+      const localSourceReady = normalizedFileId
+        && (downloadedFileCache.has(normalizedFileId) || downloadInFlight.has(normalizedFileId));
+      const shouldTryLocalFirst = normalizedFileId
+        && canDownload
+        && (kind === "direct" || localSourceReady);
+      if (shouldTryLocalFirst) {
         result.push(Object.assign({}, base, { src: normalizedFileId, download: true }));
       }
       if (normalizedUrl) result.push(Object.assign({}, base, { src: normalizedUrl, download: false }));
-      if (kind !== "direct" && normalizedFileId && canDownload) {
+      if (kind !== "direct" && normalizedFileId && canDownload && !shouldTryLocalFirst) {
         result.push(Object.assign({}, base, { src: normalizedFileId, download: true }));
       } else if (!normalizedUrl && normalizedFileId && !canDownload) {
         result.push(Object.assign({}, base, { src: normalizedFileId, download: false }));

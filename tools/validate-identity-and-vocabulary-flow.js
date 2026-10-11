@@ -33,6 +33,8 @@ assert(studyWxml.includes("想好了，查看答案"), "study page is missing ac
 });
 assert(studyJs.includes("words.push(Object.assign({}, word, { isRetry: true }))"), "weak words are not requeued in the same session");
 assert(studyJs.includes("if (this.data.readOnly)"), "teacher preview does not have a read-only branch");
+assert(studyJs.includes("prefetchAudioAhead") && studyJs.includes("includeFallback: true"), "focused study does not preload audio for both direct clips and sprite-only words");
+assert(studyWxml.includes("audioPreloadLabel"), "focused study does not show whether pronunciation audio is being prepared");
 
 let studyPage = null;
 vm.runInNewContext(studyJs, {

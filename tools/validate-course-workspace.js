@@ -134,6 +134,7 @@ assert(studentJs.includes('result.role === "student" || isTeacherPreview'), "Leg
 assert(homeJs.includes('title: "查看课后任务"'), "Student home does not include homework as a learning step");
 assert(homeJs.includes("prefetchTodayVocabularyAudio"), "Student home does not start today's audio prefetch");
 assert(homeJs.includes("prefetchVocabularyAudio(todayWords"), "Student home does not cache today's direct word audio");
+assert(read("miniprogram/pages/vocabulary-study/index.js").includes("includeFallback: true"), "Focused vocabulary study does not preload sprite-only pronunciation audio");
 assert(homeWxml.includes("真实学生首页"), "Teacher preview does not identify the shared student home");
 assert(lessonWxml.includes("学习观察"), "Learning observation UI is missing");
 assert(lessonWxml.includes("课件与资料"), "Collapsed material area is missing");

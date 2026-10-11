@@ -159,7 +159,38 @@ await new Promise((resolve) => setImmediate(resolve));
 assert.strictEqual(downloads.length, downloadsBeforePrefetch + 2, "Playback should reuse the prefetched temporary file");
 assert(/^temp:\/\//.test(contexts[contextsBeforeCachedPlay].src), "Prefetched playback should use a local temporary path");
 cachedPlayer.destroy();
-console.log("Vocabulary audio player valid: direct playback, download retry, background prefetch cache, sprite seek fallback, and single final error.");
+
+const downloadsBeforeFallbackPrefetch = downloads.length;
+const fallbackSummary = await prefetchVocabularyAudio([
+  { pronunciationFileId: "cloud://env/sprite-current.wav" },
+  { pronunciationFileId: "cloud://env/sprite-next.wav" },
+], {
+  concurrency: 1,
+  includeFallback: true,
+  maxFallbackFiles: 1,
+});
+assert.deepStrictEqual(fallbackSummary, {
+  requested: 1,
+  cached: 0,
+  downloaded: 1,
+  failed: 0,
+});
+assert.strictEqual(downloads.length, downloadsBeforeFallbackPrefetch + 1, "Fallback prefetch must stay within its large-file limit");
+assert.strictEqual(downloads[downloads.length - 1], "cloud://env/sprite-current.wav", "Current word fallback audio must be prefetched first");
+
+const fallbackCachedPlayer = createVocabularyAudioPlayer();
+const contextsBeforeFallbackCachedPlay = contexts.length;
+fallbackCachedPlayer.play({
+  wordKey: "sprite-current-word",
+  fallbackUrl: "https://example.test/sprite-current.wav",
+  fallbackFileId: "cloud://env/sprite-current.wav",
+  startMs: 4200,
+  durationMs: 800,
+});
+await new Promise((resolve) => setImmediate(resolve));
+assert(/^temp:\/\//.test(contexts[contextsBeforeFallbackCachedPlay].src), "A prefetched sprite must play from the local cache before its remote URL");
+fallbackCachedPlayer.destroy();
+console.log("Vocabulary audio player valid: direct and bounded fallback prefetch, local cache priority, download retry, sprite seek fallback, and single final error.");
 })().catch((error) => {
   console.error(error);
   process.exitCode = 1;

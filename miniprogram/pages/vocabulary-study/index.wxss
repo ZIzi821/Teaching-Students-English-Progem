@@ -148,6 +148,20 @@
   background: #4f8f73;
 }
 
+.audio-preload-note {
+  margin-top: 13rpx;
+  color: #8a7e70;
+  font-size: 20rpx;
+}
+
+.audio-preload-ready {
+  color: #3f7a61;
+}
+
+.audio-preload-partial {
+  color: #966f35;
+}
+
 .audio-output-hint {
   max-width: 560rpx;
   margin: 14rpx auto 0;

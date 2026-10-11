@@ -1,6 +1,7 @@
-const { createVocabularyAudioPlayer } = require("../../utils/vocabularyAudio");
+const { createVocabularyAudioPlayer, prefetchVocabularyAudio } = require("../../utils/vocabularyAudio");
 
 const MAX_SESSION_WORDS = 30;
+const AUDIO_PREFETCH_AHEAD = 3;
 
 Page({
   data: {
@@ -23,6 +24,8 @@ Page({
     reviewing: false,
     playingWordKey: "",
     audioLoadingWordKey: "",
+    audioPreloadState: "idle",
+    audioPreloadLabel: "",
     resultCounts: {
       forgot: 0,
       hard: 0,
@@ -32,6 +35,7 @@ Page({
   },
 
   onLoad(options) {
+    this.pageActive = true;
     this.initPronunciationPlayer();
     this.retryCounts = {};
     this.setData({
@@ -42,11 +46,21 @@ Page({
     this.loadSession();
   },
 
+  onShow() {
+    this.pageActive = true;
+    if (this.data.currentWord) {
+      this.lastAudioPrefetchKey = "";
+      this.prefetchAudioAhead(this.data.words, this.data.currentIndex);
+    }
+  },
+
   onHide() {
+    this.pageActive = false;
     this.stopPronunciation();
   },
 
   onUnload() {
+    this.pageActive = false;
     if (this.pronunciationPlayer) {
       this.pronunciationPlayer.destroy();
       this.pronunciationPlayer = null;
@@ -98,7 +112,10 @@ Page({
         sessionDone: !words.length,
         resultCounts: { forgot: 0, hard: 0, known: 0, easy: 0 },
         message: "",
-      }, () => this.syncProgress());
+      }, () => {
+        this.syncProgress();
+        this.prefetchAudioAhead(words, 0);
+      });
     }).catch((err) => {
       console.error(err);
       this.setData({
@@ -146,6 +163,55 @@ Page({
       sessionTotal: total,
       progressPercent: total ? Math.round(completed / total * 100) : 100,
     });
+  },
+
+  prefetchAudioAhead(words, currentIndex) {
+    const startIndex = Math.max(0, Number(currentIndex) || 0);
+    const candidates = (Array.isArray(words) ? words : [])
+      .slice(startIndex, startIndex + AUDIO_PREFETCH_AHEAD);
+    if (!candidates.length) return Promise.resolve(null);
+    const prefetchKey = candidates.map((word) => [
+      word.key,
+      word.pronunciationDirectFileId || "",
+      word.pronunciationFileId || "",
+    ].join(":")).join("|");
+    if (prefetchKey === this.lastAudioPrefetchKey && this.audioPrefetchPromise) {
+      return this.audioPrefetchPromise;
+    }
+    this.lastAudioPrefetchKey = prefetchKey;
+    const generation = Number(this.audioPrefetchGeneration || 0) + 1;
+    this.audioPrefetchGeneration = generation;
+    if (this.pageActive) {
+      this.setData({
+        audioPreloadState: "loading",
+        audioPreloadLabel: "正在提前准备当前和后续读音…",
+      });
+    }
+    this.audioPrefetchPromise = prefetchVocabularyAudio(candidates, {
+      concurrency: 1,
+      includeFallback: true,
+      maxFallbackFiles: 1,
+    }).then((summary) => {
+      if (generation !== this.audioPrefetchGeneration || !this.pageActive) return summary;
+      const ready = summary && summary.requested > 0 && summary.failed === 0;
+      this.setData({
+        audioPreloadState: ready ? "ready" : "partial",
+        audioPreloadLabel: ready
+          ? "当前读音已提前准备"
+          : "部分读音会在播放时继续加载",
+      });
+      return summary;
+    }).catch((error) => {
+      console.warn("prefetch study vocabulary audio failed", error);
+      if (generation === this.audioPrefetchGeneration && this.pageActive) {
+        this.setData({
+          audioPreloadState: "partial",
+          audioPreloadLabel: "读音会在播放时继续加载",
+        });
+      }
+      return null;
+    });
+    return this.audioPrefetchPromise;
   },
 
   revealAnswer() {
@@ -221,7 +287,10 @@ Page({
       sessionDone,
       resultCounts,
       reviewing: false,
-    }, () => this.syncProgress());
+    }, () => {
+      this.syncProgress();
+      if (!sessionDone) this.prefetchAudioAhead(words, nextIndex);
+    });
     if (saved && sessionDone && typeof wx.vibrateShort === "function") {
       wx.vibrateShort({ type: "light" });
     }

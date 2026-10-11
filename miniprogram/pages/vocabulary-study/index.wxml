@@ -37,6 +37,7 @@
       <view class="pronunciation-action {{playingWordKey === currentWord.key ? 'pronunciation-playing' : ''}}" bindtap="playPronunciation">
         {{audioLoadingWordKey === currentWord.key ? '正在加载读音…' : (playingWordKey === currentWord.key ? '正在播放…' : '🔊 听发音')}}
       </view>
+      <view class="audio-preload-note audio-preload-{{audioPreloadState}}" wx:if="{{audioPreloadLabel}}">{{audioPreloadLabel}}</view>
       <view class="audio-output-hint">显示播放但没听到时，请按手机音量＋，并确认声音没有连接到蓝牙耳机。</view>
 
       <view class="memory-prompt" wx:if="{{!answerShown}}">{{currentWord.memoryPrompt}}</view>
