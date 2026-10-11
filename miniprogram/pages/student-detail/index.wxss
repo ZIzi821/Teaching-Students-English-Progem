@@ -428,9 +428,21 @@
 
 .level-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 14rpx;
   margin-top: 16rpx;
+}
+
+.level-card {
+  overflow: hidden;
+  border: 1rpx solid transparent;
+  border-radius: 16rpx;
+  background: #f8f2e8;
+}
+
+.level-card-checked {
+  border-color: #cfe3d8;
+  background: #f4faf6;
 }
 
 .level-option {
@@ -439,7 +451,7 @@
   align-items: center;
   gap: 8rpx;
   padding: 12rpx 16rpx;
-  border-radius: 14rpx;
+  border-radius: 0;
   color: #62584d;
   background: #f8f2e8;
   font-size: 24rpx;
@@ -451,6 +463,47 @@
 }
 
 .level-option checkbox {
+  transform: scale(0.82);
+}
+
+.unit-toggle-list {
+  margin: 0 16rpx 16rpx;
+  overflow: hidden;
+  border-top: 1rpx solid #dce9e1;
+}
+
+.unit-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 18rpx 4rpx;
+  border-bottom: 1rpx solid #e7eee9;
+}
+
+.unit-toggle-row:last-child {
+  border-bottom: 0;
+}
+
+.unit-toggle-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.unit-toggle-name {
+  color: #355646;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.unit-toggle-count {
+  margin-top: 5rpx;
+  color: #79877f;
+  font-size: 20rpx;
+}
+
+.unit-toggle-row switch {
+  flex-shrink: 0;
   transform: scale(0.82);
 }
 

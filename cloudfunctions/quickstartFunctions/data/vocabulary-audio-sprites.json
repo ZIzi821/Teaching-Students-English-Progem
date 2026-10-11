@@ -203,7 +203,12 @@
       "word": "a little",
       "spriteId": "b",
       "startMs": 2680,
-      "durationMs": 1470
+      "durationMs": 1470,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/102-a-little.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/102-a-little.wav",
+      "directDurationMs": 1470,
+      "directBytes": 47086,
+      "directSha256": "6fbf020d985f1ed2301cfc75fcf281247429844beb825f29bc904e4579cd7b49"
     },
     {
       "key": "a lot of",
@@ -217,7 +222,12 @@
       "word": "a.m.",
       "spriteId": "b",
       "startMs": 4270,
-      "durationMs": 1525
+      "durationMs": 1525,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/096-a-m.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/096-a-m.wav",
+      "directDurationMs": 1525,
+      "directBytes": 48846,
+      "directSha256": "e368447484116a5fad59dcfc3fdb9b4c1152ed85b046e402b63bd261f142dd09"
     },
     {
       "key": "a number of",
@@ -353,7 +363,12 @@
       "word": "across",
       "spriteId": "9",
       "startMs": 3485,
-      "durationMs": 1675
+      "durationMs": 1675,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/228-across.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/228-across.wav",
+      "directDurationMs": 1675,
+      "directBytes": 53646,
+      "directSha256": "0f52cce7b47d2ab14cffeaa81c0a2f928c3dd0e31d070532801fbd3ffa7e3d6a"
     },
     {
       "key": "act",
@@ -400,7 +415,12 @@
       "word": "activity",
       "spriteId": "0",
       "startMs": 1630,
-      "durationMs": 1605
+      "durationMs": 1605,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/097-activity.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/097-activity.wav",
+      "directDurationMs": 1605,
+      "directBytes": 51406,
+      "directSha256": "4931a6c173b5090f182117fced9cd0e4ba31212cd4acd91ecbd66f3479e5a090"
     },
     {
       "key": "actor",
@@ -516,7 +536,12 @@
       "word": "advice",
       "spriteId": "8",
       "startMs": 3415,
-      "durationMs": 1595
+      "durationMs": 1595,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/173-advice.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/173-advice.wav",
+      "directDurationMs": 1595,
+      "directBytes": 51086,
+      "directSha256": "a74aa7026c293d5255f15b2fa2c39d720f597dad71975bdec9e738fcead29235"
     },
     {
       "key": "advise",
@@ -763,7 +788,12 @@
       "word": "all kinds of",
       "spriteId": "c",
       "startMs": 9030,
-      "durationMs": 1980
+      "durationMs": 1980,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/033-all-kinds-of.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/033-all-kinds-of.wav",
+      "directDurationMs": 1980,
+      "directBytes": 63406,
+      "directSha256": "04275dd4f2c0105017eb52f73810c0f8a9042b19c7320814e267c6421009f624"
     },
     {
       "key": "all one's life",
@@ -840,7 +870,12 @@
       "word": "almost",
       "spriteId": "f",
       "startMs": 12115,
-      "durationMs": 1695
+      "durationMs": 1695,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/156-almost.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/156-almost.wav",
+      "directDurationMs": 1695,
+      "directBytes": 54286,
+      "directSha256": "53854f1d72645a6ce1898b58f2e5ff4f59102d62081958fb2d4cce9c47cd053c"
     },
     {
       "key": "alone",
@@ -1011,7 +1046,12 @@
       "word": "another",
       "spriteId": "b",
       "startMs": 11510,
-      "durationMs": 1455
+      "durationMs": 1455,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/222-another.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/222-another.wav",
+      "directDurationMs": 1455,
+      "directBytes": 46606,
+      "directSha256": "fce6c7d7421b2ab94058d01f7af6a12156cbcdc6a6d3c017dafb20e4b0d93fcc"
     },
     {
       "key": "answered",
@@ -1164,7 +1204,12 @@
       "word": "area",
       "spriteId": "6",
       "startMs": 17370,
-      "durationMs": 1370
+      "durationMs": 1370,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/121-area.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/121-area.wav",
+      "directDurationMs": 1370,
+      "directBytes": 43886,
+      "directSha256": "a60749ea224f51d6b4c9f0883ed4399f38baffac34b3add3bdcdba97c88e2657"
     },
     {
       "key": "areas",
@@ -1209,7 +1254,12 @@
       "word": "around",
       "spriteId": "4",
       "startMs": 11600,
-      "durationMs": 1540
+      "durationMs": 1540,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/034-around.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/034-around.wav",
+      "directDurationMs": 1540,
+      "directBytes": 49326,
+      "directSha256": "c92424c95200305510eda2e5556beadb89816f6db0d478b666f8bc59fc5ef3f0"
     },
     {
       "key": "arrest",
@@ -1280,7 +1330,12 @@
       "word": "as",
       "spriteId": "d",
       "startMs": 9980,
-      "durationMs": 1385
+      "durationMs": 1385,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/241-as.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/241-as.wav",
+      "directDurationMs": 1385,
+      "directBytes": 44366,
+      "directSha256": "0493a7c6daefd1739bc814dd95c20ee24585dc83b6fa0d21b71efa171db26180"
     },
     {
       "key": "as a result",
@@ -1493,7 +1548,12 @@
       "word": "at the weekend",
       "spriteId": "c",
       "startMs": 14620,
-      "durationMs": 1780
+      "durationMs": 1780,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/029-at-the-weekend.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/029-at-the-weekend.wav",
+      "directDurationMs": 1780,
+      "directBytes": 57006,
+      "directSha256": "52790c4a5ff4dfd30168c10b365410335c0c03eca8ab5522785f0355638ea79e"
     },
     {
       "key": "at weekends",
@@ -1615,7 +1675,12 @@
       "word": "away",
       "spriteId": "f",
       "startMs": 21170,
-      "durationMs": 1320
+      "durationMs": 1320,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/243-away.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/243-away.wav",
+      "directDurationMs": 1320,
+      "directBytes": 42286,
+      "directSha256": "5396f84aea1f28734fd180d5d6e174ff559e5a82a334165dd32dcdcb9bf38f29"
     },
     {
       "key": "awful",
@@ -1764,7 +1829,12 @@
       "word": "baseball",
       "spriteId": "a",
       "startMs": 14175,
-      "durationMs": 1610
+      "durationMs": 1610,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/217-baseball.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/217-baseball.wav",
+      "directDurationMs": 1610,
+      "directBytes": 51566,
+      "directSha256": "c2bb4ead80a3f50c84002f21dcf7f122006f3d26b9d9bb1f76d4f86e9993c4d3"
     },
     {
       "key": "basic",
@@ -1888,7 +1958,12 @@
       "word": "be full of",
       "spriteId": "3",
       "startMs": 21535,
-      "durationMs": 1690
+      "durationMs": 1690,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/008-be-full-of.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/008-be-full-of.wav",
+      "directDurationMs": 1690,
+      "directBytes": 54126,
+      "directSha256": "6392f9edb307807390420521664777a59ae8178677728f19e7ce33ba7ec0433a"
     },
     {
       "key": "be going to do sth",
@@ -1902,14 +1977,24 @@
       "word": "be good at",
       "spriteId": "f",
       "startMs": 22610,
-      "durationMs": 1645
+      "durationMs": 1645,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/010-be-good-at.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/010-be-good-at.wav",
+      "directDurationMs": 1645,
+      "directBytes": 52686,
+      "directSha256": "fd55b4260f4b84bd2d04fc0b33eab910903cea4dce4edb46844b5c6f1e734725"
     },
     {
       "key": "be interested in",
       "word": "be interested in",
       "spriteId": "6",
       "startMs": 29555,
-      "durationMs": 1930
+      "durationMs": 1930,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/017-be-interested-in.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/017-be-interested-in.wav",
+      "directDurationMs": 1930,
+      "directBytes": 61806,
+      "directSha256": "4529897793f4fa8fb30e2fd4776f60a6adb9a55f85b24716582f7cd203737bcf"
     },
     {
       "key": "be known for",
@@ -1930,7 +2015,12 @@
       "word": "be made of",
       "spriteId": "7",
       "startMs": 24220,
-      "durationMs": 1655
+      "durationMs": 1655,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/199-be-made-of.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/199-be-made-of.wav",
+      "directDurationMs": 1655,
+      "directBytes": 53006,
+      "directSha256": "71955df75a763f9e51f4c7cad946fef34d6847f07de742a8b152b46754b7f53d"
     },
     {
       "key": "be made up of",
@@ -2033,7 +2123,12 @@
       "word": "beauty",
       "spriteId": "8",
       "startMs": 18925,
-      "durationMs": 1385
+      "durationMs": 1385,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/294-beauty.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/294-beauty.wav",
+      "directDurationMs": 1385,
+      "directBytes": 44366,
+      "directSha256": "989bc210b3e70b7c6cee0e6edddd7fd162896128bff25771e10de0c9927fadf3"
     },
     {
       "key": "because",
@@ -2059,7 +2154,12 @@
       "word": "become",
       "spriteId": "7",
       "startMs": 25995,
-      "durationMs": 1550
+      "durationMs": 1550,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/057-become.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/057-become.wav",
+      "directDurationMs": 1550,
+      "directBytes": 49646,
+      "directSha256": "6b981483ea2e31344a5ab519aee737d7dc3bb9fdc3da6ded3d075bba1c73d4b8"
     },
     {
       "key": "becoming",
@@ -2109,7 +2209,12 @@
       "word": "beef",
       "spriteId": "1",
       "startMs": 24945,
-      "durationMs": 1475
+      "durationMs": 1475,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/134-beef.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/134-beef.wav",
+      "directDurationMs": 1475,
+      "directBytes": 47246,
+      "directSha256": "77addaf0b77090b5de3a960acdb186acf739ff6f507052cd55abfc2c817625b1"
     },
     {
       "key": "bees",
@@ -2149,7 +2254,12 @@
       "word": "beginning",
       "spriteId": "3",
       "startMs": 27155,
-      "durationMs": 1595
+      "durationMs": 1595,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/253-beginning.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/253-beginning.wav",
+      "directDurationMs": 1595,
+      "directBytes": 51086,
+      "directSha256": "7bf7c8f943fc6674044cf811760dec83a5f1ad410b9a31362196b9e259b32181"
     },
     {
       "key": "behave",
@@ -2238,7 +2348,12 @@
       "word": "better",
       "spriteId": "a",
       "startMs": 19565,
-      "durationMs": 1390
+      "durationMs": 1390,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/118-better.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/118-better.wav",
+      "directDurationMs": 1390,
+      "directBytes": 44526,
+      "directSha256": "2f2a2be2ceea0f6cb38e7194b75b4b9c3770a9b2e455e07b2a532f396e241bb3"
     },
     {
       "key": "better than",
@@ -2318,7 +2433,12 @@
       "word": "bin",
       "spriteId": "9",
       "startMs": 34460,
-      "durationMs": 1440
+      "durationMs": 1440,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/127-bin.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/127-bin.wav",
+      "directDurationMs": 1440,
+      "directBytes": 46126,
+      "directSha256": "92128109a7c933df74e0ff03701569ba2b813e0433637077f5cbbb3bbcab51b6"
     },
     {
       "key": "binoculars",
@@ -2332,7 +2452,12 @@
       "word": "biology",
       "spriteId": "3",
       "startMs": 28870,
-      "durationMs": 1725
+      "durationMs": 1725,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/106-biology.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/106-biology.wav",
+      "directDurationMs": 1725,
+      "directBytes": 55246,
+      "directSha256": "783f48d0b14d0e2af4a4748e046153329259844f0e07dae8fd2bad10b0df78f6"
     },
     {
       "key": "bird",
@@ -2469,7 +2594,12 @@
       "word": "blouse",
       "spriteId": "b",
       "startMs": 24895,
-      "durationMs": 1545
+      "durationMs": 1545,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/168-blouse.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/168-blouse.wav",
+      "directDurationMs": 1545,
+      "directBytes": 49486,
+      "directSha256": "2926ddfe7f8e790f9c30e847c129d1291e47a5b559a43a5828535f064d8e7047"
     },
     {
       "key": "blow",
@@ -2652,7 +2782,12 @@
       "word": "borrow",
       "spriteId": "7",
       "startMs": 32745,
-      "durationMs": 1385
+      "durationMs": 1385,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/088-borrow.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/088-borrow.wav",
+      "directDurationMs": 1385,
+      "directBytes": 44366,
+      "directSha256": "53a0d09059711bc3b58e91c49e31f9a68ae89bb89fabb8e157045144b272c733"
     },
     {
       "key": "borrow from",
@@ -2678,7 +2813,12 @@
       "word": "both",
       "spriteId": "f",
       "startMs": 29240,
-      "durationMs": 1475
+      "durationMs": 1475,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/020-both.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/020-both.wav",
+      "directDurationMs": 1475,
+      "directBytes": 47246,
+      "directSha256": "44540cbf9f4bb7061a088fcf6ea4eae7c123a9879de465ed5b2941865887166d"
     },
     {
       "key": "both and",
@@ -2692,7 +2832,12 @@
       "word": "bottle",
       "spriteId": "a",
       "startMs": 29965,
-      "durationMs": 1410
+      "durationMs": 1410,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/153-bottle.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/153-bottle.wav",
+      "directDurationMs": 1410,
+      "directBytes": 45166,
+      "directSha256": "ea4ebe5194eef5af738559867c9d207c53e1fa688bb67c0864a4925c273df170"
     },
     {
       "key": "bottom",
@@ -2853,7 +2998,12 @@
       "word": "bright",
       "spriteId": "0",
       "startMs": 27920,
-      "durationMs": 1475
+      "durationMs": 1475,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/072-bright.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/072-bright.wav",
+      "directDurationMs": 1475,
+      "directBytes": 47246,
+      "directSha256": "ee423afd3e402de4c687b7e4d5fe076017e66e43eaba9a8ddf3a70c85b4697a6"
     },
     {
       "key": "brilliant",
@@ -3217,7 +3367,12 @@
       "word": "calm",
       "spriteId": "2",
       "startMs": 18825,
-      "durationMs": 1445
+      "durationMs": 1445,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/170-calm.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/170-calm.wav",
+      "directDurationMs": 1445,
+      "directBytes": 46286,
+      "directSha256": "7936a7d2a7838cf9eb5218c90d6565e8375fad2e5cea228a30e29f417ae1ff29"
     },
     {
       "key": "calm down",
@@ -3396,14 +3551,24 @@
       "word": "care",
       "spriteId": "e",
       "startMs": 30865,
-      "durationMs": 1390
+      "durationMs": 1390,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/090-care.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/090-care.wav",
+      "directDurationMs": 1390,
+      "directBytes": 44526,
+      "directSha256": "590d905324b87e2cc3f4ab6a6677a0d10b6f3b1933555bb15d72b29fd09f5850"
     },
     {
       "key": "care about",
       "word": "care about",
       "spriteId": "0",
       "startMs": 34485,
-      "durationMs": 1635
+      "durationMs": 1635,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/091-care-about.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/091-care-about.wav",
+      "directDurationMs": 1635,
+      "directBytes": 52366,
+      "directSha256": "3e1644b294ec19345a86d7a6c53e28ad475864226f52d686d8f57801205e77da"
     },
     {
       "key": "career",
@@ -3464,7 +3629,12 @@
       "word": "carry",
       "spriteId": "b",
       "startMs": 38130,
-      "durationMs": 1410
+      "durationMs": 1410,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/281-carry.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/281-carry.wav",
+      "directDurationMs": 1410,
+      "directBytes": 45166,
+      "directSha256": "d67b2bfae2e12fd72a8ff83d384262d0a6dc6d195cc9870bb09e0e8ae08da75a"
     },
     {
       "key": "carry on",
@@ -3485,7 +3655,12 @@
       "word": "carton",
       "spriteId": "5",
       "startMs": 68715,
-      "durationMs": 1650
+      "durationMs": 1650,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/152-carton.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/152-carton.wav",
+      "directDurationMs": 1650,
+      "directBytes": 52846,
+      "directSha256": "c8394d7f4b8d7009c5a32a453bf1094fac72b9967e414d673253b4a22cc189f6"
     },
     {
       "key": "cartoon",
@@ -3594,7 +3769,12 @@
       "word": "celebrate",
       "spriteId": "f",
       "startMs": 34155,
-      "durationMs": 1775
+      "durationMs": 1775,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/255-celebrate.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/255-celebrate.wav",
+      "directDurationMs": 1775,
+      "directBytes": 56846,
+      "directSha256": "d3eafe00c7dddd5998176987e28595d5b32d1ed63f4c44e484fb6e824e275aec"
     },
     {
       "key": "celebration",
@@ -3744,7 +3924,12 @@
       "word": "change",
       "spriteId": "7",
       "startMs": 45485,
-      "durationMs": 1665
+      "durationMs": 1665,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/035-change.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/035-change.wav",
+      "directDurationMs": 1665,
+      "directBytes": 53326,
+      "directSha256": "7d9ee246b12e228fcea3c5ff14de9f6502b634bb9a245002777d46729591e494"
     },
     {
       "key": "change one's mind",
@@ -3772,7 +3957,12 @@
       "word": "character",
       "spriteId": "f",
       "startMs": 41675,
-      "durationMs": 1595
+      "durationMs": 1595,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/019-character.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/019-character.wav",
+      "directDurationMs": 1595,
+      "directBytes": 51086,
+      "directSha256": "c793e8ae82850b5270412f8aabcc4b8bd9eda76b687e10dd6cf0a9380222828e"
     },
     {
       "key": "characteristic",
@@ -4001,7 +4191,12 @@
       "word": "Christmas",
       "spriteId": "4",
       "startMs": 36075,
-      "durationMs": 1855
+      "durationMs": 1855,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/256-christmas.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/256-christmas.wav",
+      "directDurationMs": 1855,
+      "directBytes": 59406,
+      "directSha256": "245d9d9f77738ea1e54a317caf9e65a036c4cd79a803847e74c150cc0893505e"
     },
     {
       "key": "cinema",
@@ -4174,7 +4369,12 @@
       "word": "climb",
       "spriteId": "c",
       "startMs": 56320,
-      "durationMs": 1535
+      "durationMs": 1535,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/292-climb.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/292-climb.wav",
+      "directDurationMs": 1535,
+      "directBytes": 49166,
+      "directSha256": "1074ee5ff3800ec85cb3f77019ddba29ee78a7aa51831bbc225047f65030d68e"
     },
     {
       "key": "climber",
@@ -4311,7 +4511,12 @@
       "word": "coin",
       "spriteId": "3",
       "startMs": 51415,
-      "durationMs": 1445
+      "durationMs": 1445,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/246-coin.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/246-coin.wav",
+      "directDurationMs": 1445,
+      "directBytes": 46286,
+      "directSha256": "6d7e9a9c39e7e629d09e3b6f1208a8922fc01cf7dddea493fec61653145fcf03"
     },
     {
       "key": "coke",
@@ -4363,7 +4568,12 @@
       "word": "colourful",
       "spriteId": "f",
       "startMs": 44980,
-      "durationMs": 1645
+      "durationMs": 1645,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/223-colourful.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/223-colourful.wav",
+      "directDurationMs": 1645,
+      "directBytes": 52686,
+      "directSha256": "529d3823bee05fe73391ba45faa595e32f7c28c38ba2c9e1a81f4762bca1dc37"
     },
     {
       "key": "come",
@@ -4403,7 +4613,12 @@
       "word": "come true",
       "spriteId": "e",
       "startMs": 44625,
-      "durationMs": 1670
+      "durationMs": 1670,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/044-come-true.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/044-come-true.wav",
+      "directDurationMs": 1670,
+      "directBytes": 53486,
+      "directSha256": "1cec97d2fad21d06e790feb09d1f658a673e2bce1f7f1eae777c36ea1b0f0658"
     },
     {
       "key": "come up with",
@@ -4424,7 +4639,12 @@
       "word": "comfortable",
       "spriteId": "2",
       "startMs": 33985,
-      "durationMs": 1705
+      "durationMs": 1705,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/188-comfortable.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/188-comfortable.wav",
+      "directDurationMs": 1705,
+      "directBytes": 54606,
+      "directSha256": "4f7567f63e59fc4c9dc151a5cc46c446d1572b18630273c0cd1f0887d5e39d4c"
     },
     {
       "key": "comic",
@@ -4801,7 +5021,12 @@
       "word": "cotton",
       "spriteId": "6",
       "startMs": 58315,
-      "durationMs": 1610
+      "durationMs": 1610,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/203-cotton.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/203-cotton.wav",
+      "directDurationMs": 1610,
+      "directBytes": 51566,
+      "directSha256": "b7c9736ae435e30c53760d9c0e05e63eb519874941d318f189380c2761a9125d"
     },
     {
       "key": "cough",
@@ -4815,7 +5040,12 @@
       "word": "could",
       "spriteId": "e",
       "startMs": 51465,
-      "durationMs": 1345
+      "durationMs": 1345,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/172-could.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/172-could.wav",
+      "directDurationMs": 1345,
+      "directBytes": 43086,
+      "directSha256": "75fedaa35f48f1a6238910291979e3bb8863ec70ba122b46b0426362f76aaba0"
     },
     {
       "key": "count",
@@ -4898,7 +5128,12 @@
       "word": "cover",
       "spriteId": "a",
       "startMs": 45490,
-      "durationMs": 1415
+      "durationMs": 1415,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/231-cover.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/231-cover.wav",
+      "directDurationMs": 1415,
+      "directBytes": 45326,
+      "directSha256": "cb627e6d2bd8d65b8e60d2a36df556e221dfca006643b6c033dfa316535d73b4"
     },
     {
       "key": "cowboy",
@@ -5010,7 +5245,12 @@
       "word": "culture",
       "spriteId": "8",
       "startMs": 55030,
-      "durationMs": 1575
+      "durationMs": 1575,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/195-culture.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/195-culture.wav",
+      "directDurationMs": 1575,
+      "directBytes": 50446,
+      "directSha256": "f854fc517192ef09306d168e6c45cbc54b915f381957ce281b6484ddf83f90d8"
     },
     {
       "key": "cup",
@@ -5261,7 +5501,12 @@
       "word": "dark",
       "spriteId": "3",
       "startMs": 66635,
-      "durationMs": 1420
+      "durationMs": 1420,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/181-dark.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/181-dark.wav",
+      "directDurationMs": 1420,
+      "directBytes": 45486,
+      "directSha256": "ee8ddc334078e16d189a5477d7caa3751d7875b1534ee97c29f4c5a2c3f60462"
     },
     {
       "key": "darkness",
@@ -5334,7 +5579,12 @@
       "word": "deal",
       "spriteId": "6",
       "startMs": 65280,
-      "durationMs": 1365
+      "durationMs": 1365,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/245-deal.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/245-deal.wav",
+      "directDurationMs": 1365,
+      "directBytes": 43726,
+      "directSha256": "54070474ef7760e70116d84854d37d4200d51270bbc6371f807adcb008862b90"
     },
     {
       "key": "deal with",
@@ -5388,7 +5638,12 @@
       "word": "decorate",
       "spriteId": "8",
       "startMs": 58510,
-      "durationMs": 1595
+      "durationMs": 1595,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/299-decorate.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/299-decorate.wav",
+      "directDurationMs": 1595,
+      "directBytes": 51086,
+      "directSha256": "a5ecce2b8d56022fb400b6eae5aab33237912db2279f9f5ab4bfa23d839e8eff"
     },
     {
       "key": "deep",
@@ -5469,7 +5724,12 @@
       "word": "depend",
       "spriteId": "3",
       "startMs": 69700,
-      "durationMs": 1540
+      "durationMs": 1540,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/174-depend.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/174-depend.wav",
+      "directDurationMs": 1540,
+      "directBytes": 49326,
+      "directSha256": "a4eb7e074999554a19075382aaa7f9532f49d50a9468ff705994616c690b9324"
     },
     {
       "key": "depend on upon",
@@ -5516,7 +5776,12 @@
       "word": "design",
       "spriteId": "0",
       "startMs": 59645,
-      "durationMs": 1520
+      "durationMs": 1520,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/054-design.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/054-design.wav",
+      "directDurationMs": 1520,
+      "directBytes": 48686,
+      "directSha256": "7187bb3436024a17b16fe42a9578b599de6b00062161ce69e03b229c42951c8d"
     },
     {
       "key": "desk",
@@ -5846,7 +6111,12 @@
       "word": "dish",
       "spriteId": "5",
       "startMs": 87085,
-      "durationMs": 1475
+      "durationMs": 1475,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/266-dish.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/266-dish.wav",
+      "directDurationMs": 1475,
+      "directBytes": 47246,
+      "directSha256": "3a0ae8388f8ad2ea68f38291ae64ede9da8a767ddf9afdbe43a189d2c9f881ae"
     },
     {
       "key": "dislike",
@@ -5975,7 +6245,12 @@
       "word": "dollar",
       "spriteId": "6",
       "startMs": 68760,
-      "durationMs": 1430
+      "durationMs": 1430,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/214-dollar.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/214-dollar.wav",
+      "directDurationMs": 1430,
+      "directBytes": 45806,
+      "directSha256": "91743eca9f3bb9b64e8c99a1cb117cacc7292b80fad94c0cca2ba41ddf8ececd"
     },
     {
       "key": "dollars",
@@ -6060,7 +6335,12 @@
       "word": "double",
       "spriteId": "b",
       "startMs": 66930,
-      "durationMs": 1395
+      "durationMs": 1395,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/297-double.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/297-double.wav",
+      "directDurationMs": 1395,
+      "directBytes": 44686,
+      "directSha256": "19744f3f20ae55da8d503474a1f7a2ec2456825af763adcdad9da2976c4a6eca"
     },
     {
       "key": "doubt",
@@ -6162,7 +6442,12 @@
       "word": "dream",
       "spriteId": "5",
       "startMs": 92120,
-      "durationMs": 1500
+      "durationMs": 1500,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/043-dream.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/043-dream.wav",
+      "directDurationMs": 1500,
+      "directBytes": 48046,
+      "directSha256": "3e5844f9f028a6efd6a4bf38f7c0595c616bb349cf6eb17130dc27c5a6cd5ea3"
     },
     {
       "key": "dream about",
@@ -6292,14 +6577,24 @@
       "word": "dumpling",
       "spriteId": "4",
       "startMs": 76070,
-      "durationMs": 1700
+      "durationMs": 1700,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/262-dumpling.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/262-dumpling.wav",
+      "directDurationMs": 1700,
+      "directBytes": 54446,
+      "directSha256": "b557ef63ccd9fc359cc3ecdb1b8cd9ed43d21603495f21c9dc21477e0aad61fe"
     },
     {
       "key": "during",
       "word": "during",
       "spriteId": "f",
       "startMs": 71910,
-      "durationMs": 1540
+      "durationMs": 1540,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/305-during.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/305-during.wav",
+      "directDurationMs": 1540,
+      "directBytes": 49326,
+      "directSha256": "deef39ebe6c368bfce79c6c6b41649d6145d3499f39ae54fe0f6ff9c6506b391"
     },
     {
       "key": "dust",
@@ -6339,14 +6634,24 @@
       "word": "each",
       "spriteId": "b",
       "startMs": 68445,
-      "durationMs": 1385
+      "durationMs": 1385,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/046-each.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/046-each.wav",
+      "directDurationMs": 1385,
+      "directBytes": 44366,
+      "directSha256": "e75db1138c35fe74baeaaed7013d764810d7064fdeef37397984d8726aa63c3e"
     },
     {
       "key": "each other",
       "word": "each other",
       "spriteId": "1",
       "startMs": 71775,
-      "durationMs": 1570
+      "durationMs": 1570,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/003-each-other.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/003-each-other.wav",
+      "directDurationMs": 1570,
+      "directBytes": 50286,
+      "directSha256": "b898e084b1bcc9cd1bb977d85977ae9a56ffed82104ee275e0e01580cf1ce920"
     },
     {
       "key": "eagle",
@@ -6457,7 +6762,12 @@
       "word": "education",
       "spriteId": "2",
       "startMs": 56480,
-      "durationMs": 1885
+      "durationMs": 1885,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/232-education.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/232-education.wav",
+      "directDurationMs": 1885,
+      "directBytes": 60366,
+      "directSha256": "9b4b2982cdddf3b19025f031c69e91ecaf741100c9ae692ad6b745359ff24642"
     },
     {
       "key": "effort",
@@ -6525,7 +6835,12 @@
       "word": "elder",
       "spriteId": "f",
       "startMs": 75085,
-      "durationMs": 1410
+      "durationMs": 1410,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/296-elder.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/296-elder.wav",
+      "directDurationMs": 1410,
+      "directBytes": 45166,
+      "directSha256": "ac1559ebbd33ae71ed9ab61103b59930636a67cb462069df80075a018134982d"
     },
     {
       "key": "elderly",
@@ -6579,7 +6894,12 @@
       "word": "else",
       "spriteId": "a",
       "startMs": 63665,
-      "durationMs": 1400
+      "durationMs": 1400,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/089-else.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/089-else.wav",
+      "directDurationMs": 1400,
+      "directBytes": 44846,
+      "directSha256": "df1952f946edbf6f3f62bcd8e05c702fb53bda7f064b7aa248edb09cdb81566c"
     },
     {
       "key": "email",
@@ -6605,7 +6925,12 @@
       "word": "empty",
       "spriteId": "a",
       "startMs": 65185,
-      "durationMs": 1390
+      "durationMs": 1390,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/126-empty.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/126-empty.wav",
+      "directDurationMs": 1390,
+      "directBytes": 44526,
+      "directSha256": "8a20247325cf66ad5aeda52556bb360a8327442b88cc6fc6a0d4ca56f1000e04"
     },
     {
       "key": "encourage",
@@ -6640,7 +6965,12 @@
       "word": "energy",
       "spriteId": "1",
       "startMs": 75255,
-      "durationMs": 1485
+      "durationMs": 1485,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/009-energy.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/009-energy.wav",
+      "directDurationMs": 1485,
+      "directBytes": 47566,
+      "directSha256": "8968dec3665002a65d0d1f614aca2a5f0e9dbf02a1cedd9845490a0b0f7e90c4"
     },
     {
       "key": "engineer",
@@ -6678,21 +7008,36 @@
       "word": "enjoy",
       "spriteId": "5",
       "startMs": 95265,
-      "durationMs": 1535
+      "durationMs": 1535,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/021-enjoy.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/021-enjoy.wav",
+      "directDurationMs": 1535,
+      "directBytes": 49166,
+      "directSha256": "0b18bde742938838baf5b843c11e5cea10ac4db070c5e44c57a90f4cbe44816d"
     },
     {
       "key": "enjoy oneself",
       "word": "enjoy oneself",
       "spriteId": "9",
       "startMs": 77840,
-      "durationMs": 2070
+      "durationMs": 2070,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/104-enjoy-oneself.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/104-enjoy-oneself.wav",
+      "directDurationMs": 2070,
+      "directBytes": 66286,
+      "directSha256": "5b9592585567783a27256b858490b43d1cf35844c72267236755cd3f2b554517"
     },
     {
       "key": "enough",
       "word": "enough",
       "spriteId": "8",
       "startMs": 67505,
-      "durationMs": 1540
+      "durationMs": 1540,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/146-enough.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/146-enough.wav",
+      "directDurationMs": 1540,
+      "directBytes": 49326,
+      "directSha256": "d76927b13c78d04c8d32f251ff6b9fb0abf027de23f94b510713781a4e684c12"
     },
     {
       "key": "enter",
@@ -6815,7 +7160,12 @@
       "word": "event",
       "spriteId": "5",
       "startMs": 100110,
-      "durationMs": 1495
+      "durationMs": 1495,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/092-event.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/092-event.wav",
+      "directDurationMs": 1495,
+      "directBytes": 47886,
+      "directSha256": "fee3a7acf73aee6d002b400f7ec68983c3e9c2f5b2bbb86b760044220673f7bf"
     },
     {
       "key": "ever",
@@ -6850,7 +7200,12 @@
       "word": "everyone",
       "spriteId": "a",
       "startMs": 66695,
-      "durationMs": 1645
+      "durationMs": 1645,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/073-everyone.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/073-everyone.wav",
+      "directDurationMs": 1645,
+      "directBytes": 52686,
+      "directSha256": "90980e3598e543e3b8282a6e6e37566e491bc6626fdb0b4d2091e589a75f9e25"
     },
     {
       "key": "everything",
@@ -7001,7 +7356,12 @@
       "word": "expensive",
       "spriteId": "e",
       "startMs": 82600,
-      "durationMs": 1810
+      "durationMs": 1810,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/235-expensive.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/235-expensive.wav",
+      "directDurationMs": 1810,
+      "directBytes": 57966,
+      "directSha256": "7976c3e648da9e841d2dcba1d65810b6f494e1b2ea9af4f4667cb4394bf890d3"
     },
     {
       "key": "experience",
@@ -7088,7 +7448,12 @@
       "word": "fact",
       "spriteId": "5",
       "startMs": 106240,
-      "durationMs": 1500
+      "durationMs": 1500,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/086-fact.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/086-fact.wav",
+      "directDurationMs": 1500,
+      "directBytes": 48046,
+      "directSha256": "c0779c71b8c0dee163d4c94b86f53d3e74bcaae0d16da2fede4f29a6483719d2"
     },
     {
       "key": "factory",
@@ -7246,7 +7611,12 @@
       "word": "fashion",
       "spriteId": "e",
       "startMs": 84530,
-      "durationMs": 1780
+      "durationMs": 1780,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/171-fashion.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/171-fashion.wav",
+      "directDurationMs": 1780,
+      "directBytes": 57006,
+      "directSha256": "497b0c385eef572cb9680488c387c102bb4f74ad6edc613d6388eec37b026eb6"
     },
     {
       "key": "fast",
@@ -7300,7 +7670,12 @@
       "word": "feature",
       "spriteId": "4",
       "startMs": 89835,
-      "durationMs": 1595
+      "durationMs": 1595,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/204-feature.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/204-feature.wav",
+      "directDurationMs": 1595,
+      "directBytes": 51086,
+      "directSha256": "e6901d5e7f13a8ebda3ab7133063d0c26ef76e4dee6028d2c7daaf044cd17a67"
     },
     {
       "key": "february",
@@ -7735,7 +8110,12 @@
       "word": "fix",
       "spriteId": "9",
       "startMs": 88720,
-      "durationMs": 1635
+      "durationMs": 1635,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/040-fix.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/040-fix.wav",
+      "directDurationMs": 1635,
+      "directBytes": 52366,
+      "directSha256": "00776d9fbbc4a59b16418e4bfc0c18437a27aff3ad92867cb4a4a8c66457f22a"
     },
     {
       "key": "fixed",
@@ -7934,7 +8314,12 @@
       "word": "for example",
       "spriteId": "7",
       "startMs": 96235,
-      "durationMs": 1905
+      "durationMs": 1905,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/180-for-example.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/180-for-example.wav",
+      "directDurationMs": 1905,
+      "directBytes": 61006,
+      "directSha256": "87c781deba628ea894447baa29be9ff09b872736397e4da27045ae99ab50930b"
     },
     {
       "key": "force",
@@ -8153,7 +8538,12 @@
       "word": "full",
       "spriteId": "5",
       "startMs": 118280,
-      "durationMs": 1515
+      "durationMs": 1515,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/007-full.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/007-full.wav",
+      "directDurationMs": 1515,
+      "directBytes": 48526,
+      "directSha256": "4a890396d29e03e483dfeac33d3666cee7845e55a3b52440f716418370ef0412"
     },
     {
       "key": "fun",
@@ -8212,7 +8602,12 @@
       "word": "future",
       "spriteId": "d",
       "startMs": 99220,
-      "durationMs": 1600
+      "durationMs": 1600,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/061-future.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/061-future.wav",
+      "directDurationMs": 1600,
+      "directBytes": 51246,
+      "directSha256": "fcda9a580676b488e31b1a5609a6a8387cc609e538d5ca8157f329eb57b46bad"
     },
     {
       "key": "gain",
@@ -8271,7 +8666,12 @@
       "word": "gate",
       "spriteId": "3",
       "startMs": 99395,
-      "durationMs": 1385
+      "durationMs": 1385,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/078-gate.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/078-gate.wav",
+      "directDurationMs": 1385,
+      "directBytes": 44366,
+      "directSha256": "ae89d608f1162d45bf9eb9ce36554f0e09986cd4bbbe628e58e12a3ebf9add64"
     },
     {
       "key": "gather",
@@ -8306,7 +8706,12 @@
       "word": "gentleman",
       "spriteId": "f",
       "startMs": 108470,
-      "durationMs": 1745
+      "durationMs": 1745,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/269-gentleman.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/269-gentleman.wav",
+      "directDurationMs": 1745,
+      "directBytes": 55886,
+      "directSha256": "a4d694b1e694976c8da54cd4f2243a006e077bddb14841cb881c8829f207abe9"
     },
     {
       "key": "geography",
@@ -8494,7 +8899,12 @@
       "word": "glad",
       "spriteId": "3",
       "startMs": 102460,
-      "durationMs": 1405
+      "durationMs": 1405,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/005-glad.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/005-glad.wav",
+      "directDurationMs": 1405,
+      "directBytes": 45006,
+      "directSha256": "f37d0598abf4a889718b8b65e1e43a6489cd8998a8cd003bc39bd4c85c969f17"
     },
     {
       "key": "glass",
@@ -8689,7 +9099,12 @@
       "word": "grade",
       "spriteId": "3",
       "startMs": 105660,
-      "durationMs": 1405
+      "durationMs": 1405,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/006-grade.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/006-grade.wav",
+      "directDurationMs": 1405,
+      "directBytes": 45006,
+      "directSha256": "4bf98da0ee090d169430e0ebdd2bab449b3cde242aefa32a9de95436a16a9e65"
     },
     {
       "key": "graduate",
@@ -8824,14 +9239,24 @@
       "word": "greet",
       "spriteId": "3",
       "startMs": 108780,
-      "durationMs": 1455
+      "durationMs": 1455,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/001-greet.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/001-greet.wav",
+      "directDurationMs": 1455,
+      "directBytes": 46606,
+      "directSha256": "d72ce8cec28d4c211e66240fdcdaa5691ae2398eb08f44d86721ab23965cea13"
     },
     {
       "key": "grey",
       "word": "grey",
       "spriteId": "7",
       "startMs": 101920,
-      "durationMs": 1320
+      "durationMs": 1320,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/084-grey.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/084-grey.wav",
+      "directDurationMs": 1320,
+      "directBytes": 42286,
+      "directSha256": "5e1254654d739f8903b975cbe677a81524e9ec1531a98eda76ec38b863aa6ad4"
     },
     {
       "key": "grocery store",
@@ -8987,7 +9412,12 @@
       "word": "habit",
       "spriteId": "3",
       "startMs": 112060,
-      "durationMs": 1520
+      "durationMs": 1520,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/254-habit.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/254-habit.wav",
+      "directDurationMs": 1520,
+      "directBytes": 48686,
+      "directSha256": "38f66b3767ec701748074bd6980cf1029ac26a33954955c80be1789a4022ccbb"
     },
     {
       "key": "had better",
@@ -9100,7 +9530,12 @@
       "word": "hang",
       "spriteId": "8",
       "startMs": 95425,
-      "durationMs": 1450
+      "durationMs": 1450,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/272-hang.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/272-hang.wav",
+      "directDurationMs": 1450,
+      "directBytes": 46446,
+      "directSha256": "ff676a02f19d333dce68c2c41ade78013f58220de5a5f0668043cfed5fbe2163"
     },
     {
       "key": "happen",
@@ -9747,7 +10182,12 @@
       "word": "hope",
       "spriteId": "4",
       "startMs": 117030,
-      "durationMs": 1535
+      "durationMs": 1535,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/063-hope.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/063-hope.wav",
+      "directDurationMs": 1535,
+      "directBytes": 49166,
+      "directSha256": "ec3805d0620c6367f5b7856be7ffe41ecabfc0058a4cd1bb99cd330978380d8e"
     },
     {
       "key": "horror",
@@ -9856,7 +10296,12 @@
       "word": "housework",
       "spriteId": "6",
       "startMs": 104000,
-      "durationMs": 1755
+      "durationMs": 1755,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/098-housework.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/098-housework.wav",
+      "directDurationMs": 1755,
+      "directBytes": 56206,
+      "directSha256": "a98138cb90f7b1c27f2e7e01e748073679140d13b2e8758c1ca4f48c55ffd801"
     },
     {
       "key": "how",
@@ -10180,7 +10625,12 @@
       "word": "in fact",
       "spriteId": "2",
       "startMs": 94120,
-      "durationMs": 1630
+      "durationMs": 1630,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/087-in-fact.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/087-in-fact.wav",
+      "directDurationMs": 1630,
+      "directBytes": 52206,
+      "directSha256": "f3bc7698148bb0a99fd48387803f5965b9c2fd3aadb1b231ed98d5206f3639fd"
     },
     {
       "key": "in fear of one's life",
@@ -10444,7 +10894,12 @@
       "word": "inside",
       "spriteId": "f",
       "startMs": 134790,
-      "durationMs": 1520
+      "durationMs": 1520,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/221-inside.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/221-inside.wav",
+      "directDurationMs": 1520,
+      "directBytes": 48686,
+      "directSha256": "f05c7d2899b5030097136775040ab8e9b4d14d97b661109d0c2d73674b966917"
     },
     {
       "key": "insist",
@@ -10505,7 +10960,12 @@
       "word": "interested",
       "spriteId": "e",
       "startMs": 130695,
-      "durationMs": 1690
+      "durationMs": 1690,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/016-interested.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/016-interested.wav",
+      "directDurationMs": 1690,
+      "directBytes": 54126,
+      "directSha256": "c26065e964b9e8c112a76571ed6d4bc06c7130c72f4de1e2fb44f0140210ae08"
     },
     {
       "key": "international",
@@ -10552,14 +11012,24 @@
       "word": "into",
       "spriteId": "a",
       "startMs": 103695,
-      "durationMs": 1360
+      "durationMs": 1360,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/278-into.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/278-into.wav",
+      "directDurationMs": 1360,
+      "directBytes": 43566,
+      "directSha256": "2052551a45dfe244775383d84db5ed9bde833ae4c9d6737e6c2a0cedf1dfa9de"
     },
     {
       "key": "introduce",
       "word": "introduce",
       "spriteId": "a",
       "startMs": 105175,
-      "durationMs": 1635
+      "durationMs": 1635,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/002-introduce.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/002-introduce.wav",
+      "directDurationMs": 1635,
+      "directBytes": 52366,
+      "directSha256": "5d0a74ebffa31d571d2127afef35dd061e82b8224fbbe256d6a78f9a0114f0d5"
     },
     {
       "key": "introduction",
@@ -10766,7 +11236,12 @@
       "word": "jogging",
       "spriteId": "4",
       "startMs": 126125,
-      "durationMs": 1635
+      "durationMs": 1635,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/031-jogging.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/031-jogging.wav",
+      "directDurationMs": 1635,
+      "directBytes": 52366,
+      "directSha256": "59a63e18e5183b756b498a941e3aab0617ba75904ba2a441cd18373109c43058"
     },
     {
       "key": "join",
@@ -10880,7 +11355,12 @@
       "word": "just",
       "spriteId": "d",
       "startMs": 127335,
-      "durationMs": 1580
+      "durationMs": 1580,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/194-just.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/194-just.wav",
+      "directDurationMs": 1580,
+      "directBytes": 50606,
+      "directSha256": "0324fc94513aae59ce80f65e8ff11db980942edc99acbca69b972fc72d4eb6f9"
     },
     {
       "key": "just a minute",
@@ -10957,7 +11437,12 @@
       "word": "key",
       "spriteId": "a",
       "startMs": 109790,
-      "durationMs": 1265
+      "durationMs": 1265,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/215-key.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/215-key.wav",
+      "directDurationMs": 1265,
+      "directBytes": 40526,
+      "directSha256": "4843d7ce8fcf2a75ae653d12a80e41445d56daab7fcf54a443305406ef1a7f0e"
     },
     {
       "key": "key ring",
@@ -11025,7 +11510,12 @@
       "word": "kilo",
       "spriteId": "8",
       "startMs": 138865,
-      "durationMs": 1460
+      "durationMs": 1460,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/151-kilo.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/151-kilo.wav",
+      "directDurationMs": 1460,
+      "directBytes": 46766,
+      "directSha256": "0c21ce20a94f661b8541e29a7b522d851106580e219dba67161869485ed0562d"
     },
     {
       "key": "kilogram",
@@ -11161,7 +11651,12 @@
       "word": "lab",
       "spriteId": "3",
       "startMs": 133240,
-      "durationMs": 1365
+      "durationMs": 1365,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/068-lab.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/068-lab.wav",
+      "directDurationMs": 1365,
+      "directBytes": 43726,
+      "directSha256": "4dd0a939859e22f78c971746f8f54960680a99981c50995ab636eb89895d39e1"
     },
     {
       "key": "laboratory",
@@ -11175,7 +11670,12 @@
       "word": "lady",
       "spriteId": "5",
       "startMs": 155735,
-      "durationMs": 1430
+      "durationMs": 1430,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/268-lady.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/268-lady.wav",
+      "directDurationMs": 1430,
+      "directBytes": 45806,
+      "directSha256": "1637039a3bb3eb52370d0da13aec1450e4d50f576f15e0a3d649a97ed4d0bc0e"
     },
     {
       "key": "lake",
@@ -11232,7 +11732,12 @@
       "word": "lantern",
       "spriteId": "5",
       "startMs": 157285,
-      "durationMs": 1615
+      "durationMs": 1615,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/291-lantern.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/291-lantern.wav",
+      "directDurationMs": 1615,
+      "directBytes": 51726,
+      "directSha256": "c453db9cc5b30dfd7526d9c6712d07c44aa4778f8d336db47eec48c3d58ac2c2"
     },
     {
       "key": "laptop",
@@ -11251,14 +11756,24 @@
       "word": "large",
       "spriteId": "5",
       "startMs": 159020,
-      "durationMs": 1515
+      "durationMs": 1515,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/094-large.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/094-large.wav",
+      "directDurationMs": 1515,
+      "directBytes": 48526,
+      "directSha256": "50c616747a41282bb0cf000c6cd758ebb7641f4628c5f099ecd87272c87a953c"
     },
     {
       "key": "last",
       "word": "last",
       "spriteId": "2",
       "startMs": 108150,
-      "durationMs": 1590
+      "durationMs": 1590,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/306-last.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/306-last.wav",
+      "directDurationMs": 1590,
+      "directBytes": 50926,
+      "directSha256": "4bf093b34eec13b16360422129adefb250aed6e405e3ec04b78fd93d05d20e35"
     },
     {
       "key": "lasting",
@@ -11422,7 +11937,12 @@
       "word": "leather",
       "spriteId": "7",
       "startMs": 131335,
-      "durationMs": 1410
+      "durationMs": 1410,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/206-leather.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/206-leather.wav",
+      "directDurationMs": 1410,
+      "directBytes": 45166,
+      "directSha256": "a5a3710f462283fa874c0cd60027fc09a466339683a2d9edc7bcf69a60fc9549"
     },
     {
       "key": "leave",
@@ -11514,7 +12034,12 @@
       "word": "less",
       "spriteId": "0",
       "startMs": 128140,
-      "durationMs": 1485
+      "durationMs": 1485,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/147-less.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/147-less.wav",
+      "directDurationMs": 1485,
+      "directBytes": 47566,
+      "directSha256": "d9d398cf08b3a39faaeb406f6d94727299a755c559d7819aba48042fd4714404"
     },
     {
       "key": "less and less",
@@ -11932,14 +12457,24 @@
       "word": "life",
       "spriteId": "2",
       "startMs": 113355,
-      "durationMs": 1485
+      "durationMs": 1485,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/036-life.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/036-life.wav",
+      "directDurationMs": 1485,
+      "directBytes": 47566,
+      "directSha256": "6d7785d67e512c05ca58949a74a25ae57502a1b4fcef77071b84d4ab347e6e5d"
     },
     {
       "key": "lifestyle",
       "word": "lifestyle",
       "spriteId": "1",
       "startMs": 141170,
-      "durationMs": 1875
+      "durationMs": 1875,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/130-lifestyle.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/130-lifestyle.wav",
+      "directDurationMs": 1875,
+      "directBytes": 60046,
+      "directSha256": "164a7076181c82e9cccfe134fd596393b27875e7753ad3a9dad314f24e2e5c43"
     },
     {
       "key": "lifetime",
@@ -12083,7 +12618,12 @@
       "word": "lively",
       "spriteId": "4",
       "startMs": 138285,
-      "durationMs": 1540
+      "durationMs": 1540,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/286-lively.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/286-lively.wav",
+      "directDurationMs": 1540,
+      "directBytes": 49326,
+      "directSha256": "72e0faa203d63e244bb14061d83cf1adcd32a9b3844619aeec5daf5f5adcf83c"
     },
     {
       "key": "lives",
@@ -12097,7 +12637,12 @@
       "word": "living",
       "spriteId": "5",
       "startMs": 170690,
-      "durationMs": 1550
+      "durationMs": 1550,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/107-living.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/107-living.wav",
+      "directDurationMs": 1550,
+      "directBytes": 49646,
+      "directSha256": "fb568a2aabbd753683781cb1870010ec1f71f6c1a1d7b8349001a253bd817057"
     },
     {
       "key": "living room",
@@ -12259,7 +12804,12 @@
       "word": "looks",
       "spriteId": "4",
       "startMs": 139945,
-      "durationMs": 1575
+      "durationMs": 1575,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/018-looks.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/018-looks.wav",
+      "directDurationMs": 1575,
+      "directBytes": 50446,
+      "directSha256": "40ca3bafca0eda98344a6425c4d2bddb0cf03540320960a8421e0a9cded179e2"
     },
     {
       "key": "lorry",
@@ -12369,7 +12919,12 @@
       "word": "luck",
       "spriteId": "7",
       "startMs": 134665,
-      "durationMs": 1410
+      "durationMs": 1410,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/025-luck.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/025-luck.wav",
+      "directDurationMs": 1410,
+      "directBytes": 45166,
+      "directSha256": "485f73fb1023f6083ace20214af1dd40d3342066bd36ccda898ddc51fedec2a7"
     },
     {
       "key": "luckily",
@@ -12383,7 +12938,12 @@
       "word": "lucky",
       "spriteId": "1",
       "startMs": 148395,
-      "durationMs": 1400
+      "durationMs": 1400,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/247-lucky.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/247-lucky.wav",
+      "directDurationMs": 1400,
+      "directBytes": 44846,
+      "directSha256": "d17db2a53094c809600c3fb3e5abc4937bdaa5439cbef99e8c781745879c9c71"
     },
     {
       "key": "lunar",
@@ -12568,7 +13128,12 @@
       "word": "mall",
       "spriteId": "4",
       "startMs": 144780,
-      "durationMs": 1390
+      "durationMs": 1390,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/227-mall.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/227-mall.wav",
+      "directDurationMs": 1390,
+      "directBytes": 44526,
+      "directSha256": "54d3ea3793c3c721f1c539e7d201ddf70864231e55f6781de28068681533400e"
     },
     {
       "key": "man",
@@ -12582,7 +13147,12 @@
       "word": "manage",
       "spriteId": "3",
       "startMs": 146035,
-      "durationMs": 1610
+      "durationMs": 1610,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/229-manage.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/229-manage.wav",
+      "directDurationMs": 1610,
+      "directBytes": 51566,
+      "directSha256": "4a751827a38f66483f576f84ce00bde2be55326b219e4a813cb867bdb29e4720"
     },
     {
       "key": "manager",
@@ -12703,7 +13273,12 @@
       "word": "master",
       "spriteId": "4",
       "startMs": 147945,
-      "durationMs": 1680
+      "durationMs": 1680,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/056-master.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/056-master.wav",
+      "directDurationMs": 1680,
+      "directBytes": 53806,
+      "directSha256": "c58bd6bd6b24d6ad2af0dd58b5daeae65e9c7a2fe69f0f5929ecbb24b7c029de"
     },
     {
       "key": "match",
@@ -12722,7 +13297,12 @@
       "word": "material",
       "spriteId": "9",
       "startMs": 139740,
-      "durationMs": 1680
+      "durationMs": 1680,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/205-material.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/205-material.wav",
+      "directDurationMs": 1680,
+      "directBytes": 53806,
+      "directSha256": "8f77042903d81b4fb5137905f818c204dd3d36a15ed92dc36ab18bd609d089f0"
     },
     {
       "key": "mathematics",
@@ -12748,7 +13328,12 @@
       "word": "matter",
       "spriteId": "8",
       "startMs": 153145,
-      "durationMs": 1425
+      "durationMs": 1425,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/239-matter.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/239-matter.wav",
+      "directDurationMs": 1425,
+      "directBytes": 45646,
+      "directSha256": "906ba7ea7e6ebbd9ad1f23e3b27a72b0dd7d1607653ff1555bc4a9bc9c456a4a"
     },
     {
       "key": "may",
@@ -12767,7 +13352,12 @@
       "word": "maybe",
       "spriteId": "f",
       "startMs": 146015,
-      "durationMs": 1435
+      "durationMs": 1435,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/154-maybe.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/154-maybe.wav",
+      "directDurationMs": 1435,
+      "directBytes": 45966,
+      "directSha256": "6781ae84d0622fdb8074396a00a9250213cb530228106d2b311da06a4c0ba6e9"
     },
     {
       "key": "meal",
@@ -12798,7 +13388,12 @@
       "word": "meaning",
       "spriteId": "2",
       "startMs": 123725,
-      "durationMs": 1575
+      "durationMs": 1575,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/304-meaning.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/304-meaning.wav",
+      "directDurationMs": 1575,
+      "directBytes": 50446,
+      "directSha256": "da8866233dad83af502d5704110621f14a09bb660a2c4968291a6d6cc17afbc0"
     },
     {
       "key": "meaningful",
@@ -12881,7 +13476,12 @@
       "word": "meeting",
       "spriteId": "b",
       "startMs": 150570,
-      "durationMs": 1560
+      "durationMs": 1560,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/048-meeting.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/048-meeting.wav",
+      "directDurationMs": 1560,
+      "directBytes": 49966,
+      "directSha256": "1d4ebdacd3027f173d478febc3d50a9ec1351f7aa0188dbb814c207323e36ccc"
     },
     {
       "key": "member",
@@ -13110,7 +13710,12 @@
       "word": "mix",
       "spriteId": "3",
       "startMs": 149590,
-      "durationMs": 1575
+      "durationMs": 1575,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/182-mix.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/182-mix.wav",
+      "directDurationMs": 1575,
+      "directBytes": 50446,
+      "directSha256": "ea60029d685c8575a135010b414637440db54ef9107f63a2ec381daa458d1555"
     },
     {
       "key": "mixed",
@@ -13136,14 +13741,24 @@
       "word": "model",
       "spriteId": "1",
       "startMs": 160760,
-      "durationMs": 1460
+      "durationMs": 1460,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/052-model.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/052-model.wav",
+      "directDurationMs": 1460,
+      "directBytes": 46766,
+      "directSha256": "e81b3b4166a96b1a6e965e5e47041b3c66861cffa468c04088f6a8d397cfb024"
     },
     {
       "key": "modern",
       "word": "modern",
       "spriteId": "b",
       "startMs": 157520,
-      "durationMs": 1560
+      "durationMs": 1560,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/070-modern.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/070-modern.wav",
+      "directDurationMs": 1560,
+      "directBytes": 49966,
+      "directSha256": "0180582f6d4c955bf1cc04fa46c362c22f0a958e5267a321478de453e7827d5e"
     },
     {
       "key": "modest",
@@ -13157,7 +13772,12 @@
       "word": "moment",
       "spriteId": "b",
       "startMs": 159200,
-      "durationMs": 1600
+      "durationMs": 1600,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/288-moment.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/288-moment.wav",
+      "directDurationMs": 1600,
+      "directBytes": 51246,
+      "directSha256": "5380d8a0184faf2965a6c5d707a333fb190ad25f87cb365699ea94a65b3e68b4"
     },
     {
       "key": "monday",
@@ -13230,7 +13850,12 @@
       "word": "more",
       "spriteId": "e",
       "startMs": 158865,
-      "durationMs": 1390
+      "durationMs": 1390,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/079-more.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/079-more.wav",
+      "directDurationMs": 1390,
+      "directBytes": 44526,
+      "directSha256": "224ad0ba2da31d35efdcaa9d7b1ed4dd8b986f3ecc3ce5002ca475392ebb4b6c"
     },
     {
       "key": "more than",
@@ -13263,7 +13888,12 @@
       "word": "most",
       "spriteId": "d",
       "startMs": 154210,
-      "durationMs": 1590
+      "durationMs": 1590,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/166-most.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/166-most.wav",
+      "directDurationMs": 1590,
+      "directBytes": 50926,
+      "directSha256": "6f21225f459968eab7f20ea1c0c209b5ad677d920e6e08629c0ec906c97b8be7"
     },
     {
       "key": "mostly",
@@ -13507,7 +14137,12 @@
       "word": "myself",
       "spriteId": "e",
       "startMs": 160375,
-      "durationMs": 1710
+      "durationMs": 1710,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/103-myself.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/103-myself.wav",
+      "directDurationMs": 1710,
+      "directBytes": 54766,
+      "directSha256": "aef7425eba6d31b1170c5b13f503c68ab15ab50d09361f56cfe9b506cbbf5914"
     },
     {
       "key": "mystery",
@@ -13554,7 +14189,12 @@
       "word": "natural",
       "spriteId": "1",
       "startMs": 166085,
-      "durationMs": 1640
+      "durationMs": 1640,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/293-natural.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/293-natural.wav",
+      "directDurationMs": 1640,
+      "directBytes": 52526,
+      "directSha256": "43b99732b0842c39c6190a01bed368d0563028a26d160b3b0b909ba58304c060"
     },
     {
       "key": "natural sights",
@@ -13641,7 +14281,12 @@
       "word": "need",
       "spriteId": "e",
       "startMs": 165580,
-      "durationMs": 1340
+      "durationMs": 1340,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/145-need.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/145-need.wav",
+      "directDurationMs": 1340,
+      "directBytes": 42926,
+      "directSha256": "07defe5509530804e9b430718a2bcedead52df2612d91989059058ee361127a0"
     },
     {
       "key": "neighbor",
@@ -14428,7 +15073,12 @@
       "word": "of course",
       "spriteId": "8",
       "startMs": 170690,
-      "durationMs": 1640
+      "durationMs": 1640,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/111-of-course.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/111-of-course.wav",
+      "directDurationMs": 1640,
+      "directBytes": 52526,
+      "directSha256": "4256d8383152f31c8b6233645311e71954fa4c4e33f2c50accab539a38bc7f48"
     },
     {
       "key": "of one's own",
@@ -14613,7 +15263,12 @@
       "word": "once",
       "spriteId": "1",
       "startMs": 179525,
-      "durationMs": 1550
+      "durationMs": 1550,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/047-once.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/047-once.wav",
+      "directDurationMs": 1550,
+      "directBytes": 49646,
+      "directSha256": "ff990b0a84873de92834598539474ba450b1994f3884726386cbe63eaec12883"
     },
     {
       "key": "one",
@@ -14660,7 +15315,12 @@
       "word": "only",
       "spriteId": "f",
       "startMs": 168560,
-      "durationMs": 1445
+      "durationMs": 1445,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/024-only.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/024-only.wav",
+      "directDurationMs": 1445,
+      "directBytes": 46286,
+      "directSha256": "50aed6bae3682b7e271fdb9beb926e5fc5311147d57b4037ad3680f2e2b04995"
     },
     {
       "key": "onto",
@@ -14806,7 +15466,12 @@
       "word": "other",
       "spriteId": "d",
       "startMs": 166930,
-      "durationMs": 1335
+      "durationMs": 1335,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/015-other.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/015-other.wav",
+      "directDurationMs": 1335,
+      "directBytes": 42766,
+      "directSha256": "2f670607dc6d71fad301b75d85c0ae6b3e2143ecc73508344d9a93e7066d3272"
     },
     {
       "key": "others",
@@ -14883,7 +15548,12 @@
       "word": "outside",
       "spriteId": "4",
       "startMs": 165850,
-      "durationMs": 1585
+      "durationMs": 1585,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/114-outside.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/114-outside.wav",
+      "directDurationMs": 1585,
+      "directBytes": 50766,
+      "directSha256": "d88a7cad32926e1cc6ca5254bc23c5dd25f57751d9339b761835d8d7842f1b52"
     },
     {
       "key": "oven",
@@ -14930,7 +15600,12 @@
       "word": "p.m.",
       "spriteId": "a",
       "startMs": 139490,
-      "durationMs": 1560
+      "durationMs": 1560,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/045-p-m.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/045-p-m.wav",
+      "directDurationMs": 1560,
+      "directBytes": 49966,
+      "directSha256": "1e536d05a5c5bafc8e32c96b170cdc4625f6648e8e215e597be1d94b1e5eeb69"
     },
     {
       "key": "pacific",
@@ -14944,7 +15619,12 @@
       "word": "packet",
       "spriteId": "4",
       "startMs": 167555,
-      "durationMs": 1580
+      "durationMs": 1580,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/150-packet.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/150-packet.wav",
+      "directDurationMs": 1580,
+      "directBytes": 50606,
+      "directSha256": "8339021cc29a8d0a0bbb985f86ef8169d068299db1a02dbbf1bbfb7386a63950"
     },
     {
       "key": "page",
@@ -15032,7 +15712,12 @@
       "word": "pancake",
       "spriteId": "6",
       "startMs": 151340,
-      "durationMs": 1640
+      "durationMs": 1640,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/138-pancake.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/138-pancake.wav",
+      "directDurationMs": 1640,
+      "directBytes": 52526,
+      "directSha256": "857feda75b23aa9b2b10a77156ad0352b2f94c119e5fff2ae35175e07d297c15"
     },
     {
       "key": "panda",
@@ -15129,7 +15814,12 @@
       "word": "part",
       "spriteId": "3",
       "startMs": 175165,
-      "durationMs": 1410
+      "durationMs": 1410,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/069-part.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/069-part.wav",
+      "directDurationMs": 1410,
+      "directBytes": 45166,
+      "directSha256": "62fb70f0a3ed6bc283e167b4d675a5d9883fc75d98bc80f33ad338ba4d1cf8ee"
     },
     {
       "key": "partner",
@@ -15252,7 +15942,12 @@
       "word": "pay for",
       "spriteId": "5",
       "startMs": 204775,
-      "durationMs": 1620
+      "durationMs": 1620,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/233-pay-for.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/233-pay-for.wav",
+      "directDurationMs": 1620,
+      "directBytes": 51886,
+      "directSha256": "c50c7259132b99f79ef3c967692ada6c2c6acd5d098d3cf958a0a9d22ecc9c81"
     },
     {
       "key": "pc",
@@ -15271,7 +15966,12 @@
       "word": "peace",
       "spriteId": "d",
       "startMs": 171800,
-      "durationMs": 1475
+      "durationMs": 1475,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/115-peace.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/115-peace.wav",
+      "directDurationMs": 1475,
+      "directBytes": 47246,
+      "directSha256": "3f9e63fd5139d69979ea3f9b94c2d0735573d38b36e449c9880daa1c8eedfe68"
     },
     {
       "key": "peacefully",
@@ -15342,7 +16042,12 @@
       "word": "per cent (",
       "spriteId": "2",
       "startMs": 156320,
-      "durationMs": 1740
+      "durationMs": 1740,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/234-per-cent.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/234-per-cent.wav",
+      "directDurationMs": 1740,
+      "directBytes": 55726,
+      "directSha256": "d38c842b946a8679e53d9fa2317a566955d50bb5bcca5b367dd679ceb31a5554"
     },
     {
       "key": "percent",
@@ -15363,7 +16068,12 @@
       "word": "perfect",
       "spriteId": "c",
       "startMs": 194900,
-      "durationMs": 1710
+      "durationMs": 1710,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/074-perfect.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/074-perfect.wav",
+      "directDurationMs": 1710,
+      "directBytes": 54766,
+      "directSha256": "4346418369b31e4392d1e83012423b687fe8f3ece5dba0906c5d0bda16b78144"
     },
     {
       "key": "perhaps",
@@ -15510,7 +16220,12 @@
       "word": "pick",
       "spriteId": "4",
       "startMs": 172685,
-      "durationMs": 1400
+      "durationMs": 1400,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/110-pick.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/110-pick.wav",
+      "directDurationMs": 1400,
+      "directBytes": 44846,
+      "directSha256": "f5551293eb85711fd70112d0579ee0e9c3ff3ffe9d57e6270589cb637cfbb7c1"
     },
     {
       "key": "pick up",
@@ -15548,14 +16263,24 @@
       "word": "pie",
       "spriteId": "c",
       "startMs": 196730,
-      "durationMs": 1255
+      "durationMs": 1255,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/164-pie.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/164-pie.wav",
+      "directDurationMs": 1255,
+      "directBytes": 40206,
+      "directSha256": "9974be038fc94e042ae37a8c06d8cdd45108cc006df44ea338931b0ce42ea95c"
     },
     {
       "key": "piece",
       "word": "piece",
       "spriteId": "b",
       "startMs": 180050,
-      "durationMs": 1475
+      "durationMs": 1475,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/149-piece.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/149-piece.wav",
+      "directDurationMs": 1475,
+      "directBytes": 47246,
+      "directSha256": "3f9e63fd5139d69979ea3f9b94c2d0735573d38b36e449c9880daa1c8eedfe68"
     },
     {
       "key": "pig",
@@ -15759,7 +16484,12 @@
       "word": "player",
       "spriteId": "8",
       "startMs": 186870,
-      "durationMs": 1475
+      "durationMs": 1475,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/225-player.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/225-player.wav",
+      "directDurationMs": 1475,
+      "directBytes": 47246,
+      "directSha256": "bfdb6df68e9b235c9b80101e5981418e0b135238f34af1e91575ff8c33a46984"
     },
     {
       "key": "playground",
@@ -15844,14 +16574,24 @@
       "word": "pocket money",
       "spriteId": "4",
       "startMs": 174205,
-      "durationMs": 1760
+      "durationMs": 1760,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/240-pocket-money.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/240-pocket-money.wav",
+      "directDurationMs": 1760,
+      "directBytes": 56366,
+      "directSha256": "8b950722738729528b098e2fe66595beb7b04d657af2d54c162f4ad8775dcd47"
     },
     {
       "key": "poem",
       "word": "poem",
       "spriteId": "6",
       "startMs": 154725,
-      "durationMs": 1560
+      "durationMs": 1560,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/267-poem.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/267-poem.wav",
+      "directDurationMs": 1560,
+      "directBytes": 49966,
+      "directSha256": "52cbdef88fad836a40a97bda9b6f9035ac6a36e19ff3d8e9c2820cc3ff7d4ab0"
     },
     {
       "key": "point",
@@ -15922,7 +16662,12 @@
       "word": "polite",
       "spriteId": "1",
       "startMs": 196800,
-      "durationMs": 1500
+      "durationMs": 1500,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/012-polite.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/012-polite.wav",
+      "directDurationMs": 1500,
+      "directBytes": 48046,
+      "directSha256": "a97ac75d9df170ccabf304870a711b63658d8a93455481864831feb29a25ebd2"
     },
     {
       "key": "politely",
@@ -15997,7 +16742,12 @@
       "word": "popular",
       "spriteId": "9",
       "startMs": 170850,
-      "durationMs": 1615
+      "durationMs": 1615,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/191-popular.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/191-popular.wav",
+      "directDurationMs": 1615,
+      "directBytes": 51726,
+      "directSha256": "69c3f871be647a3e1c96523a956da8723458ee03020de90c19ff0902aee75503"
     },
     {
       "key": "population",
@@ -16011,7 +16761,12 @@
       "word": "pork",
       "spriteId": "6",
       "startMs": 156405,
-      "durationMs": 1425
+      "durationMs": 1425,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/135-pork.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/135-pork.wav",
+      "directDurationMs": 1425,
+      "directBytes": 45646,
+      "directSha256": "762c5654d52ffc4f5b565f2406b5a7e5d7767f5511bacd1367c57744953ac71e"
     },
     {
       "key": "position",
@@ -16103,7 +16858,12 @@
       "word": "pound",
       "spriteId": "d",
       "startMs": 184360,
-      "durationMs": 1455
+      "durationMs": 1455,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/211-pound.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/211-pound.wav",
+      "directDurationMs": 1455,
+      "directBytes": 46606,
+      "directSha256": "8b11bef8f0ef37edcbb7fdfa002d8dcb14c2c5a9d72ba7a0c313027773fc9b99"
     },
     {
       "key": "pour",
@@ -16202,7 +16962,12 @@
       "word": "prepare",
       "spriteId": "4",
       "startMs": 179555,
-      "durationMs": 1555
+      "durationMs": 1555,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/303-prepare.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/303-prepare.wav",
+      "directDurationMs": 1555,
+      "directBytes": 49806,
+      "directSha256": "0d70ad017c20b38e65951d4f7c16a626a63e5086e3aa1ffc8b70e76660cfae3d"
     },
     {
       "key": "prepare for",
@@ -16223,7 +16988,12 @@
       "word": "present",
       "spriteId": "5",
       "startMs": 226725,
-      "durationMs": 1625
+      "durationMs": 1625,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/242-present.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/242-present.wav",
+      "directDurationMs": 1625,
+      "directBytes": 52046,
+      "directSha256": "d8665e7e0a3c4ceb90faa6ae76fcd1db5df7acf1a1e39e11f7b5b453fb77f2fa"
     },
     {
       "key": "president",
@@ -16237,7 +17007,12 @@
       "word": "pretty",
       "spriteId": "1",
       "startMs": 200235,
-      "durationMs": 1365
+      "durationMs": 1365,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/022-pretty.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/022-pretty.wav",
+      "directDurationMs": 1365,
+      "directBytes": 43726,
+      "directSha256": "520c4b44b3ff767f7c3d200dc1103c894797c10a15f748e68b3363cba5163afb"
     },
     {
       "key": "prevent",
@@ -16270,7 +17045,12 @@
       "word": "primary",
       "spriteId": "e",
       "startMs": 191560,
-      "durationMs": 1700
+      "durationMs": 1700,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/189-primary.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/189-primary.wav",
+      "directDurationMs": 1700,
+      "directBytes": 54446,
+      "directSha256": "77cdc117793dce9c41fa19d1933f13cacb21a2b62b15699dc5521a3a4badff51"
     },
     {
       "key": "princess",
@@ -16331,7 +17111,12 @@
       "word": "problem",
       "spriteId": "a",
       "startMs": 158590,
-      "durationMs": 1720
+      "durationMs": 1720,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/028-problem.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/028-problem.wav",
+      "directDurationMs": 1720,
+      "directBytes": 55086,
+      "directSha256": "dc7720fe8f563381f45d76d1fb70d1da7985c96706695cf473a4a2352b905588"
     },
     {
       "key": "produce",
@@ -16446,7 +17231,12 @@
       "word": "protect",
       "spriteId": "1",
       "startMs": 205445,
-      "durationMs": 1545
+      "durationMs": 1545,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/226-protect.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/226-protect.wav",
+      "directDurationMs": 1545,
+      "directBytes": 49486,
+      "directSha256": "14f1aaf887e53846f659501b57499a31ab69c38c7215fc0236025a1b34319fd7"
     },
     {
       "key": "protecting",
@@ -16544,7 +17334,12 @@
       "word": "purple",
       "spriteId": "a",
       "startMs": 160430,
-      "durationMs": 1475
+      "durationMs": 1475,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/178-purple.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/178-purple.wav",
+      "directDurationMs": 1475,
+      "directBytes": 47246,
+      "directSha256": "f69e983288b92c19e601cba78baf9851ba35f7fde798babdde6202b4399388b6"
     },
     {
       "key": "purpose",
@@ -16593,7 +17388,12 @@
       "word": "put up",
       "spriteId": "2",
       "startMs": 178440,
-      "durationMs": 1465
+      "durationMs": 1465,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/300-put-up.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/300-put-up.wav",
+      "directDurationMs": 1465,
+      "directBytes": 46926,
+      "directSha256": "5164a7ee5cc60d36d6cf79ba84971fb96c95ec90590a2d9a6ea331955519fac6"
     },
     {
       "key": "quality",
@@ -16661,14 +17461,24 @@
       "word": "quiet",
       "spriteId": "5",
       "startMs": 233975,
-      "durationMs": 1535
+      "durationMs": 1535,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/116-quiet.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/116-quiet.wav",
+      "directDurationMs": 1535,
+      "directBytes": 49166,
+      "directSha256": "94c0e1b2fbaade5e9715400e196701e63f4803519624b078bf27eb4f57e8cce3"
     },
     {
       "key": "quite",
       "word": "quite",
       "spriteId": "5",
       "startMs": 235630,
-      "durationMs": 1495
+      "durationMs": 1495,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/093-quite.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/093-quite.wav",
+      "directDurationMs": 1495,
+      "directBytes": 47886,
+      "directSha256": "53e7278f29a6e0fc8369de66249966a5bebdf1e7f2707bff2eb4cbe7e5211978"
     },
     {
       "key": "rabbit",
@@ -16687,7 +17497,12 @@
       "word": "race",
       "spriteId": "d",
       "startMs": 187530,
-      "durationMs": 1485
+      "durationMs": 1485,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/261-race.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/261-race.wav",
+      "directDurationMs": 1485,
+      "directBytes": 47566,
+      "directSha256": "377a4b964757caa456dc1d85322b0d7f8a4290a9c7cc05451ee028e7469c3f75"
     },
     {
       "key": "radio",
@@ -16756,7 +17571,12 @@
       "word": "rainy",
       "spriteId": "1",
       "startMs": 210260,
-      "durationMs": 1445
+      "durationMs": 1445,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/238-rainy.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/238-rainy.wav",
+      "directDurationMs": 1445,
+      "directBytes": 46286,
+      "directSha256": "92a238739f95691650c828c0517f8f2b35d5753233c83b81964b0fe7bcbeeed7"
     },
     {
       "key": "raise",
@@ -16885,7 +17705,12 @@
       "word": "really",
       "spriteId": "0",
       "startMs": 175380,
-      "durationMs": 1380
+      "durationMs": 1380,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/081-really.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/081-really.wav",
+      "directDurationMs": 1380,
+      "directBytes": 44206,
+      "directSha256": "0e19b6f59fc4195585cce456e9b17bfd6716ae0a17e4bc01e2dd49210f75c131"
     },
     {
       "key": "reason",
@@ -16975,7 +17800,12 @@
       "word": "red packet",
       "spriteId": "c",
       "startMs": 209700,
-      "durationMs": 1725
+      "durationMs": 1725,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/250-red-packet.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/250-red-packet.wav",
+      "directDurationMs": 1725,
+      "directBytes": 55246,
+      "directSha256": "8b9292553b05e87359a8d736b96ff72e278960ace3f7afad031878119e15562d"
     },
     {
       "key": "red-crowned crane",
@@ -17029,7 +17859,12 @@
       "word": "relative",
       "spriteId": "d",
       "startMs": 195610,
-      "durationMs": 1595
+      "durationMs": 1595,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/249-relative.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/249-relative.wav",
+      "directDurationMs": 1595,
+      "directBytes": 51086,
+      "directSha256": "97da74cb5d1d891d29c18d6613e4f1db66f1d3428fbb63b1e6171c33aed2cb29"
     },
     {
       "key": "relax",
@@ -17057,7 +17892,12 @@
       "word": "remember",
       "spriteId": "0",
       "startMs": 180585,
-      "durationMs": 1535
+      "durationMs": 1535,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/257-remember.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/257-remember.wav",
+      "directDurationMs": 1535,
+      "directBytes": 49166,
+      "directSha256": "890c9b76adc17d9c17a7fb909c1591726ce75bbf7096cbd79af424ddbd6b7363"
     },
     {
       "key": "remember to do sth",
@@ -17174,14 +18014,24 @@
       "word": "respect",
       "spriteId": "1",
       "startMs": 215500,
-      "durationMs": 1770
+      "durationMs": 1770,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/295-respect.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/295-respect.wav",
+      "directDurationMs": 1770,
+      "directBytes": 56686,
+      "directSha256": "d8426cd82620493c798571deaf3be5d9630650d629ac718937a64a82f446c369"
     },
     {
       "key": "rest",
       "word": "rest",
       "spriteId": "2",
       "startMs": 188635,
-      "durationMs": 1595
+      "durationMs": 1595,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/163-rest.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/163-rest.wav",
+      "directDurationMs": 1595,
+      "directBytes": 51086,
+      "directSha256": "c403ad9b1ceb6cb54fd30a8f5fd839117b947d40b568afd440dfd55d6fe5d327"
     },
     {
       "key": "restaurant",
@@ -17259,7 +18109,12 @@
       "word": "rice dumpling",
       "spriteId": "5",
       "startMs": 240700,
-      "durationMs": 1920
+      "durationMs": 1920,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/263-rice-dumpling.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/263-rice-dumpling.wav",
+      "directDurationMs": 1920,
+      "directBytes": 61486,
+      "directSha256": "66cf3817a1c118ed23517c6f012be4e8d9d7c8cbe4d341aacae26baa9dc04b73"
     },
     {
       "key": "rich",
@@ -17316,7 +18171,12 @@
       "word": "ring",
       "spriteId": "5",
       "startMs": 242740,
-      "durationMs": 1450
+      "durationMs": 1450,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/216-ring.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/216-ring.wav",
+      "directDurationMs": 1450,
+      "directBytes": 46446,
+      "directSha256": "9ffdd47558bbb2843fbd9519081ce4eec97864af331cb1e33008af20594f94ca"
     },
     {
       "key": "rise",
@@ -17387,7 +18247,12 @@
       "word": "role",
       "spriteId": "8",
       "startMs": 202995,
-      "durationMs": 1395
+      "durationMs": 1395,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/051-role.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/051-role.wav",
+      "directDurationMs": 1395,
+      "directBytes": 44686,
+      "directSha256": "6e8684da6ca812f28879653cb1bd7a5ffced0bced41158a0c4368764e514f4ce"
     },
     {
       "key": "roller coaster",
@@ -17582,7 +18447,12 @@
       "word": "Russian",
       "spriteId": "f",
       "startMs": 202520,
-      "durationMs": 1645
+      "durationMs": 1645,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/218-russian.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/218-russian.wav",
+      "directDurationMs": 1645,
+      "directBytes": 52686,
+      "directSha256": "d99a645d2e1f5757ee61ce2cb51be396f069c56c7c39b0965752ab13f1e08e4c"
     },
     {
       "key": "sad",
@@ -17757,7 +18627,12 @@
       "word": "save",
       "spriteId": "1",
       "startMs": 220905,
-      "durationMs": 1540
+      "durationMs": 1540,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/236-save.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/236-save.wav",
+      "directDurationMs": 1540,
+      "directBytes": 49326,
+      "directSha256": "7310dcd9cb5f3443c36a8ec3093cba0d4776ecfd5ec586e327b2e3a8fadcaaf8"
     },
     {
       "key": "save from",
@@ -17875,7 +18750,12 @@
       "word": "scientist",
       "spriteId": "d",
       "startMs": 202005,
-      "durationMs": 1865
+      "durationMs": 1865,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/042-scientist.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/042-scientist.wav",
+      "directDurationMs": 1865,
+      "directBytes": 59726,
+      "directSha256": "41aeb78fac9b48b03c3ee7b192190a71eb5f555633522d9e69a4d956627beffc"
     },
     {
       "key": "scissors",
@@ -17894,7 +18774,12 @@
       "word": "score",
       "spriteId": "7",
       "startMs": 188330,
-      "durationMs": 1570
+      "durationMs": 1570,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/160-score.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/160-score.wav",
+      "directDurationMs": 1570,
+      "directBytes": 50286,
+      "directSha256": "24e68b15139ddf95286a42ccedf0d5715ec06c1e6af2fe63b33315c8d97c128a"
     },
     {
       "key": "scream",
@@ -18045,7 +18930,12 @@
       "word": "seldom",
       "spriteId": "7",
       "startMs": 191640,
-      "durationMs": 1675
+      "durationMs": 1675,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/112-seldom.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/112-seldom.wav",
+      "directDurationMs": 1675,
+      "directBytes": 53646,
+      "directSha256": "ae41e7578899881f58e9c62c5564d0f273654ea85b0415d6792fd432c760f713"
     },
     {
       "key": "sell",
@@ -18168,7 +19058,12 @@
       "word": "set",
       "spriteId": "6",
       "startMs": 195655,
-      "durationMs": 1450
+      "durationMs": 1450,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/219-set.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/219-set.wav",
+      "directDurationMs": 1450,
+      "directBytes": 46446,
+      "directSha256": "29c3c115dafad222f66f4bb4c106de7df4ad55148e55382d49f7e6d79ea816cc"
     },
     {
       "key": "set off",
@@ -18483,7 +19378,12 @@
       "word": "shy",
       "spriteId": "d",
       "startMs": 210640,
-      "durationMs": 1320
+      "durationMs": 1320,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/023-shy.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/023-shy.wav",
+      "directDurationMs": 1320,
+      "directBytes": 42286,
+      "directSha256": "14454174823a62fe8f44041977c0a2c39c01d916259d7ab4b8c254937493602f"
     },
     {
       "key": "sick",
@@ -18542,7 +19442,12 @@
       "word": "silk",
       "spriteId": "1",
       "startMs": 224090,
-      "durationMs": 1450
+      "durationMs": 1450,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/200-silk.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/200-silk.wav",
+      "directDurationMs": 1450,
+      "directBytes": 46446,
+      "directSha256": "9ec8da5b1f98b4580db6c1bea08c1dbeffc3aa504e13077dfdb5909708e6e91c"
     },
     {
       "key": "silly",
@@ -18563,7 +19468,12 @@
       "word": "similar",
       "spriteId": "a",
       "startMs": 199385,
-      "durationMs": 1615
+      "durationMs": 1615,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/179-similar.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/179-similar.wav",
+      "directDurationMs": 1615,
+      "directBytes": 51726,
+      "directSha256": "538f0cbe52205fd71af9ea20fd13db4ec70fa827d8f50dcda9b57830f96ce658"
     },
     {
       "key": "simple",
@@ -18705,7 +19615,12 @@
       "word": "size",
       "spriteId": "8",
       "startMs": 213180,
-      "durationMs": 1540
+      "durationMs": 1540,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/207-size.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/207-size.wav",
+      "directDurationMs": 1540,
+      "directBytes": 49326,
+      "directSha256": "8f4c16c7ea4462b9afe3eb7feeeaf3684851fa06ffd261c452d4f879b42de868"
     },
     {
       "key": "skating",
@@ -18736,7 +19651,12 @@
       "word": "skill",
       "spriteId": "3",
       "startMs": 215660,
-      "durationMs": 1540
+      "durationMs": 1540,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/055-skill.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/055-skill.wav",
+      "directDurationMs": 1540,
+      "directBytes": 49326,
+      "directSha256": "251c91a4293d4afe0a5636f70eae638f1a0087eeabf2b5c13478cf5c849f60f9"
     },
     {
       "key": "skills",
@@ -18783,7 +19703,12 @@
       "word": "slim",
       "spriteId": "8",
       "startMs": 216670,
-      "durationMs": 1590
+      "durationMs": 1590,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/011-slim.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/011-slim.wav",
+      "directDurationMs": 1590,
+      "directBytes": 50926,
+      "directSha256": "5e92ef7fcefd625ba4e329debfa78f3b12e81dd2f8d5f3ba3853289b261d09f6"
     },
     {
       "key": "slowly",
@@ -18811,7 +19736,12 @@
       "word": "smart",
       "spriteId": "1",
       "startMs": 229310,
-      "durationMs": 1625
+      "durationMs": 1625,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/013-smart.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/013-smart.wav",
+      "directDurationMs": 1625,
+      "directBytes": 52046,
+      "directSha256": "5f7b62b728ed6c98ff7476c15ae51454931b9587c64e6b55f23d0c3c3ab81ef1"
     },
     {
       "key": "smell",
@@ -18846,7 +19776,12 @@
       "word": "smooth",
       "spriteId": "2",
       "startMs": 206235,
-      "durationMs": 1695
+      "durationMs": 1695,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/201-smooth.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/201-smooth.wav",
+      "directDurationMs": 1695,
+      "directBytes": 54286,
+      "directSha256": "f1d54b0cc89b3a595f435d9ea49d819e32d189f76f912ea70e8e728455dc3ee1"
     },
     {
       "key": "smoothly",
@@ -18996,7 +19931,12 @@
       "word": "soft",
       "spriteId": "e",
       "startMs": 222330,
-      "durationMs": 1710
+      "durationMs": 1710,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/202-soft.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/202-soft.wav",
+      "directDurationMs": 1710,
+      "directBytes": 54766,
+      "directSha256": "4e16365bcd1f914153ec5a2a8d4cfcea7c5207ca80967990b8673efe58de6767"
     },
     {
       "key": "software",
@@ -19064,7 +20004,12 @@
       "word": "something",
       "spriteId": "1",
       "startMs": 236230,
-      "durationMs": 1795
+      "durationMs": 1795,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/129-something.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/129-something.wav",
+      "directDurationMs": 1795,
+      "directBytes": 57486,
+      "directSha256": "14764649398c6d108927397da8cd5536d9166540319af4f12c0e6f09cd5154cd"
     },
     {
       "key": "sometime",
@@ -19116,7 +20061,12 @@
       "word": "soon",
       "spriteId": "3",
       "startMs": 219235,
-      "durationMs": 1565
+      "durationMs": 1565,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/082-soon.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/082-soon.wav",
+      "directDurationMs": 1565,
+      "directBytes": 50126,
+      "directSha256": "c9844d86085039cbc6ac5c20d2c935f2c10fd0832f939b74999df9c9f88690c9"
     },
     {
       "key": "soon after",
@@ -19142,7 +20092,12 @@
       "word": "sound",
       "spriteId": "5",
       "startMs": 268405,
-      "durationMs": 1520
+      "durationMs": 1520,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/049-sound.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/049-sound.wav",
+      "directDurationMs": 1520,
+      "directBytes": 48686,
+      "directSha256": "9cc4cf6fbfe0a1852ba550b3453225fafcf830ac10d77a2c2134470eca66b318"
     },
     {
       "key": "sounds",
@@ -19248,7 +20203,12 @@
       "word": "special",
       "spriteId": "b",
       "startMs": 219470,
-      "durationMs": 1650
+      "durationMs": 1650,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/095-special.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/095-special.wav",
+      "directDurationMs": 1650,
+      "directBytes": 52846,
+      "directSha256": "71b0595e93e5e3586f6d2caa5d1b69ef6faa9ddf82eb0b94afb904721f3b1339"
     },
     {
       "key": "special offer",
@@ -19302,7 +20262,12 @@
       "word": "spend",
       "spriteId": "9",
       "startMs": 208815,
-      "durationMs": 1685
+      "durationMs": 1685,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/075-spend.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/075-spend.wav",
+      "directDurationMs": 1685,
+      "directBytes": 53966,
+      "directSha256": "ffefca80518a822df22b70190639a762825a024de4dffde87ee60467dfc1539e"
     },
     {
       "key": "spend time doing sth",
@@ -19363,7 +20328,12 @@
       "word": "spread",
       "spriteId": "e",
       "startMs": 229550,
-      "durationMs": 1640
+      "durationMs": 1640,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/270-spread.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/270-spread.wav",
+      "directDurationMs": 1640,
+      "directBytes": 52526,
+      "directSha256": "fc909f9f0840eb45444fb4c4401f82f49eaacb4962ba33d42b6d6088214f10f5"
     },
     {
       "key": "spring",
@@ -19560,7 +20530,12 @@
       "word": "stay up",
       "spriteId": "4",
       "startMs": 217615,
-      "durationMs": 1640
+      "durationMs": 1640,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/143-stay-up.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/143-stay-up.wav",
+      "directDurationMs": 1640,
+      "directBytes": 52526,
+      "directSha256": "82e59a1edfd1fca99f01bebdfe22ad3b2dbb07e487b9204e3e642fa5e78de2c6"
     },
     {
       "key": "steal",
@@ -19850,7 +20825,12 @@
       "word": "style",
       "spriteId": "2",
       "startMs": 217395,
-      "durationMs": 1660
+      "durationMs": 1660,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/167-style.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/167-style.wav",
+      "directDurationMs": 1660,
+      "directBytes": 53166,
+      "directSha256": "1a6fc9a9caecc45dbe01da81c42371bb83d815b0f7d0f1d6e2ec89936cb84bf3"
     },
     {
       "key": "subject",
@@ -19911,7 +20891,12 @@
       "word": "such as",
       "spriteId": "2",
       "startMs": 219175,
-      "durationMs": 1755
+      "durationMs": 1755,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/177-such-as.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/177-such-as.wav",
+      "directDurationMs": 1755,
+      "directBytes": 56206,
+      "directSha256": "3282ccfffd4fc96c096a76cae6f7b8c59d7f33338900ee25b7e6f487db24ab4a"
     },
     {
       "key": "such that",
@@ -19975,14 +20960,24 @@
       "word": "suit",
       "spriteId": "3",
       "startMs": 237135,
-      "durationMs": 1515
+      "durationMs": 1515,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/186-suit.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/186-suit.wav",
+      "directDurationMs": 1515,
+      "directBytes": 48526,
+      "directSha256": "7ad39f3fccc0febf80a8ecf5eb3f5a1ca18c4910d5e7444c64e203e203b02a2d"
     },
     {
       "key": "suitable",
       "word": "suitable",
       "spriteId": "c",
       "startMs": 246090,
-      "durationMs": 1595
+      "durationMs": 1595,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/184-suitable.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/184-suitable.wav",
+      "directDurationMs": 1595,
+      "directBytes": 51086,
+      "directSha256": "dc61b36e24f309df90f9fe0a41e127dcb34a3bee2c710f4f9e92d93f63f2013e"
     },
     {
       "key": "summer",
@@ -20124,7 +21119,12 @@
       "word": "surprise",
       "spriteId": "6",
       "startMs": 209225,
-      "durationMs": 1825
+      "durationMs": 1825,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/224-surprise.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/224-surprise.wav",
+      "directDurationMs": 1825,
+      "directBytes": 58446,
+      "directSha256": "2849d5e906548e0d9b81b95b6dff5d1e0a40a5889dd0e6d2fa63a35fa10dccc7"
     },
     {
       "key": "surprised",
@@ -20138,7 +21138,12 @@
       "word": "survey",
       "spriteId": "6",
       "startMs": 211170,
-      "durationMs": 1480
+      "durationMs": 1480,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/251-survey.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/251-survey.wav",
+      "directDurationMs": 1480,
+      "directBytes": 47406,
+      "directSha256": "54d869e997ede2bf904eadcc6666a732622ab67687adc026ce1727913730fdb9"
     },
     {
       "key": "survive",
@@ -20223,7 +21228,12 @@
       "word": "symbol",
       "spriteId": "8",
       "startMs": 243815,
-      "durationMs": 1565
+      "durationMs": 1565,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/276-symbol.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/276-symbol.wav",
+      "directDurationMs": 1565,
+      "directBytes": 50126,
+      "directSha256": "780a04e7eb66105dbb209e824af7b19cc47c81b00f26d4e9fd657326e2a372bd"
     },
     {
       "key": "system",
@@ -20322,7 +21332,12 @@
       "word": "take care of",
       "spriteId": "7",
       "startMs": 207325,
-      "durationMs": 1780
+      "durationMs": 1780,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/128-take-care-of.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/128-take-care-of.wav",
+      "directDurationMs": 1780,
+      "directBytes": 57006,
+      "directSha256": "7274b6c1295b4525820bfd48089bab01f3656c37b5822ec4453f582a84e54646"
     },
     {
       "key": "take notice of",
@@ -20336,7 +21351,12 @@
       "word": "take part in",
       "spriteId": "4",
       "startMs": 226665,
-      "durationMs": 1805
+      "durationMs": 1805,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/122-take-part-in.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/122-take-part-in.wav",
+      "directDurationMs": 1805,
+      "directBytes": 57806,
+      "directSha256": "a39982d2cc6708976c8a874dd665965ea527a1f9ed888eaaaf9388c046b6e7ee"
     },
     {
       "key": "take photos",
@@ -20357,7 +21377,12 @@
       "word": "take place",
       "spriteId": "1",
       "startMs": 247425,
-      "durationMs": 1765
+      "durationMs": 1765,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/076-take-place.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/076-take-place.wav",
+      "directDurationMs": 1765,
+      "directBytes": 56526,
+      "directSha256": "dc7230aa3ce8120c530e70b089e01cce724b9a0fb2ec572ab5d05461fa8a1b1c"
     },
     {
       "key": "take sth with sb",
@@ -20681,7 +21706,12 @@
       "word": "term",
       "spriteId": "2",
       "startMs": 227930,
-      "durationMs": 1445
+      "durationMs": 1445,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/105-term.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/105-term.wav",
+      "directDurationMs": 1445,
+      "directBytes": 46286,
+      "directSha256": "dc31a7b6a7f5ad3e2314a91cce7fac1e0381129fe29ee689060df11758f98a3e"
     },
     {
       "key": "terrible",
@@ -20731,7 +21761,12 @@
       "word": "than",
       "spriteId": "d",
       "startMs": 226670,
-      "durationMs": 1400
+      "durationMs": 1400,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/155-than.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/155-than.wav",
+      "directDurationMs": 1400,
+      "directBytes": 44846,
+      "directSha256": "cfcc50445887f8c95cbeb23b4c752a7904b5d5a3f751f980b5ae032f09646bb3"
     },
     {
       "key": "thank",
@@ -20944,7 +21979,12 @@
       "word": "thing",
       "spriteId": "8",
       "startMs": 255690,
-      "durationMs": 1500
+      "durationMs": 1500,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/037-thing.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/037-thing.wav",
+      "directDurationMs": 1500,
+      "directBytes": 48046,
+      "directSha256": "25bca822362566046836ee160fa3bd22f54e5ef5d4efa05acf9a0116492f8aa5"
     },
     {
       "key": "things",
@@ -21045,7 +22085,12 @@
       "word": "thousand",
       "spriteId": "2",
       "startMs": 231975,
-      "durationMs": 1720
+      "durationMs": 1720,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/085-thousand.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/085-thousand.wav",
+      "directDurationMs": 1720,
+      "directBytes": 55086,
+      "directSha256": "c7020eb805104bbfd9d3ff7731cf87d244978d7dfd4d77dbcbeefb2d41c4e6fd"
     },
     {
       "key": "thousands of",
@@ -21073,7 +22118,12 @@
       "word": "through",
       "spriteId": "b",
       "startMs": 249940,
-      "durationMs": 1410
+      "durationMs": 1410,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/123-through.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/123-through.wav",
+      "directDurationMs": 1410,
+      "directBytes": 45166,
+      "directSha256": "5bdd858431f33f35c616ae0d003ed9c5122b229c9f59c3604ec8cf4dfcdf7758"
     },
     {
       "key": "through adv",
@@ -21139,7 +22189,12 @@
       "word": "tie",
       "spriteId": "d",
       "startMs": 236415,
-      "durationMs": 1255
+      "durationMs": 1255,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/169-tie.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/169-tie.wav",
+      "directDurationMs": 1255,
+      "directBytes": 40206,
+      "directSha256": "f2b4b137407a2f6ff02f3179199229129b049c56d71ede9a8936f4fdf625bb93"
     },
     {
       "key": "tiger",
@@ -21158,7 +22213,12 @@
       "word": "till",
       "spriteId": "2",
       "startMs": 235460,
-      "durationMs": 1350
+      "durationMs": 1350,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/307-till.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/307-till.wav",
+      "directDurationMs": 1350,
+      "directBytes": 43246,
+      "directSha256": "dc1ae2b5df187396c7fde2fe7221b26ff05001201235c60b989435c29b49e430"
     },
     {
       "key": "time",
@@ -21212,7 +22272,12 @@
       "word": "tiring",
       "spriteId": "2",
       "startMs": 236930,
-      "durationMs": 1655
+      "durationMs": 1655,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/119-tiring.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/119-tiring.wav",
+      "directDurationMs": 1655,
+      "directBytes": 53006,
+      "directSha256": "d31feef89a39cb9e5b2acc303f6c6d96782d72e7172f204fa79e8749c0825d55"
     },
     {
       "key": "title",
@@ -21288,7 +22353,12 @@
       "word": "tonight",
       "spriteId": "4",
       "startMs": 240950,
-      "durationMs": 1510
+      "durationMs": 1510,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/290-tonight.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/290-tonight.wav",
+      "directDurationMs": 1510,
+      "directBytes": 48366,
+      "directSha256": "7e29e40ae188edf11b6e311e191440229a7c48e7ff62abfc93b31d4f36133189"
     },
     {
       "key": "too",
@@ -21487,7 +22557,12 @@
       "word": "traditional",
       "spriteId": "c",
       "startMs": 261600,
-      "durationMs": 1640
+      "durationMs": 1640,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/190-traditional.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/190-traditional.wav",
+      "directDurationMs": 1640,
+      "directBytes": 52526,
+      "directSha256": "06ad63313cede217608c85d5b44f3df1d3e5e7514cf2981e1a1d6e51024db870"
     },
     {
       "key": "traffic",
@@ -21621,7 +22696,12 @@
       "word": "traveller",
       "spriteId": "a",
       "startMs": 233060,
-      "durationMs": 1580
+      "durationMs": 1580,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/283-traveller.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/283-traveller.wav",
+      "directDurationMs": 1580,
+      "directBytes": 50606,
+      "directSha256": "73c98597fa65cf739ed527dcaa13e1c6a77e9c161a07457d63d52ac49c6ef50e"
     },
     {
       "key": "travelling",
@@ -21727,7 +22807,12 @@
       "word": "trust",
       "spriteId": "f",
       "startMs": 259900,
-      "durationMs": 1685
+      "durationMs": 1685,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/080-trust.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/080-trust.wav",
+      "directDurationMs": 1685,
+      "directBytes": 53966,
+      "directSha256": "f897ccc6f8fb4353a09bf913c47744012e5ff11970fd1368b55a341ec7449b8e"
     },
     {
       "key": "truth",
@@ -21779,7 +22864,12 @@
       "word": "turn",
       "spriteId": "b",
       "startMs": 256525,
-      "durationMs": 1435
+      "durationMs": 1435,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/124-turn.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/124-turn.wav",
+      "directDurationMs": 1435,
+      "directBytes": 45966,
+      "directSha256": "d8be97766ed02bbec9365fdbbef4e6cb7dfd06510380498ecc7cb6ba9191d501"
     },
     {
       "key": "turn around",
@@ -21868,7 +22958,12 @@
       "word": "type",
       "spriteId": "d",
       "startMs": 240865,
-      "durationMs": 1400
+      "durationMs": 1400,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/192-type.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/192-type.wav",
+      "directDurationMs": 1400,
+      "directBytes": 44846,
+      "directSha256": "dbd4711f8ef6ea548ebb4fb426f96f3c911df1f12d5d42082cc2c70501576bcb"
     },
     {
       "key": "ugly",
@@ -22138,7 +23233,12 @@
       "word": "usually",
       "spriteId": "6",
       "startMs": 231125,
-      "durationMs": 1585
+      "durationMs": 1585,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/100-usually.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/100-usually.wav",
+      "directDurationMs": 1585,
+      "directBytes": 50766,
+      "directSha256": "a624d431ca7fb7d41b552a898cc6eb94338de196b2a557b8d5e3196e490e3f1d"
     },
     {
       "key": "vacation",
@@ -22225,7 +23325,12 @@
       "word": "violin",
       "spriteId": "0",
       "startMs": 235100,
-      "durationMs": 1690
+      "durationMs": 1690,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/285-violin.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/285-violin.wav",
+      "directDurationMs": 1690,
+      "directBytes": 54126,
+      "directSha256": "18570bee9d0dd5a6f1efbd5f1e74e1fb341c9417ddba65fa46a21b6707c34093"
     },
     {
       "key": "virus",
@@ -22523,7 +23628,12 @@
       "word": "watermelon",
       "spriteId": "e",
       "startMs": 257095,
-      "durationMs": 1795
+      "durationMs": 1795,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/132-watermelon.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/132-watermelon.wav",
+      "directDurationMs": 1795,
+      "directBytes": 57486,
+      "directSha256": "9d5c42bc42bbe938794a51183b8a95f40931773637c3cd2b28e16a3bf7c72d97"
     },
     {
       "key": "way",
@@ -22618,7 +23728,12 @@
       "word": "wedding",
       "spriteId": "c",
       "startMs": 271915,
-      "durationMs": 1545
+      "durationMs": 1545,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/193-wedding.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/193-wedding.wav",
+      "directDurationMs": 1545,
+      "directBytes": 49486,
+      "directSha256": "74edc27c3537a19026829e9524460ea5682dfe3f438a2f3d5e7602298b1ef710"
     },
     {
       "key": "wednesday",
@@ -22854,7 +23969,12 @@
       "word": "whole",
       "spriteId": "a",
       "startMs": 240690,
-      "durationMs": 1515
+      "durationMs": 1515,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/162-whole.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/162-whole.wav",
+      "directDurationMs": 1515,
+      "directBytes": 48526,
+      "directSha256": "02f0b96385beb0e4b87cddfc10515145cdcd85dcfbfa319f53c0c23dde59061e"
     },
     {
       "key": "whom",
@@ -23041,7 +24161,12 @@
       "word": "wise",
       "spriteId": "c",
       "startMs": 281470,
-      "durationMs": 1485
+      "durationMs": 1485,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/208-wise.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/208-wise.wav",
+      "directDurationMs": 1485,
+      "directBytes": 47566,
+      "directSha256": "504f7564e3295e98671c911ff3a7196fe479346e1a38eb57d517abb2bf2796ef"
     },
     {
       "key": "wisely",
@@ -23062,7 +24187,12 @@
       "word": "without",
       "spriteId": "0",
       "startMs": 243625,
-      "durationMs": 1460
+      "durationMs": 1460,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/137-without.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/137-without.wav",
+      "directDurationMs": 1460,
+      "directBytes": 46766,
+      "directSha256": "d9f59156ca4480cf25adb83071ab1293933358749771637a200bef481088f166"
     },
     {
       "key": "witness",
@@ -23243,14 +24373,24 @@
       "word": "would",
       "spriteId": "0",
       "startMs": 247305,
-      "durationMs": 1350
+      "durationMs": 1350,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/059-would.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/059-would.wav",
+      "directDurationMs": 1350,
+      "directBytes": 43246,
+      "directSha256": "84bf3289a112158edb3ae82e277b5861805c87ab01ebc9bb9341639e35d229d5"
     },
     {
       "key": "would like",
       "word": "would like",
       "spriteId": "d",
       "startMs": 256895,
-      "durationMs": 1555
+      "durationMs": 1555,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/060-would-like.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/060-would-like.wav",
+      "directDurationMs": 1555,
+      "directBytes": 49806,
+      "directSha256": "e0807b1460a09250be1700b356be320609274abb23308f8ad0fd31fa0cfdc1a3"
     },
     {
       "key": "would rather",
@@ -23467,7 +24607,12 @@
       "word": "yuan",
       "spriteId": "3",
       "startMs": 286525,
-      "durationMs": 1575
+      "durationMs": 1575,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/209-yuan.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/209-yuan.wav",
+      "directDurationMs": 1575,
+      "directBytes": 50446,
+      "directSha256": "56ec3dfb37755b3933cea95bbbb254a6a974c22b9926657fa601ad105d0424ec"
     },
     {
       "key": "yummy",
@@ -23489,6 +24634,942 @@
       "spriteId": "a",
       "startMs": 252570,
       "durationMs": 1455
+    },
+    {
+      "key": "go by",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/004-go-by.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/004-go-by.wav",
+      "directDurationMs": 1430,
+      "directBytes": 45806,
+      "directSha256": "0289caccadc183af57b7d7edcb49f42b86d92fcac6977ff544ea6a8b34c3c87d",
+      "word": "go by"
+    },
+    {
+      "key": "be ready to do sth",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/014-be-ready-to-do-sth.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/014-be-ready-to-do-sth.wav",
+      "directDurationMs": 2555,
+      "directBytes": 81806,
+      "directSha256": "1b30ab862a18c2f173f752f01770dae3cebb202ea2ea1d3458f2668a4edeaecc",
+      "word": "be ready to do sth"
+    },
+    {
+      "key": "good luck",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/026-good-luck.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/026-good-luck.wav",
+      "directDurationMs": 1540,
+      "directBytes": 49326,
+      "directSha256": "5178af2ec4344081febb9733d8fa945756d41c91a5080b2943f27956aa630b11",
+      "word": "good luck"
+    },
+    {
+      "key": "chinese chess",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/027-chinese-chess.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/027-chinese-chess.wav",
+      "directDurationMs": 2000,
+      "directBytes": 64046,
+      "directSha256": "64a57c655ca9df3d6166c07ea96be2f0e5a05da91fc6b4ac8dbcbe65a045cc9f",
+      "word": "Chinese chess"
+    },
+    {
+      "key": "make friends with",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/030-make-friends-with.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/030-make-friends-with.wav",
+      "directDurationMs": 2030,
+      "directBytes": 65006,
+      "directSha256": "5af671ca636aa88b8ca4b3175ffd39ffbb15964f23e87f13d1be26b8329d1a3e",
+      "word": "make friends with"
+    },
+    {
+      "key": "paper-cutting",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/032-paper-cutting.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/032-paper-cutting.wav",
+      "directDurationMs": 1915,
+      "directBytes": 61326,
+      "directSha256": "8501a007cd0dc586b5a84fcb1a4b8874c89baca139e4bfd3cfb897f2adbe9d09",
+      "word": "paper-cutting"
+    },
+    {
+      "key": "apart",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/038-apart.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/038-apart.wav",
+      "directDurationMs": 1475,
+      "directBytes": 47246,
+      "directSha256": "a37f3fe1f248bd4586a2c902eff9229d7f9aa890b4bf204897dccf9236ddc7ed",
+      "word": "apart"
+    },
+    {
+      "key": "take apart",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/039-take-apart.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/039-take-apart.wav",
+      "directDurationMs": 2355,
+      "directBytes": 75406,
+      "directSha256": "463426df362a8ebfafcd4e3ae669b26b427a029034c156cd8c84fa162d7f70b4",
+      "word": "take ... apart"
+    },
+    {
+      "key": "endless",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/041-endless.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/041-endless.wav",
+      "directDurationMs": 1660,
+      "directBytes": 53166,
+      "directSha256": "550904cf98ce6208d659c3912af94a5a57fc08ab87d024beeb3e5fe914ebbe6f",
+      "word": "endless"
+    },
+    {
+      "key": "questionnaire",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/050-questionnaire.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/050-questionnaire.wav",
+      "directDurationMs": 1775,
+      "directBytes": 56846,
+      "directSha256": "7be4759e3277a18227a3ebfb7f6d08204e13d299ebf9827cc540cb9cd3de95bd",
+      "word": "questionnaire"
+    },
+    {
+      "key": "role model",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/053-role-model.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/053-role-model.wav",
+      "directDurationMs": 1755,
+      "directBytes": 56206,
+      "directSha256": "248cc368d743bfd68c50c61f8eacd6d4e261efea7f5e6a3c2c12d167e2ce9d16",
+      "word": "role model"
+    },
+    {
+      "key": "designer",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/058-designer.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/058-designer.wav",
+      "directDurationMs": 1580,
+      "directBytes": 50606,
+      "directSha256": "02f533b91912f27f3e0ab96a55673454d7531a75b3d8689605829ba89506637a",
+      "word": "designer"
+    },
+    {
+      "key": "in the future",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/062-in-the-future.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/062-in-the-future.wav",
+      "directDurationMs": 1715,
+      "directBytes": 54926,
+      "directSha256": "6b5e5e893ce98f17959465caf6d30695449b378fa10101f606ddc602ab0ce79e",
+      "word": "in the future"
+    },
+    {
+      "key": "gym",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/064-gym.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/064-gym.wav",
+      "directDurationMs": 1435,
+      "directBytes": 45966,
+      "directSha256": "9193442d262738ce49594f205a700ccd7213969fa08c7ad214f9636bc19a5199",
+      "word": "gym"
+    },
+    {
+      "key": "sports field",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/065-sports-field.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/065-sports-field.wav",
+      "directDurationMs": 1940,
+      "directBytes": 62126,
+      "directSha256": "22d08e8506e67ba93e35b140aa560469c4c61a6e97377390a44578bc56fdfa4c",
+      "word": "sports field"
+    },
+    {
+      "key": "dining",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/066-dining.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/066-dining.wav",
+      "directDurationMs": 1590,
+      "directBytes": 50926,
+      "directSha256": "0d79d2697b53e4ab39c6b2497634aa3126b723ec132638d9673305b5cd7dad08",
+      "word": "dining"
+    },
+    {
+      "key": "dining hall",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/067-dining-hall.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/067-dining-hall.wav",
+      "directDurationMs": 1735,
+      "directBytes": 55566,
+      "directSha256": "42c3d21c472132a58453d005cf4b673717bf6757b8ca98896d76316e0c2b5aa3",
+      "word": "dining hall"
+    },
+    {
+      "key": "as well",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/071-as-well.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/071-as-well.wav",
+      "directDurationMs": 1560,
+      "directBytes": 49966,
+      "directSha256": "bcddae26a47d61a0fe0ae2ef9fa633770860284c86d308235406941c6750cb3e",
+      "word": "as well"
+    },
+    {
+      "key": "noticeboard",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/077-noticeboard.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/077-noticeboard.wav",
+      "directDurationMs": 1675,
+      "directBytes": 53646,
+      "directSha256": "23976e702f0311db72c011a8e4eea07d88dd2aec079be1bef7fa5977ab26017b",
+      "word": "noticeboard"
+    },
+    {
+      "key": "form teacher",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/083-form-teacher.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/083-form-teacher.wav",
+      "directDurationMs": 1905,
+      "directBytes": 61006,
+      "directSha256": "99a9811a22a9bc9baddc582a092ed3efa94679320798e83d2e633096055fc8b3",
+      "word": "form teacher"
+    },
+    {
+      "key": "on weekdays",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/099-on-weekdays.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/099-on-weekdays.wav",
+      "directDurationMs": 1875,
+      "directBytes": 60046,
+      "directSha256": "a1a8b0e660258dd02e781ee3abc722ac21f0e9221fac47036c35347735d50cb5",
+      "word": "on weekdays"
+    },
+    {
+      "key": "jog",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/101-jog.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/101-jog.wav",
+      "directDurationMs": 1400,
+      "directBytes": 44846,
+      "directSha256": "362d582bb44100e4ac2c9c40ee3f2332f60a519b71765cdb78c382eaedafea4d",
+      "word": "jog"
+    },
+    {
+      "key": "field trip",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/108-field-trip.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/108-field-trip.wav",
+      "directDurationMs": 1790,
+      "directBytes": 57326,
+      "directSha256": "193f1ffcad51817fe5a457baa45c55fc04272ac4d46c42a9fd8dcabe4f8df4ac",
+      "word": "field trip"
+    },
+    {
+      "key": "leave for",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/109-leave-for.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/109-leave-for.wav",
+      "directDurationMs": 1655,
+      "directBytes": 53006,
+      "directSha256": "00bff9d481a0a41dd81da4cbe08096641ce67dc6c24aaa5bf8e9a647fc2b085f",
+      "word": "leave for"
+    },
+    {
+      "key": "roller skate",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/113-roller-skate.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/113-roller-skate.wav",
+      "directDurationMs": 1835,
+      "directBytes": 58766,
+      "directSha256": "c334c2311f19d829f9a880db49035b25d47e51f89ed1fed195edf685cdc68763",
+      "word": "roller skate"
+    },
+    {
+      "key": "teamwork",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/117-teamwork.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/117-teamwork.wav",
+      "directDurationMs": 1610,
+      "directBytes": 51566,
+      "directSha256": "bebbd787a359dc9f74e42a18707fb9f7c910a2086fa9fee8f81bb8e275e0ae1c",
+      "word": "teamwork"
+    },
+    {
+      "key": "duty",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/120-duty.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/120-duty.wav",
+      "directDurationMs": 1365,
+      "directBytes": 43726,
+      "directSha256": "fb8e10fdac0f224b504651d88546c7d8cf2f5702fc7482f3bd3fb5c07ec455fc",
+      "word": "duty"
+    },
+    {
+      "key": "take turns",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/125-take-turns.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/125-take-turns.wav",
+      "directDurationMs": 1785,
+      "directBytes": 57166,
+      "directSha256": "be1458cd490103224676e068d1a2b7430a24bb888babe23236f5c39857210400",
+      "word": "take turns"
+    },
+    {
+      "key": "cucumber",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/131-cucumber.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/131-cucumber.wav",
+      "directDurationMs": 1700,
+      "directBytes": 54446,
+      "directSha256": "826c4e223bf898802975728c80e68008906837d1888b9bc140ec6601125f76bb",
+      "word": "cucumber"
+    },
+    {
+      "key": "pepper",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/133-pepper.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/133-pepper.wav",
+      "directDurationMs": 1435,
+      "directBytes": 45966,
+      "directSha256": "3a3f4d9894755a542238935ce3797bbf18244b096bccd759ffec02e23d767d02",
+      "word": "pepper"
+    },
+    {
+      "key": "diet",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/136-diet.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/136-diet.wav",
+      "directDurationMs": 1470,
+      "directBytes": 47086,
+      "directSha256": "e1b8bc3fe065264f4fcb521af69cf93f583fda002174cf61c94050f2d29ff977",
+      "word": "diet"
+    },
+    {
+      "key": "tofu",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/139-tofu.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/139-tofu.wav",
+      "directDurationMs": 1600,
+      "directBytes": 51246,
+      "directSha256": "d4b237de98a28ec6482ee150a18794c732aaabe9b2d1c528f64730aa13e45a92",
+      "word": "tofu"
+    },
+    {
+      "key": "homebody",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/140-homebody.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/140-homebody.wav",
+      "directDurationMs": 1630,
+      "directBytes": 52206,
+      "directSha256": "abcd3f141fabeb85cbb989a3bef202c0b17ab6162dd819520d5e00c98d62c6e7",
+      "word": "homebody"
+    },
+    {
+      "key": "mutton",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/141-mutton.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/141-mutton.wav",
+      "directDurationMs": 1560,
+      "directBytes": 49966,
+      "directSha256": "842be9571906301dd3a9096e7fb6d47cde10dfa34e393c3250c5dedc67447963",
+      "word": "mutton"
+    },
+    {
+      "key": "have a sweet tooth",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/142-have-a-sweet-tooth.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/142-have-a-sweet-tooth.wav",
+      "directDurationMs": 2040,
+      "directBytes": 65326,
+      "directSha256": "0ea3ee42192e23ae07d4be248a7115903c1ce7a07d68846810ef1686c96ae13d",
+      "word": "have a sweet tooth"
+    },
+    {
+      "key": "unhealthy",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/144-unhealthy.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/144-unhealthy.wav",
+      "directDurationMs": 1645,
+      "directBytes": 52686,
+      "directSha256": "12da01c6d92cc59da045219553b43a8d0afc82841e59c2095d32221faf858c9b",
+      "word": "unhealthy"
+    },
+    {
+      "key": "cheese",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/148-cheese.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/148-cheese.wav",
+      "directDurationMs": 1545,
+      "directBytes": 49486,
+      "directSha256": "2a0389e85ac159132039afddc31cf252b10948acd3953b050190ae36804f7776",
+      "word": "cheese"
+    },
+    {
+      "key": "chip",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/157-chip.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/157-chip.wav",
+      "directDurationMs": 1470,
+      "directBytes": 47086,
+      "directSha256": "16b84cb435674d4d179b90e647675f7198bba716d7ad4bf30ed6105e21ce9fa5",
+      "word": "chip"
+    },
+    {
+      "key": "smartphone",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/158-smartphone.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/158-smartphone.wav",
+      "directDurationMs": 2025,
+      "directBytes": 64846,
+      "directSha256": "4b0d1ad7eea3aedefd93b934d3049c821274dfea0dd7ca6868c796d282caae93",
+      "word": "smartphone"
+    },
+    {
+      "key": "tablet",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/159-tablet.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/159-tablet.wav",
+      "directDurationMs": 1620,
+      "directBytes": 51886,
+      "directSha256": "b43ba79cae74cd04ef85a29297ecc0a45b060a380ce913c42bab5ff0241be989",
+      "word": "tablet"
+    },
+    {
+      "key": "porridge",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/161-porridge.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/161-porridge.wav",
+      "directDurationMs": 1670,
+      "directBytes": 53486,
+      "directSha256": "500e513c530df5a88eeab96e6263ae0546a9547c9703ac5800b45801a29b1821",
+      "word": "porridge"
+    },
+    {
+      "key": "yogurt",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/165-yogurt.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/165-yogurt.wav",
+      "directDurationMs": 1475,
+      "directBytes": 47246,
+      "directSha256": "93a844bf8a37df4c208ba7fc233823de69a9ca571ef3d84dced3bff3938f8487",
+      "word": "yogurt"
+    },
+    {
+      "key": "depend on",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/175-depend-on.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/175-depend-on.wav",
+      "directDurationMs": 1710,
+      "directBytes": 54766,
+      "directSha256": "480478c055b9204371c3e7121616a33a7ad5b86738fe3814ca7ba224b2fec5dd",
+      "word": "depend on"
+    },
+    {
+      "key": "skin",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/176-skin.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/176-skin.wav",
+      "directDurationMs": 1655,
+      "directBytes": 53006,
+      "directSha256": "3b372e48c1be4273d7804d77464f13718695f0e8ce0bf2a37f18809e57766a34",
+      "word": "skin"
+    },
+    {
+      "key": "stand out",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/183-stand-out.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/183-stand-out.wav",
+      "directDurationMs": 1770,
+      "directBytes": 56686,
+      "directSha256": "2fff0a6f5fd89d47a4f7db15ea767ae677543cb3477f327f639eff72491ec560",
+      "word": "stand out"
+    },
+    {
+      "key": "formal",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/185-formal.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/185-formal.wav",
+      "directDurationMs": 1510,
+      "directBytes": 48366,
+      "directSha256": "9e844e4258e5acbda8edba714df7abdfc1b70495066d61c74e5155ab9dbae6d8",
+      "word": "formal"
+    },
+    {
+      "key": "casual",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/187-casual.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/187-casual.wav",
+      "directDurationMs": 1520,
+      "directBytes": 48686,
+      "directSha256": "893eea4a7cfc84d971017d29d425a2dbcca6bbac1586cb5a0eea32bd3b3217d1",
+      "word": "casual"
+    },
+    {
+      "key": "loose",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/196-loose.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/196-loose.wav",
+      "directDurationMs": 1485,
+      "directBytes": 47566,
+      "directSha256": "13db87a4a7e95cb40c0c659c36b332c4bb705961125a3ee9c07ebc0edbf062c3",
+      "word": "loose"
+    },
+    {
+      "key": "belt",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/197-belt.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/197-belt.wav",
+      "directDurationMs": 1370,
+      "directBytes": 43886,
+      "directSha256": "fb2dadd6c45cb10b18ad2c26c4486cf6f8990fa6dd9c6469d4f195bf1d50811b",
+      "word": "belt"
+    },
+    {
+      "key": "close-fitting",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/198-close-fitting.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/198-close-fitting.wav",
+      "directDurationMs": 1855,
+      "directBytes": 59406,
+      "directSha256": "d55b9197c850ef945d940cc31267a560d7e3c51feb1aecf1992b823fe3041a21",
+      "word": "close-fitting"
+    },
+    {
+      "key": "euro",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/210-euro.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/210-euro.wav",
+      "directDurationMs": 1440,
+      "directBytes": 46126,
+      "directSha256": "b9dc2e50dc35fdb466548719da3b7e2d1fdb80ab9aac728fb45cfe2482d1a878",
+      "word": "euro"
+    },
+    {
+      "key": "yen",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/212-yen.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/212-yen.wav",
+      "directDurationMs": 1445,
+      "directBytes": 46286,
+      "directSha256": "f7b7bad0233045490c4cea0330db1a451aac3a368db6061514a93853d1c6bad4",
+      "word": "yen"
+    },
+    {
+      "key": "rouble",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/213-rouble.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/213-rouble.wav",
+      "directDurationMs": 1435,
+      "directBytes": 45966,
+      "directSha256": "46ea75e34e52b4171c8368a6085c9668f0867fa220ab0930bc3c21985636b06c",
+      "word": "rouble"
+    },
+    {
+      "key": "a set of",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/220-a-set-of.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/220-a-set-of.wav",
+      "directDurationMs": 1640,
+      "directBytes": 52526,
+      "directSha256": "8d1e705f367ed74efe275da5b7d0bd2203113f3491fc9abbaa21701245f4176a",
+      "word": "a set of"
+    },
+    {
+      "key": "budget",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/230-budget.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/230-budget.wav",
+      "directDurationMs": 1500,
+      "directBytes": 48046,
+      "directSha256": "7991a686b274acce60128dab0d9f93f916bbd02ddb8d99ae4fa2956c4a7c10ea",
+      "word": "budget"
+    },
+    {
+      "key": "account",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/237-account.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/237-account.wav",
+      "directDurationMs": 1540,
+      "directBytes": 49326,
+      "directSha256": "f71ce07e34e633007ceadcccd0d2612b317039d66f31c8a650821d467b9b3845",
+      "word": "account"
+    },
+    {
+      "key": "shell",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/244-shell.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/244-shell.wav",
+      "directDurationMs": 1450,
+      "directBytes": 46446,
+      "directSha256": "70a7c90f24ae5016cf1609b41076599a01008a3222351a7caf913ea27a967cd6",
+      "word": "shell"
+    },
+    {
+      "key": "lucky money",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/248-lucky-money.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/248-lucky-money.wav",
+      "directDurationMs": 1690,
+      "directBytes": 54126,
+      "directSha256": "8a9acbf8371eab974133dae9cdf02795e575e0ce8cb61a2dae186aa77f9137b7",
+      "word": "lucky money"
+    },
+    {
+      "key": "in need",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/252-in-need.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/252-in-need.wav",
+      "directDurationMs": 1470,
+      "directBytes": 47086,
+      "directSha256": "6d780656a2fb849053c07240e7831f6d400e120990189810bb1f169253c3e22b",
+      "word": "in need"
+    },
+    {
+      "key": "poet",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/258-poet.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/258-poet.wav",
+      "directDurationMs": 1480,
+      "directBytes": 47406,
+      "directSha256": "7f12f791d6f19d1d89cf0e0330a0e97ca20988f72b1a8a75b10f3ba2e1ef8823",
+      "word": "poet"
+    },
+    {
+      "key": "dragon",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/259-dragon.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/259-dragon.wav",
+      "directDurationMs": 1640,
+      "directBytes": 52526,
+      "directSha256": "080d9e0edea57c24cac82c59f35cf1666ac3b2c19880c7f1d895306d59efa303",
+      "word": "dragon"
+    },
+    {
+      "key": "dragon boat",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/260-dragon-boat.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/260-dragon-boat.wav",
+      "directDurationMs": 1770,
+      "directBytes": 56686,
+      "directSha256": "d46476ce3320c1ff2ba5c4b6f514a2fc451d17cea3201831ee97984991578eb0",
+      "word": "dragon boat"
+    },
+    {
+      "key": "scottish",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/264-scottish.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/264-scottish.wav",
+      "directDurationMs": 1770,
+      "directBytes": 56686,
+      "directSha256": "3ad98bf992edc086f929b4922ef28db061020e44610be3c41fb4a65fa0edf18f",
+      "word": "Scottish"
+    },
+    {
+      "key": "haggis",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/265-haggis.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/265-haggis.wav",
+      "directDurationMs": 1635,
+      "directBytes": 52366,
+      "directSha256": "749b4dbffda06f455b91027296bf01346d0ba54221bbc5349defb6dc2dada090",
+      "word": "haggis"
+    },
+    {
+      "key": "doorstep",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/271-doorstep.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/271-doorstep.wav",
+      "directDurationMs": 1855,
+      "directBytes": 59406,
+      "directSha256": "abc59c9bab0b3c774bb683cc2f83bc00b6ddc7a834e2b25185fa1118a73fb549",
+      "word": "doorstep"
+    },
+    {
+      "key": "onion",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/273-onion.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/273-onion.wav",
+      "directDurationMs": 1610,
+      "directBytes": 51566,
+      "directSha256": "febeea2e8d1c22ac07cfa3c78c6802cec09f8e0232621e1365a5beb8b2545ee4",
+      "word": "onion"
+    },
+    {
+      "key": "greek",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/274-greek.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/274-greek.wav",
+      "directDurationMs": 1470,
+      "directBytes": 47086,
+      "directSha256": "6f2fb473bc21bde875d98c001d434734e9497a01a2662fb444e3f433d1bfd5a2",
+      "word": "Greek"
+    },
+    {
+      "key": "tradition",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/275-tradition.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/275-tradition.wav",
+      "directDurationMs": 1735,
+      "directBytes": 55566,
+      "directSha256": "6fa3b1b80e4fa073dfa2d3ffb5ac41afb9559a835c39f6a5769341d3e016dabf",
+      "word": "tradition"
+    },
+    {
+      "key": "strike",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/277-strike.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/277-strike.wav",
+      "directDurationMs": 1695,
+      "directBytes": 54286,
+      "directSha256": "dc4433e108ed7036303795345fedb30a350d30dad064209bb8b26adab84d985f",
+      "word": "strike"
+    },
+    {
+      "key": "in the hope of",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/279-in-the-hope-of.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/279-in-the-hope-of.wav",
+      "directDurationMs": 1785,
+      "directBytes": 57166,
+      "directSha256": "f6590cf643a332c35fce474ce80d7498edb1feff83295434985ea1260451b5c0",
+      "word": "in the hope of"
+    },
+    {
+      "key": "ahead",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/280-ahead.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/280-ahead.wav",
+      "directDurationMs": 1445,
+      "directBytes": 46286,
+      "directSha256": "51196e869cc727ff8785e5a35ee5c983d2c99ab382e980d2d33bb09f1d8a77d0",
+      "word": "ahead"
+    },
+    {
+      "key": "suitcase",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/282-suitcase.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/282-suitcase.wav",
+      "directDurationMs": 1775,
+      "directBytes": 56846,
+      "directSha256": "9dfdf2695c731aeeaa2e2a47ae0c0c3101e42ac9eb42787acf766f8592a755ee",
+      "word": "suitcase"
+    },
+    {
+      "key": "wherever",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/284-wherever.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/284-wherever.wav",
+      "directDurationMs": 1500,
+      "directBytes": 48046,
+      "directSha256": "7ac017ab155f27481a599aaa2ffb41dcf06a79a04686a3ec292d6a930ad41cb2",
+      "word": "wherever"
+    },
+    {
+      "key": "spring roll",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/287-spring-roll.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/287-spring-roll.wav",
+      "directDurationMs": 1840,
+      "directBytes": 58926,
+      "directSha256": "16a6855d9ffd8f8ed4bab5c92ccb2b45aafb189e657e22b85479872ead56d04b",
+      "word": "spring roll"
+    },
+    {
+      "key": "at the moment",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/289-at-the-moment.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/289-at-the-moment.wav",
+      "directDurationMs": 1680,
+      "directBytes": 53806,
+      "directSha256": "fee95fdeb62d25932980cad1d4b974b029bc556d8c0efc8ba814926dd7d6827b",
+      "word": "at the moment"
+    },
+    {
+      "key": "forever",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/298-forever.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/298-forever.wav",
+      "directDurationMs": 1560,
+      "directBytes": 49966,
+      "directSha256": "7f0e49266b959979f5718b67a1b8302653d4db94019e98c0d8cb25c314ceb453",
+      "word": "forever"
+    },
+    {
+      "key": "spring festival couplets",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/301-spring-festival-couplets.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/301-spring-festival-couplets.wav",
+      "directDurationMs": 2725,
+      "directBytes": 87246,
+      "directSha256": "20b1feb4634655355bdf339808472e493cf9abce2935ff8424d8e791a165b1ff",
+      "word": "Spring Festival couplets"
+    },
+    {
+      "key": "beforehand",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/302-beforehand.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/302-beforehand.wav",
+      "directDurationMs": 1785,
+      "directBytes": 57166,
+      "directSha256": "3ef054e0da697ad6c7dfb329aeddb365283092d436017b24d4be9ad12a5a7f58",
+      "word": "beforehand"
     }
   ]
 }

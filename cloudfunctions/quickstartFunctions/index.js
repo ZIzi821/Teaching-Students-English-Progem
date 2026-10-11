@@ -2380,11 +2380,22 @@ const getStudentDetail = async (event) => {
     canReadMistakeLearning ? buildStudentAnalytics(studentId) : Promise.resolve(null),
     buildStudentVocabularyOverview(student),
   ]);
+  const vocabularyLibrary = getVocabularyLibrary();
+  const vocabularySettings = vocabulary.normalizeVocabularySettings(
+    student.vocabularySettings,
+    vocabularyLibrary,
+    student
+  );
   return {
     success: true,
     role: identity.role,
     student: sanitizeStudent(student, identity.role === "teacher"),
-    vocabularyLevels: getVocabularyLibrary().levels.filter((level) => !level.isReferenceOnly),
+    vocabularyLevels: vocabularyLibrary.levels.filter((level) => !level.isReferenceOnly),
+    vocabularyUnits: buildVocabularyUnits(
+      vocabularyLibrary,
+      vocabularyLibrary.levels.filter((level) => !level.isReferenceOnly).map((level) => level.id),
+      vocabularySettings
+    ),
     lessons: lessons
       .map((lesson) => courseWorkflow.withApplicableLessonDuration(lesson, student))
       .map(withTeacherConfirmedHomeworkState)
@@ -2632,6 +2643,9 @@ const buildStudentVocabularyCatalog = (studentData, options = {}) => {
     if (options.includeCounts === true) return item;
     const safeItem = Object.assign({}, item);
     delete safeItem.wordCount;
+    delete safeItem.enabledWordCount;
+    delete safeItem.unitCount;
+    delete safeItem.enabledUnitCount;
     return safeItem;
   });
   const enabled = studentData.vocabularyEnabled === true;
@@ -2694,6 +2708,21 @@ const validateVocabularySettings = (data, library, student) => {
   if (levelIds.some((levelId) => !validLevelIds.has(levelId))) {
     throw createError("INVALID_VOCABULARY_SETTINGS", "所选词库已更新，请刷新后重试");
   }
+  if (data.disabledUnitIds !== undefined && !Array.isArray(data.disabledUnitIds)) {
+    throw createError("INVALID_VOCABULARY_SETTINGS", "教材单元设置格式不正确，请刷新后重试");
+  }
+  const selectedLevels = new Set(levelIds);
+  const validUnitIds = new Set(
+    library.words
+      .filter((word) => selectedLevels.has(word.levelId) && word.unitId)
+      .map((word) => word.unitId)
+  );
+  const disabledUnitIds = Array.from(new Set(
+    (data.disabledUnitIds || []).map((unitId) => String(unitId || "").trim()).filter(Boolean)
+  ));
+  if (disabledUnitIds.some((unitId) => !validUnitIds.has(unitId))) {
+    throw createError("INVALID_VOCABULARY_SETTINGS", "教材单元已经变化，请刷新后重试");
+  }
   const dailyGoal = Number(data.dailyGoal);
   if (
     !Number.isInteger(dailyGoal)
@@ -2715,6 +2744,7 @@ const validateVocabularySettings = (data, library, student) => {
     includeMistakeWords: data.includeMistakeWords,
     hideBasicWords: typeof data.hideBasicWords === "boolean" ? data.hideBasicWords : undefined,
     learningOrder: data.learningOrder,
+    disabledUnitIds,
   }, library, student);
   if (data.enabled && !settings.levelIds.length && !settings.includeMistakeWords) {
     throw createError("INVALID_VOCABULARY_SETTINGS", "请至少选择一种学习内容：错题单词或基础词库");
@@ -3063,22 +3093,38 @@ const buildStudentVocabularyOverview = async (student) => {
   };
 };
 
-const buildVocabularyUnits = (library, selectedLevelIds) => {
+const buildVocabularyUnits = (library, selectedLevelIds, settings = {}) => {
   const selectedLevels = new Set(selectedLevelIds || []);
+  const disabledUnitIds = new Set(settings.disabledUnitIds || []);
   const unitById = new Map();
   library.words.forEach((word) => {
-    if (!selectedLevels.has(word.levelId) || !word.unitId || unitById.has(word.unitId)) return;
-    unitById.set(word.unitId, {
-      id: word.unitId,
-      label: word.unitLabel || word.unitId,
-      levelId: word.levelId,
-      order: Number(word.order || 0),
-    });
+    if (!selectedLevels.has(word.levelId) || !word.unitId || !word.key) return;
+    if (!unitById.has(word.unitId)) {
+      unitById.set(word.unitId, {
+        id: word.unitId,
+        label: word.unitLabel || word.unitId,
+        levelId: word.levelId,
+        order: Number(word.order || 0),
+        wordKeys: new Set(),
+      });
+    }
+    const unit = unitById.get(word.unitId);
+    unit.order = Math.min(unit.order, Number(word.order || unit.order || 0));
+    unit.wordKeys.add(word.key);
   });
-  return Array.from(unitById.values()).sort((a, b) => {
-    if (a.levelId !== b.levelId) return a.levelId.localeCompare(b.levelId);
-    return a.order - b.order;
-  });
+  return Array.from(unitById.values())
+    .sort((a, b) => {
+      if (a.levelId !== b.levelId) return a.levelId.localeCompare(b.levelId);
+      return a.order - b.order;
+    })
+    .map((unit) => ({
+      id: unit.id,
+      label: unit.label,
+      levelId: unit.levelId,
+      order: unit.order,
+      wordCount: unit.wordKeys.size,
+      enabled: !disabledUnitIds.has(unit.id),
+    }));
 };
 
 const buildVocabularyBrowsePage = (view, data) => {
@@ -3228,7 +3274,7 @@ const getVocabularyData = async (event) => {
     dailyPlan,
     configuredDailyGoal: configuredSettings.dailyGoal,
     levels: library.levels.filter((level) => !level.isReferenceOnly),
-    units: buildVocabularyUnits(library, settings.levelIds),
+    units: buildVocabularyUnits(library, settings.levelIds, settings).filter((unit) => unit.enabled),
   };
   const dailyStats = await loadAllVocabularyDocuments("vocabularyDailyStats", { studentId });
   const weeklyStats = buildVocabularyWeeklyStats(dailyStats);
@@ -5971,6 +6017,8 @@ exports.main = async (event) => {
         return await weeklyScheduleService.cancelScheduleEvent(event);
       case "setScheduleDayAvailability":
         return await weeklyScheduleService.setScheduleDayAvailability(event);
+      case "setFixedStudentScheduleEnabled":
+        return await weeklyScheduleService.setFixedStudentScheduleEnabled(event);
       case "markHomeworkActivitiesViewed":
       case "markLearningActivitiesViewed":
         return await markHomeworkActivitiesViewed(event);

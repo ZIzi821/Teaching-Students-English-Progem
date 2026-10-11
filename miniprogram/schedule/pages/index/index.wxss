@@ -165,6 +165,91 @@
 .legend-teacher { background: #c48b50; }
 .legend-student { background: #639b80; }
 
+.fixed-schedule-card {
+  margin: 18rpx 0 22rpx;
+  padding: 24rpx;
+  border: 1rpx solid #d7e5dd;
+  border-radius: 20rpx;
+  background: #fffdfa;
+}
+
+.fixed-schedule-head,
+.fixed-schedule-row {
+  display: flex;
+  align-items: center;
+}
+
+.fixed-schedule-head {
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.fixed-schedule-title {
+  color: #24483a;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.fixed-schedule-hint {
+  margin-top: 6rpx;
+  color: #7b807b;
+  font-size: 20rpx;
+  line-height: 1.5;
+}
+
+.fixed-schedule-count {
+  flex-shrink: 0;
+  padding: 8rpx 13rpx;
+  border-radius: 999rpx;
+  color: #39765d;
+  background: #e9f4ee;
+  font-size: 20rpx;
+  font-weight: 800;
+}
+
+.fixed-schedule-empty {
+  margin-top: 18rpx;
+  color: #8d8276;
+  font-size: 22rpx;
+  text-align: center;
+}
+
+.fixed-schedule-row {
+  gap: 14rpx;
+  margin-top: 18rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid #ece5dc;
+}
+
+.fixed-schedule-color {
+  width: 12rpx;
+  height: 52rpx;
+  flex-shrink: 0;
+  border-radius: 999rpx;
+}
+
+.fixed-schedule-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.fixed-schedule-name {
+  color: #2c463a;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.fixed-schedule-time {
+  margin-top: 5rpx;
+  color: #7c746c;
+  font-size: 20rpx;
+}
+
+.fixed-schedule-row switch {
+  flex-shrink: 0;
+  transform: scale(0.86);
+}
+
 .timeline-card {
   position: relative;
   overflow: hidden;

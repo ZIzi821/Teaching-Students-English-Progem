@@ -415,6 +415,9 @@ Page({
 
   getSelectedLevelLabel(levelIds, levels) {
     const selected = (levelIds || []).map((id) => levels.find((item) => item.id === id)).filter(Boolean);
+    if (selected.length === 1 && selected[0].id === "yilin-2024-7A") {
+      return "译林七年级上 · 2024新教材（2022课标）";
+    }
     if (selected.length >= 6 && selected.every((item) => item.isTextbook)) {
       return "译林牛津七至九年级 · 译林版 · 2012课标旧版";
     }

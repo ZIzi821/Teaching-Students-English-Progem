@@ -2,7 +2,7 @@
   <view class="preview-banner" wx:if="{{isTeacherPreview}}">
     <view>
       <view class="preview-title">正在查看 {{student.name}} 的学生日程</view>
-      <view class="preview-hint">界面与家长看到的一样；教师可在这里代为预约、编辑或取消该学生的课程。</view>
+      <view class="preview-hint">界面与家长看到的一样，只显示这个孩子自己的课程，预览中的点击不会改动日程。</view>
     </view>
     <view class="preview-action" bindtap="goBackToTeacher">返回教师端</view>
   </view>
@@ -10,8 +10,8 @@
   <view class="schedule-hero">
     <view class="hero-kicker">WEEKLY SCHEDULE</view>
     <view class="hero-title">每周上课日程</view>
-    <view class="hero-hint" wx:if="{{isTeacher}}">固定课程、个人安排和学生预约都在同一张周表里。</view>
-    <view class="hero-hint" wx:elif="{{student}}">先看老师有没有空，再为 {{student.name}} 选择每周固定上课时间。</view>
+    <view class="hero-hint" wx:if="{{isTeacher}}">查看所有课程，并在这里统一开关学生的长期固定上课时间。</view>
+    <view class="hero-hint" wx:elif="{{student}}">这里显示 {{student.name}} 每周什么时候上课；日程由朱老师统一维护。</view>
   </view>
 
   <view class="card loading-card" wx:if="{{loading}}">正在整理本周日程…</view>
@@ -29,7 +29,7 @@
         >
           <view class="day-week">{{item.label}}</view>
           <view class="day-date">{{item.dateLabel}}<text wx:if="{{item.isYesterday}}"> · 昨天</text><text wx:elif="{{item.isToday}}"> · 今天</text></view>
-          <view class="day-count {{!item.bookingOpen ? 'day-count-closed' : ''}}">{{!item.bookingOpen ? '暂停预约' : item.eventCount ? item.eventCount + ' 项' : '可预约'}}</view>
+          <view class="day-count">{{item.eventCount ? item.eventCount + ' 项' : '无课程'}}</view>
         </view>
       </view>
     </scroll-view>
@@ -37,27 +37,41 @@
     <view class="schedule-summary">
       <view>
         <view class="summary-title">{{selectedDayLabel}}</view>
-        <view class="summary-hint" wx:if="{{selectedDayBookingOpen}}">09:00–23:00 的空白时段均可预约；有重叠时系统会阻止重复预约。</view>
-        <view class="summary-hint summary-hint-closed" wx:else>朱老师已暂停这一天的新预约，已有课程仍会保留。</view>
+        <view class="summary-hint" wx:if="{{isTeacher}}">本页显示每周固定课程和临时安排；固定课表可在下方单独打开或关闭。</view>
+        <view class="summary-hint" wx:else>只显示当前孩子自己的课程，不再展示其他学生或老师的空闲时间。</view>
       </view>
       <view class="summary-actions">
-        <view class="availability-toggle {{selectedDayBookingOpen ? '' : 'availability-toggle-closed'}}" wx:if="{{isTeacher}}" bindtap="toggleSelectedDayAvailability">
-          {{availabilitySaving ? '保存中…' : selectedDayBookingOpen ? '每' + selectedDayWeekLabel + '可预约' : '每' + selectedDayWeekLabel + '已暂停'}}
-        </view>
-        <view class="schedule-add" wx:if="{{canWrite && (actorRole === 'teacher' || selectedDayBookingOpen)}}" bindtap="openForm">{{isTeacher ? '＋ 添加安排' : isTeacherPreview ? '＋ 帮学生预约' : '＋ 预约上课'}}</view>
-        <view class="schedule-closed" wx:elif="{{actorRole !== 'teacher' && !selectedDayBookingOpen}}">暂停预约</view>
+        <view class="schedule-add" wx:if="{{isTeacher && canWrite}}" bindtap="openForm">＋ 添加临时安排</view>
       </view>
     </view>
 
     <view class="legend-row">
-      <view class="legend-item"><view class="legend-dot legend-monash"></view>MONASH</view>
-      <view class="legend-item"><view class="legend-dot legend-teacher"></view>老师安排</view>
+      <view class="legend-item" wx:if="{{isTeacher}}"><view class="legend-dot legend-monash"></view>MONASH</view>
+      <view class="legend-item" wx:if="{{isTeacher}}"><view class="legend-dot legend-teacher"></view>老师安排</view>
       <view class="legend-item"><view class="legend-dot legend-student"></view>学生课程</view>
     </view>
 
+    <view class="fixed-schedule-card" wx:if="{{isTeacher}}">
+      <view class="fixed-schedule-head">
+        <view>
+          <view class="fixed-schedule-title">长期固定上课时间</view>
+          <view class="fixed-schedule-hint">关闭后只会从课表隐藏，不会删除这条固定设置；以后可再次打开。</view>
+        </view>
+        <view class="fixed-schedule-count">{{fixedStudentSchedules.length}} 条</view>
+      </view>
+      <view class="fixed-schedule-empty" wx:if="{{!fixedStudentSchedules.length}}">暂未找到需要管理的固定课程。</view>
+      <view class="fixed-schedule-row" wx:for="{{fixedStudentSchedules}}" wx:key="_id">
+        <view class="fixed-schedule-color event-{{item.colorKey}}"></view>
+        <view class="fixed-schedule-copy">
+          <view class="fixed-schedule-name">{{item.title}}</view>
+          <view class="fixed-schedule-time">{{item.weekdayLabel}} · {{item.timeLabel}} · {{item.enabled ? '已打开' : '已关闭'}}</view>
+        </view>
+        <switch checked="{{item.enabled}}" color="#4f8f73" disabled="{{fixedScheduleSavingId}}" data-id="{{item._id}}" bindchange="onFixedScheduleEnabledChange" />
+      </view>
+    </view>
+
     <view class="timeline-card">
-      <view class="timeline-empty" wx:if="{{!selectedDayEvents.length && selectedDayBookingOpen}}">这一天没有已占用安排，09:00 后的空白时段均可预约。</view>
-      <view class="timeline-empty timeline-empty-closed" wx:elif="{{!selectedDayEvents.length}}">这一天暂停接受新的预约。</view>
+      <view class="timeline-empty" wx:if="{{!selectedDayEvents.length}}">这一天没有安排课程。</view>
       <view class="timeline" style="height: {{timelineHeight}}rpx;">
         <view class="hour-line" wx:for="{{timelineHours}}" wx:key="label" style="top: {{item.topRpx}}rpx;">
           <view class="hour-label">{{item.label}}</view>
@@ -82,10 +96,9 @@
 
   <view class="modal-mask" wx:if="{{showForm}}" bindtap="closeForm">
     <view class="schedule-modal" catchtap="stopPropagation">
-      <view class="modal-title">{{editingId ? '编辑每周日程' : formMode === 'teacher' ? '添加每周安排' : '预约每周上课时间'}}</view>
+      <view class="modal-title">{{editingId ? '编辑每周日程' : formMode === 'teacher' ? '添加老师安排' : '添加学生临时课程'}}</view>
       <view class="modal-hint" wx:if="{{formMode === 'booking' && bookingStudent}}">{{bookingStudent.name}} 每节 {{bookingStudent.bookingDurationMinutes}} 分钟；结束时间由系统自动计算。</view>
       <view class="modal-hint" wx:else>这段时间会直接显示在家长看到的日程表中。</view>
-      <view class="booking-closed-note" wx:if="{{formMode === 'booking' && !formDayBookingOpen}}">{{actorRole === 'teacher' ? weekdayOptions[form.weekdayIndex].label + '已暂停学生自助预约；教师仍可代为安排。' : weekdayOptions[form.weekdayIndex].label + '已暂停预约，请更换星期。'}}</view>
 
       <view class="field" wx:if="{{isTeacher && !editingId}}">
         <view class="field-label">安排类型</view>
@@ -132,10 +145,10 @@
         <view class="field-label">备注（可选）</view>
         <input class="text-input" maxlength="100" placeholder="补充说明" value="{{form.note}}" data-field="note" bindinput="onFormInput" />
       </view>
-      <view class="weekly-note">保存后会作为每周固定时间显示；如有变化，可点按对应板块继续编辑或取消。</view>
+      <view class="weekly-note">这里用于额外的每周安排；Molly、冯嘉文的长期固定课程请使用页面上的固定课表开关。</view>
       <view class="modal-actions">
         <view class="modal-cancel" bindtap="closeForm">返回</view>
-        <view class="modal-confirm {{saving || (formMode === 'booking' && actorRole !== 'teacher' && !formDayBookingOpen) ? 'modal-confirm-disabled' : ''}}" bindtap="submitForm">{{saving ? '保存中…' : editingId ? '保存修改' : formMode === 'teacher' ? '加入日程' : '确认预约'}}</view>
+        <view class="modal-confirm {{saving ? 'modal-confirm-disabled' : ''}}" bindtap="submitForm">{{saving ? '保存中…' : editingId ? '保存修改' : '加入日程'}}</view>
       </view>
     </view>
   </view>

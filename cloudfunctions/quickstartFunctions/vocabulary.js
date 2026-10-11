@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const vocabularyAudioManifest = require("./data/vocabulary-audio-sprites.json");
 
 const VOCABULARY_CANDIDATES_VERSION = 3;
-const VOCABULARY_PROFILE_VERSION = 3;
+const VOCABULARY_PROFILE_VERSION = 4;
 const DEFAULT_DAILY_GOAL = 8;
 const MIN_DAILY_GOAL = 5;
 const MAX_DAILY_GOAL = 30;
@@ -183,6 +183,7 @@ const normalizeLevel = (level, index) => {
     grade: Number.isFinite(Number(source.grade)) ? Number(source.grade) : 0,
     semester: asText(source.semester),
     bookTitle: asText(source.bookTitle),
+    isbn: asText(source.isbn),
     isTextbook: source.isTextbook === true,
     isReferenceOnly: source.isReferenceOnly === true,
     sourceRef: asText(source.sourceRef),
@@ -231,6 +232,7 @@ const loadVocabularyLibrary = () => {
     "./data/primary-beginner-words.json",
     "./data/primary-1-3-words.json",
     "./data/molly-ket-a2-words.json",
+    "./data/yilin-junior-2024-7a-words.json",
     "./data/yilin-junior-old-words.json",
     "./data/mistake-word-lexicon.json",
   ].forEach((dataPath) => {
@@ -256,6 +258,11 @@ const isMolly = (student) => {
   return asText(source.name).toLowerCase() === "molly";
 };
 
+const isXuHaocheng = (student) => {
+  const source = student || {};
+  return asText(source.name) === "徐浩成";
+};
+
 const getRecommendedVocabularySettings = (student, library = loadVocabularyLibrary()) => {
   if (isMolly(student)) {
     return {
@@ -265,6 +272,18 @@ const getRecommendedVocabularySettings = (student, library = loadVocabularyLibra
       includeMistakeWords: false,
       hideBasicWords: false,
       learningOrder: "book",
+      disabledUnitIds: [],
+    };
+  }
+  if (isXuHaocheng(student)) {
+    return {
+      profileVersion: VOCABULARY_PROFILE_VERSION,
+      levelIds: ["yilin-2024-7A"],
+      dailyGoal: 10,
+      includeMistakeWords: true,
+      hideBasicWords: false,
+      learningOrder: "book",
+      disabledUnitIds: [],
     };
   }
   const levelPrefix = isXuannan(student) ? "yilin-old-" : "";
@@ -279,6 +298,7 @@ const getRecommendedVocabularySettings = (student, library = loadVocabularyLibra
     includeMistakeWords: true,
     hideBasicWords: isXuannan(student),
     learningOrder: "smart",
+    disabledUnitIds: [],
   };
 };
 
@@ -301,8 +321,23 @@ const normalizeVocabularySettings = (settings, library = loadVocabularyLibrary()
     && Number(source.profileVersion || 0) < VOCABULARY_PROFILE_VERSION
     && levelIds.indexOf("molly-ket-a2-16w") < 0;
   if (needsMollyMigration) levelIds = defaults.levelIds;
-  const goal = Number(source.dailyGoal);
-  const learningOrder = ["smart", "book", "mistakeFirst"].indexOf(source.learningOrder) >= 0
+  const needsXuHaochengMigration = isXuHaocheng(student)
+    && Number(source.profileVersion || 0) < VOCABULARY_PROFILE_VERSION
+    && levelIds.indexOf("yilin-2024-7A") < 0;
+  if (needsXuHaochengMigration) levelIds = defaults.levelIds;
+  const selectedLevels = new Set(levelIds);
+  const validUnitIds = new Set(
+    library.words
+      .filter((word) => selectedLevels.has(word.levelId) && word.unitId)
+      .map((word) => word.unitId)
+  );
+  const disabledUnitIds = Array.isArray(source.disabledUnitIds)
+    && !needsXuHaochengMigration
+    ? Array.from(new Set(source.disabledUnitIds.map(asText).filter((id) => validUnitIds.has(id))))
+    : defaults.disabledUnitIds;
+  const goal = needsXuHaochengMigration ? defaults.dailyGoal : Number(source.dailyGoal);
+  const learningOrder = !needsXuHaochengMigration
+    && ["smart", "book", "mistakeFirst"].indexOf(source.learningOrder) >= 0
     ? source.learningOrder
     : defaults.learningOrder;
   return {
@@ -311,11 +346,14 @@ const normalizeVocabularySettings = (settings, library = loadVocabularyLibrary()
     dailyGoal: Number.isInteger(goal) && goal >= MIN_DAILY_GOAL && goal <= MAX_DAILY_GOAL
       ? goal
       : defaults.dailyGoal,
-    includeMistakeWords: source.includeMistakeWords !== false,
-    hideBasicWords: typeof source.hideBasicWords === "boolean"
+    includeMistakeWords: needsXuHaochengMigration
+      ? defaults.includeMistakeWords
+      : source.includeMistakeWords !== false,
+    hideBasicWords: !needsXuHaochengMigration && typeof source.hideBasicWords === "boolean"
       ? source.hideBasicWords
       : defaults.hideBasicWords,
     learningOrder,
+    disabledUnitIds,
   };
 };
 
@@ -324,6 +362,9 @@ const buildVocabularyCatalog = ({ library = loadVocabularyLibrary(), settings = 
     Array.isArray(settings.levelIds) ? settings.levelIds.map(asText).filter(Boolean) : []
   );
   const groups = new Map();
+  const disabledUnitIds = new Set(
+    Array.isArray(settings.disabledUnitIds) ? settings.disabledUnitIds.map(asText).filter(Boolean) : []
+  );
   (library.levels || [])
     .filter((level) => !level.isReferenceOnly && selectedLevelIds.has(level.id))
     .forEach((level) => {
@@ -339,6 +380,9 @@ const buildVocabularyCatalog = ({ library = loadVocabularyLibrary(), settings = 
           levelLabels: [],
           bookTitles: [],
           wordKeys: new Set(),
+          enabledWordKeys: new Set(),
+          unitIds: new Set(),
+          enabledUnitIds: new Set(),
         });
       }
       const group = groups.get(id);
@@ -356,7 +400,13 @@ const buildVocabularyCatalog = ({ library = loadVocabularyLibrary(), settings = 
   });
   (library.words || []).forEach((word) => {
     const group = groupByLevelId.get(word.levelId);
-    if (group && word.key) group.wordKeys.add(word.key);
+    if (!group || !word.key) return;
+    group.wordKeys.add(word.key);
+    if (word.unitId) group.unitIds.add(word.unitId);
+    if (!word.unitId || !disabledUnitIds.has(word.unitId)) {
+      group.enabledWordKeys.add(word.key);
+      if (word.unitId) group.enabledUnitIds.add(word.unitId);
+    }
   });
   return Array.from(groups.values())
     .sort((left, right) => left.order - right.order || left.label.localeCompare(right.label))
@@ -369,6 +419,9 @@ const buildVocabularyCatalog = ({ library = loadVocabularyLibrary(), settings = 
       levelLabels: group.levelLabels,
       bookTitles: group.bookTitles,
       wordCount: group.wordKeys.size,
+      enabledWordCount: group.enabledWordKeys.size,
+      unitCount: group.unitIds.size,
+      enabledUnitCount: group.enabledUnitIds.size,
     }));
 };
 
@@ -540,6 +593,7 @@ const buildVocabularyView = ({
   const normalizedSettings = normalizeVocabularySettings(settings, library, student);
   const currentLearningDay = getLearningDay(nowMs);
   const selectedLevels = new Set(normalizedSettings.levelIds);
+  const disabledUnitIds = new Set(normalizedSettings.disabledUnitIds || []);
   const beginnerOnly = selectedLevels.size === 1 && selectedLevels.has("0A");
   const levelById = new Map(library.levels.map((level) => [level.id, level]));
   const libraryWordByKey = new Map();
@@ -550,6 +604,7 @@ const buildVocabularyView = ({
 
   library.words.forEach((libraryWord) => {
     if (!selectedLevels.has(libraryWord.levelId)) return;
+    if (libraryWord.unitId && disabledUnitIds.has(libraryWord.unitId)) return;
     const existing = itemByKey.get(libraryWord.key);
     if (existing) {
       if (existing.levelIds.indexOf(libraryWord.levelId) < 0) existing.levelIds.push(libraryWord.levelId);

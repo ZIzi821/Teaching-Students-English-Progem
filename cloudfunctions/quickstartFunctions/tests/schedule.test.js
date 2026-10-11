@@ -22,7 +22,7 @@ assert.strictEqual(schedule.canManageScheduleEvent({
   mode: "teacherPreview",
   previewStudentId: "molly",
   event: { eventType: "lesson_booking", studentId: "molly" },
-}), true);
+}), false);
 assert.strictEqual(schedule.canManageScheduleEvent({
   actorRole: "teacher",
   mode: "teacherPreview",
@@ -33,7 +33,7 @@ assert.strictEqual(schedule.canManageScheduleEvent({
   actorRole: "student",
   actorStudentId: "molly",
   event: { eventType: "lesson_booking", studentId: "molly" },
-}), true);
+}), false);
 assert.strictEqual(schedule.canManageScheduleEvent({
   actorRole: "student",
   actorStudentId: "molly",
@@ -44,6 +44,30 @@ assert.deepStrictEqual(
   schedule.buildBookingRange({ name: "Molly" }, 1, "16:00"),
   { valid: true, weekday: 1, startMinute: 960, endMinute: 1005, durationMinutes: 45 }
 );
+assert.strictEqual(schedule.DEFAULT_STUDENT_SCHEDULE_TEMPLATES.length, 8);
+assert.deepStrictEqual(
+  schedule.DEFAULT_STUDENT_SCHEDULE_TEMPLATES.map((item) => `${item.studentName}:${item.weekday}:${item.startMinute}-${item.endMinute}`),
+  [
+    "Molly:1:1080-1125",
+    "Molly:2:1200-1245",
+    "Molly:3:1080-1125",
+    "Molly:4:1080-1125",
+    "Molly:5:1080-1125",
+    "冯嘉文:1:1200-1240",
+    "冯嘉文:3:1200-1240",
+    "冯嘉文:5:1200-1240",
+  ]
+);
+const fixedStudentEvents = schedule.buildDefaultStudentScheduleEvents([
+  { _id: "molly", name: "Molly" },
+  { _id: "feng", name: "冯嘉文" },
+  { _id: "hidden", name: "任轩楠", teacherHidden: true },
+]);
+assert.strictEqual(fixedStudentEvents.length, 8);
+assert(fixedStudentEvents.every((item) => item.eventType === "fixed_student_lesson"));
+assert(fixedStudentEvents.every((item) => item.studentId === "molly" || item.studentId === "feng"));
+assert.strictEqual(schedule.isStudentLessonEvent({ eventType: "fixed_student_lesson" }), true);
+assert.strictEqual(schedule.isStudentLessonEvent({ eventType: "lesson_booking" }), true);
 assert.strictEqual(schedule.buildBookingRange({ name: "冯嘉文" }, 2, "19:30").endMinute, 1210);
 assert.strictEqual(schedule.buildBookingRange({ name: "徐浩成" }, 6, "20:00").endMinute, 1260);
 
@@ -74,7 +98,7 @@ assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 1080, e
 assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 8 * 60 + 55, endMinute: 9 * 60 + 55 }).valid, false);
 assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 9 * 60, endMinute: 9 * 60 + 5 }).valid, true);
 const assignedColors = schedule.assignStudentColorKeys([
-  { eventType: "lesson_booking", studentId: "student-b" },
+  { eventType: "fixed_student_lesson", studentId: "student-b" },
   { eventType: "lesson_booking", studentId: "student-a" },
   { eventType: "lesson_booking", studentId: "student-b" },
 ]);

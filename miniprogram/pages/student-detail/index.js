@@ -46,6 +46,7 @@ Page({
       includeMistakeWords: true,
       hideBasicWords: false,
       learningOrder: "smart",
+      disabledUnitIds: [],
     },
     vocabularyDailyPlan: {
       dailyGoal: 8,
@@ -140,7 +141,11 @@ Page({
           return;
         }
         const student = this.prepareStudent(result.student);
-        const vocabularyState = this.prepareVocabularyState(student, result.vocabularyLevels || []);
+        const vocabularyState = this.prepareVocabularyState(
+          student,
+          result.vocabularyLevels || [],
+          result.vocabularyUnits || []
+        );
         const overviewState = this.prepareVocabularyOverview(result.vocabularyOverview, vocabularyState.dailyPlan);
         const analytics = this.prepareAnalytics(result.analytics);
         const mistakeLearningEnabled = student.mistakeLearningEnabled !== false;
@@ -273,8 +278,17 @@ Page({
     });
   },
 
-  prepareVocabularyState(student, availableLevels) {
+  prepareVocabularyState(student, availableLevels, availableUnits) {
     const settings = (student && student.vocabularySettings) || {};
+    const disabledUnitIds = Array.isArray(settings.disabledUnitIds) ? settings.disabledUnitIds : [];
+    const units = (availableUnits || []).map((item) => ({
+      id: item.id || item.unitId || "",
+      label: item.label || item.unitLabel || item.id || "",
+      levelId: item.levelId || "",
+      order: Number(item.order || 0),
+      wordCount: Math.max(0, Number(item.wordCount) || 0),
+      enabled: disabledUnitIds.indexOf(item.id || item.unitId || "") < 0,
+    })).filter((item) => item.id && item.levelId);
     const vocabularyLevels = (availableLevels.length ? availableLevels : FALLBACK_VOCABULARY_LEVELS)
       .map((item) => ({
         id: item.id || item.levelId || "",
@@ -283,6 +297,9 @@ Page({
         edition: item.edition || "",
         isTextbook: item.isTextbook === true,
         order: Number(item.order || 0),
+        units: units
+          .filter((unit) => unit.levelId === (item.id || item.levelId || ""))
+          .sort((left, right) => left.order - right.order),
       }))
       .filter((item) => item.id)
       .sort((a, b) => a.order - b.order);
@@ -311,6 +328,7 @@ Page({
         includeMistakeWords: settings.includeMistakeWords !== false,
         hideBasicWords: settings.hideBasicWords === true,
         learningOrder: settings.learningOrder || "smart",
+        disabledUnitIds: disabledUnitIds.filter((id) => units.some((unit) => unit.id === id)),
       },
     };
   },
@@ -456,11 +474,41 @@ Page({
 
   onVocabularyLevelsChange(e) {
     const levelIds = e.detail.value || [];
+    const selectedLevelIds = new Set(levelIds);
+    const validUnitIds = new Set(
+      this.data.vocabularyLevels
+        .filter((item) => selectedLevelIds.has(item.id))
+        .reduce((result, item) => result.concat((item.units || []).map((unit) => unit.id)), [])
+    );
+    const nextDisabledUnitIds = (this.data.vocabularyForm.disabledUnitIds || [])
+      .filter((id) => validUnitIds.has(id));
+    const nextDisabled = new Set(nextDisabledUnitIds);
     this.setData({
       "vocabularyForm.levelIds": levelIds,
-      vocabularyLevels: this.data.vocabularyLevels.map((item) =>
-        Object.assign({}, item, { checked: levelIds.indexOf(item.id) >= 0 })
-      ),
+      "vocabularyForm.disabledUnitIds": nextDisabledUnitIds,
+      vocabularyLevels: this.data.vocabularyLevels.map((item) => Object.assign({}, item, {
+        checked: levelIds.indexOf(item.id) >= 0,
+        units: (item.units || []).map((unit) => Object.assign({}, unit, {
+          enabled: !nextDisabled.has(unit.id),
+        })),
+      })),
+    });
+  },
+
+  onVocabularyUnitChange(e) {
+    const unitId = String(e.currentTarget.dataset.unitId || "");
+    if (!unitId || this.data.vocabularySaving) return;
+    const enabled = Boolean(e.detail.value);
+    const disabled = new Set(this.data.vocabularyForm.disabledUnitIds || []);
+    if (enabled) disabled.delete(unitId);
+    else disabled.add(unitId);
+    this.setData({
+      "vocabularyForm.disabledUnitIds": Array.from(disabled),
+      vocabularyLevels: this.data.vocabularyLevels.map((level) => Object.assign({}, level, {
+        units: (level.units || []).map((unit) => (
+          unit.id === unitId ? Object.assign({}, unit, { enabled }) : unit
+        )),
+      })),
     });
   },
 
@@ -490,6 +538,7 @@ Page({
             includeMistakeWords: form.includeMistakeWords,
             hideBasicWords: form.hideBasicWords,
             learningOrder: form.learningOrder,
+            disabledUnitIds: form.disabledUnitIds || [],
           },
         },
       })

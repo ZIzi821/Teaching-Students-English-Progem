@@ -64,6 +64,17 @@ const DEFAULT_WEEKLY_EVENTS = Object.freeze([
   },
 ]);
 
+const DEFAULT_STUDENT_SCHEDULE_TEMPLATES = Object.freeze([
+  { id: "molly-mon-1800", studentName: "Molly", weekday: 1, startMinute: 18 * 60, endMinute: 18 * 60 + 45 },
+  { id: "molly-tue-2000", studentName: "Molly", weekday: 2, startMinute: 20 * 60, endMinute: 20 * 60 + 45 },
+  { id: "molly-wed-1800", studentName: "Molly", weekday: 3, startMinute: 18 * 60, endMinute: 18 * 60 + 45 },
+  { id: "molly-thu-1800", studentName: "Molly", weekday: 4, startMinute: 18 * 60, endMinute: 18 * 60 + 45 },
+  { id: "molly-fri-1800", studentName: "Molly", weekday: 5, startMinute: 18 * 60, endMinute: 18 * 60 + 45 },
+  { id: "fengjiawen-mon-2000", studentName: "冯嘉文", weekday: 1, startMinute: 20 * 60, endMinute: 20 * 60 + 40 },
+  { id: "fengjiawen-wed-2000", studentName: "冯嘉文", weekday: 3, startMinute: 20 * 60, endMinute: 20 * 60 + 40 },
+  { id: "fengjiawen-fri-2000", studentName: "冯嘉文", weekday: 5, startMinute: 20 * 60, endMinute: 20 * 60 + 40 },
+]);
+
 const pad2 = (value) => String(value).padStart(2, "0");
 
 const formatMinute = (value) => {
@@ -150,6 +161,40 @@ const isStudentBookingEnabled = (student = {}) => Boolean(
   student && student._id && student.teacherHidden !== true
 );
 
+const isStudentLessonEvent = (event = {}) => (
+  event.eventType === "lesson_booking" || event.eventType === "fixed_student_lesson"
+);
+
+const buildDefaultStudentScheduleEvents = (students = []) => {
+  const studentByName = new Map();
+  (students || []).filter(isStudentBookingEnabled).forEach((student) => {
+    const name = String(student.name || student.nickname || "").trim().toLowerCase();
+    if (name && !studentByName.has(name)) studentByName.set(name, student);
+  });
+  return DEFAULT_STUDENT_SCHEDULE_TEMPLATES.map((template) => {
+    const student = studentByName.get(String(template.studentName || "").trim().toLowerCase());
+    if (!student) return null;
+    const name = student.name || student.nickname || template.studentName;
+    return {
+      _id: `schedule_fixed_${template.id}`,
+      eventType: "fixed_student_lesson",
+      fixedTemplateId: template.id,
+      scheduleKind: "fixed_student",
+      weekday: template.weekday,
+      startMinute: template.startMinute,
+      endMinute: template.endMinute,
+      durationMinutes: template.endMinute - template.startMinute,
+      title: `${name}英语课`,
+      publicTitle: `${name}英语课`,
+      note: "每周固定上课时间",
+      studentId: student._id,
+      studentNameSnapshot: name,
+      colorKey: getStudentColorKey(student),
+      source: "fixed_student_seed",
+    };
+  }).filter(Boolean);
+};
+
 const canManageScheduleEvent = ({
   actorRole,
   actorStudentId = "",
@@ -158,19 +203,9 @@ const canManageScheduleEvent = ({
   event = {},
 } = {}) => {
   if (actorRole === "teacher") {
-    if (mode !== "teacherPreview") return true;
-    return Boolean(
-      previewStudentId
-      && event.eventType === "lesson_booking"
-      && String(event.studentId || "") === String(previewStudentId)
-    );
+    return mode !== "teacherPreview";
   }
-  return Boolean(
-    actorRole === "student"
-    && actorStudentId
-    && event.eventType === "lesson_booking"
-    && String(event.studentId || "") === String(actorStudentId)
-  );
+  return false;
 };
 
 const hashString = (value) => {
@@ -192,7 +227,7 @@ const getStudentColorKey = (student = {}) => {
 const assignStudentColorKeys = (events = []) => {
   const studentIds = Array.from(new Set(
     events
-      .filter((item) => item && item.eventType === "lesson_booking" && item.studentId)
+      .filter((item) => item && isStudentLessonEvent(item) && item.studentId)
       .map((item) => String(item.studentId))
   )).sort();
   return new Map(studentIds.map((studentId, index) => [
@@ -274,6 +309,7 @@ const buildTeacherScheduleActivities = ({
 };
 
 module.exports = {
+  DEFAULT_STUDENT_SCHEDULE_TEMPLATES,
   DEFAULT_WEEKLY_EVENTS,
   EARLIEST_MINUTE,
   LATEST_MINUTE,
@@ -281,6 +317,7 @@ module.exports = {
   STUDENT_COLOR_KEYS,
   WEEKDAY_LABELS,
   assignStudentColorKeys,
+  buildDefaultStudentScheduleEvents,
   buildBookingRange,
   buildTeacherScheduleActivities,
   buildWeekdayAvailability,
@@ -289,6 +326,7 @@ module.exports = {
   formatMinute,
   getDefaultBookingDurationMinutes,
   isStudentBookingEnabled,
+  isStudentLessonEvent,
   isWeekdayBookingOpen,
   getStudentColorKey,
   normalizeClosedWeekdays,

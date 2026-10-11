@@ -9,7 +9,7 @@ const WEEKDAY_OPTIONS = WEEKDAY_LABELS.map((label, index) => ({
 }));
 const ARRANGEMENT_TYPES = [
   { value: "teacher", label: "老师安排" },
-  { value: "booking", label: "帮学生预约" },
+  { value: "booking", label: "学生临时课程" },
 ];
 
 const pad2 = (value) => String(value).padStart(2, "0");
@@ -41,6 +41,8 @@ Page({
     availabilitySaving: false,
     student: null,
     students: [],
+    fixedStudentSchedules: [],
+    fixedScheduleSavingId: "",
     days: buildScheduleDays(),
     weekdayOptions: WEEKDAY_OPTIONS,
     selectedWeekday: 1,
@@ -139,6 +141,7 @@ Page({
         availabilityVersion: Math.max(0, Number(result.availabilityVersion) || 0),
         student: result.student || null,
         students,
+        fixedStudentSchedules: result.fixedStudentSchedules || [],
         days,
         bookingStudent,
         formStudentIndex,
@@ -187,7 +190,7 @@ Page({
 
   openForm() {
     if (!this.data.canWrite) {
-      wx.showToast({ title: "当前学生暂未开放预约", icon: "none" });
+      wx.showToast({ title: "家长端日程仅供查看", icon: "none" });
       return;
     }
     if (this.data.actorRole !== "teacher" && !this.data.selectedDayBookingOpen) {
@@ -427,6 +430,39 @@ Page({
       console.error(err);
       wx.showToast({ title: err.message || "取消失败", icon: "none" });
     }).finally(() => this.setData({ cancellingId: "" }));
+  },
+
+  onFixedScheduleEnabledChange(event) {
+    if (!this.data.isTeacher || this.data.fixedScheduleSavingId) return;
+    const eventId = String(event.currentTarget.dataset.id || "");
+    const enabled = Boolean(event.detail.value);
+    const item = (this.data.fixedStudentSchedules || []).find((entry) => entry._id === eventId);
+    if (!item) {
+      this.loadSchedule();
+      return;
+    }
+    this.setData({ fixedScheduleSavingId: eventId });
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "setFixedStudentScheduleEnabled",
+        data: {
+          eventId,
+          enabled,
+          expectedVersion: Number(item.version) || 1,
+        },
+      },
+    }).then((res) => {
+      const result = res.result || {};
+      if (!result.success) throw new Error(result.message || "固定课表保存失败");
+      wx.showToast({ title: enabled ? "固定课程已打开" : "固定课程已关闭", icon: "success" });
+    }).catch((err) => {
+      console.error(err);
+      wx.showToast({ title: err.message || "固定课表保存失败", icon: "none", duration: 2600 });
+    }).finally(() => {
+      this.setData({ fixedScheduleSavingId: "" });
+      this.loadSchedule();
+    });
   },
 
   toggleSelectedDayAvailability() {

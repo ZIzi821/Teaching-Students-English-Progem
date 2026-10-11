@@ -208,15 +208,26 @@
 
       <view class="setting-block">
         <view class="setting-title">英语课本和基础词库</view>
-        <view class="setting-hint">可选择译林七至九年级六册，并显示对应的词库版本。</view>
+        <view class="setting-hint">新旧译林教材分开显示；选中教材后，可继续控制每个单元是否加入学习。</view>
         <checkbox-group class="level-grid" bindchange="onVocabularyLevelsChange">
-          <label class="level-option {{item.checked ? 'level-option-checked' : ''}}" wx:for="{{vocabularyLevels}}" wx:key="id">
-            <checkbox value="{{item.id}}" checked="{{item.checked}}" disabled="{{vocabularySaving}}" color="#4f8f73" />
-            <view>
-              <view>{{item.label}}</view>
-              <view class="setting-hint" wx:if="{{item.edition}}">{{item.edition}}</view>
+          <view class="level-card {{item.checked ? 'level-card-checked' : ''}}" wx:for="{{vocabularyLevels}}" wx:key="id">
+            <label class="level-option {{item.checked ? 'level-option-checked' : ''}}">
+              <checkbox value="{{item.id}}" checked="{{item.checked}}" disabled="{{vocabularySaving}}" color="#4f8f73" />
+              <view>
+                <view>{{item.label}}</view>
+                <view class="setting-hint" wx:if="{{item.edition}}">{{item.edition}}</view>
+              </view>
+            </label>
+            <view class="unit-toggle-list" wx:if="{{item.checked && item.units.length}}">
+              <view class="unit-toggle-row" wx:for="{{item.units}}" wx:for-item="unit" wx:key="id">
+                <view class="unit-toggle-copy">
+                  <view class="unit-toggle-name">{{unit.label}}</view>
+                  <view class="unit-toggle-count">{{unit.wordCount}} 个课后词汇 · {{unit.enabled ? '已打开' : '已关闭'}}</view>
+                </view>
+                <switch checked="{{unit.enabled}}" color="#4f8f73" disabled="{{vocabularySaving}}" data-unit-id="{{unit.id}}" bindchange="onVocabularyUnitChange" />
+              </view>
             </view>
-          </label>
+          </view>
         </checkbox-group>
       </view>
 
