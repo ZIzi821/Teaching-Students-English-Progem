@@ -15,7 +15,7 @@ const studentPageWxml = read("miniprogram/pages/vocabulary/index.wxml");
 const studentDetailJs = read("miniprogram/pages/student-detail/index.js");
 const backend = read("cloudfunctions/quickstartFunctions/index.js");
 const vocabulary = read("cloudfunctions/quickstartFunctions/vocabulary.js");
-const yilinLibrary = read("cloudfunctions/quickstartFunctions/data/yilin-junior-old-words.json");
+const yilinLibrary = read("cloudfunctions/quickstartFunctions/data/yilin-junior-2024-7a-words.json");
 
 assert(app.pages.includes("pages/teacher-vocabulary-detail/index"), "Teacher vocabulary detail page is not registered");
 assert(homeWxml.includes('bindtap="goVocabularyDetail"'), "Teacher home is missing the vocabulary detail entry");
@@ -41,6 +41,7 @@ assert(
     && vocabulary.includes("wordCount: group.wordKeys.size"),
   "Static vocabulary catalog counts are missing"
 );
-assert(yilinLibrary.includes('"edition": "译林版 · 2012课标旧版"'), "Yilin legacy edition is not clearly named");
+assert(yilinLibrary.includes('"edition": "译林版 · 2024新教材（2022课标）"'), "Current Yilin edition is not clearly named");
+assert(!vocabulary.includes('yilin-junior-old-words.json'), "Removed Yilin 2012 library is still loaded");
 
 console.log("Teacher vocabulary detail validation passed.");

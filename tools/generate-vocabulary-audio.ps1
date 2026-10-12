@@ -1,17 +1,13 @@
 param(
-  [string]$ManifestPath = "",
-  [string]$OutputDirectory = ""
+  [Parameter(Mandatory = $true)]
+  [string]$ManifestPath,
+
+  [Parameter(Mandatory = $true)]
+  [string]$OutputDirectory
 )
 
 $ErrorActionPreference = "Stop"
 $projectRoot = Split-Path -Parent $PSScriptRoot
-
-if (-not $ManifestPath) {
-  $ManifestPath = Join-Path $projectRoot "cloudfunctions\quickstartFunctions\data\vocabulary-audio-manifest.json"
-}
-if (-not $OutputDirectory) {
-  $OutputDirectory = Join-Path $projectRoot "output\vocabulary-audio\v1"
-}
 
 $resolvedManifest = (Resolve-Path -LiteralPath $ManifestPath).Path
 $resolvedOutput = [System.IO.Path]::GetFullPath($OutputDirectory)

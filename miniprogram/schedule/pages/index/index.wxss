@@ -217,9 +217,11 @@
 .fixed-schedule-row {
   gap: 14rpx;
   margin-top: 18rpx;
-  padding-top: 18rpx;
+  padding: 18rpx 4rpx 0;
   border-top: 1rpx solid #ece5dc;
 }
+
+.fixed-schedule-row:active { opacity: 0.7; }
 
 .fixed-schedule-color {
   width: 12rpx;
@@ -245,9 +247,11 @@
   font-size: 20rpx;
 }
 
-.fixed-schedule-row switch {
+.fixed-schedule-action {
   flex-shrink: 0;
-  transform: scale(0.86);
+  color: #39765d;
+  font-size: 22rpx;
+  font-weight: 800;
 }
 
 .timeline-card {
@@ -369,3 +373,36 @@
 .modal-cancel { background: #eee8df; color: #6f655c; }
 .modal-confirm { background: #4f8f73; color: #fff; }
 .modal-confirm-disabled { opacity: 0.55; }
+
+.fixed-editor-modal { max-height: 92vh; }
+.fixed-day-list { display: flex; flex-direction: column; gap: 12rpx; }
+.fixed-day-row {
+  padding: 18rpx 20rpx;
+  border: 1rpx solid #dce7e0;
+  border-radius: 16rpx;
+  background: #f7fbf8;
+}
+.fixed-day-disabled { border-color: #e9e3db; background: #f7f3ed; }
+.fixed-day-head { display: flex; align-items: center; justify-content: space-between; }
+.fixed-day-head switch { transform: scale(0.82); transform-origin: right center; }
+.fixed-day-name { color: #28483b; font-size: 25rpx; font-weight: 800; }
+.fixed-day-disabled .fixed-day-name { color: #8f877e; }
+.fixed-day-times { display: flex; margin-top: 12rpx; align-items: center; gap: 12rpx; }
+.fixed-day-times picker { min-width: 0; flex: 1; }
+.fixed-time-value {
+  display: flex;
+  box-sizing: border-box;
+  min-height: 64rpx;
+  padding: 14rpx 16rpx;
+  align-items: center;
+  justify-content: space-between;
+  border: 1rpx solid #d7cec2;
+  border-radius: 12rpx;
+  background: #fffdfa;
+  color: #254437;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+.fixed-time-value text { margin-right: 10rpx; color: #8a8075; font-size: 18rpx; font-weight: 500; }
+.fixed-day-disabled .fixed-time-value { color: #9b938a; background: #eee9e2; }
+.fixed-time-arrow { flex-shrink: 0; color: #91877d; font-size: 22rpx; }

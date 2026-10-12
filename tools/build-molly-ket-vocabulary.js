@@ -6,7 +6,7 @@ const dataDir = path.join(root, "cloudfunctions", "quickstartFunctions", "data")
 const sourceFiles = [
   "primary-beginner-words.json",
   "primary-1-3-words.json",
-  "yilin-junior-old-words.json",
+  "yilin-junior-2024-7a-words.json",
   "mistake-word-lexicon.json",
 ];
 const outputPath = path.join(dataDir, "molly-ket-a2-words.json");

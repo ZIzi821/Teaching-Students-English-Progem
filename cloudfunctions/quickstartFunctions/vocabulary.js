@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const vocabularyAudioManifest = require("./data/vocabulary-audio-sprites.json");
 
 const VOCABULARY_CANDIDATES_VERSION = 3;
-const VOCABULARY_PROFILE_VERSION = 4;
+const VOCABULARY_PROFILE_VERSION = 5;
 const DEFAULT_DAILY_GOAL = 8;
 const MIN_DAILY_GOAL = 5;
 const MAX_DAILY_GOAL = 30;
@@ -233,7 +233,6 @@ const loadVocabularyLibrary = () => {
     "./data/primary-1-3-words.json",
     "./data/molly-ket-a2-words.json",
     "./data/yilin-junior-2024-7a-words.json",
-    "./data/yilin-junior-old-words.json",
     "./data/mistake-word-lexicon.json",
   ].forEach((dataPath) => {
     try {
@@ -246,11 +245,6 @@ const loadVocabularyLibrary = () => {
   });
   cachedLibrary = normalizeLibrary(rawLibrary);
   return cachedLibrary;
-};
-
-const isXuannan = (student) => {
-  const source = student || {};
-  return asText(source.name) === "任轩楠";
 };
 
 const isMolly = (student) => {
@@ -286,17 +280,16 @@ const getRecommendedVocabularySettings = (student, library = loadVocabularyLibra
       disabledUnitIds: [],
     };
   }
-  const levelPrefix = isXuannan(student) ? "yilin-old-" : "";
   const levelIds = library.levels
     .filter((level) => !level.isReferenceOnly)
-    .filter((level) => levelPrefix ? level.id.indexOf(levelPrefix) === 0 : /^([123][AB])$/.test(level.id))
+    .filter((level) => /^([123][AB])$/.test(level.id))
     .map((level) => level.id);
   return {
     profileVersion: VOCABULARY_PROFILE_VERSION,
     levelIds,
-    dailyGoal: isXuannan(student) ? 10 : DEFAULT_DAILY_GOAL,
+    dailyGoal: DEFAULT_DAILY_GOAL,
     includeMistakeWords: true,
-    hideBasicWords: isXuannan(student),
+    hideBasicWords: false,
     learningOrder: "smart",
     disabledUnitIds: [],
   };
@@ -310,13 +303,13 @@ const normalizeVocabularySettings = (settings, library = loadVocabularyLibrary()
   const defaults = getRecommendedVocabularySettings(student, library);
   const source = settings && typeof settings === "object" ? settings : {};
   const validLevelIds = new Set(library.levels.filter((level) => !level.isReferenceOnly).map((level) => level.id));
+  const sourceLevelIds = Array.isArray(source.levelIds) ? source.levelIds.map(asText) : [];
   let levelIds = Array.isArray(source.levelIds)
     ? Array.from(new Set(source.levelIds.map(asText).filter((id) => validLevelIds.has(id))))
     : defaults.levelIds;
-  const needsXuannanMigration = isXuannan(student)
-    && Number(source.profileVersion || 0) < VOCABULARY_PROFILE_VERSION
-    && !levelIds.some((id) => id.indexOf("yilin-old-") === 0);
-  if (needsXuannanMigration) levelIds = defaults.levelIds;
+  const needsRemovedYilinMigration = sourceLevelIds.some((id) => id.indexOf("yilin-old-") === 0)
+    && !levelIds.length;
+  if (needsRemovedYilinMigration) levelIds = defaults.levelIds;
   const needsMollyMigration = isMolly(student)
     && Number(source.profileVersion || 0) < VOCABULARY_PROFILE_VERSION
     && levelIds.indexOf("molly-ket-a2-16w") < 0;
@@ -333,6 +326,7 @@ const normalizeVocabularySettings = (settings, library = loadVocabularyLibrary()
   );
   const disabledUnitIds = Array.isArray(source.disabledUnitIds)
     && !needsXuHaochengMigration
+    && !needsRemovedYilinMigration
     ? Array.from(new Set(source.disabledUnitIds.map(asText).filter((id) => validUnitIds.has(id))))
     : defaults.disabledUnitIds;
   const goal = needsXuHaochengMigration ? defaults.dailyGoal : Number(source.dailyGoal);

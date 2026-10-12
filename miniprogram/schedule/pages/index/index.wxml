@@ -10,7 +10,7 @@
   <view class="schedule-hero">
     <view class="hero-kicker">WEEKLY SCHEDULE</view>
     <view class="hero-title">每周上课日程</view>
-    <view class="hero-hint" wx:if="{{isTeacher}}">查看所有课程，并在这里统一开关学生的长期固定上课时间。</view>
+    <view class="hero-hint" wx:if="{{isTeacher}}">查看所有课程，并按学生维护每周固定上课日和时间。</view>
     <view class="hero-hint" wx:elif="{{student}}">这里显示 {{student.name}} 每周什么时候上课；日程由朱老师统一维护。</view>
   </view>
 
@@ -37,7 +37,7 @@
     <view class="schedule-summary">
       <view>
         <view class="summary-title">{{selectedDayLabel}}</view>
-        <view class="summary-hint" wx:if="{{isTeacher}}">本页显示每周固定课程和临时安排；固定课表可在下方单独打开或关闭。</view>
+        <view class="summary-hint" wx:if="{{isTeacher}}">本页显示每周固定课程和临时安排；固定课表可在下方按学生调整。</view>
         <view class="summary-hint" wx:else>只显示当前孩子自己的课程，不再展示其他学生或老师的空闲时间。</view>
       </view>
       <view class="summary-actions">
@@ -55,18 +55,18 @@
       <view class="fixed-schedule-head">
         <view>
           <view class="fixed-schedule-title">长期固定上课时间</view>
-          <view class="fixed-schedule-hint">关闭后只会从课表隐藏，不会删除这条固定设置；以后可再次打开。</view>
+          <view class="fixed-schedule-hint">按学生管理。点学生姓名，可以修改每周上课日和具体时间。</view>
         </view>
-        <view class="fixed-schedule-count">{{fixedStudentSchedules.length}} 条</view>
+        <view class="fixed-schedule-count">{{fixedScheduleStudents.length}} 名</view>
       </view>
-      <view class="fixed-schedule-empty" wx:if="{{!fixedStudentSchedules.length}}">暂未找到需要管理的固定课程。</view>
-      <view class="fixed-schedule-row" wx:for="{{fixedStudentSchedules}}" wx:key="_id">
+      <view class="fixed-schedule-empty" wx:if="{{!fixedScheduleStudents.length}}">暂未找到可以设置固定课表的学生。</view>
+      <view class="fixed-schedule-row" wx:for="{{fixedScheduleStudents}}" wx:key="studentId" data-student-id="{{item.studentId}}" bindtap="openFixedScheduleForm">
         <view class="fixed-schedule-color event-{{item.colorKey}}"></view>
         <view class="fixed-schedule-copy">
-          <view class="fixed-schedule-name">{{item.title}}</view>
-          <view class="fixed-schedule-time">{{item.weekdayLabel}} · {{item.timeLabel}} · {{item.enabled ? '已打开' : '已关闭'}}</view>
+          <view class="fixed-schedule-name">{{item.studentName}}</view>
+          <view class="fixed-schedule-time">{{item.summary}}</view>
         </view>
-        <switch checked="{{item.enabled}}" color="#4f8f73" disabled="{{fixedScheduleSavingId}}" data-id="{{item._id}}" bindchange="onFixedScheduleEnabledChange" />
+        <view class="fixed-schedule-action">调整 ›</view>
       </view>
     </view>
 
@@ -145,10 +145,38 @@
         <view class="field-label">备注（可选）</view>
         <input class="text-input" maxlength="100" placeholder="补充说明" value="{{form.note}}" data-field="note" bindinput="onFormInput" />
       </view>
-      <view class="weekly-note">这里用于额外的每周安排；Molly、冯嘉文的长期固定课程请使用页面上的固定课表开关。</view>
+      <view class="weekly-note">这里用于额外的每周安排；长期固定课程请点页面上方的学生姓名调整。</view>
       <view class="modal-actions">
         <view class="modal-cancel" bindtap="closeForm">返回</view>
         <view class="modal-confirm {{saving ? 'modal-confirm-disabled' : ''}}" bindtap="submitForm">{{saving ? '保存中…' : editingId ? '保存修改' : '加入日程'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showFixedScheduleForm}}" bindtap="closeFixedScheduleForm">
+    <view class="schedule-modal fixed-editor-modal" catchtap="stopPropagation">
+      <view class="modal-title">{{fixedScheduleEditingStudent.name}}的固定课表</view>
+      <view class="modal-hint">打开需要上课的星期，再设置开始和结束时间。关闭某一天只会暂停显示，不会影响课程记录。</view>
+      <view class="fixed-day-list">
+        <view class="fixed-day-row {{item.enabled ? '' : 'fixed-day-disabled'}}" wx:for="{{fixedScheduleDraft}}" wx:key="weekday">
+          <view class="fixed-day-head">
+            <view class="fixed-day-name">{{item.label}}</view>
+            <switch checked="{{item.enabled}}" color="#4f8f73" data-index="{{index}}" bindchange="onFixedScheduleDayToggle" />
+          </view>
+          <view class="fixed-day-times">
+            <picker mode="time" start="09:00" end="22:55" value="{{item.startTime}}" disabled="{{!item.enabled}}" data-index="{{index}}" data-field="startTime" bindchange="onFixedScheduleTimeChange">
+              <view class="fixed-time-value"><text>开始</text>{{item.startTime}}</view>
+            </picker>
+            <view class="fixed-time-arrow">—</view>
+            <picker mode="time" start="09:05" end="23:00" value="{{item.endTime}}" disabled="{{!item.enabled}}" data-index="{{index}}" data-field="endTime" bindchange="onFixedScheduleTimeChange">
+              <view class="fixed-time-value"><text>结束</text>{{item.endTime}}</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="modal-actions">
+        <view class="modal-cancel" bindtap="closeFixedScheduleForm">返回</view>
+        <view class="modal-confirm {{fixedScheduleSaving ? 'modal-confirm-disabled' : ''}}" bindtap="submitFixedStudentSchedule">{{fixedScheduleSaving ? '保存中…' : '保存固定课表'}}</view>
       </view>
     </view>
   </view>

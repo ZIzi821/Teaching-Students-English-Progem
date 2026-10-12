@@ -17,7 +17,6 @@ assert.strictEqual(beginnerLevel.label, "英语启蒙（零基础）");
 assert.strictEqual(beginnerWords.length, 89);
 assert.strictEqual(beginnerWords.filter((word) => word.unitId === "letters").length, 26);
 assert.strictEqual(beginnerWords.filter((word) => /^numbers-/.test(word.unitId)).length, 21);
-assert(beginnerWords.every((word) => vocabulary.getVocabularyAudioInfo(word.key).fileId));
 assert(beginnerWords.every((word) => vocabulary.getVocabularyAudioInfo(word.key).directFileId));
 assert(beginnerWords.every((word) => vocabulary.getVocabularyAudioInfo(word.key).directDurationMs > 0));
 assert(!vocabulary.getRecommendedVocabularySettings({ name: "普通学生" }, library).levelIds.includes("0A"));
@@ -30,18 +29,21 @@ assert.strictEqual(beginnerCatalog.length, 1);
 assert.strictEqual(beginnerCatalog[0].id, "primary-beginner");
 assert.strictEqual(beginnerCatalog[0].wordCount, 89);
 
-const yilinLevelIds = library.levels
-  .filter((level) => level.id.indexOf("yilin-old-") === 0)
-  .map((level) => level.id);
-const yilinCatalog = vocabulary.buildVocabularyCatalog({
-  library,
-  settings: { levelIds: yilinLevelIds },
-});
-assert.strictEqual(yilinCatalog.length, 1, "Selected Yilin volumes must be grouped as one library");
-assert.strictEqual(yilinCatalog[0].id, "yilin-junior-old");
-assert.strictEqual(yilinCatalog[0].edition, "译林版 · 2012课标旧版");
-assert.strictEqual(yilinCatalog[0].wordCount, 2183);
-assert.deepStrictEqual(yilinCatalog[0].levelIds, yilinLevelIds);
+assert.strictEqual(
+  library.levels.some((level) => level.id.indexOf("yilin-old-") === 0),
+  false,
+  "Removed Yilin 2012 textbooks must not remain selectable"
+);
+const removedYilinMigration = vocabulary.normalizeVocabularySettings({
+  profileVersion: 4,
+  levelIds: ["yilin-old-7A", "yilin-old-7B"],
+  dailyGoal: 10,
+  includeMistakeWords: true,
+  hideBasicWords: true,
+  learningOrder: "book",
+}, library, { name: "旧词库学生" });
+assert(removedYilinMigration.levelIds.length > 0, "Removed legacy selections must migrate to a valid current default");
+assert(removedYilinMigration.levelIds.every((id) => id.indexOf("yilin-old-") !== 0));
 
 const yilin2024Level = library.levels.find((level) => level.id === "yilin-2024-7A");
 const yilin2024Words = library.words.filter((word) => word.levelId === "yilin-2024-7A");

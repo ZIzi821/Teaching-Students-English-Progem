@@ -97,6 +97,29 @@ assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 1001, e
 assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 1080, endMinute: 1080 }).valid, false);
 assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 8 * 60 + 55, endMinute: 9 * 60 + 55 }).valid, false);
 assert.strictEqual(schedule.validateTimeRange({ weekday: 2, startMinute: 9 * 60, endMinute: 9 * 60 + 5 }).valid, true);
+const editableFixedWeek = schedule.normalizeFixedStudentScheduleEntries(
+  schedule.WEEKDAY_LABELS.map((label, index) => ({
+    weekday: index + 1,
+    enabled: index === 0 || index === 2,
+    startTime: index === 0 ? "18:00" : "20:00",
+    endTime: index === 0 ? "18:45" : "20:40",
+    eventId: index === 0 ? "fixed-molly-mon" : "",
+    expectedVersion: index === 0 ? 3 : 0,
+  }))
+);
+assert.strictEqual(editableFixedWeek.valid, true);
+assert.strictEqual(editableFixedWeek.entries.length, 7);
+assert.strictEqual(editableFixedWeek.entries[0].durationMinutes, 45);
+assert.strictEqual(editableFixedWeek.entries[2].enabled, true);
+assert.strictEqual(schedule.normalizeFixedStudentScheduleEntries([]).valid, false);
+assert.strictEqual(schedule.normalizeFixedStudentScheduleEntries(
+  Array.from({ length: 7 }, (_, index) => ({
+    weekday: index + 1,
+    enabled: true,
+    startTime: index === 0 ? "08:55" : "18:00",
+    endTime: "18:45",
+  }))
+).valid, false);
 const assignedColors = schedule.assignStudentColorKeys([
   { eventType: "fixed_student_lesson", studentId: "student-b" },
   { eventType: "lesson_booking", studentId: "student-a" },

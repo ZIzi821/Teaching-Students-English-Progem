@@ -22,6 +22,27 @@ const parseTime = (value) => {
   return matched ? Number(matched[1]) * 60 + Number(matched[2]) : 0;
 };
 
+const buildFixedScheduleStudents = (students = [], schedules = []) => {
+  const schedulesByStudent = new Map();
+  schedules.forEach((item) => {
+    const studentId = String(item.studentId || "");
+    if (!studentId) return;
+    if (!schedulesByStudent.has(studentId)) schedulesByStudent.set(studentId, []);
+    schedulesByStudent.get(studentId).push(item);
+  });
+  return students.map((student) => {
+    const rows = schedulesByStudent.get(String(student._id || "")) || [];
+    const enabledCount = rows.filter((item) => item.enabled).length;
+    return {
+      studentId: student._id,
+      studentName: student.name,
+      colorKey: student.colorKey || (rows[0] && rows[0].colorKey) || "sage",
+      enabledCount,
+      summary: enabledCount ? `已开启 ${enabledCount} 天` : "暂未设置固定时间",
+    };
+  });
+};
+
 Page({
   data: {
     loading: true,
@@ -42,7 +63,11 @@ Page({
     student: null,
     students: [],
     fixedStudentSchedules: [],
-    fixedScheduleSavingId: "",
+    fixedScheduleStudents: [],
+    showFixedScheduleForm: false,
+    fixedScheduleEditingStudent: null,
+    fixedScheduleDraft: [],
+    fixedScheduleSaving: false,
     days: buildScheduleDays(),
     weekdayOptions: WEEKDAY_OPTIONS,
     selectedWeekday: 1,
@@ -124,6 +149,7 @@ Page({
         };
       });
       const students = result.students || [];
+      const fixedStudentSchedules = result.fixedStudentSchedules || [];
       const previousStudentId = this.data.bookingStudent && this.data.bookingStudent._id;
       const bookingStudent = result.student
         || students.find((item) => item._id === previousStudentId)
@@ -141,7 +167,8 @@ Page({
         availabilityVersion: Math.max(0, Number(result.availabilityVersion) || 0),
         student: result.student || null,
         students,
-        fixedStudentSchedules: result.fixedStudentSchedules || [],
+        fixedStudentSchedules,
+        fixedScheduleStudents: buildFixedScheduleStudents(students, fixedStudentSchedules),
         days,
         bookingStudent,
         formStudentIndex,
@@ -432,36 +459,125 @@ Page({
     }).finally(() => this.setData({ cancellingId: "" }));
   },
 
-  onFixedScheduleEnabledChange(event) {
-    if (!this.data.isTeacher || this.data.fixedScheduleSavingId) return;
-    const eventId = String(event.currentTarget.dataset.id || "");
-    const enabled = Boolean(event.detail.value);
-    const item = (this.data.fixedStudentSchedules || []).find((entry) => entry._id === eventId);
-    if (!item) {
-      this.loadSchedule();
+  openFixedScheduleForm(event) {
+    if (!this.data.isTeacher || !this.data.canWrite) return;
+    const studentId = String(event.currentTarget.dataset.studentId || "");
+    const student = (this.data.students || []).find((item) => String(item._id) === studentId);
+    if (!student) {
+      wx.showToast({ title: "学生信息已变化，请刷新", icon: "none" });
       return;
     }
-    this.setData({ fixedScheduleSavingId: eventId });
+    const existingRows = (this.data.fixedStudentSchedules || [])
+      .filter((item) => String(item.studentId || "") === studentId);
+    const existingByWeekday = new Map(existingRows.map((item) => [Number(item.weekday), item]));
+    const firstExisting = existingRows[0] || null;
+    const defaultStartTime = firstExisting && firstExisting.startTime || "18:00";
+    const defaultDuration = Number(student.bookingDurationMinutes) || 60;
+    const defaultEndTime = formatMinute(parseTime(defaultStartTime) + defaultDuration);
+    const fixedScheduleDraft = WEEKDAY_OPTIONS.map((option) => {
+      const current = existingByWeekday.get(option.weekday);
+      return {
+        weekday: option.weekday,
+        label: option.label,
+        enabled: current ? current.enabled === true : false,
+        startTime: current && current.startTime || defaultStartTime,
+        endTime: current && current.endTime || defaultEndTime,
+        eventId: current && current._id || "",
+        expectedVersion: current ? Number(current.version) || 1 : 0,
+      };
+    });
+    this.setData({
+      showFixedScheduleForm: true,
+      fixedScheduleEditingStudent: student,
+      fixedScheduleDraft,
+    });
+  },
+
+  closeFixedScheduleForm() {
+    if (this.data.fixedScheduleSaving) return;
+    this.setData({
+      showFixedScheduleForm: false,
+      fixedScheduleEditingStudent: null,
+      fixedScheduleDraft: [],
+    });
+  },
+
+  onFixedScheduleDayToggle(event) {
+    const index = Number(event.currentTarget.dataset.index);
+    if (!Number.isInteger(index) || index < 0 || index >= this.data.fixedScheduleDraft.length) return;
+    this.setData({ [`fixedScheduleDraft[${index}].enabled`]: Boolean(event.detail.value) });
+  },
+
+  onFixedScheduleTimeChange(event) {
+    const index = Number(event.currentTarget.dataset.index);
+    const field = String(event.currentTarget.dataset.field || "");
+    const rows = this.data.fixedScheduleDraft || [];
+    const row = rows[index];
+    if (!row || ["startTime", "endTime"].indexOf(field) < 0) return;
+    const value = event.detail.value;
+    if (field === "startTime") {
+      const previousDuration = Math.max(5, parseTime(row.endTime) - parseTime(row.startTime));
+      this.setData({
+        [`fixedScheduleDraft[${index}].startTime`]: value,
+        [`fixedScheduleDraft[${index}].endTime`]: formatMinute(Math.min(23 * 60, parseTime(value) + previousDuration)),
+      });
+      return;
+    }
+    this.setData({ [`fixedScheduleDraft[${index}].endTime`]: value });
+  },
+
+  submitFixedStudentSchedule() {
+    if (this.data.fixedScheduleSaving) return;
+    const student = this.data.fixedScheduleEditingStudent;
+    const entries = this.data.fixedScheduleDraft || [];
+    if (!student || entries.length !== 7) {
+      wx.showToast({ title: "固定课表信息不完整", icon: "none" });
+      return;
+    }
+    const invalid = entries.find((item) => {
+      const start = parseTime(item.startTime);
+      const end = parseTime(item.endTime);
+      return start < 9 * 60 || end > 23 * 60 || end <= start || start % 5 || end % 5;
+    });
+    if (invalid) {
+      wx.showToast({ title: `${invalid.label}的时间不正确`, icon: "none" });
+      return;
+    }
+    this.setData({ fixedScheduleSaving: true });
+    wx.showLoading({ title: "保存固定课表", mask: true });
     wx.cloud.callFunction({
       name: "quickstartFunctions",
       data: {
-        type: "setFixedStudentScheduleEnabled",
+        type: "saveFixedStudentSchedule",
         data: {
-          eventId,
-          enabled,
-          expectedVersion: Number(item.version) || 1,
+          studentId: student._id,
+          mode: this.mode,
+          entries: entries.map((item) => ({
+            weekday: item.weekday,
+            enabled: item.enabled,
+            startTime: item.startTime,
+            endTime: item.endTime,
+            eventId: item.eventId,
+            expectedVersion: item.expectedVersion,
+          })),
         },
       },
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "固定课表保存失败");
-      wx.showToast({ title: enabled ? "固定课程已打开" : "固定课程已关闭", icon: "success" });
+      this.setData({
+        showFixedScheduleForm: false,
+        fixedScheduleEditingStudent: null,
+        fixedScheduleDraft: [],
+      });
+      wx.showToast({ title: "固定课表已更新", icon: "success" });
+      this.loadSchedule();
     }).catch((err) => {
       console.error(err);
-      wx.showToast({ title: err.message || "固定课表保存失败", icon: "none", duration: 2600 });
+      wx.showToast({ title: err.message || "固定课表保存失败", icon: "none", duration: 2800 });
     }).finally(() => {
-      this.setData({ fixedScheduleSavingId: "" });
-      this.loadSchedule();
+      wx.hideLoading();
+      this.setData({ fixedScheduleSaving: false });
     });
   },
 

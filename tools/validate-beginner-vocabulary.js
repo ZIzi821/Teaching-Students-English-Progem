@@ -71,8 +71,8 @@ data.words.forEach((item, index) => {
   assert(item.word && item.meaning && item.unitId && item.unitLabel && item.audioText, `Incomplete beginner item: ${item.key}`);
   assert.strictEqual(vocabulary.normalizeWordKey(item.key), item.key, `Unstable beginner key: ${item.key}`);
   const audio = vocabulary.getVocabularyAudioInfo(item.key);
-  assert(audio.fileId && audio.durationMs > 0, `Missing runtime audio mapping: ${item.key}`);
   assert(audio.directFileId && audio.directDurationMs > 0, `Missing direct audio mapping: ${item.key}`);
+  assert(!audio.fileId || audio.durationMs > 0, `Invalid optional sprite mapping: ${item.key}`);
   assert(audio.directFileId.endsWith(`vocabulary-audio/beginner-direct-v1/${item.key}.wav`), `Direct File ID mismatch: ${item.key}`);
 });
 
@@ -122,4 +122,4 @@ const library = vocabulary.loadVocabularyLibrary();
 const regularDefaults = vocabulary.getRecommendedVocabularySettings({ name: "普通学生" }, library);
 assert(!regularDefaults.levelIds.includes("0A"), "Existing students must not receive 0A automatically");
 
-console.log("Beginner vocabulary valid: 89 items, 7 units, 89 direct WAVs with sprite fallback, existing defaults unchanged.");
+console.log("Beginner vocabulary valid: 89 items, 7 units, 89 direct WAVs with optional sprite fallback, existing defaults unchanged.");

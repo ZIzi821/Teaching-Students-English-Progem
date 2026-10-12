@@ -6019,6 +6019,8 @@ exports.main = async (event) => {
         return await weeklyScheduleService.setScheduleDayAvailability(event);
       case "setFixedStudentScheduleEnabled":
         return await weeklyScheduleService.setFixedStudentScheduleEnabled(event);
+      case "saveFixedStudentSchedule":
+        return await weeklyScheduleService.saveFixedStudentSchedule(event);
       case "markHomeworkActivitiesViewed":
       case "markLearningActivitiesViewed":
         return await markHomeworkActivitiesViewed(event);

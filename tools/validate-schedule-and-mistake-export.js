@@ -52,7 +52,7 @@ assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "active-student" }), 
 assert.strictEqual(schedule.isStudentBookingEnabled({ _id: "hidden-student", teacherHidden: true }), false);
 assert(scheduleService.includes("withoutDocumentId(source)"), "Schedule seeds must not write _id inside document data");
 assert(mistakeService.includes("withoutDocumentId(current)"), "Mistake export updates must not write queried _id back into document data");
-["getWeeklySchedule", "createScheduleBooking", "saveTeacherScheduleBlock", "updateScheduleEvent", "cancelScheduleEvent", "setScheduleDayAvailability", "setFixedStudentScheduleEnabled"].forEach((action) => {
+["getWeeklySchedule", "createScheduleBooking", "saveTeacherScheduleBlock", "updateScheduleEvent", "cancelScheduleEvent", "setScheduleDayAvailability", "setFixedStudentScheduleEnabled", "saveFixedStudentSchedule"].forEach((action) => {
   assert(backend.includes(`case "${action}"`), `Missing schedule cloud action: ${action}`);
 });
 assert(
@@ -70,7 +70,15 @@ assert(schedulePageWxml.includes("每周上课日程"), "Schedule page heading i
 assert(schedulePageWxml.includes("学生临时课程") && schedulePageWxml.includes("保存修改"), "Teacher temporary lesson or editable schedule UI is missing");
 assert(schedulePageWxml.includes("家长看到的一样") && schedulePageWxml.includes("只显示当前孩子自己的课程"), "Parent and teacher-preview read-only copy is missing");
 assert(!schedulePageWxml.includes("空白时段均可预约") && !schedulePageWxml.includes("预约上课"), "Parent schedule still suggests self-booking");
-assert(schedulePageWxml.includes("长期固定上课时间") && schedulePageWxml.includes("onFixedScheduleEnabledChange"), "Teacher fixed timetable controls are missing");
+assert(
+  schedulePageWxml.includes("长期固定上课时间")
+    && schedulePageWxml.includes("openFixedScheduleForm")
+    && schedulePageWxml.includes("onFixedScheduleDayToggle")
+    && schedulePageWxml.includes("submitFixedStudentSchedule"),
+  "Teacher per-student fixed timetable editor is missing"
+);
+assert(schedulePageJs.includes("buildFixedScheduleStudents") && schedulePageJs.includes('type: "saveFixedStudentSchedule"'), "Fixed timetable is not grouped by student or cannot be saved");
+assert(scheduleService.includes("normalizeFixedStudentScheduleEntries") && scheduleService.includes("SCHEDULE_VERSION_CONFLICT"), "Fixed timetable validation or optimistic concurrency is missing");
 assert(schedulePageWxml.includes("item.dateLabel"), "Current-week month/day labels are missing");
 assert(schedulePageJs.includes("buildScheduleDays") && schedulePageJs.includes("TIMELINE_START_MINUTE = 9 * 60"), "Schedule does not use the rolling seven-day window or 09:00 timeline");
 assert(schedulePageWxml.includes('start="09:00"') && schedulePageWxml.includes('start="09:05"'), "Schedule time pickers still allow pre-09:00 times");

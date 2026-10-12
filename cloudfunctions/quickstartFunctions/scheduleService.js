@@ -748,6 +748,145 @@ const createWeeklyScheduleService = ({
     };
   };
 
+  const saveFixedStudentSchedule = async (event) => {
+    const identity = await getIdentity();
+    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "仅教师端可调整固定课表");
+    const data = event.data || {};
+    if (data.mode === "teacherPreview") {
+      throw createError("PERMISSION_DENIED", "请返回教师日程调整固定课表");
+    }
+    const studentId = String(data.studentId || "").trim();
+    const normalized = schedule.normalizeFixedStudentScheduleEntries(data.entries);
+    if (!studentId || !normalized.valid) {
+      throw createError("INVALID_FIXED_SCHEDULE", normalized.message || "请选择需要调整的学生");
+    }
+    const student = await loadStudent(studentId);
+    if (!student || !schedule.isStudentBookingEnabled({ ...student, _id: studentId })) {
+      throw createError("INVALID_STUDENT", "学生不存在、已隐藏或已删除");
+    }
+    await ensureDefaults();
+    const saved = await withScheduleTransaction(async (transaction) => {
+      const lockRef = transaction.collection("systemLocks").doc(SCHEDULE_LOCK_ID);
+      const [state, currentFixedResult, ...activeResults] = await Promise.all([
+        getOptionalTransactionDocument(lockRef),
+        transaction.collection("scheduleEvents")
+          .where({ eventType: "fixed_student_lesson", studentId })
+          .get(),
+        ...normalized.entries
+          .filter((entry) => entry.enabled)
+          .map((entry) => transaction.collection("scheduleEvents")
+            .where({ status: "active", weekday: entry.weekday })
+            .get()),
+      ]);
+      const currentFixed = currentFixedResult.data || [];
+      const currentByWeekday = new Map();
+      currentFixed.forEach((item) => {
+        const weekday = schedule.normalizeWeekday(item.weekday);
+        if (!weekday || currentByWeekday.has(weekday)) {
+          throw createError("FIXED_SCHEDULE_DUPLICATE", "这个学生的固定课表存在重复，请联系维护后再试");
+        }
+        currentByWeekday.set(weekday, item);
+      });
+      normalized.entries.forEach((entry) => {
+        const current = currentByWeekday.get(entry.weekday);
+        if (!current && entry.eventId) {
+          throw createError("SCHEDULE_VERSION_CONFLICT", "固定课表刚被修改，请刷新后重试");
+        }
+        if (current && (
+          String(current._id || "") !== entry.eventId
+          || Number(current.version) !== entry.expectedVersion
+        )) {
+          throw createError("SCHEDULE_VERSION_CONFLICT", "固定课表刚被修改，请刷新后重试");
+        }
+      });
+      const currentIds = new Set(currentFixed.map((item) => String(item._id || "")));
+      let activeIndex = 0;
+      normalized.entries.filter((entry) => entry.enabled).forEach((entry) => {
+        const activeRows = activeResults[activeIndex] && activeResults[activeIndex].data || [];
+        activeIndex += 1;
+        const conflict = activeRows.find((item) => (
+          !currentIds.has(String(item._id || ""))
+          && schedule.rangesOverlap(item, entry)
+        ));
+        if (conflict) {
+          const time = `${schedule.formatMinute(conflict.startMinute)}–${schedule.formatMinute(conflict.endMinute)}`;
+          throw createError(
+            "SCHEDULE_CONFLICT",
+            `${schedule.WEEKDAY_LABELS[entry.weekday - 1]}已有其他安排（${time}），请调整时间`
+          );
+        }
+      });
+
+      const nowMs = Date.now();
+      const name = student.name || student.nickname || "学生";
+      const colorKey = schedule.getStudentColorKey({ ...student, _id: studentId });
+      const savedRows = [];
+      for (let index = 0; index < normalized.entries.length; index += 1) {
+        const entry = normalized.entries[index];
+        const current = currentByWeekday.get(entry.weekday);
+        if (!current && !entry.enabled) continue;
+        const eventId = current && current._id
+          ? current._id
+          : `schedule_fixed_student_${crypto.createHash("sha1").update(`${studentId}\n${entry.weekday}`).digest("hex").slice(0, 24)}`;
+        const nextVersion = current ? Math.max(1, Number(current.version) || 1) + 1 : 1;
+        const eventData = {
+          eventType: "fixed_student_lesson",
+          fixedTemplateId: current && current.fixedTemplateId
+            ? current.fixedTemplateId
+            : `teacher-${crypto.createHash("sha1").update(`${studentId}\n${entry.weekday}`).digest("hex").slice(0, 16)}`,
+          scheduleKind: "fixed_student",
+          weekday: entry.weekday,
+          startMinute: entry.startMinute,
+          endMinute: entry.endMinute,
+          durationMinutes: entry.durationMinutes,
+          title: `${name}英语课`,
+          publicTitle: `${name}英语课`,
+          note: "每周固定上课时间",
+          studentId,
+          studentNameSnapshot: name,
+          colorKey,
+          source: current && current.source || "fixed_student_teacher",
+          recordType: "weeklyScheduleEvent",
+          recurrence: "weekly",
+          status: entry.enabled ? "active" : "paused",
+          version: nextVersion,
+          editedByRole: "teacher",
+          editedByOpenId: identity.openid || "",
+          updatedAt: db.serverDate(),
+          updatedAtMs: nowMs,
+        };
+        const eventRef = transaction.collection("scheduleEvents").doc(eventId);
+        if (current) {
+          await eventRef.update({ data: eventData });
+        } else {
+          await eventRef.set({
+            data: {
+              ...eventData,
+              createdByRole: "teacher",
+              createdAt: db.serverDate(),
+              createdAtMs: nowMs,
+            },
+          });
+        }
+        savedRows.push({ ...withoutDocumentId(current || {}), ...eventData, _id: eventId });
+      }
+      await lockRef.set({
+        data: {
+          recordType: "weeklyScheduleState",
+          version: Math.max(0, Number(state && state.version) || 0) + 1,
+          seedRevision: Math.max(SCHEDULE_SEED_REVISION, Number(state && state.seedRevision) || 0),
+          updatedAt: db.serverDate(),
+          updatedAtMs: nowMs,
+        },
+      });
+      return savedRows;
+    });
+    return {
+      success: true,
+      fixedSchedules: schedule.sortEvents(saved).map(sanitizeTeacherEvent),
+    };
+  };
+
   return {
     getWeeklySchedule,
     createScheduleBooking,
@@ -756,6 +895,7 @@ const createWeeklyScheduleService = ({
     cancelScheduleEvent,
     setScheduleDayAvailability,
     setFixedStudentScheduleEnabled,
+    saveFixedStudentSchedule,
   };
 };
 

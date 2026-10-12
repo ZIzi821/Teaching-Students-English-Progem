@@ -65,7 +65,7 @@
 - 现有学生不会被自动勾选 `0A`；教师可为零基础学生只选择“英语启蒙（零基础）”。启蒙词按教学顺序进入每日任务，明确选择的 `0A` 内容不会被“每天跳过英语基础词”过滤。
 - 89 项现在都优先使用独立短 WAV，避免手机为了播放一个词先加载并跳转一条约 95 秒的音频合辑。播放器会显示“加载读音”，8 秒无响应后自动重试，并在短音频不可用时回退到原有音频精灵。
 - 本地待上传目录为 `output/vocabulary-audio/beginner-direct-v1/`，共 89 个文件、约 3.9 MiB。必须把整个目录上传到 CloudBase 的 `vocabulary-audio/beginner-direct-v1/`；不要只上传外层文件夹名，也不要改文件名。
-- 原有 `output/vocabulary-audio/sprites-beginner-v1/vocabulary-audio-sprite-beginner-1.wav` 保留为兼容兜底，无需删除。重新构建短音频包可运行 `node tools/build-beginner-direct-audio.js`。
+- 原有 `output/vocabulary-audio/sprites-beginner-v1/vocabulary-audio-sprite-beginner-1.wav` 保留为兼容兜底，无需删除。89 个独立短音频已经完成并由完整性检查保护，不再依赖已移除的旧基础音频目录重建。
 - 上传音频后还需重新部署 `quickstartFunctions` 并上传小程序前端；只有在家长真机分别用 Wi-Fi 和移动网络试听后，才能确认线上问题已修复。
 - 内容与音频校验：`node tools/validate-beginner-vocabulary.js`、`node tools/validate-vocabulary-audio-sprites.js`、`node tools/validate-vocabulary-audio-player.js`。
 
@@ -80,8 +80,16 @@
 
 - Molly 的 640 个 KET 词必须全部带有读音；`node tools/validate-molly-ket-vocabulary.js` 会同时检查 640 个词、16 周分组、每日 8 个以及 640/640 音频覆盖率。
 - Molly 不再使用或依赖 `sprites-molly-ket-v1` 大合辑。640 个词的独立文件全部集中在 `output/vocabulary-audio/molly-ket-direct-v1/`（约 30.6 MiB），文件名使用 `001-name.wav`、`002-age.wav` 这种“顺序号＋单词/短语”格式，便于人工核对。
-- 上线前把该目录中的 640 个 WAV 原样上传到云存储 `vocabulary-audio/molly-ket-direct-v1/`，不要再创建或上传 `sprites-molly-ket-v1`。运行时为了不破坏冯嘉文现有映射，Molly 与启蒙词库重复的 20 个词仍共用 `beginner-direct-v1`；因此该目录也必须保留并完成上传。重新构建可运行 `node tools/build-molly-ket-direct-audio.js`；音频完整性检查为 `node tools/validate-vocabulary-audio-sprites.js`。
+- 上线前把该目录中的 640 个 WAV 原样上传到云存储 `vocabulary-audio/molly-ket-direct-v1/`，不要再创建或上传 `sprites-molly-ket-v1`。运行时为了不破坏冯嘉文现有映射，Molly 与启蒙词库重复的 20 个词仍共用 `beginner-direct-v1`；因此该目录也必须保留并完成上传。640 个独立文件已经完成并由 `node tools/validate-vocabulary-audio-sprites.js` 检查，不再依赖已移除的旧基础音频目录重建。
 - 冯嘉文或 Molly 以真实学生身份进入首页后，客户端会在后台获取并临时缓存当天最多 30 个待学词的短音频；通常每日目标为 8 个。教师预览不会触发预下载，下载失败也不会阻塞首页，进入背词页后仍保留在线地址和合辑回退。
+
+## 译林 2024 七年级上册与现用共享音频
+
+- 2012 课标旧版六册词库已经移除；教师端只保留已核对的“译林版 · 2024新教材（2022课标）”七年级上册，并按八个单元分别开关。
+- 新教材专属 307 个短音频位于 `output/vocabulary-audio/yilin-2024-7a-direct-v1/`，上传到云存储 `vocabulary-audio/yilin-2024-7a-direct-v1/`。
+- 另有 206 个仍被现有基础词库和错题释义使用的共享读音，已从旧合辑迁移到 `output/vocabulary-audio/shared-current-direct-v1/`，上传到云存储 `vocabulary-audio/shared-current-direct-v1/`。
+- 两个新目录上传并部署新版 `quickstartFunctions` 后，云存储中的旧目录 `vocabulary-audio/v1/` 与 `vocabulary-audio/sprites-v1/` 才可以删除。不要删除 `beginner-direct-v1`、`molly-ket-direct-v1`、`sprites-beginner-v1` 或 `sprites-extra-v1`。
+- 完整性检查：`node tools/validate-yilin-2024-7a-vocabulary.js`、`node tools/validate-vocabulary-audio-sprites.js`。
 
 ## 法语学习（Phase 2）
 

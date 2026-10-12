@@ -140,6 +140,45 @@ const validateTimeRange = ({ weekday, startMinute, endMinute }) => {
   };
 };
 
+const normalizeFixedStudentScheduleEntries = (entries = []) => {
+  if (!Array.isArray(entries) || entries.length !== 7) {
+    return { valid: false, message: "请完整设置周一到周日" };
+  }
+  const seenWeekdays = new Set();
+  const normalized = [];
+  for (let index = 0; index < entries.length; index += 1) {
+    const source = entries[index] || {};
+    const weekday = normalizeWeekday(source.weekday);
+    if (!weekday || seenWeekdays.has(weekday) || typeof source.enabled !== "boolean") {
+      return { valid: false, message: "每个星期只能设置一次" };
+    }
+    const range = validateTimeRange({
+      weekday,
+      startMinute: parseTime(source.startTime),
+      endMinute: parseTime(source.endTime),
+    });
+    if (!range.valid) {
+      return { valid: false, message: `${WEEKDAY_LABELS[weekday - 1]}：${range.message}` };
+    }
+    const eventId = String(source.eventId || "").trim();
+    const expectedVersion = Number(source.expectedVersion) || 0;
+    if (eventId && (!Number.isInteger(expectedVersion) || expectedVersion < 1)) {
+      return { valid: false, message: "固定课表信息已变化，请刷新后重试" };
+    }
+    seenWeekdays.add(weekday);
+    normalized.push({
+      ...range,
+      enabled: source.enabled,
+      eventId,
+      expectedVersion,
+    });
+  }
+  return {
+    valid: true,
+    entries: normalized.sort((left, right) => left.weekday - right.weekday),
+  };
+};
+
 const rangesOverlap = (left, right) => (
   Number(left.startMinute) < Number(right.endMinute)
   && Number(right.startMinute) < Number(left.endMinute)
@@ -330,6 +369,7 @@ module.exports = {
   isWeekdayBookingOpen,
   getStudentColorKey,
   normalizeClosedWeekdays,
+  normalizeFixedStudentScheduleEntries,
   normalizeWeekday,
   parseTime,
   rangesOverlap,
