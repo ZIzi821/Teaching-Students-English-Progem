@@ -1,4 +1,5 @@
 const { createVocabularyAudioPlayer, prefetchVocabularyAudio } = require("../../utils/vocabularyAudio");
+const { getFriendlyCloudErrorMessage } = require("../../utils/cloudError");
 
 const MAX_SESSION_WORDS = 30;
 const AUDIO_PREFETCH_AHEAD = 3;
@@ -249,7 +250,7 @@ Page({
       this.finishRating(result, word, true);
     }).catch((err) => {
       console.error(err);
-      wx.showToast({ title: err.message || "保存失败，请重试", icon: "none" });
+      wx.showToast({ title: getFriendlyCloudErrorMessage(err, "保存失败，请重试"), icon: "none" });
     }).finally(() => {
       this.setData({ reviewing: false });
     });

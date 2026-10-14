@@ -1,7 +1,7 @@
 <view class="page">
   <view class="form-head">
     <view class="title">{{isEditing ? '整理英语错题' : '快速记录英语错题'}}</view>
-    <view class="subtitle">{{isEditing ? '补充或修改答案、原因和解析。' : '先拍照保存，答案和解析可以稍后再补。'}}</view>
+    <view class="subtitle">{{isEditing ? '补充或修改题目、答案、原因和解析。' : '填写完整题目和选项，答案和解析可以稍后再补。'}}</view>
   </view>
 
   <view class="card message-card" wx:if="{{message}}">{{message}}</view>
@@ -22,15 +22,8 @@
     </view>
 
     <view class="field">
-      <view class="label">题目图片</view>
-      <view class="upload-box" bindtap="chooseImage">
-        <image wx:if="{{questionImageFileId}}" class="preview" src="{{questionImageFileId}}" mode="aspectFill"></image>
-        <view wx:else class="upload-text">拍照或从相册选择题目</view>
-      </view>
-      <view class="image-actions" wx:if="{{questionImageFileId}}">
-        <text bindtap="chooseImage">重新选择</text>
-        <text bindtap="removeImage">移除图片</text>
-      </view>
+      <view class="label">完整题目与选项（必填）</view>
+      <textarea class="textarea tall" placeholder="请粘贴完整题干；选择题请把全部选项一起写入" value="{{form.questionText}}" data-field="questionText" bindinput="onInput"></textarea>
     </view>
 
     <view class="field">
@@ -77,11 +70,6 @@
       </view>
 
       <view class="field">
-        <view class="label">题目文字（选填）</view>
-        <textarea class="textarea tall" placeholder="可以粘贴我整理好的题目文字" value="{{form.questionText}}" data-field="questionText" bindinput="onInput"></textarea>
-      </view>
-
-      <view class="field">
         <view class="label">原因分类</view>
         <picker mode="selector" range="{{reasonTypes}}" value="{{reasonTypeIndex}}" bindchange="onReasonTypeChange">
           <view class="picker-value">{{reasonTypes[reasonTypeIndex]}}</view>
@@ -120,7 +108,7 @@
     </view>
   </view>
 
-  <view class="quick-tip">只上传图片也能先保存，之后可继续整理。</view>
+  <view class="quick-tip">错题只保留文字：请把长文章、整组小题和全部选项完整写入。</view>
   <view class="action-row">
     <view class="ghost-btn action-btn" wx:if="{{!isEditing}}" data-action="continue" bindtap="submitMistake">保存并继续</view>
     <view class="primary-btn action-btn" data-action="back" bindtap="submitMistake">{{isEditing ? '保存修改' : '保存并返回'}}</view>

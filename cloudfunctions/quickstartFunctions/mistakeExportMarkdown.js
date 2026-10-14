@@ -16,7 +16,7 @@ const buildMistakeExportMarkdown = ({ student, lessons, mistakes, exportLabel, c
     `- 课程范围：${normalizeText(exportLabel, "未填写")}`,
     `- 错题数量：${(mistakes || []).length} 道`,
     "",
-    "> 第一部分只放题目，第二部分集中放答案与解析，适合直接粘贴或上传给 AI 生成复习试卷。带原图的题目会明确标注，请同时把相应原图交给 AI。",
+    "> 第一部分只放完整题目与选项，第二部分集中放答案与解析，适合直接粘贴或上传给 AI 生成复习试卷。",
     "",
     "## 第一部分：错题题目",
     "",
@@ -34,13 +34,9 @@ const buildMistakeExportMarkdown = ({ student, lessons, mistakes, exportLabel, c
       : Array.isArray(mistake.tags) ? mistake.tags : [];
     if (tags.length) lines.push(`- 知识点：${tags.map((item) => normalizeText(item)).filter(Boolean).join("、")}`);
     lines.push("");
-    lines.push("**题目文字**");
+    lines.push("**题目与选项**");
     lines.push("");
-    lines.push(normalizeText(mistake.questionText, "未填写题目文字，请结合原题图片。"));
-    if (normalizeText(mistake.questionImageFileId)) {
-      lines.push("");
-      lines.push("> 本题另有原题图片；向 AI 提问时请同时附上该题原图。 ");
-    }
+    lines.push(normalizeText(mistake.questionText, "未填写题目文字。"));
     lines.push("");
   });
 

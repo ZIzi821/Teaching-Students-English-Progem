@@ -1,4 +1,5 @@
 const { createVocabularyAudioPlayer } = require("../../utils/vocabularyAudio");
+const { getFriendlyCloudErrorMessage } = require("../../utils/cloudError");
 
 const WORD_TABS = [
   { value: "all", label: "全部" },
@@ -717,7 +718,7 @@ Page({
       })
       .catch((err) => {
         console.error(err);
-        wx.showToast({ title: err.message || "保存失败", icon: "none" });
+        wx.showToast({ title: getFriendlyCloudErrorMessage(err, "保存失败"), icon: "none" });
       })
       .finally(() => {
         this.setData({ dailyGoalSaving: false });
@@ -909,7 +910,7 @@ Page({
       })
       .catch((err) => {
         console.error(err);
-        wx.showToast({ title: err.message || "保存失败", icon: "none" });
+        wx.showToast({ title: getFriendlyCloudErrorMessage(err, "保存失败"), icon: "none" });
       })
       .finally(() => {
         this.setData({ reviewingWordKey: "" });
@@ -980,7 +981,7 @@ Page({
       })
       .catch((err) => {
         console.error(err);
-        wx.showToast({ title: err.message || "保存失败", icon: "none" });
+        wx.showToast({ title: getFriendlyCloudErrorMessage(err, "保存失败"), icon: "none" });
       })
       .finally(() => {
         this.setData({ pendingSavingKey: "" });

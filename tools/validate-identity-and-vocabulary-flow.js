@@ -43,6 +43,9 @@ vm.runInNewContext(studyJs, {
     if (modulePath === "../../utils/vocabularyAudio") {
       return require(path.join(root, "miniprogram", "utils", "vocabularyAudio"));
     }
+    if (modulePath === "../../utils/cloudError") {
+      return require(path.join(root, "miniprogram", "utils", "cloudError"));
+    }
     throw new Error(`Unexpected page dependency: ${modulePath}`);
   },
   wx: {

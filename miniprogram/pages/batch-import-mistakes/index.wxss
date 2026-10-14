@@ -50,16 +50,11 @@
   background: #fbe7e1;
 }
 
-.local-progress-track {
-  background: #d5e4dc;
-}
-
 .eyebrow,
 .meta,
 .hint,
 .preview,
 .file-name,
-.stat-label,
 .progress-count {
   color: #817669;
   font-size: 25rpx;
@@ -104,17 +99,6 @@
   white-space: nowrap;
 }
 
-.image-actions {
-  justify-content: space-between;
-}
-
-.text-action {
-  flex: 0 0 auto;
-  padding: 18rpx 0 18rpx 18rpx;
-  color: #9a604b;
-  font-size: 25rpx;
-}
-
 .import-textarea {
   box-sizing: border-box;
   width: 100%;
@@ -131,41 +115,6 @@
   margin-top: 16rpx;
 }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12rpx;
-}
-
-.stat-item {
-  box-sizing: border-box;
-  min-width: 0;
-  padding: 18rpx 8rpx;
-  border-radius: 14rpx;
-  background: #f8f2e8;
-  text-align: center;
-}
-
-.stat-value {
-  color: #2f2a24;
-  font-size: 34rpx;
-  font-weight: 700;
-}
-
-.stat-label {
-  margin-top: 4rpx;
-  font-size: 22rpx;
-}
-
-.stat-ready {
-  background: #e9f4ee;
-}
-
-.stat-warning {
-  background: #fff1cf;
-}
-
-.legacy-note,
 .missing-box {
   margin-top: 18rpx;
   padding: 18rpx 20rpx;
@@ -174,23 +123,9 @@
   line-height: 1.6;
 }
 
-.legacy-note {
-  color: #4f6f63;
-  background: #e9f4ee;
-}
-
 .missing-box {
   color: #8a6730;
   background: #fff1cf;
-}
-
-.missing-title {
-  margin-bottom: 6rpx;
-  font-weight: 700;
-}
-
-.missing-name {
-  overflow-wrap: anywhere;
 }
 
 .message-card {

@@ -4,7 +4,6 @@ Page({
     mistake: null,
     role: "",
     message: "",
-    imageLoadFailed: false,
     deleting: false,
     reviewSaving: false,
     isReadOnly: false,
@@ -47,11 +46,7 @@ Page({
           mistake,
           role: result.role || "",
           message: "",
-          imageLoadFailed: false,
         });
-        if (!mistake.questionImageUrl) {
-          this.resolveQuestionImage(mistake.questionImageFileId);
-        }
       })
       .catch((err) => {
         console.error(err);
@@ -64,37 +59,8 @@ Page({
   prepareMistake(mistake) {
     return Object.assign({}, mistake, {
       displayTitle: mistake.questionNo || mistake.questionTitle || "英语题目",
-      questionImageSrc: mistake.questionImageUrl || mistake.questionImageFileId || "",
       entryStatus: mistake.entryStatus || (mistake.studentAnswer && mistake.correctAnswer ? "已整理" : "待整理"),
     });
-  },
-
-  resolveQuestionImage(fileId) {
-    if (!fileId || fileId.indexOf("cloud://") !== 0) return;
-    wx.cloud
-      .getTempFileURL({
-        fileList: [fileId],
-      })
-      .then((res) => {
-        const file = res.fileList && res.fileList[0];
-        if (!file || file.status !== 0 || !file.tempFileURL) {
-          this.setData({ imageLoadFailed: true });
-          return;
-        }
-        this.setData({
-          "mistake.questionImageSrc": file.tempFileURL,
-          imageLoadFailed: false,
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-        this.setData({ imageLoadFailed: true });
-      });
-  },
-
-  onQuestionImageError(e) {
-    console.error("question image load failed", e.detail);
-    this.setData({ imageLoadFailed: true });
   },
 
   updateReviewStatus(e) {

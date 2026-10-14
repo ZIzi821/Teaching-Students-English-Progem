@@ -16,10 +16,7 @@
       <text wx:if="{{mistake.sourcePage}}"> · PDF 第 {{mistake.sourcePage}} 页</text>
     </view>
     <view class="question-text" wx:if="{{mistake.questionText}}">{{mistake.questionText}}</view>
-    <view class="source-note" wx:if="{{mistake.sourceImageName}}">对应截图：{{mistake.sourceImageName}}</view>
-    <image wx:if="{{mistake.questionImageSrc && !imageLoadFailed}}" class="question-image" src="{{mistake.questionImageSrc}}" mode="widthFix" binderror="onQuestionImageError"></image>
-      <view wx:elif="{{imageLoadFailed}}" class="image-empty">图片加载失败，请检查网络后重试</view>
-    <view wx:elif="{{!mistake.questionText}}" class="image-empty">题目图片待上传</view>
+    <view wx:else class="text-empty">这道历史错题还没有整理题目文字，请由老师编辑补齐。</view>
   </view>
 
   <view class="card review-card">

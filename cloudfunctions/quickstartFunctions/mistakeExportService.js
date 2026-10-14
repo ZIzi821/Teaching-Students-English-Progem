@@ -175,35 +175,6 @@ const createMistakeExportService = ({
     };
   };
 
-  const downloadMistakeImages = async (mistakes) => {
-    const result = new Map();
-    const fileCache = new Map();
-    const withImages = mistakes.filter((item) => String(item.questionImageFileId || "").trim());
-    for (let offset = 0; offset < withImages.length; offset += 6) {
-      const batch = withImages.slice(offset, offset + 6);
-      await Promise.all(batch.map(async (item) => {
-        const fileID = String(item.questionImageFileId || "").trim();
-        let fileContent = fileCache.get(fileID);
-        if (!fileContent) {
-          try {
-            const download = await cloud.downloadFile({ fileID });
-            fileContent = download && download.fileContent;
-          } catch (err) {
-            console.error("mistake export image download failed", item._id, err);
-            throw createError("EXPORT_IMAGE_DOWNLOAD_FAILED", `错题 ${item.questionNo || "图片"} 的原图读取失败，请检查图片后重试`);
-          }
-          if (!fileContent) {
-            throw createError("EXPORT_IMAGE_DOWNLOAD_FAILED", `错题 ${item.questionNo || "图片"} 的原图为空，请检查图片后重试`);
-          }
-          if (!Buffer.isBuffer(fileContent)) fileContent = Buffer.from(fileContent);
-          fileCache.set(fileID, fileContent);
-        }
-        result.set(String(item._id), fileContent);
-      }));
-    }
-    return result;
-  };
-
   const buildFingerprint = (studentId, plan, exportFormat) => crypto.createHash("sha1").update(JSON.stringify({
     studentId,
     exportFormat,
@@ -351,7 +322,6 @@ const createMistakeExportService = ({
           student: workspace.student,
           lessons: exportLessons,
           mistakes: plan.mistakes,
-          imageBuffers: await downloadMistakeImages(plan.mistakes),
           exportLabel: selectionLabel,
           createdLabel,
         });

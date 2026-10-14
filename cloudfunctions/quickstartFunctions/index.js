@@ -298,21 +298,6 @@ const deleteUnsafeFiles = async (fileIDs) => {
   }
 };
 
-const deleteUnreferencedMistakeFiles = async (fileIDs) => {
-  const candidates = uniqueValues((fileIDs || []).filter((fileID) => fileID));
-  const unreferenced = [];
-  for (let index = 0; index < candidates.length; index += 1) {
-    const fileID = candidates[index];
-    const referenceRes = await db
-      .collection("mistakes")
-      .where({ questionImageFileId: fileID })
-      .limit(1)
-      .get();
-    if (!(referenceRes.data || []).length) unreferenced.push(fileID);
-  }
-  await deleteUnsafeFiles(unreferenced);
-};
-
 const assertContentSafe = async ({ texts, imageFileIds, allowImageReview, contextLabel }) => {
   await checkTextContent(texts);
   const fileIDs = uniqueValues((imageFileIds || []).filter((fileID) => fileID));
@@ -546,23 +531,6 @@ const toBookingDurationMinutes = (value, fallback) => {
     throw createError("INVALID_PROGRESS", "预约单节时长必须是 20–180 分钟，并按 5 分钟递增");
   }
   return number;
-};
-
-const attachQuestionImageUrl = async (mistake) => {
-  if (!mistake || !mistake.questionImageFileId) return mistake;
-  try {
-    const res = await cloud.getTempFileURL({
-      fileList: [mistake.questionImageFileId],
-    });
-    const file = res.fileList && res.fileList[0];
-    if (!file || file.status !== 0 || !file.tempFileURL) return mistake;
-    return Object.assign({}, mistake, {
-      questionImageUrl: file.tempFileURL,
-    });
-  } catch (err) {
-    console.error("get question image temp url failed", err);
-    return mistake;
-  }
 };
 
 const buildProgress = (student) => courseWorkflow.buildLessonProgress(student);
@@ -3391,6 +3359,32 @@ const assertVocabularyWordBelongsToStudent = async ({
   }
 };
 
+const runVocabularyReviewTransaction = async (transactionCallback, context) => {
+  try {
+    return await runTransactionWithRetry(
+      () => db.runTransaction(transactionCallback),
+      {
+        retryDelaysMs: [200, 500, 1000],
+        onRetry: ({ attempt, maxAttempts, waitMs, error }) => {
+          console.warn("vocabulary review transaction busy; retrying", {
+            context,
+            attempt,
+            maxAttempts,
+            waitMs,
+            message: (error && (error.errMsg || error.message)) || "",
+          });
+        },
+      }
+    );
+  } catch (err) {
+    if (!isTransactionBusyError(err)) throw err;
+    throw createError(
+      "TRANSACTION_BUSY",
+      "云数据库暂时繁忙，已自动重试，请再点一次"
+    );
+  }
+};
+
 const reviewVocabularyWord = async (event) => {
   await Promise.all([
     createOneCollection("vocabularyProgress"),
@@ -3435,7 +3429,7 @@ const reviewVocabularyWord = async (event) => {
     nowMs
   );
   const dailyStatsId = getVocabularyDailyStatsId(studentId, dailyPlan.learningDay);
-  const progress = await db.runTransaction(async (transaction) => {
+  const progress = await runVocabularyReviewTransaction(async (transaction) => {
     const ref = transaction.collection("vocabularyProgress").doc(progressId);
     const dailyStatsRef = transaction.collection("vocabularyDailyStats").doc(dailyStatsId);
     const [existingRes, dailyStatsRes, currentStudentRes] = await Promise.all([
@@ -3506,7 +3500,7 @@ const reviewVocabularyWord = async (event) => {
       await dailyStatsRef.set({ data: Object.assign({}, dailyStatsData, { createdAt: db.serverDate() }) });
     }
     return reviewProgress;
-  });
+  }, `word:${studentId}:${wordKey}`);
   return Object.assign({ success: true, studentId, wordKey }, progress);
 };
 
@@ -3552,7 +3546,7 @@ const reviewVocabularyQuizAnswer = async (event) => {
   });
   const nowMs = Date.now();
   const learningDay = vocabulary.getLearningDay(nowMs);
-  const progress = await db.runTransaction(async (transaction) => {
+  const progress = await runVocabularyReviewTransaction(async (transaction) => {
     const ref = transaction.collection("vocabularyProgress").doc(progressId);
     const existingRes = await transaction.collection("vocabularyProgress")
       .where({ _id: progressId }).limit(1).get();
@@ -3582,7 +3576,7 @@ const reviewVocabularyQuizAnswer = async (event) => {
       });
     }
     return next;
-  });
+  }, `quiz:${studentId}:${wordKey}`);
   return Object.assign({ success: true, studentId, wordKey, questionType, answerMode }, progress);
 };
 
@@ -4513,9 +4507,6 @@ const deleteLesson = async (event) => {
         return result.concat(paper.fileID || [], paper.fileIds || []);
       }, [])
     );
-  const mistakeImageFileIDs = mistakes
-    .map((mistake) => mistake.questionImageFileId)
-    .filter((fileID) => fileID);
   const submissionFileIDs = lessonSubmissions
     .map((submission) => submission.fileID)
     .filter((fileID) => fileID);
@@ -4525,7 +4516,6 @@ const deleteLesson = async (event) => {
   await removeDocumentsById("lessonSubmissions", lessonSubmissions);
   await db.collection("lessons").doc(lessonId).remove();
   await deleteUnsafeFiles(paperFileIDs.concat(submissionFileIDs));
-  await deleteUnreferencedMistakeFiles(mistakeImageFileIDs);
   await db.collection("systemLocks").doc(deleteLockId).update({
     data: {
       status: "completed",
@@ -5367,24 +5357,13 @@ const subscribeHomeworkReminder = async (event) => {
   return { success: true, ...saved };
 };
 
-const checkUploadedImage = async (event) => {
-  await ensureTeacher();
-  const data = event.data || {};
-  const fileID = data.fileID;
-  if (!fileID) throw createError("INVALID_FILE", "图片信息不完整，请重新选择");
-  try {
-    await assertContentSafe({
-      imageFileIds: [fileID],
-    });
-  } catch (err) {
-    if (err.code === "CONTENT_RISK") {
-      await deleteUnreferencedMistakeFiles([fileID]);
-    }
-    throw err;
-  }
-  return {
-    success: true,
-  };
+const withoutMistakeImageFields = (mistake) => {
+  if (!mistake || typeof mistake !== "object") return mistake;
+  const result = Object.assign({}, mistake);
+  delete result.questionImageFileId;
+  delete result.questionImageUrl;
+  delete result.sourceImageName;
+  return result;
 };
 
 const listMistakes = async (event) => {
@@ -5412,7 +5391,7 @@ const listMistakes = async (event) => {
   return {
     success: true,
     role: identity.role,
-    data: res.data || [],
+    data: (res.data || []).map(withoutMistakeImageFields),
   };
 };
 
@@ -5431,42 +5410,33 @@ const addMistake = async (event) => {
   if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
     throw createError("INVALID_MISTAKE", "所选课程不属于这位学生，请重新选择");
   }
-  if (!data.questionImageFileId && !data.questionText && !data.studentAnswer && !data.correctAnswer) {
-    throw createError("INVALID_MISTAKE", "请上传题目图片，或填写题目和答案");
+  if (!String(data.questionText || "").trim()) {
+    throw createError("INVALID_MISTAKE", "请填写完整题目文字和选项");
   }
   const skillTags = normalizeTags(data.skillTags && data.skillTags.length ? data.skillTags : data.tags);
   const reviewStatus = data.reviewStatus || data.status || "待复习";
   const vocabularyWords = vocabulary.normalizeVocabularyWords(data.vocabularyWords);
   const vocabularyFields = getMistakeVocabularyFields(Object.assign({}, data, { vocabularyWords }));
-  try {
-    await assertContentSafe({
-      texts: [
-        data.questionNo,
-        data.paperSection,
-        data.questionType,
-        data.mistakeReasonType,
-        data.studentAnswer,
-        data.correctAnswer,
-        data.explanation,
-        data.reason,
-        data.questionText,
-        skillTags,
-        vocabularyWords.map((item) => [item.word, item.meaning, item.partOfSpeech]),
-      ],
-      imageFileIds: data.questionImageFileId ? [data.questionImageFileId] : [],
-    });
-  } catch (err) {
-    if (err.code === "CONTENT_RISK") {
-      await deleteUnreferencedMistakeFiles([data.questionImageFileId]);
-    }
-    throw err;
-  }
+  await assertContentSafe({
+    texts: [
+      data.questionNo,
+      data.paperSection,
+      data.questionType,
+      data.mistakeReasonType,
+      data.studentAnswer,
+      data.correctAnswer,
+      data.explanation,
+      data.reason,
+      data.questionText,
+      skillTags,
+      vocabularyWords.map((item) => [item.word, item.meaning, item.partOfSpeech]),
+    ],
+  });
   const mistakeId = `mistake_${Date.now()}_${crypto.randomBytes(8).toString("hex")}`;
   const mistakeData = {
     studentId: data.studentId,
     lessonId: data.lessonId,
     paperId: data.paperId || "",
-    questionImageFileId: data.questionImageFileId || "",
     questionNo: data.questionNo || "",
     paperSection: data.paperSection || "",
     questionType: data.questionType || "",
@@ -5506,8 +5476,8 @@ const updateMistake = async (event) => {
   if (!data.mistakeId || !data.studentId || !data.lessonId) {
     throw createError("INVALID_MISTAKE", "错题信息不完整，请返回后重试");
   }
-  if (!data.questionImageFileId && !data.questionText && !data.studentAnswer && !data.correctAnswer) {
-    throw createError("INVALID_MISTAKE", "请上传题目图片，或填写题目和答案");
+  if (!String(data.questionText || "").trim()) {
+    throw createError("INVALID_MISTAKE", "请填写完整题目文字和选项");
   }
   const existingRes = await db.collection("mistakes").doc(data.mistakeId).get();
   if (!existingRes.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
@@ -5515,7 +5485,6 @@ const updateMistake = async (event) => {
   if (!lessonRes.data || lessonRes.data.studentId !== data.studentId) {
     throw createError("INVALID_MISTAKE", "所选课程不属于这位学生，请重新选择");
   }
-  const previousImageFileId = existingRes.data.questionImageFileId || "";
   const skillTags = normalizeTags(data.skillTags && data.skillTags.length ? data.skillTags : data.tags);
   const reviewStatus = data.reviewStatus || data.status || "待复习";
   const vocabularyWords = vocabulary.normalizeVocabularyWords(
@@ -5524,38 +5493,25 @@ const updateMistake = async (event) => {
       : existingRes.data.vocabularyWords
   );
   const vocabularyFields = getMistakeVocabularyFields(Object.assign({}, data, { vocabularyWords }));
-  try {
-    await assertContentSafe({
-      texts: [
-        data.questionNo,
-        data.paperSection,
-        data.questionType,
-        data.mistakeReasonType,
-        data.studentAnswer,
-        data.correctAnswer,
-        data.explanation,
-        data.reason,
-        data.questionText,
-        skillTags,
-        vocabularyWords.map((item) => [item.word, item.meaning, item.partOfSpeech]),
-      ],
-      imageFileIds: data.questionImageFileId ? [data.questionImageFileId] : [],
-    });
-  } catch (err) {
-    if (
-      err.code === "CONTENT_RISK"
-      && data.questionImageFileId
-      && data.questionImageFileId !== previousImageFileId
-    ) {
-      await deleteUnreferencedMistakeFiles([data.questionImageFileId]);
-    }
-    throw err;
-  }
+  await assertContentSafe({
+    texts: [
+      data.questionNo,
+      data.paperSection,
+      data.questionType,
+      data.mistakeReasonType,
+      data.studentAnswer,
+      data.correctAnswer,
+      data.explanation,
+      data.reason,
+      data.questionText,
+      skillTags,
+      vocabularyWords.map((item) => [item.word, item.meaning, item.partOfSpeech]),
+    ],
+  });
   const mistakeUpdateData = {
     studentId: data.studentId,
     lessonId: data.lessonId,
     paperId: data.paperId || "",
-    questionImageFileId: data.questionImageFileId || "",
     questionNo: data.questionNo || "",
     paperSection: data.paperSection || "",
     questionType: data.questionType || "",
@@ -5576,7 +5532,7 @@ const updateMistake = async (event) => {
     vocabularyCandidatesVersion: vocabularyFields.vocabularyCandidatesVersion,
     updatedAt: db.serverDate(),
   };
-  const replacedImageFileId = await db.runTransaction(async (transaction) => {
+  await db.runTransaction(async (transaction) => {
     const mistakeRef = transaction.collection("mistakes").doc(data.mistakeId);
     const [currentMistake] = await Promise.all([
       getOptionalTransactionDocument(mistakeRef),
@@ -5597,11 +5553,7 @@ const updateMistake = async (event) => {
       }
     }
     await mistakeRef.update({ data: mistakeUpdateData });
-    return String(currentMistake.questionImageFileId || "");
   });
-  if (replacedImageFileId && replacedImageFileId !== (data.questionImageFileId || "")) {
-    await deleteUnreferencedMistakeFiles([replacedImageFileId]);
-  }
   return { success: true };
 };
 
@@ -5664,9 +5616,7 @@ const batchImportMistakes = async (event) => {
       paperSection: String(source.paperSection || "").trim(),
       questionType: String(source.questionType || "").trim(),
       questionText: String(source.questionText || "").trim(),
-      questionImageFileId: String(source.questionImageFileId || "").trim(),
       sourcePage: String(source.sourcePage || "").trim(),
-      sourceImageName: String(source.sourceImageName || "").trim(),
       skillTags,
       vocabularyWords: vocabulary.normalizeVocabularyWords(source.vocabularyWords),
       mistakeReasonType: String(source.mistakeReasonType || "").trim(),
@@ -5680,17 +5630,11 @@ const batchImportMistakes = async (event) => {
     };
     return Object.assign(safeItem, getMistakeVocabularyFields(safeItem));
   });
-  const emptyIndex = safeItems.findIndex((item) => !item.questionText && !item.studentAnswer && !item.correctAnswer);
+  const emptyIndex = safeItems.findIndex((item) => !item.questionText);
   if (emptyIndex >= 0) {
-    throw createError("INVALID_IMPORT", `第 ${importItemOffset + emptyIndex + 1} 道错题内容为空，请至少填写题目或答案`);
+    throw createError("INVALID_IMPORT", `第 ${importItemOffset + emptyIndex + 1} 道错题缺少完整题目文字和选项`);
   }
   await checkTeacherImportContent(safeItems, importItemOffset);
-  const importImageFileIds = uniqueValues(
-    safeItems.map((item) => item.questionImageFileId).filter((fileID) => fileID)
-  );
-  for (let imageIndex = 0; imageIndex < importImageFileIds.length; imageIndex += 1) {
-    await checkImageFile(importImageFileIds[imageIndex]);
-  }
   const existingImportRes = await db.collection("mistakes").where({
     importBatchId,
     studentId: data.studentId,
@@ -5700,9 +5644,7 @@ const batchImportMistakes = async (event) => {
     (existingImportRes.data || []).map((item) => [Number(item.importItemIndex), item])
   );
   let addedCount = 0;
-  let updatedImageCount = 0;
   let skippedCount = 0;
-  const unusedImageFileIds = [];
   for (let i = 0; i < safeItems.length; i++) {
     const item = safeItems[i];
     const importItemIndex = importItemOffset + i;
@@ -5720,21 +5662,10 @@ const batchImportMistakes = async (event) => {
           ),
         ]);
         if (!current) return { missing: true };
-        const currentImageFileId = String(current.questionImageFileId || "").trim();
         const needsVocabularyBackfill =
           Number(current.vocabularyCandidatesVersion) !== vocabulary.VOCABULARY_CANDIDATES_VERSION
           || !Array.isArray(current.vocabularyCandidates);
         const updateData = {};
-        let updatedImage = false;
-        let unusedImageFileId = "";
-        if (item.questionImageFileId && !currentImageFileId) {
-          updateData.questionImageFileId = item.questionImageFileId;
-          updateData.sourcePage = item.sourcePage;
-          updateData.sourceImageName = item.sourceImageName;
-          updatedImage = true;
-        } else if (item.questionImageFileId && item.questionImageFileId !== currentImageFileId) {
-          unusedImageFileId = item.questionImageFileId;
-        }
         if (needsVocabularyBackfill) {
           updateData.vocabularyWords = item.vocabularyWords;
           updateData.vocabularyCandidates = item.vocabularyCandidates;
@@ -5747,17 +5678,11 @@ const batchImportMistakes = async (event) => {
         }
         return {
           missing: false,
-          updatedImage,
           skipped: !hasUpdates,
-          unusedImageFileId,
         };
       }, importItemIndex);
       if (!existingResult.missing) {
-        if (existingResult.updatedImage) updatedImageCount += 1;
         if (existingResult.skipped) skippedCount += 1;
-        if (existingResult.unusedImageFileId) {
-          unusedImageFileIds.push(existingResult.unusedImageFileId);
-        }
         continue;
       }
     }
@@ -5768,13 +5693,11 @@ const batchImportMistakes = async (event) => {
         studentId: data.studentId,
         lessonId: data.lessonId,
         paperId: item.paperId,
-        questionImageFileId: item.questionImageFileId,
         questionNo: item.questionNo,
         paperSection: item.paperSection,
         questionType: item.questionType,
         questionText: item.questionText,
         sourcePage: item.sourcePage,
-        sourceImageName: item.sourceImageName,
         skillTags: item.skillTags,
         mistakeReasonType: item.mistakeReasonType,
         studentAnswer: item.studentAnswer,
@@ -5807,23 +5730,12 @@ const batchImportMistakes = async (event) => {
       ]);
       if (!current) {
         await ref.set({ data: importData });
-        return { created: true, updatedImage: false, skipped: false, unusedImageFileId: "" };
+        return { created: true, skipped: false };
       }
-      const currentImageFileId = String(current.questionImageFileId || "").trim();
       const needsVocabularyBackfill =
         Number(current.vocabularyCandidatesVersion) !== vocabulary.VOCABULARY_CANDIDATES_VERSION
         || !Array.isArray(current.vocabularyCandidates);
       const updateData = {};
-      let updatedImage = false;
-      let unusedImageFileId = "";
-      if (item.questionImageFileId && !currentImageFileId) {
-        updateData.questionImageFileId = item.questionImageFileId;
-        updateData.sourcePage = item.sourcePage;
-        updateData.sourceImageName = item.sourceImageName;
-        updatedImage = true;
-      } else if (item.questionImageFileId && item.questionImageFileId !== currentImageFileId) {
-        unusedImageFileId = item.questionImageFileId;
-      }
       if (needsVocabularyBackfill) {
         updateData.vocabularyWords = item.vocabularyWords;
         updateData.vocabularyCandidates = item.vocabularyCandidates;
@@ -5836,22 +5748,16 @@ const batchImportMistakes = async (event) => {
       }
       return {
         created: false,
-        updatedImage,
         skipped: !hasUpdates,
-        unusedImageFileId,
       };
     }, importItemIndex);
     if (upsertResult.created) addedCount += 1;
-    if (upsertResult.updatedImage) updatedImageCount += 1;
     if (upsertResult.skipped) skippedCount += 1;
-    if (upsertResult.unusedImageFileId) unusedImageFileIds.push(upsertResult.unusedImageFileId);
   }
-  await deleteUnreferencedMistakeFiles(unusedImageFileIds);
   return {
     success: true,
     importedCount: safeItems.length,
     addedCount,
-    updatedImageCount,
     skippedCount,
   };
 };
@@ -5925,11 +5831,10 @@ const getMistakeDetail = async (event) => {
     skillTags: normalizeTags(res.data.skillTags && res.data.skillTags.length ? res.data.skillTags : res.data.tags),
     reviewPriority: res.data.reviewPriority || "中",
   });
-  const mistake = await attachQuestionImageUrl(hydratedMistake);
   return {
     success: true,
     role: identity.role,
-    mistake,
+    mistake: withoutMistakeImageFields(hydratedMistake),
   };
 };
 
@@ -5940,9 +5845,6 @@ const deleteMistake = async (event) => {
   const res = await db.collection("mistakes").doc(mistakeId).get();
   if (!res.data) throw createError("MISTAKE_NOT_FOUND", "错题不存在或已删除");
   await db.collection("mistakes").doc(mistakeId).remove();
-  if (res.data.questionImageFileId) {
-    await deleteUnreferencedMistakeFiles([res.data.questionImageFileId]);
-  }
   return { success: true };
 };
 
@@ -6190,8 +6092,6 @@ exports.main = async (event) => {
         return await reviewLessonHomeworkCompletion(event);
       case "subscribeHomeworkReminder":
         return await subscribeHomeworkReminder(event);
-      case "checkUploadedImage":
-        return await checkUploadedImage(event);
       case "listMistakes":
         return await listMistakes(event);
       case "getMistakeExportWorkspace":

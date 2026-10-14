@@ -9,7 +9,7 @@
     <view class="hero-card">
       <view class="eyebrow">TEACHER EXPORT</view>
       <view class="hero-title">{{student.name}}的错题汇总</view>
-      <view class="hero-copy">可生成保留原题图片的 Word，也可生成更适合 AI 读取的 Markdown。两种格式分别记录，互不影响后续去重。</view>
+      <view class="hero-copy">可生成保留完整题目、选项和答案的 Word，也可生成更适合 AI 读取的 Markdown。两种格式分别记录，互不影响后续去重。</view>
       <view class="hero-stats">
         <view><text>{{totalMistakeCount}}</text><label>现有错题</label></view>
         <view><text>{{exportedMistakeCount}}</text><label>曾导出</label></view>

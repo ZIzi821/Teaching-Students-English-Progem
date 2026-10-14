@@ -4,8 +4,8 @@ const SELECTION_MODES = [
 ];
 
 const EXPORT_FORMATS = [
-  { value: "docx", label: "Word（保留原题图片）", shortLabel: "Word", hint: "适合打印、查看原题图片和直接保存文件。" },
-  { value: "markdown", label: "Markdown（适合交给 AI）", shortLabel: "Markdown", hint: "按题目、答案和解析分区；可一键复制内容或转发 .md 文件。图片题会提醒同时附上原图。" },
+  { value: "docx", label: "Word（题目与答案分区）", shortLabel: "Word", hint: "保留完整题目、选项和答案，适合打印或直接保存。" },
+  { value: "markdown", label: "Markdown（适合交给 AI）", shortLabel: "Markdown", hint: "按题目、选项、答案和解析分区；可一键复制内容或转发 .md 文件。" },
 ];
 
 const EXCLUDE_OPTIONS = [

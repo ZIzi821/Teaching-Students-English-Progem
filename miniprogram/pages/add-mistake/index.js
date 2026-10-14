@@ -1,5 +1,3 @@
-const CONTENT_RISK_MESSAGE = "内容含违规信息，请修改后再提交";
-
 Page({
   data: {
     students: [],
@@ -11,7 +9,6 @@ Page({
     selectedStudentName: "请选择学生",
     selectedLessonTitle: "请先选择学生",
     selectedPaperTitle: "不关联试卷",
-    questionImageFileId: "",
     message: "",
     showAdvanced: false,
     saving: false,
@@ -71,7 +68,6 @@ Page({
         this.setData({
           isEditing: true,
           showAdvanced: true,
-          questionImageFileId: mistake.questionImageFileId || "",
           paperSectionIndex: Math.max(0, this.data.paperSections.indexOf(mistake.paperSection)),
           questionTypeIndex: Math.max(0, this.data.questionTypes.indexOf(mistake.questionType)),
           reasonTypeIndex: Math.max(0, this.data.reasonTypes.indexOf(mistake.mistakeReasonType)),
@@ -297,79 +293,6 @@ Page({
     });
   },
 
-  chooseImage() {
-    wx.chooseMedia({
-      count: 1,
-      mediaType: ["image"],
-      sourceType: ["album", "camera"],
-      success: (res) => {
-        const filePath = res.tempFiles[0].tempFilePath;
-        this.uploadImage(filePath);
-      },
-    });
-  },
-
-  removeImage() {
-    this.setData({
-      questionImageFileId: "",
-      message: "",
-    });
-  },
-
-  uploadImage(filePath) {
-    const student = this.data.students[this.data.studentIndex];
-    const suffix = filePath.match(/\.[^.]+$/);
-    const ext = suffix ? suffix[0] : ".png";
-    const cloudPath = "english-mistake-images/" + (student ? student._id : "student") + "-" + Date.now() + ext;
-    wx.showLoading({ title: "上传中" });
-    wx.cloud
-      .uploadFile({
-        cloudPath,
-        filePath,
-      })
-      .then((res) => {
-        return wx.cloud
-          .callFunction({
-            name: "quickstartFunctions",
-            data: {
-              type: "checkUploadedImage",
-              data: {
-                fileID: res.fileID,
-              },
-            },
-          })
-          .then((checkRes) => {
-            const result = checkRes.result || {};
-            if (result.success === false) {
-              throw new Error(result.message || CONTENT_RISK_MESSAGE);
-            }
-            return res;
-          });
-      })
-      .then((res) => {
-        this.setData({
-          questionImageFileId: res.fileID,
-          message: "",
-        });
-        wx.showToast({ title: "图片已上传" });
-      })
-      .catch((err) => {
-        console.error(err);
-        const message = err.message === CONTENT_RISK_MESSAGE ? CONTENT_RISK_MESSAGE : err.message || "上传失败";
-        this.setData({
-          questionImageFileId: "",
-          message,
-        });
-        wx.showToast({
-          title: message,
-          icon: "none",
-        });
-      })
-      .finally(() => {
-        wx.hideLoading();
-      });
-  },
-
   submitMistake(e) {
     if (this.data.saving) return;
     const student = this.data.students[this.data.studentIndex];
@@ -377,10 +300,9 @@ Page({
     const paper = this.data.papers[this.data.paperIndex];
     const form = this.data.form;
     const action = (e && e.currentTarget && e.currentTarget.dataset.action) || "back";
-    const hasTextContent = Boolean(form.questionText || form.studentAnswer || form.correctAnswer);
-    if (!student || !lesson || (!this.data.questionImageFileId && !hasTextContent)) {
+    if (!student || !lesson || !String(form.questionText || "").trim()) {
       wx.showToast({
-        title: "请上传题目图片或填写答案",
+        title: "请填写完整题目文字和选项",
         icon: "none",
       });
       return;
@@ -404,7 +326,6 @@ Page({
             studentId: student._id,
             lessonId: lesson._id,
             paperId: hasDetailedInfo && paper && paper._id ? paper._id : "",
-            questionImageFileId: this.data.questionImageFileId,
             questionNo: form.questionNo,
             paperSection: hasDetailedInfo ? this.data.paperSections[this.data.paperSectionIndex] : "",
             questionType: hasDetailedInfo ? this.data.questionTypes[this.data.questionTypeIndex] : "",
@@ -426,10 +347,7 @@ Page({
       .then((res) => {
         const result = res.result || {};
         if (result.success === false) {
-          this.setData({
-            message: result.message || "保存失败",
-            questionImageFileId: result.code === "CONTENT_RISK" ? "" : this.data.questionImageFileId,
-          });
+          this.setData({ message: result.message || "保存失败" });
           wx.showToast({
             title: result.message || "保存失败",
             icon: "none",
@@ -458,7 +376,6 @@ Page({
 
   resetMistakeForm() {
     this.setData({
-      questionImageFileId: "",
       message: "",
       showAdvanced: false,
       paperSectionIndex: 1,

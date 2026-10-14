@@ -16,7 +16,6 @@ const output = buildMistakeExportMarkdown({
     reason: "词义混淆",
     reviewStatus: "待复习",
     skillTags: ["词汇"],
-    questionImageFileId: "cloud://image",
   }],
   exportLabel: "全部课程（1 节）",
   createdLabel: "2026-10-08 12:00",
@@ -27,6 +26,7 @@ assert(output.includes("## 第一部分：错题题目"));
 assert(output.includes("## 第二部分：答案与解析"));
 assert(output.includes("Choose the correct answer."));
 assert(output.includes("正确答案：B"));
-assert(output.includes("请同时附上该题原图"));
+assert(output.includes("题目与选项"));
+assert(!output.includes("原图"));
 
 console.log("mistake export markdown tests passed");

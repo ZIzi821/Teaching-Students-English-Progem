@@ -20,6 +20,12 @@ const mistakeDocx = read("cloudfunctions/quickstartFunctions/mistakeExportDocx.j
 const mistakeMarkdown = read("cloudfunctions/quickstartFunctions/mistakeExportMarkdown.js");
 const mistakePageJs = read("miniprogram/mistake-export/pages/index/index.js");
 const mistakePageWxml = read("miniprogram/mistake-export/pages/index/index.wxml");
+const addMistakeJs = read("miniprogram/pages/add-mistake/index.js");
+const addMistakeWxml = read("miniprogram/pages/add-mistake/index.wxml");
+const mistakeDetailWxml = read("miniprogram/pages/mistake-detail/index.wxml");
+const batchMistakeJs = read("miniprogram/pages/batch-import-mistakes/index.js");
+const batchMistakeWxml = read("miniprogram/pages/batch-import-mistakes/index.wxml");
+const localMistakeServer = read("tools/local-mistake-importer/server.js");
 const studentDetailJs = read("miniprogram/pages/student-detail/index.js");
 const studentDetailWxml = read("miniprogram/pages/student-detail/index.wxml");
 const lessonTemplates = require(path.join(root, "miniprogram", "utils", "lessonTemplates"));
@@ -98,7 +104,13 @@ assert(mistakeWorkflow.includes("startLessonId") && mistakeWorkflow.includes("en
 assert((mistakeService.match(/await ensureTeacher\(\)/g) || []).length >= 2, "Mistake export endpoints are not teacher-only");
 assert(mistakeWorkflow.includes("mistakeIds") && mistakeService.includes("includedLessonIds"), "Export history does not persist exact coverage IDs");
 assert(mistakeService.includes('item.status === "ready"'), "Failed or generating exports can affect deduplication");
-assert(mistakeService.includes("cloud.downloadFile") && mistakeService.includes("cloud.uploadFile"), "Export images or DOCX are not transferred through cloud storage");
+assert(mistakeService.includes("cloud.uploadFile") && !mistakeService.includes("downloadMistakeImages"), "Text-only export should upload documents without downloading mistake images");
+assert(!mistakeDocx.includes("ImageRun") && !mistakeMarkdown.includes("questionImageFileId"), "Mistake exports still depend on removed question images");
+assert(!backend.includes('case "checkUploadedImage"') && !backend.includes("english-mistake-images"), "Removed mistake-image cloud action or path still exists");
+assert(!addMistakeJs.includes("chooseImage") && !addMistakeWxml.includes("题目图片"), "Direct mistake entry still uploads images");
+assert(!mistakeDetailWxml.includes("questionImage") && !mistakeDetailWxml.includes("对应截图"), "Mistake detail still renders linked images");
+assert(!batchMistakeJs.includes("chooseImages") && !batchMistakeJs.includes("sourceImageName") && !batchMistakeWxml.includes("选择题目截图"), "Batch mistake import still accepts images");
+assert(!localMistakeServer.includes('pathname === "/api/image"'), "Local mistake importer still serves image data");
 assert(mistakeDocx.includes("第一部分：错题题目") && mistakeDocx.includes("第二部分：答案与解析"), "DOCX does not separate questions from answers");
 assert(mistakeMarkdown.includes("第一部分：错题题目") && mistakeMarkdown.includes("第二部分：答案与解析"), "Markdown does not separate questions from answers");
 assert(mistakePageJs.includes("showMenu: true"), "Generated DOCX cannot be forwarded or saved from WeChat");
