@@ -134,7 +134,16 @@ const ineligibleSmartWords = challenge.selectChallengeWords({
     meaning: "等待中的",
     isEasy: false,
     isDue: false,
-  }, {
+  }],
+  scope: "smart",
+  limit: 6,
+  random: fixedRandom,
+});
+assert.strictEqual(ineligibleSmartWords.length, 0);
+
+const legacyBasicWord = challenge.selectChallengeWords({
+  todayWords: [],
+  allWords: [{
     key: "basic",
     word: "basic",
     meaning: "基础的",
@@ -145,7 +154,7 @@ const ineligibleSmartWords = challenge.selectChallengeWords({
   limit: 6,
   random: fixedRandom,
 });
-assert.strictEqual(ineligibleSmartWords.length, 0);
+assert.strictEqual(legacyBasicWord.length, 1, "Legacy basic-word flags must no longer filter quiz words");
 
 const retryWaitingWord = challenge.selectChallengeWords({
   todayWords: [{

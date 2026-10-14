@@ -198,14 +198,6 @@
         <switch checked="{{vocabularyForm.includeMistakeWords}}" color="#4f8f73" disabled="{{vocabularySaving}}" bindchange="onIncludeMistakeWordsChange" />
       </view>
 
-      <view class="setting-row">
-        <view>
-          <view class="setting-title">每天跳过英语基础词</view>
-          <view class="setting-hint">英语基础词仍可搜索，但不计入每天的学习任务。</view>
-        </view>
-        <switch checked="{{vocabularyForm.hideBasicWords}}" color="#4f8f73" disabled="{{vocabularySaving}}" bindchange="onHideBasicWordsChange" />
-      </view>
-
       <view class="setting-block">
         <view class="setting-title">英语课本和基础词库</view>
         <view class="setting-hint">新旧译林教材分开显示；选中教材后，可继续控制每个单元是否加入学习。</view>

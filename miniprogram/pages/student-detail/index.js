@@ -44,7 +44,6 @@ Page({
       levelIds: [],
       dailyGoal: 8,
       includeMistakeWords: true,
-      hideBasicWords: false,
       learningOrder: "smart",
       disabledUnitIds: [],
     },
@@ -326,7 +325,6 @@ Page({
         levelIds: selectedLevelIds,
         dailyGoal: DAILY_GOAL_OPTIONS[safeDailyGoalIndex],
         includeMistakeWords: settings.includeMistakeWords !== false,
-        hideBasicWords: settings.hideBasicWords === true,
         learningOrder: settings.learningOrder || "smart",
         disabledUnitIds: disabledUnitIds.filter((id) => units.some((unit) => unit.id === id)),
       },
@@ -466,12 +464,6 @@ Page({
     });
   },
 
-  onHideBasicWordsChange(e) {
-    this.setData({
-      "vocabularyForm.hideBasicWords": Boolean(e.detail.value),
-    });
-  },
-
   onVocabularyLevelsChange(e) {
     const levelIds = e.detail.value || [];
     const selectedLevelIds = new Set(levelIds);
@@ -536,7 +528,6 @@ Page({
             levelIds: form.levelIds,
             dailyGoal: form.dailyGoal,
             includeMistakeWords: form.includeMistakeWords,
-            hideBasicWords: form.hideBasicWords,
             learningOrder: form.learningOrder,
             disabledUnitIds: form.disabledUnitIds || [],
           },

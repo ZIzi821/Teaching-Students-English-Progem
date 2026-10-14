@@ -53,7 +53,6 @@ const selectChallengeWords = ({
     ? combined
     : combined.filter((item) => (
       item.isEasy !== true
-      && item.isBasicHidden !== true
       && item.isDue !== false
     ));
   const todayKeys = new Set(uniqueWords(todayWords).map((item) => asText(item.key || item.word).toLowerCase()));

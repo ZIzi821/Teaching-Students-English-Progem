@@ -10,7 +10,6 @@ const pageWxml = fs.readFileSync(path.join(root, "miniprogram", "pages", "studen
 [
   "英语背单词功能",
   "加入英语错题单词",
-  "每天跳过英语基础词",
   "英语课本和基础词库",
   "保存英语单词设置",
 ].forEach((label) => assert(pageWxml.includes(label), `Missing explicit English label: ${label}`));
@@ -62,7 +61,6 @@ const createPage = (callFunction) => {
     "vocabularyForm.levelIds": ["1A"],
     "vocabularyForm.dailyGoal": 8,
     "vocabularyForm.includeMistakeWords": true,
-    "vocabularyForm.hideBasicWords": false,
     "vocabularyForm.learningOrder": "smart",
   });
   return { page, toasts };

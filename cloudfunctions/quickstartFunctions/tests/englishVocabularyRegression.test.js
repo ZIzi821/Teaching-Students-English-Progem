@@ -39,11 +39,17 @@ const removedYilinMigration = vocabulary.normalizeVocabularySettings({
   levelIds: ["yilin-old-7A", "yilin-old-7B"],
   dailyGoal: 10,
   includeMistakeWords: true,
+  // 旧数据中的字段必须被忽略，不能继续影响每日学习范围。
   hideBasicWords: true,
   learningOrder: "book",
 }, library, { name: "旧词库学生" });
 assert(removedYilinMigration.levelIds.length > 0, "Removed legacy selections must migrate to a valid current default");
 assert(removedYilinMigration.levelIds.every((id) => id.indexOf("yilin-old-") !== 0));
+assert.strictEqual(
+  Object.prototype.hasOwnProperty.call(removedYilinMigration, "hideBasicWords"),
+  false,
+  "Removed basic-word filtering must not survive settings normalization"
+);
 
 const yilin2024Level = library.levels.find((level) => level.id === "yilin-2024-7A");
 const yilin2024Words = library.words.filter((word) => word.levelId === "yilin-2024-7A");
@@ -74,7 +80,6 @@ assert(yilin2024Words.every((word) => vocabulary.getVocabularyAudioInfo(word.key
 const xuRecommended = vocabulary.getRecommendedVocabularySettings({ name: "徐浩成" }, library);
 assert.deepStrictEqual(xuRecommended.levelIds, ["yilin-2024-7A"]);
 assert.strictEqual(xuRecommended.learningOrder, "book");
-assert.strictEqual(xuRecommended.hideBasicWords, false);
 const xuMigrated = vocabulary.normalizeVocabularySettings({
   profileVersion: 3,
   levelIds: ["1A", "1B", "2A"],
@@ -85,7 +90,7 @@ const xuMigrated = vocabulary.normalizeVocabularySettings({
 }, library, { name: "徐浩成" });
 assert.deepStrictEqual(xuMigrated.levelIds, ["yilin-2024-7A"]);
 assert.strictEqual(xuMigrated.learningOrder, "book", "Xu Haocheng must start the real textbook in unit order");
-assert.strictEqual(xuMigrated.hideBasicWords, false, "Every textbook word must remain in Xu Haocheng's daily pool");
+assert.strictEqual(Object.prototype.hasOwnProperty.call(xuMigrated, "hideBasicWords"), false);
 
 const yilin2024Catalog = vocabulary.buildVocabularyCatalog({
   library,
@@ -107,7 +112,6 @@ const yilin2024View = vocabulary.buildVocabularyView({
     levelIds: ["yilin-2024-7A"],
     dailyGoal: 10,
     includeMistakeWords: false,
-    hideBasicWords: false,
     learningOrder: "book",
     disabledUnitIds: ["yilin-2024-7A-u1"],
   },
@@ -131,6 +135,7 @@ const beginnerView = vocabulary.buildVocabularyView({
     levelIds: ["0A"],
     dailyGoal: 5,
     includeMistakeWords: true,
+    // 模拟生产库中尚未清理的旧字段；新版必须完全忽略它。
     hideBasicWords: true,
     learningOrder: "smart",
   },
@@ -145,7 +150,6 @@ const beginnerView = vocabulary.buildVocabularyView({
   student: { name: "零基础学生" },
 });
 assert.strictEqual(beginnerView.summary.totalCount, 90);
-assert.strictEqual(beginnerView.summary.basicHiddenCount, 0, "Selected 0A words must not be hidden as basic words");
 assert.deepStrictEqual(
   beginnerView.todayWords.map((word) => word.key),
   ["letter-a", "letter-b", "letter-c", "letter-d", "letter-e"],
@@ -154,6 +158,26 @@ assert.deepStrictEqual(
 assert(beginnerView.todayWords.every((word) => word.pronunciationDirectFileId));
 assert(beginnerView.todayWords.every((word) => word.pronunciationDirectDurationMs > 0));
 
+const legacyBasicFilterView = vocabulary.buildVocabularyView({
+  library,
+  settings: {
+    levelIds: ["2A"],
+    dailyGoal: 30,
+    includeMistakeWords: false,
+    hideBasicWords: true,
+    learningOrder: "book",
+  },
+  mistakes: [],
+  progressItems: [],
+  isTeacher: true,
+  nowMs: Date.UTC(2026, 8, 15),
+  student: { name: "旧设置学生" },
+});
+assert(legacyBasicFilterView.words.some((word) => word.key === "school"));
+assert(legacyBasicFilterView.todayWords.some((word) => word.key === "school"));
+assert(legacyBasicFilterView.words.every((word) => !Object.prototype.hasOwnProperty.call(word, "isBasicHidden")));
+assert.strictEqual(Object.prototype.hasOwnProperty.call(legacyBasicFilterView.settings, "hideBasicWords"), false);
+
 const teacherDetailNow = Date.UTC(2026, 8, 15, 12);
 const teacherDetailView = vocabulary.buildVocabularyView({
   library,
@@ -161,7 +185,6 @@ const teacherDetailView = vocabulary.buildVocabularyView({
     levelIds: ["0A"],
     dailyGoal: 5,
     includeMistakeWords: false,
-    hideBasicWords: false,
     learningOrder: "smart",
   },
   mistakes: [],

@@ -2710,7 +2710,6 @@ const validateVocabularySettings = (data, library, student) => {
     levelIds,
     dailyGoal,
     includeMistakeWords: data.includeMistakeWords,
-    hideBasicWords: typeof data.hideBasicWords === "boolean" ? data.hideBasicWords : undefined,
     learningOrder: data.learningOrder,
     disabledUnitIds,
   }, library, student);
@@ -2935,7 +2934,6 @@ const getEmptyVocabularySummary = (dailyGoal) => ({
   dueCount: 0,
   pendingCount: 0,
   easyCount: 0,
-  basicHiddenCount: 0,
   dailyGoal,
   todayCount: 0,
   todayReviewedCount: 0,
@@ -3310,14 +3308,6 @@ const assertVocabularyWordBelongsToStudent = async ({
   settings,
   progressId,
 }) => {
-  const matchingLibraryWord = library.words.find((item) => item.key === wordKey);
-  if (
-    settings.hideBasicWords === true
-    && matchingLibraryWord
-    && matchingLibraryWord.isBasic === true
-  ) {
-    throw createError("INVALID_VOCABULARY_WORD", "这个词已不在学习范围内，请刷新列表");
-  }
   const progressRes = await db.collection("vocabularyProgress")
     .where({ _id: progressId })
     .limit(1)

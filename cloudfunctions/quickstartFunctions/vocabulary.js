@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const vocabularyAudioManifest = require("./data/vocabulary-audio-sprites.json");
 
 const VOCABULARY_CANDIDATES_VERSION = 3;
-const VOCABULARY_PROFILE_VERSION = 5;
+const VOCABULARY_PROFILE_VERSION = 6;
 const DEFAULT_DAILY_GOAL = 8;
 const MIN_DAILY_GOAL = 5;
 const MAX_DAILY_GOAL = 30;
@@ -30,23 +30,6 @@ const COMMON_STRUCTURE_WORDS = new Set([
 const IGNORED_CANDIDATE_WORDS = new Set([
   "studentanswer", "timmy", "jim", "mike", "benjamin", "jerry", "sally", "sth", "ing",
   "lead-led", "i'd", "i'm", "state's", "one's",
-]);
-
-const BASIC_WORD_KEYS = new Set([
-  "about", "after", "again", "all", "always", "another", "answer", "ask", "back", "beautiful",
-  "before", "best", "better", "big", "bird", "birds", "boat", "but", "buy", "can", "can't", "child", "children",
-  "class", "clothes", "come", "country", "day", "do", "doing", "don't", "down", "each", "english",
-  "easy", "even", "every", "exercise", "fast", "feel", "find", "food", "friend", "friends", "give", "go",
-  "goes", "good", "grade", "great", "happy", "help", "home", "hot", "house", "how", "keep", "kind",
-  "know", "language", "last", "late", "learn", "left", "life", "like", "living", "long", "look", "looks",
-  "lose", "lost", "made", "make", "makes", "man", "many",
-  "model", "more", "most", "much", "must", "mustn't", "name", "names", "need", "new", "next", "no",
-  "nice", "now", "office", "often", "old", "only", "other", "others", "out", "over", "parent", "parents",
-  "pass", "photo", "photos", "please", "question", "questions", "read", "remember", "room", "same",
-  "saw", "school", "second", "shop", "should", "some", "song", "songs", "sorry", "start", "stop",
-  "student", "sun", "take", "test", "thank", "they", "thing", "things", "think", "time", "today",
-  "travel", "tree", "trip", "use", "useful", "very", "village", "wait", "want", "wants", "way",
-  "week", "will", "winter", "woman", "would", "young",
 ]);
 
 const INSTRUCTION_PATTERNS = [
@@ -125,24 +108,6 @@ const getVocabularyPronunciationFields = (value) => {
   };
 };
 
-const isBasicWordKey = (key) => {
-  if (!key) return false;
-  if (BASIC_WORD_KEYS.has(key) || COMMON_STRUCTURE_WORDS.has(key)) return true;
-  const roots = [];
-  if (key.endsWith("ies") && key.length > 4) roots.push(`${key.slice(0, -3)}y`);
-  if (key.endsWith("ing") && key.length > 5) {
-    roots.push(key.slice(0, -3), `${key.slice(0, -3)}e`);
-    if (/([a-z])\1ing$/.test(key)) roots.push(key.slice(0, -4));
-  }
-  if (key.endsWith("ied") && key.length > 4) roots.push(`${key.slice(0, -3)}y`);
-  if (key.endsWith("ed") && key.length > 4) roots.push(key.slice(0, -2), key.slice(0, -1));
-  if (key.endsWith("est") && key.length > 5) roots.push(key.slice(0, -3));
-  if (key.endsWith("er") && key.length > 4) roots.push(key.slice(0, -2));
-  if (key.endsWith("es") && key.length > 4) roots.push(key.slice(0, -2), key.slice(0, -1));
-  if (key.endsWith("s") && key.length > 3) roots.push(key.slice(0, -1));
-  return roots.some((root) => BASIC_WORD_KEYS.has(root) || COMMON_STRUCTURE_WORDS.has(root));
-};
-
 const normalizeVocabularyWords = (value) => {
   const items = Array.isArray(value) ? value : [];
   const result = [];
@@ -201,7 +166,6 @@ const normalizeLibraryWord = (word, index) => {
     levelId: asText(source.levelId),
     unitId: asText(source.unitId),
     unitLabel: asText(source.unitLabel),
-    isBasic: source.isBasic === true || isBasicWordKey(key),
     sourceRef: asText(source.sourceRef),
     order: Number.isFinite(Number(source.order)) ? Number(source.order) : index + 1,
   };
@@ -264,7 +228,6 @@ const getRecommendedVocabularySettings = (student, library = loadVocabularyLibra
       levelIds: ["molly-ket-a2-16w"],
       dailyGoal: 8,
       includeMistakeWords: false,
-      hideBasicWords: false,
       learningOrder: "book",
       disabledUnitIds: [],
     };
@@ -275,7 +238,6 @@ const getRecommendedVocabularySettings = (student, library = loadVocabularyLibra
       levelIds: ["yilin-2024-7A"],
       dailyGoal: 10,
       includeMistakeWords: true,
-      hideBasicWords: false,
       learningOrder: "book",
       disabledUnitIds: [],
     };
@@ -289,7 +251,6 @@ const getRecommendedVocabularySettings = (student, library = loadVocabularyLibra
     levelIds,
     dailyGoal: DEFAULT_DAILY_GOAL,
     includeMistakeWords: true,
-    hideBasicWords: false,
     learningOrder: "smart",
     disabledUnitIds: [],
   };
@@ -343,9 +304,6 @@ const normalizeVocabularySettings = (settings, library = loadVocabularyLibrary()
     includeMistakeWords: needsXuHaochengMigration
       ? defaults.includeMistakeWords
       : source.includeMistakeWords !== false,
-    hideBasicWords: !needsXuHaochengMigration && typeof source.hideBasicWords === "boolean"
-      ? source.hideBasicWords
-      : defaults.hideBasicWords,
     learningOrder,
     disabledUnitIds,
   };
@@ -610,7 +568,6 @@ const buildVocabularyView = ({
       }
       if (!existing.meaning && libraryWord.meaning) existing.meaning = libraryWord.meaning;
       if (!existing.partOfSpeech && libraryWord.partOfSpeech) existing.partOfSpeech = libraryWord.partOfSpeech;
-      existing.isBasic = existing.isBasic && libraryWord.isBasic;
       return;
     }
     const level = levelById.get(libraryWord.levelId) || {};
@@ -631,7 +588,6 @@ const buildVocabularyView = ({
       unitLabel: libraryWord.unitLabel || "",
       unitLabels: libraryWord.unitLabel ? [libraryWord.unitLabel] : [],
       isTextbook: level.isTextbook === true,
-      isBasic: libraryWord.isBasic === true,
       sources: [sourceKind],
       sourceMistakeId: "",
       sourceQuestionNo: "",
@@ -675,7 +631,6 @@ const buildVocabularyView = ({
             unitLabel: libraryMatch ? libraryMatch.unitLabel || "" : "",
             unitLabels: libraryMatch && libraryMatch.unitLabel ? [libraryMatch.unitLabel] : [],
             isTextbook: libraryMatch ? matchedLevel.isTextbook === true : false,
-            isBasic: libraryMatch ? libraryMatch.isBasic === true : isBasicWordKey(key),
             sources: [],
             sourceMistakeId: "",
             sourceQuestionNo: "",
@@ -739,9 +694,6 @@ const buildVocabularyView = ({
       correctCount: Number(progress.correctCount || 0),
       wrongCount: Number(progress.wrongCount || 0),
       isEasy: progress.isEasy === true,
-      isBasicHidden: normalizedSettings.hideBasicWords === true
-        && baseItem.isBasic === true
-        && baseItem.levelIds.indexOf("0A") < 0,
       isDue: !nextReviewAtMs || nextReviewAtMs <= nowMs,
       reviewedToday: lastReviewedAtMs > 0
         && Math.floor((lastReviewedAtMs + LEARNING_DAY_OFFSET_MS) / DAY_MS) === currentLearningDay,
@@ -764,7 +716,7 @@ const buildVocabularyView = ({
   confirmedWords.sort(wordSort);
   pendingWords.sort(wordSort);
 
-  const studyWords = confirmedWords.filter((item) => !item.isEasy && !item.isBasicHidden);
+  const studyWords = confirmedWords.filter((item) => !item.isEasy);
   const dueWords = studyWords.filter((item) => item.isDue).sort((a, b) => {
     const aNext = a.nextReviewAtMs || Number.MAX_SAFE_INTEGER;
     const bNext = b.nextReviewAtMs || Number.MAX_SAFE_INTEGER;
@@ -800,7 +752,6 @@ const buildVocabularyView = ({
     dueCount: dueWords.length,
     pendingCount: isTeacher ? pendingWords.length : 0,
     easyCount: confirmedWords.filter((item) => item.isEasy).length,
-    basicHiddenCount: confirmedWords.filter((item) => item.isBasicHidden && !item.isEasy).length,
     dailyGoal: normalizedSettings.dailyGoal,
     todayCount: todayWords.length,
     todayReviewedCount,

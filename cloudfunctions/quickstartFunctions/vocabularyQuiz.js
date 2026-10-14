@@ -95,7 +95,6 @@ const buildPersonalizedQuizPlan = ({
   const todayKeys = new Set(uniqueWords(todayWords).map((item) => asText(item.key || item.word)));
   const eligible = uniqueWords(words).filter((word) => (
     word.isEasy !== true
-      && word.isBasicHidden !== true
       && Math.max(0, asNumber(word.reviewCount)) > 0
   ));
   const context = { nowMs, todayKeys, studentId, learningDay };

@@ -108,7 +108,6 @@ const parseWordlist = (html) => {
       unitId: `yilin-2024-7A-u${currentUnit}`,
       unitLabel: `Unit ${currentUnit} · ${UNIT_TITLES[currentUnit - 1]}`,
       order: currentUnit * 1000 + unitOrder,
-      isBasic: false,
       sourceRef: SOURCE_URL,
     });
   }

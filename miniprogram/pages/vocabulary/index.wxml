@@ -63,7 +63,6 @@
       </view>
       <view class="hero-meta">{{summary.todayRemainingCount ? '还差 ' + summary.todayRemainingCount + ' 个' : '今天的单词学完了'}}</view>
       <view class="hero-meta" wx:if="{{settings.includeMistakeWords}}">今天也会复习错题里的单词</view>
-      <view class="hero-meta" wx:if="{{settings.hideBasicWords && summary.basicHiddenCount}}">已跳过 {{summary.basicHiddenCount}} 个基础词</view>
     </view>
 
     <view class="card feature-disabled-card" wx:if="{{!enabled}}">

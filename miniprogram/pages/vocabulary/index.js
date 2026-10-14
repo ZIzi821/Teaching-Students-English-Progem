@@ -41,7 +41,6 @@ Page({
       levelIds: [],
       dailyGoal: 8,
       includeMistakeWords: true,
-      hideBasicWords: false,
       learningOrder: "smart",
     },
     dailyGoalOptions: DAILY_GOAL_OPTIONS.map((value) => ({ value, disabled: false })),
@@ -67,7 +66,6 @@ Page({
       mistakeWordCount: 0,
       weakCount: 0,
       easyCount: 0,
-      basicHiddenCount: 0,
     },
     activeTab: "all",
     wordTabs: WORD_TABS,
@@ -366,7 +364,6 @@ Page({
       levelIds: Array.isArray(source.levelIds) ? source.levelIds : [],
       dailyGoal: Number.isFinite(dailyGoal) && dailyGoal > 0 ? dailyGoal : 8,
       includeMistakeWords: source.includeMistakeWords !== false,
-      hideBasicWords: source.hideBasicWords === true,
       learningOrder: source.learningOrder || "smart",
     };
   },
@@ -440,7 +437,6 @@ Page({
       mistakeWordCount: getFirstCount([source.mistakeWordCount], 0),
       weakCount: getFirstCount([source.weakCount], 0),
       easyCount: getFirstCount([source.easyCount], 0),
-      basicHiddenCount: getFirstCount([source.basicHiddenCount], 0),
       todayReviewedCount: getFirstCount([source.todayReviewedCount], 0),
       todayRemainingCount: getFirstCount([source.todayRemainingCount], todayWords.length),
     };
@@ -510,7 +506,6 @@ Page({
       unitLabels: Array.isArray(source.unitLabels) ? source.unitLabels : [],
       isTextbook: source.isTextbook === true,
       isEasy: source.isEasy === true,
-      isBasicHidden: source.isBasicHidden === true,
       sources,
       sourceKinds,
       isMistakeSource: sourceKinds.indexOf("mistake") >= 0,
@@ -535,10 +530,8 @@ Page({
       pronunciationDirectDurationMs: Math.max(0, Number(source.pronunciationDirectDurationMs) || 0),
       progressLabel: source.isEasy === true
         ? "太简单 · 已跳过"
-        : source.isBasicHidden === true && Number(source.masteryLevel || 0) < 5
-          ? "基础词 · 今日跳过"
-          : source.reviewedToday === true && source.isDue === false
-            ? source.lastResult === "forgot" ? "稍后再复习" : "今日已完成"
+        : source.reviewedToday === true && source.isDue === false
+          ? source.lastResult === "forgot" ? "稍后再复习" : "今日已完成"
         : String(source.progressLabel || "待学习"),
       meaningShown: false,
     };
