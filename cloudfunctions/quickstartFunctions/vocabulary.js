@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const vocabularyAudioManifest = require("./data/vocabulary-audio-sprites.json");
 
 const VOCABULARY_CANDIDATES_VERSION = 3;
-const VOCABULARY_PROFILE_VERSION = 6;
+const VOCABULARY_PROFILE_VERSION = 7;
 const DEFAULT_DAILY_GOAL = 8;
 const MIN_DAILY_GOAL = 5;
 const MAX_DAILY_GOAL = 30;
@@ -277,7 +277,10 @@ const normalizeVocabularySettings = (settings, library = loadVocabularyLibrary()
   if (needsMollyMigration) levelIds = defaults.levelIds;
   const needsXuHaochengMigration = isXuHaocheng(student)
     && Number(source.profileVersion || 0) < VOCABULARY_PROFILE_VERSION
-    && levelIds.indexOf("yilin-2024-7A") < 0;
+    && (
+      levelIds.length !== defaults.levelIds.length
+      || defaults.levelIds.some((id) => levelIds.indexOf(id) < 0)
+    );
   if (needsXuHaochengMigration) levelIds = defaults.levelIds;
   const selectedLevels = new Set(levelIds);
   const validUnitIds = new Set(
@@ -286,8 +289,6 @@ const normalizeVocabularySettings = (settings, library = loadVocabularyLibrary()
       .map((word) => word.unitId)
   );
   const disabledUnitIds = Array.isArray(source.disabledUnitIds)
-    && !needsXuHaochengMigration
-    && !needsRemovedYilinMigration
     ? Array.from(new Set(source.disabledUnitIds.map(asText).filter((id) => validUnitIds.has(id))))
     : defaults.disabledUnitIds;
   const goal = needsXuHaochengMigration ? defaults.dailyGoal : Number(source.dailyGoal);
@@ -548,9 +549,12 @@ const buildVocabularyView = ({
   const disabledUnitIds = new Set(normalizedSettings.disabledUnitIds || []);
   const beginnerOnly = selectedLevels.size === 1 && selectedLevels.has("0A");
   const levelById = new Map(library.levels.map((level) => [level.id, level]));
-  const libraryWordByKey = new Map();
+  const referenceWordByKey = new Map();
   library.words.forEach((word) => {
-    if (!libraryWordByKey.has(word.key)) libraryWordByKey.set(word.key, word);
+    const level = levelById.get(word.levelId) || {};
+    if (level.isReferenceOnly && !referenceWordByKey.has(word.key)) {
+      referenceWordByKey.set(word.key, word);
+    }
   });
   const itemByKey = new Map();
 
@@ -606,31 +610,28 @@ const buildVocabularyView = ({
       getStoredVocabularyCandidates(mistake, library).forEach((key) => {
         let item = itemByKey.get(key);
         const explicitWord = explicitWordByKey.get(key);
-        const libraryMatch = libraryWordByKey.get(key);
-        const matchedLevel = libraryMatch ? levelById.get(libraryMatch.levelId) || {} : {};
+        const referenceMatch = referenceWordByKey.get(key);
         if (!item) {
           item = {
             key,
-            word: explicitWord ? explicitWord.word : libraryMatch ? libraryMatch.word : key,
+            word: explicitWord ? explicitWord.word : referenceMatch ? referenceMatch.word : key,
             meaning: explicitWord && explicitWord.meaning
               ? explicitWord.meaning
-              : libraryMatch ? libraryMatch.meaning : "",
+              : referenceMatch ? referenceMatch.meaning : "",
             partOfSpeech: explicitWord && explicitWord.partOfSpeech
               ? explicitWord.partOfSpeech
-              : libraryMatch ? libraryMatch.partOfSpeech : "",
-            levelId: libraryMatch && !matchedLevel.isReferenceOnly ? libraryMatch.levelId : "",
-            levelIds: libraryMatch && !matchedLevel.isReferenceOnly ? [libraryMatch.levelId] : [],
-            levelLabel: libraryMatch && !matchedLevel.isReferenceOnly ? matchedLevel.label || "" : "",
-            bookLabel: libraryMatch && !matchedLevel.isReferenceOnly
-              ? matchedLevel.bookTitle || matchedLevel.label || ""
-              : "",
-            collectionLabel: libraryMatch && !matchedLevel.isReferenceOnly ? matchedLevel.collectionLabel || "" : "",
-            edition: libraryMatch && !matchedLevel.isReferenceOnly ? matchedLevel.edition || "" : "",
-            unitId: libraryMatch ? libraryMatch.unitId || "" : "",
-            unitIds: libraryMatch && libraryMatch.unitId ? [libraryMatch.unitId] : [],
-            unitLabel: libraryMatch ? libraryMatch.unitLabel || "" : "",
-            unitLabels: libraryMatch && libraryMatch.unitLabel ? [libraryMatch.unitLabel] : [],
-            isTextbook: libraryMatch ? matchedLevel.isTextbook === true : false,
+              : referenceMatch ? referenceMatch.partOfSpeech : "",
+            levelId: "",
+            levelIds: [],
+            levelLabel: "",
+            bookLabel: "",
+            collectionLabel: "",
+            edition: "",
+            unitId: "",
+            unitIds: [],
+            unitLabel: "",
+            unitLabels: [],
+            isTextbook: false,
             sources: [],
             sourceMistakeId: "",
             sourceQuestionNo: "",
@@ -644,10 +645,6 @@ const buildVocabularyView = ({
           if (explicitWord.word) item.word = explicitWord.word;
           if (explicitWord.meaning) item.meaning = explicitWord.meaning;
           if (explicitWord.partOfSpeech) item.partOfSpeech = explicitWord.partOfSpeech;
-        }
-        if (libraryMatch && !matchedLevel.isReferenceOnly) {
-          const sourceKind = matchedLevel.isTextbook ? "textbook" : "library";
-          if (item.sources.indexOf(sourceKind) < 0) item.sources.push(sourceKind);
         }
         if (item.sources.indexOf("mistake") < 0) item.sources.push("mistake");
         item.occurrenceCount += 1;

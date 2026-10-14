@@ -1,11 +1,12 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "collection": {
     "id": "yilin-junior-2024",
     "label": "译林初中英语",
     "edition": "译林版 · 2024新教材（2022课标）",
-    "notice": "家长提供的七年级上册实拍已核对；按2024年新教材的八个单元维护。",
-    "isbn": "978-7-5753-0036-0"
+    "notice": "已按家长提供的七年级上册书后 Wordlist 实拍逐项核对；仅收录印刷词条，不收录手写批注。",
+    "isbn": "978-7-5753-0036-0",
+    "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
   },
   "levels": [
     {
@@ -20,7 +21,7 @@
       "bookTitle": "义务教育教科书·英语 七年级上册",
       "isTextbook": true,
       "isbn": "978-7-5753-0036-0",
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     }
   ],
   "words": [
@@ -33,8 +34,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1001,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "introduce",
@@ -45,8 +45,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1002,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "each other",
@@ -57,8 +56,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1003,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "go by",
@@ -69,8 +67,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1004,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "glad",
@@ -81,8 +78,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1005,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "same",
@@ -93,8 +89,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1006,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "hobby",
@@ -105,8 +100,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1007,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "grade",
@@ -117,8 +111,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1008,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "classmate",
@@ -129,8 +122,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1009,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "friendly",
@@ -141,8 +133,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1010,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "full",
@@ -153,8 +144,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1011,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "be full of",
@@ -165,8 +155,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1012,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "energy",
@@ -177,8 +166,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1013,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "be good at",
@@ -189,8 +177,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1014,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "slim",
@@ -201,8 +188,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1015,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "polite",
@@ -213,8 +199,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1016,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "smart",
@@ -225,8 +210,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1017,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "ready",
@@ -237,8 +221,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1018,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "be ready to do sth",
@@ -249,8 +232,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1019,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "other",
@@ -261,8 +243,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1020,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "interested",
@@ -273,8 +254,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1021,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "be interested in",
@@ -285,8 +265,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1022,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "looks",
@@ -297,8 +276,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1023,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "character",
@@ -309,8 +287,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1024,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "both",
@@ -321,8 +298,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1025,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "enjoy",
@@ -333,8 +309,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1026,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pretty",
@@ -345,8 +320,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1027,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "shy",
@@ -357,8 +331,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1028,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "only",
@@ -369,8 +342,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1029,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "stay",
@@ -381,8 +353,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1030,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "match",
@@ -393,8 +364,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1031,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "luck",
@@ -405,8 +375,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1032,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "good luck",
@@ -417,8 +386,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1033,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "chess",
@@ -429,8 +397,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1034,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "chinese chess",
@@ -441,8 +408,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1035,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "problem",
@@ -453,8 +419,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1036,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "weekend",
@@ -465,8 +430,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1037,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "at the weekend",
@@ -477,8 +441,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1038,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "fun",
@@ -489,8 +452,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1039,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "make friends with",
@@ -501,8 +463,7 @@
       "unitId": "yilin-2024-7A-u1",
       "unitLabel": "Unit 1 · This is me!",
       "order": 1040,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "jogging",
@@ -513,8 +474,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2001,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "painting",
@@ -525,8 +485,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2002,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "paper-cutting",
@@ -537,8 +496,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2003,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "all kinds of",
@@ -549,8 +507,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2004,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "fit",
@@ -561,8 +518,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2005,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "around",
@@ -573,8 +529,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2006,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "change",
@@ -585,8 +540,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2007,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "life",
@@ -597,8 +551,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2008,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "museum",
@@ -609,8 +562,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2009,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "thing",
@@ -621,8 +573,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2010,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "fun",
@@ -633,8 +584,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2011,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "apart",
@@ -645,8 +595,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2012,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "take apart",
@@ -657,8 +606,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2013,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "fix",
@@ -669,20 +617,7 @@
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
       "order": 2014,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "endless",
-      "word": "endless",
-      "meaning": "无穷无尽的，不计其数的",
-      "partOfSpeech": "adj.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u2",
-      "unitLabel": "Unit 2 · Hobbies",
-      "order": 2015,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "scientist",
@@ -692,9 +627,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2016,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2015,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "dream",
@@ -704,9 +638,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2017,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2016,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "true",
@@ -716,9 +649,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2018,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2017,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "come true",
@@ -728,9 +660,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2019,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2018,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "paint",
@@ -740,9 +671,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2020,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2019,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "club",
@@ -752,9 +682,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2021,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2020,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "member",
@@ -764,9 +693,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2022,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2021,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "geography",
@@ -776,9 +704,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2023,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2022,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "p m",
@@ -788,9 +715,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2024,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2023,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "volleyball",
@@ -800,9 +726,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2025,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2024,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "each",
@@ -812,9 +737,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2026,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2025,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "once",
@@ -824,9 +748,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2027,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2026,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "join",
@@ -836,9 +759,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2028,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2027,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "meeting",
@@ -848,9 +770,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2029,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2028,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "sound",
@@ -860,9 +781,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2030,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2029,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "plan",
@@ -872,21 +792,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2031,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "questionnaire",
-      "word": "questionnaire",
-      "meaning": "调查表，问卷",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u2",
-      "unitLabel": "Unit 2 · Hobbies",
-      "order": 2032,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2030,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "role",
@@ -896,9 +803,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2033,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2031,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "model",
@@ -908,9 +814,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2034,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2032,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "role model",
@@ -920,9 +825,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2035,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2033,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "design",
@@ -932,9 +836,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2036,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2034,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "skill",
@@ -944,9 +847,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2037,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2035,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "artist",
@@ -956,9 +858,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2038,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2036,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "master",
@@ -968,9 +869,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2039,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2037,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "work",
@@ -980,9 +880,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2040,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2038,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "become",
@@ -992,9 +891,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2041,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2039,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "designer",
@@ -1004,9 +902,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2042,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2040,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "would",
@@ -1016,9 +913,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2043,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2041,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "would like",
@@ -1028,9 +924,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2044,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2042,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "future",
@@ -1040,9 +935,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2045,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2043,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "in the future",
@@ -1052,9 +946,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2046,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2044,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "hope",
@@ -1064,9 +957,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u2",
       "unitLabel": "Unit 2 · Hobbies",
-      "order": 2047,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 2045,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "gym",
@@ -1077,8 +969,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3001,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "building",
@@ -1089,8 +980,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3002,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "field",
@@ -1101,8 +991,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3003,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "sports field",
@@ -1113,8 +1002,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3004,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "dining",
@@ -1125,8 +1013,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3005,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "hall",
@@ -1137,8 +1024,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3006,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "dining hall",
@@ -1149,8 +1035,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3007,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "lab",
@@ -1161,8 +1046,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3008,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "part",
@@ -1173,8 +1057,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3009,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "modern",
@@ -1185,8 +1068,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3010,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "as well",
@@ -1197,8 +1079,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3011,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "bright",
@@ -1209,8 +1090,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3012,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "everyone",
@@ -1221,8 +1101,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3013,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "perfect",
@@ -1233,8 +1112,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3014,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "spend",
@@ -1245,8 +1123,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3015,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "chat",
@@ -1257,8 +1134,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3016,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "exciting",
@@ -1269,8 +1145,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3017,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "take place",
@@ -1281,8 +1156,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3018,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "noticeboard",
@@ -1293,8 +1167,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3019,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "gate",
@@ -1305,8 +1178,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3020,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "news",
@@ -1317,8 +1189,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3021,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "board",
@@ -1329,8 +1200,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3022,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "like",
@@ -1341,8 +1211,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3023,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "more",
@@ -1353,8 +1222,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3024,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "trust",
@@ -1365,8 +1233,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3025,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "really",
@@ -1377,8 +1244,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3026,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "soon",
@@ -1389,8 +1255,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3027,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "teach",
@@ -1401,8 +1266,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3028,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "team",
@@ -1413,8 +1277,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3029,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "form teacher",
@@ -1425,8 +1288,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3030,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "show",
@@ -1437,8 +1299,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3031,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "grey",
@@ -1449,8 +1310,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3032,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "different",
@@ -1461,8 +1321,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3033,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "thousand",
@@ -1473,8 +1332,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3034,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "fact",
@@ -1485,8 +1343,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3035,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "in fact",
@@ -1497,8 +1354,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3036,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "borrow",
@@ -1509,8 +1365,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3037,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "newspaper",
@@ -1521,8 +1376,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3038,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "magazine",
@@ -1533,8 +1387,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3039,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "else",
@@ -1545,8 +1398,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3040,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "care",
@@ -1557,8 +1409,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3041,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "care about",
@@ -1569,8 +1420,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3042,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "event",
@@ -1581,8 +1431,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3043,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "together",
@@ -1593,8 +1442,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3044,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "quite",
@@ -1605,8 +1453,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3045,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "large",
@@ -1617,8 +1464,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3046,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "special",
@@ -1629,8 +1475,7 @@
       "unitId": "yilin-2024-7A-u3",
       "unitLabel": "Unit 3 · Welcome to our school!",
       "order": 3047,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "a m",
@@ -1641,8 +1486,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4001,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "get up",
@@ -1653,8 +1497,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4002,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "activity",
@@ -1665,8 +1508,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4003,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "housework",
@@ -1677,8 +1519,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4004,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "homework",
@@ -1689,8 +1530,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4005,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "weekday",
@@ -1701,8 +1541,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4006,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "on weekdays",
@@ -1713,8 +1552,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4007,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "usually",
@@ -1725,8 +1563,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4008,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "jog",
@@ -1737,8 +1574,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4009,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "a little",
@@ -1749,8 +1585,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4010,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "myself",
@@ -1761,8 +1596,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4011,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "enjoy oneself",
@@ -1773,8 +1607,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4012,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "first",
@@ -1785,8 +1618,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4013,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "term",
@@ -1797,8 +1629,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4014,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "start",
@@ -1809,8 +1640,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4015,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "writer",
@@ -1821,20 +1651,7 @@
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
       "order": 4016,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "language",
-      "word": "language",
-      "meaning": "语言",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u4",
-      "unitLabel": "Unit 4 · School days",
-      "order": 4017,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "amazing",
@@ -1844,9 +1661,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4018,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4017,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "biology",
@@ -1856,9 +1672,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4019,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4018,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "living",
@@ -1868,9 +1683,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4020,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4019,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "nature",
@@ -1880,9 +1694,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4021,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4020,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "practise",
@@ -1892,9 +1705,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4022,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4021,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "field",
@@ -1904,9 +1716,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4023,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4022,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "trip",
@@ -1916,9 +1727,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4024,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4023,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "field trip",
@@ -1928,9 +1738,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4025,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4024,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "leave",
@@ -1940,9 +1749,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4026,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4025,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "leave for",
@@ -1952,9 +1760,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4027,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4026,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pick",
@@ -1964,9 +1771,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4028,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4027,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "of course",
@@ -1976,9 +1782,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4029,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4028,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "seldom",
@@ -1988,9 +1793,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4030,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4029,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "tennis",
@@ -2000,9 +1804,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4031,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4030,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "roller skate",
@@ -2012,9 +1815,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4032,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4031,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "grow",
@@ -2024,9 +1826,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4033,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4032,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "tour",
@@ -2036,9 +1837,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4034,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4033,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "website",
@@ -2048,9 +1848,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4035,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4034,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "video",
@@ -2060,9 +1859,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4036,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4035,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "outside",
@@ -2072,33 +1870,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4037,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "peace",
-      "word": "peace",
-      "meaning": "平静；和平",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u4",
-      "unitLabel": "Unit 4 · School days",
-      "order": 4038,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "quiet",
-      "word": "quiet",
-      "meaning": "宁静，平静",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u4",
-      "unitLabel": "Unit 4 · School days",
-      "order": 4039,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4036,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "teamwork",
@@ -2108,9 +1881,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4040,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4037,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "better",
@@ -2120,9 +1892,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4041,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4038,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "tiring",
@@ -2132,9 +1903,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4042,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4039,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "duty",
@@ -2144,9 +1914,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4043,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4040,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "area",
@@ -2156,9 +1925,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4044,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4041,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "take part in",
@@ -2168,21 +1936,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4045,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "through",
-      "word": "through",
-      "meaning": "以，凭借；通过；穿过",
-      "partOfSpeech": "prep.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u4",
-      "unitLabel": "Unit 4 · School days",
-      "order": 4046,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4042,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "group",
@@ -2192,9 +1947,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4047,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4043,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "turn",
@@ -2204,9 +1958,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4048,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4044,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "take turns",
@@ -2216,9 +1969,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4049,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4045,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "empty",
@@ -2228,9 +1980,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4050,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4046,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "bin",
@@ -2240,9 +1991,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4051,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4047,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "care",
@@ -2252,9 +2002,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4052,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4048,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "take care of",
@@ -2264,21 +2013,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u4",
       "unitLabel": "Unit 4 · School days",
-      "order": 4053,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "something",
-      "word": "something",
-      "meaning": "某事，某物",
-      "partOfSpeech": "pron.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u4",
-      "unitLabel": "Unit 4 · School days",
-      "order": 4054,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 4049,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "lifestyle",
@@ -2289,8 +2025,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5001,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "cucumber",
@@ -2301,8 +2036,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5002,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "lemon",
@@ -2313,8 +2047,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5003,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "watermelon",
@@ -2325,8 +2058,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5004,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pepper",
@@ -2337,8 +2069,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5005,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "chocolate",
@@ -2349,8 +2080,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5006,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "beef",
@@ -2361,8 +2091,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5007,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "carrot",
@@ -2373,8 +2102,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5008,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pork",
@@ -2385,8 +2113,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5009,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "sweet",
@@ -2397,8 +2124,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5010,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "snack",
@@ -2409,8 +2135,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5011,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "health",
@@ -2421,8 +2146,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5012,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "delicious",
@@ -2433,8 +2157,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5013,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "important",
@@ -2445,8 +2168,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5014,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "diet",
@@ -2457,8 +2179,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5015,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "without",
@@ -2469,8 +2190,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5016,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pancake",
@@ -2481,8 +2201,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5017,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "tofu",
@@ -2493,8 +2212,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5018,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "sugar",
@@ -2505,8 +2223,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5019,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "tooth",
@@ -2517,8 +2234,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5020,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "homebody",
@@ -2529,8 +2245,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5021,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "mutton",
@@ -2541,8 +2256,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5022,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "sweet",
@@ -2553,8 +2267,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5023,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "have a sweet tooth",
@@ -2565,8 +2278,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5024,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "stay",
@@ -2577,8 +2289,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5025,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "stay up",
@@ -2589,8 +2300,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5026,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "unhealthy",
@@ -2601,8 +2311,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5027,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "need",
@@ -2613,8 +2322,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5028,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "enough",
@@ -2625,8 +2333,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5029,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "less",
@@ -2637,8 +2344,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5030,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "cheese",
@@ -2649,8 +2355,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5031,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "piece",
@@ -2661,8 +2366,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5032,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "bowl",
@@ -2673,8 +2377,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5033,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "salt",
@@ -2685,8 +2388,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5034,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "packet",
@@ -2697,8 +2399,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5035,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "kilo",
@@ -2709,20 +2410,7 @@
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
       "order": 5036,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "carton",
-      "word": "carton",
-      "meaning": "硬纸盒，塑料盒",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u5",
-      "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5037,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "bottle",
@@ -2732,9 +2420,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5038,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5037,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "maybe",
@@ -2744,9 +2431,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5039,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5038,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "than",
@@ -2756,9 +2442,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5040,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5039,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "almost",
@@ -2768,9 +2453,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5041,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5040,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "chip",
@@ -2780,9 +2464,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5042,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5041,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "smartphone",
@@ -2792,21 +2475,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5043,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "tablet",
-      "word": "tablet",
-      "meaning": "平板电脑",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u5",
-      "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5044,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5042,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "score",
@@ -2816,9 +2486,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5045,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5043,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "point",
@@ -2828,9 +2497,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5046,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5044,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "change",
@@ -2840,9 +2508,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5047,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5045,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "meal",
@@ -2852,9 +2519,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5048,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5046,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "porridge",
@@ -2864,9 +2530,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5049,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5047,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "whole",
@@ -2876,9 +2541,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5050,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5048,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "miss",
@@ -2888,9 +2552,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5051,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5049,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "rest",
@@ -2900,9 +2563,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5052,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5050,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pie",
@@ -2912,9 +2574,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5053,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5051,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "yogurt",
@@ -2924,9 +2585,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5054,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5052,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "most",
@@ -2936,9 +2596,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u5",
       "unitLabel": "Unit 5 · A healthy lifestyle",
-      "order": 5055,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 5053,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "style",
@@ -2949,8 +2608,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6001,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "blouse",
@@ -2961,8 +2619,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6002,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "jacket",
@@ -2973,8 +2630,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6003,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "jeans",
@@ -2985,8 +2641,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6004,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "scarf",
@@ -2997,8 +2652,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6005,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "tie",
@@ -3009,8 +2663,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6006,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "t-shirt",
@@ -3021,8 +2674,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6007,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "calm",
@@ -3033,8 +2685,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6008,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "fashion",
@@ -3045,8 +2696,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6009,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "choose",
@@ -3057,8 +2707,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6010,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "could",
@@ -3069,8 +2718,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6011,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "advice",
@@ -3081,8 +2729,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6012,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "depend",
@@ -3093,8 +2740,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6013,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "depend on",
@@ -3105,8 +2751,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6014,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "skin",
@@ -3117,8 +2762,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6015,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "such as",
@@ -3129,8 +2773,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6016,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "purple",
@@ -3141,8 +2784,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6017,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "similar",
@@ -3153,8 +2795,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6018,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "example",
@@ -3165,8 +2806,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6019,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "for example",
@@ -3177,8 +2817,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6020,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "dark",
@@ -3189,8 +2828,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6021,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "mix",
@@ -3201,20 +2839,7 @@
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
       "order": 6022,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "stand out",
-      "word": "stand out",
-      "meaning": "突出，显眼",
-      "partOfSpeech": "",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u6",
-      "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6023,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "match",
@@ -3224,21 +2849,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6024,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "suitable",
-      "word": "suitable",
-      "meaning": "合适的，适宜的",
-      "partOfSpeech": "adj.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u6",
-      "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6025,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6023,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "formal",
@@ -3248,33 +2860,19 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6026,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6024,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
-      "key": "suit",
-      "word": "suit",
-      "meaning": "套装，西服",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u6",
-      "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6027,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "casual",
-      "word": "casual",
-      "meaning": "非正式的，随便的",
+      "key": "informal",
+      "word": "informal",
+      "meaning": "（衣服）在家穿的，日常穿的",
       "partOfSpeech": "adj.",
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6028,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6025,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "comfortable",
@@ -3284,9 +2882,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6029,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6026,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "primary",
@@ -3296,9 +2893,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6030,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6027,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "smart",
@@ -3308,9 +2904,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6031,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6028,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "date",
@@ -3320,9 +2915,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6032,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6029,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "traditional",
@@ -3332,9 +2926,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6033,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6030,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "popular",
@@ -3344,9 +2937,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6034,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6031,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "type",
@@ -3356,9 +2948,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6035,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6032,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "design",
@@ -3368,9 +2959,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6036,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6033,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "festival",
@@ -3380,9 +2970,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6037,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6034,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "wedding",
@@ -3392,9 +2981,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6038,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6035,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "just",
@@ -3404,9 +2992,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6039,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6036,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "culture",
@@ -3416,21 +3003,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6040,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "country",
-      "word": "country",
-      "meaning": "国家",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u6",
-      "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6041,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6037,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "history",
@@ -3440,21 +3014,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6042,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "loose",
-      "word": "loose",
-      "meaning": "宽松的",
-      "partOfSpeech": "adj.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u6",
-      "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6043,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6038,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "belt",
@@ -3464,21 +3025,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6044,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "close-fitting",
-      "word": "close-fitting",
-      "meaning": "紧身的",
-      "partOfSpeech": "adj.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u6",
-      "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6045,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6039,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "be made of",
@@ -3488,9 +3036,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6046,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6040,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "silk",
@@ -3500,21 +3047,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6047,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "feel",
-      "word": "feel",
-      "meaning": "摸起来",
-      "partOfSpeech": "linking v.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u6",
-      "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6048,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6041,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "smooth",
@@ -3524,9 +3058,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6049,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6042,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "soft",
@@ -3536,9 +3069,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6050,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6043,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "cotton",
@@ -3548,9 +3080,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6051,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6044,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "agree",
@@ -3560,9 +3091,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6052,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6045,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "feature",
@@ -3572,33 +3102,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6053,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "material",
-      "word": "material",
-      "meaning": "布料；材料，原料",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u6",
-      "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6054,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "leather",
-      "word": "leather",
-      "meaning": "皮革",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u6",
-      "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6055,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6046,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "size",
@@ -3608,9 +3113,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u6",
       "unitLabel": "Unit 6 · My clothes, my style",
-      "order": 6056,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 6047,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "wise",
@@ -3621,8 +3125,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7001,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "yuan",
@@ -3633,8 +3136,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7002,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "euro",
@@ -3645,8 +3147,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7003,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pound",
@@ -3657,8 +3158,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7004,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "yen",
@@ -3669,8 +3169,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7005,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "rouble",
@@ -3681,8 +3180,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7006,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "dollar",
@@ -3693,8 +3191,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7007,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "key",
@@ -3705,8 +3202,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7008,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "ring",
@@ -3717,8 +3213,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7009,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "baseball",
@@ -3729,8 +3224,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7010,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "russian",
@@ -3741,8 +3235,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7011,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "set",
@@ -3753,8 +3246,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7012,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "a set of",
@@ -3765,8 +3257,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7013,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "inside",
@@ -3777,8 +3268,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7014,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "another",
@@ -3789,8 +3279,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7015,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "colourful",
@@ -3801,8 +3290,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7016,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "surprise",
@@ -3813,32 +3301,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7017,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "player",
-      "word": "player",
-      "meaning": "运动员",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u7",
-      "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7018,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "protect",
-      "word": "protect",
-      "meaning": "保护，防护",
-      "partOfSpeech": "vt. & vi.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u7",
-      "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7019,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "mall",
@@ -3848,9 +3311,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7020,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7018,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "across",
@@ -3860,9 +3322,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7021,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7019,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "cost",
@@ -3872,9 +3333,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7022,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7020,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "manage",
@@ -3884,9 +3344,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7023,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7021,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "budget",
@@ -3896,9 +3355,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7024,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7022,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "cover",
@@ -3908,9 +3366,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7025,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7023,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "education",
@@ -3920,9 +3377,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7026,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7024,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pay",
@@ -3932,9 +3388,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7027,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7025,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pay for",
@@ -3944,9 +3399,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7028,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7026,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "flat",
@@ -3956,9 +3410,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7029,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7027,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "daily",
@@ -3968,9 +3421,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7030,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7028,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "need",
@@ -3980,9 +3432,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7031,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7029,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "per cent",
@@ -3992,9 +3443,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7032,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7030,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "expensive",
@@ -4004,9 +3454,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7033,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7031,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "save",
@@ -4016,9 +3465,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7034,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7032,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "bank",
@@ -4028,9 +3476,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7035,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7033,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "account",
@@ -4040,9 +3487,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7036,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7034,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "rainy",
@@ -4052,9 +3498,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7037,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7035,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "matter",
@@ -4064,9 +3509,19 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7038,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7036,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
+    },
+    {
+      "key": "keep to",
+      "word": "keep to",
+      "meaning": "遵守；不偏离",
+      "partOfSpeech": "",
+      "levelId": "yilin-2024-7A",
+      "unitId": "yilin-2024-7A-u7",
+      "unitLabel": "Unit 7 · Be wise with money",
+      "order": 7037,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pocket",
@@ -4076,9 +3531,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7039,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7038,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "pocket money",
@@ -4088,9 +3542,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7040,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7039,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "notebook",
@@ -4100,9 +3553,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7041,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7040,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "rest",
@@ -4112,9 +3564,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7042,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7041,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "strawberry",
@@ -4124,9 +3575,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7043,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7042,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "bookshop",
@@ -4136,9 +3586,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7044,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7043,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "eraser",
@@ -4148,9 +3597,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7045,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7044,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "as",
@@ -4160,9 +3608,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7046,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7045,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "present",
@@ -4172,9 +3619,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7047,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7046,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "away",
@@ -4184,9 +3630,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7048,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7047,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "shell",
@@ -4196,9 +3641,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7049,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7048,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "deal",
@@ -4208,9 +3652,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7050,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7049,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "coin",
@@ -4220,9 +3663,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7051,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7050,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "online",
@@ -4232,9 +3674,19 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
+      "order": 7051,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
+    },
+    {
+      "key": "country",
+      "word": "country",
+      "meaning": "国家",
+      "partOfSpeech": "n.",
+      "levelId": "yilin-2024-7A",
+      "unitId": "yilin-2024-7A-u7",
+      "unitLabel": "Unit 7 · Be wise with money",
       "order": 7052,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "lucky",
@@ -4245,8 +3697,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7053,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "lucky money",
@@ -4257,8 +3708,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7054,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "grandparent",
@@ -4269,8 +3719,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7055,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "relative",
@@ -4281,8 +3730,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7056,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "send",
@@ -4293,8 +3741,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7057,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "online",
@@ -4305,8 +3752,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7058,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "red packet",
@@ -4317,8 +3763,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7059,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "survey",
@@ -4329,8 +3774,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7060,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "in need",
@@ -4341,32 +3785,7 @@
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
       "order": 7061,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "as",
-      "word": "as",
-      "meaning": "正如，如同",
-      "partOfSpeech": "conj.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u7",
-      "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7062,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "beginning",
-      "word": "beginning",
-      "meaning": "开头，开端",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u7",
-      "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7063,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "habit",
@@ -4376,9 +3795,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u7",
       "unitLabel": "Unit 7 · Be wise with money",
-      "order": 7064,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 7062,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "celebrate",
@@ -4389,8 +3807,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8001,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "christmas",
@@ -4401,8 +3818,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8002,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "remember",
@@ -4413,8 +3829,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8003,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "poet",
@@ -4425,8 +3840,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8004,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "dragon",
@@ -4437,8 +3851,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8005,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "dragon boat",
@@ -4449,8 +3862,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8006,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "race",
@@ -4461,8 +3873,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8007,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "dumpling",
@@ -4473,8 +3884,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8008,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "rice dumpling",
@@ -4485,8 +3895,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8009,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "scottish",
@@ -4497,20 +3906,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8010,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "haggis",
-      "word": "haggis",
-      "meaning": "哈吉斯（一种苏格兰美食）",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u8",
-      "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8011,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "dish",
@@ -4520,9 +3916,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8012,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8011,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "poem",
@@ -4532,9 +3927,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8013,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8012,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "lady",
@@ -4544,9 +3938,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8014,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8013,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "gentleman",
@@ -4556,9 +3949,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8015,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8014,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "spread",
@@ -4568,9 +3960,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8016,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8015,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "doorstep",
@@ -4580,9 +3971,19 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
+      "order": 8016,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
+    },
+    {
+      "key": "peace",
+      "word": "peace",
+      "meaning": "和平，平静",
+      "partOfSpeech": "n.",
+      "levelId": "yilin-2024-7A",
+      "unitId": "yilin-2024-7A-u8",
+      "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8017,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "hang",
@@ -4593,8 +3994,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8018,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "onion",
@@ -4605,8 +4005,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8019,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "greek",
@@ -4617,8 +4016,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8020,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "tradition",
@@ -4629,8 +4027,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8021,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "symbol",
@@ -4641,8 +4038,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8022,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "midnight",
@@ -4653,8 +4049,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8023,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "strike",
@@ -4665,8 +4060,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8024,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "into",
@@ -4677,32 +4071,7 @@
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
       "order": 8025,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "hope",
-      "word": "hope",
-      "meaning": "希望",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u8",
-      "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8026,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "in the hope of",
-      "word": "in the hope of",
-      "meaning": "希望",
-      "partOfSpeech": "",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u8",
-      "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8027,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "ahead",
@@ -4712,9 +4081,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8028,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8026,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "carry",
@@ -4724,9 +4092,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8029,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8027,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "suitcase",
@@ -4736,9 +4103,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8030,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8028,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "block",
@@ -4748,9 +4114,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8031,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8029,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "traveller",
@@ -4760,9 +4125,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8032,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8030,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "wherever",
@@ -4772,9 +4136,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8033,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8031,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "violin",
@@ -4784,9 +4147,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8034,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8032,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "lively",
@@ -4796,9 +4158,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8035,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8033,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "spring roll",
@@ -4808,9 +4169,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8036,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8034,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "moment",
@@ -4820,9 +4180,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8037,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8035,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "at the moment",
@@ -4832,9 +4191,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8038,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8036,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "tonight",
@@ -4844,9 +4202,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8039,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8037,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "lantern",
@@ -4856,9 +4213,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8040,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8038,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "mountain",
@@ -4868,9 +4224,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8041,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8039,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "climb",
@@ -4880,9 +4235,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8042,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8040,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "natural",
@@ -4892,9 +4246,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8043,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8041,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "beauty",
@@ -4904,21 +4257,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8044,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "respect",
-      "word": "respect",
-      "meaning": "尊敬",
-      "partOfSpeech": "n.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u8",
-      "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8045,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8042,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "elder",
@@ -4928,9 +4268,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8046,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8043,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "double",
@@ -4940,9 +4279,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8047,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8044,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "forever",
@@ -4952,21 +4290,19 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8048,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8045,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
-      "key": "decorate",
-      "word": "decorate",
-      "meaning": "装饰",
-      "partOfSpeech": "vt.",
+      "key": "something",
+      "word": "something",
+      "meaning": "某事，某物",
+      "partOfSpeech": "pron.",
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8049,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8046,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "put up",
@@ -4976,9 +4312,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8050,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8047,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "spring festival couplets",
@@ -4988,21 +4323,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8051,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
-    },
-    {
-      "key": "beforehand",
-      "word": "beforehand",
-      "meaning": "事先，预先",
-      "partOfSpeech": "adv.",
-      "levelId": "yilin-2024-7A",
-      "unitId": "yilin-2024-7A-u8",
-      "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8052,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8048,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "prepare",
@@ -5012,9 +4334,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8053,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8049,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "meaning",
@@ -5024,9 +4345,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8054,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8050,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "during",
@@ -5036,9 +4356,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8055,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8051,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "last",
@@ -5048,9 +4367,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8056,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8052,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "till",
@@ -5060,9 +4378,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8057,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8053,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     },
     {
       "key": "heart",
@@ -5072,9 +4389,8 @@
       "levelId": "yilin-2024-7A",
       "unitId": "yilin-2024-7A-u8",
       "unitLabel": "Unit 8 · Let's celebrate!",
-      "order": 8058,
-      "isBasic": false,
-      "sourceRef": "https://yyld.51jiaoxi.com/qishang/njylb_danyuan012.html"
+      "order": 8054,
+      "sourceRef": "family-photo-wordlist-2026-10-15-pages-149-154"
     }
   ]
 }

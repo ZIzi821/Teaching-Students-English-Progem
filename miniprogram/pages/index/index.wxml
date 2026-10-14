@@ -76,7 +76,7 @@
       </view>
       <view class="teacher-homework-notice-actions">
         <view class="teacher-homework-notice-count">{{studentLearningActivities.length}} 条</view>
-        <view class="teacher-homework-dismiss" catchtap="dismissStudentLearningActivities">我看完了</view>
+        <view class="teacher-homework-dismiss" hover-class="notice-action-pressed" catchtap="dismissStudentLearningActivities">我看完了</view>
       </view>
     </view>
     <view
@@ -94,7 +94,7 @@
         </view>
         <view class="teacher-homework-time {{item.activityType === 'teacherReminder' ? 'student-reminder-text' : ''}}">{{item.activityText}} · {{item.activityLabel}}</view>
       </view>
-      <view class="teacher-homework-link">{{item.activityType === 'teacherReminder' ? '知道了' : '查看 →'}}</view>
+      <view class="teacher-homework-link" hover-class="notice-action-pressed">{{item.activityType === 'teacherReminder' ? '知道了' : '查看 →'}}</view>
     </view>
     <view class="teacher-homework-time" wx:if="{{isTeacherPreview}}">老师预览可以查看，但不会同步学生的已读状态。</view>
   </view>
@@ -131,7 +131,7 @@
       </view>
       <view class="teacher-homework-notice-actions">
         <view class="teacher-homework-notice-count">{{learningActivityNotices.length}} 条</view>
-        <view class="teacher-homework-dismiss" catchtap="dismissLearningActivities">全部已看</view>
+        <view class="teacher-homework-dismiss" hover-class="notice-action-pressed" catchtap="dismissLearningActivities">全部已看</view>
       </view>
     </view>
     <view
@@ -150,7 +150,7 @@
           {{item.activityText}}<text wx:if="{{item.activityType === 'recording' && item.recordingCount > 1}}">（{{item.recordingCount}}份）</text> · {{item.activityLabel}}
         </view>
       </view>
-      <view class="teacher-homework-link">{{item.actionLabel || '查看 →'}}</view>
+      <view class="teacher-homework-link" hover-class="notice-action-pressed">{{item.actionLabel || '查看 →'}}</view>
     </view>
   </view>
 

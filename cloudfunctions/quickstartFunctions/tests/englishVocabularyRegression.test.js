@@ -3,6 +3,10 @@ const fs = require("fs");
 const path = require("path");
 const vocabulary = require("../vocabulary");
 const frenchContent = require("../frenchContent");
+const {
+  SOURCE_REF: yilinPhotoSourceRef,
+  WORDS_BY_UNIT: yilinPhotoWordsByUnit,
+} = require("../../../tools/yilin-2024-7a-photo-wordlist");
 
 assert.strictEqual(vocabulary.normalizeWordKey("  HELLO  "), "hello");
 assert.strictEqual(vocabulary.normalizeWordKey("don't"), "don't");
@@ -56,14 +60,24 @@ const yilin2024Words = library.words.filter((word) => word.levelId === "yilin-20
 assert(yilin2024Level, "Yilin 2024 Grade 7A must be available separately from the legacy edition");
 assert.strictEqual(yilin2024Level.edition, "译林版 · 2024新教材（2022课标）");
 assert.strictEqual(yilin2024Level.isbn, "978-7-5753-0036-0");
-assert.strictEqual(yilin2024Words.length, 421);
-assert.strictEqual(new Set(yilin2024Words.map((word) => word.key)).size, 407);
+assert.strictEqual(yilin2024Words.length, 397);
+assert.strictEqual(new Set(yilin2024Words.map((word) => word.key)).size, 385);
 assert.deepStrictEqual(
   Array.from({ length: 8 }, (_, index) => (
     yilin2024Words.filter((word) => word.unitId === `yilin-2024-7A-u${index + 1}`).length
   )),
-  [40, 47, 47, 54, 55, 56, 64, 58]
+  [40, 45, 47, 49, 53, 47, 62, 54]
 );
+assert.deepStrictEqual(
+  Array.from({ length: 8 }, (_, index) => (
+    yilin2024Words
+      .filter((word) => word.unitId === `yilin-2024-7A-u${index + 1}`)
+      .map((word) => word.word)
+  )),
+  yilinPhotoWordsByUnit,
+  "Every Yilin unit must exactly match the family-provided photographed wordlist"
+);
+assert(yilin2024Words.every((word) => word.sourceRef === yilinPhotoSourceRef));
 assert.deepStrictEqual(
   yilin2024Words.filter((word) => word.unitId === "yilin-2024-7A-u3").slice(-4).map((word) => word.word),
   ["together", "quite", "large", "special"],
@@ -91,6 +105,20 @@ const xuMigrated = vocabulary.normalizeVocabularySettings({
 assert.deepStrictEqual(xuMigrated.levelIds, ["yilin-2024-7A"]);
 assert.strictEqual(xuMigrated.learningOrder, "book", "Xu Haocheng must start the real textbook in unit order");
 assert.strictEqual(Object.prototype.hasOwnProperty.call(xuMigrated, "hideBasicWords"), false);
+const xuLibraryIsolationMigration = vocabulary.normalizeVocabularySettings({
+  profileVersion: 6,
+  levelIds: ["molly-ket-a2-16w", "yilin-2024-7A"],
+  dailyGoal: 10,
+  includeMistakeWords: true,
+  learningOrder: "book",
+  disabledUnitIds: ["yilin-2024-7A-u8"],
+}, library, { name: "徐浩成" });
+assert.deepStrictEqual(xuLibraryIsolationMigration.levelIds, ["yilin-2024-7A"]);
+assert.deepStrictEqual(
+  xuLibraryIsolationMigration.disabledUnitIds,
+  ["yilin-2024-7A-u8"],
+  "Correcting an accidental extra library must preserve the teacher's unit switches"
+);
 
 const yilin2024Catalog = vocabulary.buildVocabularyCatalog({
   library,
@@ -102,7 +130,7 @@ const yilin2024Catalog = vocabulary.buildVocabularyCatalog({
 const expectedEnabledYilinKeys = new Set(
   yilin2024Words.filter((word) => word.unitId !== "yilin-2024-7A-u1").map((word) => word.key)
 );
-assert.strictEqual(yilin2024Catalog[0].wordCount, 407);
+assert.strictEqual(yilin2024Catalog[0].wordCount, 385);
 assert.strictEqual(yilin2024Catalog[0].enabledWordCount, expectedEnabledYilinKeys.size);
 assert.strictEqual(yilin2024Catalog[0].unitCount, 8);
 assert.strictEqual(yilin2024Catalog[0].enabledUnitCount, 7);
@@ -122,6 +150,33 @@ const yilin2024View = vocabulary.buildVocabularyView({
 });
 assert.strictEqual(yilin2024View.summary.totalCount, expectedEnabledYilinKeys.size);
 assert(yilin2024View.words.every((word) => word.unitIds.indexOf("yilin-2024-7A-u1") < 0));
+
+const isolatedMistakeView = vocabulary.buildVocabularyView({
+  library,
+  settings: {
+    levelIds: ["yilin-2024-7A"],
+    dailyGoal: 10,
+    includeMistakeWords: true,
+    learningOrder: "book",
+    disabledUnitIds: [],
+  },
+  mistakes: [{
+    _id: "mistake-molly-only",
+    vocabularyWords: [{ word: "airport", meaning: "机场", partOfSpeech: "n." }],
+    vocabularyCandidates: ["airport"],
+  }],
+  progressItems: [],
+  isTeacher: true,
+  student: { name: "徐浩成" },
+});
+const isolatedAirport = isolatedMistakeView.words.find((word) => word.key === "airport");
+assert(isolatedAirport, "Explicit mistake vocabulary must remain available");
+assert.deepStrictEqual(isolatedAirport.sources, ["mistake"]);
+assert.deepStrictEqual(isolatedAirport.levelIds, []);
+assert.deepStrictEqual(isolatedAirport.unitIds, []);
+assert.strictEqual(isolatedAirport.levelLabel, "");
+assert.strictEqual(isolatedAirport.bookLabel, "");
+assert.strictEqual(isolatedAirport.sourceLabel, "错题单词");
 
 assert.deepStrictEqual(
   vocabulary.buildVocabularyCatalog({ library, settings: { levelIds: [] } }),

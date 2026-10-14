@@ -86,7 +86,7 @@
 ## 译林 2024 七年级上册与现用共享音频
 
 - 2012 课标旧版六册词库已经移除；教师端只保留已核对的“译林版 · 2024新教材（2022课标）”七年级上册，并按八个单元分别开关。
-- 新教材专属 307 个短音频位于 `output/vocabulary-audio/yilin-2024-7a-direct-v1/`，上传到云存储 `vocabulary-audio/yilin-2024-7a-direct-v1/`。
+- 新教材音频目录现有 309 个短音频；在原 307 个文件基础上新增 `308-informal.wav` 与 `309-keep-to.wav`。本地位于 `output/vocabulary-audio/yilin-2024-7a-direct-v1/`，上传到云存储同名目录 `vocabulary-audio/yilin-2024-7a-direct-v1/`。
 - 另有 206 个仍被现有基础词库和错题释义使用的共享读音，已从旧合辑迁移到 `output/vocabulary-audio/shared-current-direct-v1/`，上传到云存储 `vocabulary-audio/shared-current-direct-v1/`。
 - 两个新目录上传并部署新版 `quickstartFunctions` 后，云存储中的旧目录 `vocabulary-audio/v1/` 与 `vocabulary-audio/sprites-v1/` 才可以删除。不要删除 `beginner-direct-v1`、`molly-ket-direct-v1`、`sprites-beginner-v1` 或 `sprites-extra-v1`。
 - 完整性检查：`node tools/validate-yilin-2024-7a-vocabulary.js`、`node tools/validate-vocabulary-audio-sprites.js`。

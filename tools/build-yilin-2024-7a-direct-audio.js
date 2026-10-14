@@ -63,8 +63,8 @@ const wordByKey = new Map();
   const key = vocabulary.normalizeWordKey(word.key || word.word);
   if (key && !wordByKey.has(key)) wordByKey.set(key, String(word.word || key).trim());
 });
-if ((library.words || []).length !== 421 || wordByKey.size !== 407) {
-  throw new Error("Yilin 2024 Grade 7A must contain 421 entries and 407 unique audio keys");
+if ((library.words || []).length !== 397 || wordByKey.size !== 385) {
+  throw new Error("Yilin 2024 Grade 7A must contain 397 entries and 385 unique audio keys");
 }
 
 const wordsNeedingDirectAudio = Array.from(wordByKey.entries()).filter(([key]) => {
@@ -72,11 +72,16 @@ const wordsNeedingDirectAudio = Array.from(wordByKey.entries()).filter(([key]) =
   return !existing
     || !existing.directFileId
     || !existing.directCloudPath
-    || !existing.directDurationMs
-    || String(existing.directCloudPath).startsWith(`${directCloudRoot}/`);
+    || !existing.directDurationMs;
 });
+const existingSequenceMax = (runtimeManifest.items || []).reduce((maximum, item) => {
+  const cloudPath = String(item.directCloudPath || "");
+  if (!cloudPath.startsWith(`${directCloudRoot}/`)) return maximum;
+  const match = path.posix.basename(cloudPath).match(/^(\d+)-/);
+  return match ? Math.max(maximum, Number(match[1]) || 0) : maximum;
+}, 0);
 const sourceItems = wordsNeedingDirectAudio.map(([key, word], index) => {
-  const sequence = String(index + 1).padStart(3, "0");
+  const sequence = String(existingSequenceMax + index + 1).padStart(3, "0");
   const fileName = `${sequence}-${toReadableSlug(word) || "word"}.wav`;
   return {
     key,
@@ -98,7 +103,7 @@ fs.writeFileSync(sourceManifestPath, `${JSON.stringify({
 if (prepareOnly) {
   console.log(JSON.stringify({
     textbookUniqueWords: wordByKey.size,
-    alreadyDirect: wordByKey.size - sourceItems.length,
+    alreadyCovered: wordByKey.size - sourceItems.length,
     toGenerate: sourceItems.length,
     sourceManifestPath,
     outputDirectory: directDir,
@@ -112,7 +117,7 @@ if (missingFiles.length) {
   throw new Error(`Missing ${missingFiles.length} generated WAV files; run this script with --prepare first`);
 }
 
-const directItems = sourceItems.map((item) => {
+const generatedDirectItems = sourceItems.map((item) => {
   const wave = readWaveInfo(path.join(directDir, item.fileName));
   return {
     ...item,
@@ -122,7 +127,26 @@ const directItems = sourceItems.map((item) => {
     sha256: wave.sha256,
   };
 });
+const existingDirectItems = (runtimeManifest.items || []).map((existing) => {
+  const key = vocabulary.normalizeWordKey(existing.key);
+  const cloudPath = String(existing && existing.directCloudPath || "");
+  if (!cloudPath.startsWith(`${directCloudRoot}/`)) return null;
+  return {
+    key,
+    word: String(existing.word || key),
+    fileName: path.posix.basename(cloudPath),
+    cloudPath,
+    fileId: existing.directFileId,
+    durationMs: Number(existing.directDurationMs),
+    bytes: Number(existing.directBytes),
+    sha256: String(existing.directSha256 || ""),
+  };
+}).filter(Boolean);
+const directItems = existingDirectItems.concat(generatedDirectItems).sort((left, right) => (
+  left.fileName.localeCompare(right.fileName, "en", { numeric: true })
+));
 const directByKey = new Map(directItems.map((item) => [item.key, item]));
+const currentYilinDirectCount = Array.from(wordByKey.keys()).filter((key) => directByKey.has(key)).length;
 const runtimeItems = (runtimeManifest.items || []).map((item) => {
   const direct = directByKey.get(vocabulary.normalizeWordKey(item.key));
   if (!direct) return item;
@@ -171,13 +195,16 @@ fs.writeFileSync(directManifestPath, `${JSON.stringify({
   items: directItems,
 }, null, 2)}\n`, "utf8");
 fs.writeFileSync(runtimeManifestPath, `${JSON.stringify(Object.assign({}, runtimeManifest, {
+  total: runtimeItems.length,
   items: runtimeItems,
 }), null, 2)}\n`, "utf8");
 
 console.log(JSON.stringify({
   textbookUniqueWords: wordByKey.size,
-  reusedExistingDirect: wordByKey.size - directItems.length,
-  generatedDirect: directItems.length,
+  reusedOutsideYilinFolder: wordByKey.size - currentYilinDirectCount,
+  keptExistingYilinFiles: existingDirectItems.length,
+  currentYilinDirect: currentYilinDirectCount,
+  generatedDirect: generatedDirectItems.length,
   totalBytes: directItems.reduce((sum, item) => sum + item.bytes, 0),
   directDir,
   directManifestPath,

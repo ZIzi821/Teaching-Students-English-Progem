@@ -99,7 +99,7 @@ const spriteConfigs = {
 const directConfigs = [
   { label: "beginner", folder: "beginner-direct-v1", manifest: "beginner-direct-v1-manifest.json", expected: 89 },
   { label: "Molly KET", folder: "molly-ket-direct-v1", manifest: "molly-ket-direct-v1-manifest.json", expected: 640 },
-  { label: "Yilin 2024 7A", folder: "yilin-2024-7a-direct-v1", manifest: "yilin-2024-7a-direct-v1-manifest.json", expected: 307 },
+  { label: "Yilin 2024 7A", folder: "yilin-2024-7a-direct-v1", manifest: "yilin-2024-7a-direct-v1-manifest.json", expected: 309 },
   { label: "shared current", folder: "shared-current-direct-v1", manifest: "shared-current-direct-v1-manifest.json", expected: 206 },
 ];
 const directSummary = {};

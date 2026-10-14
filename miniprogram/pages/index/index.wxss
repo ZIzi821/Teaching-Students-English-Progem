@@ -490,10 +490,14 @@
 }
 
 .teacher-homework-dismiss {
-  padding: 8rpx 4rpx;
-  color: #39765d;
+  padding: 10rpx 16rpx;
+  border: 2rpx solid #4c8a70;
+  border-radius: 999rpx;
+  color: #276248;
+  background: #e5f4ec;
   font-size: 22rpx;
-  font-weight: 700;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .teacher-homework-notice-item {
@@ -539,9 +543,18 @@
 
 .teacher-homework-link {
   flex-shrink: 0;
-  color: #3f8065;
+  padding: 10rpx 16rpx;
+  border-radius: 999rpx;
+  color: #ffffff;
+  background: #4f9275;
+  box-shadow: 0 5rpx 12rpx rgba(55, 116, 88, 0.18);
   font-size: 22rpx;
-  font-weight: 600;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.notice-action-pressed {
+  opacity: 0.72;
 }
 
 .actions {

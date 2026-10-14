@@ -3,7 +3,7 @@
   "voice": "Microsoft Zira Desktop - English (United States)",
   "format": "16kHz 16-bit mono WAV",
   "gapMs": 120,
-  "total": 1348,
+  "total": 1350,
   "spriteCount": 2,
   "sprites": [
     {
@@ -15571,6 +15571,30 @@
       "directDurationMs": 1575,
       "directBytes": 50446,
       "directSha256": "56ec3dfb37755b3933cea95bbbb254a6a974c22b9926657fa601ad105d0424ec"
+    },
+    {
+      "key": "informal",
+      "word": "informal",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/308-informal.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/308-informal.wav",
+      "directDurationMs": 1635,
+      "directBytes": 52366,
+      "directSha256": "2514acf3e8d33f54b5c8e537ef235735357b5274767b28206634c267d64b9708"
+    },
+    {
+      "key": "keep to",
+      "word": "keep to",
+      "spriteId": "",
+      "startMs": 0,
+      "durationMs": 0,
+      "directFileId": "cloud://cloud1-d0gg6whoj379ba8b8.636c-cloud1-d0gg6whoj379ba8b8-1448212822/vocabulary-audio/yilin-2024-7a-direct-v1/309-keep-to.wav",
+      "directCloudPath": "vocabulary-audio/yilin-2024-7a-direct-v1/309-keep-to.wav",
+      "directDurationMs": 1565,
+      "directBytes": 50126,
+      "directSha256": "d8748e697423bda1d1411f1299daf7b62124f41cd6ab006c6b55e8d02f4093ca"
     }
   ]
 }
