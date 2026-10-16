@@ -204,6 +204,18 @@ const isStudentLessonEvent = (event = {}) => (
   event.eventType === "lesson_booking" || event.eventType === "fixed_student_lesson"
 );
 
+const isStudentScheduleEventVisible = (event = {}, viewerStudentId = "", visibleStudentIds = []) => {
+  if (!isStudentLessonEvent(event)) return false;
+  const eventStudentId = String(event.studentId || "");
+  const viewerId = String(viewerStudentId || "");
+  if (!eventStudentId) return false;
+  if (eventStudentId === viewerId) return true;
+  const visibleIds = visibleStudentIds instanceof Set
+    ? visibleStudentIds
+    : new Set((visibleStudentIds || []).map((item) => String(item || "")));
+  return visibleIds.has(eventStudentId);
+};
+
 const buildDefaultStudentScheduleEvents = (students = []) => {
   const studentByName = new Map();
   (students || []).filter(isStudentBookingEnabled).forEach((student) => {
@@ -300,6 +312,39 @@ const decorateEvent = (event = {}) => ({
   durationMinutes: Math.max(0, Number(event.endMinute) - Number(event.startMinute)),
 });
 
+const buildStudentScheduleViewEvent = (event = {}, student = {}) => {
+  const decorated = decorateEvent(event);
+  const isOwn = isStudentLessonEvent(decorated)
+    && String(decorated.studentId || "") === String(student._id || "");
+  const studentName = String(
+    decorated.studentNameSnapshot
+    || (isOwn && (student.name || student.nickname))
+    || "同学"
+  ).trim();
+  return {
+    _id: decorated._id,
+    eventType: decorated.eventType,
+    weekday: decorated.weekday,
+    startMinute: decorated.startMinute,
+    endMinute: decorated.endMinute,
+    startTime: decorated.startTime,
+    endTime: decorated.endTime,
+    timeLabel: decorated.timeLabel,
+    durationMinutes: decorated.durationMinutes,
+    title: isOwn
+      ? decorated.title || `${student.name || "我的"}课程`
+      : decorated.publicTitle || `${studentName}英语课`,
+    note: isOwn ? String(decorated.note || "") : "",
+    studentId: isOwn ? decorated.studentId : "",
+    studentName,
+    isOwn,
+    colorKey: decorated.colorKey || (isOwn ? getStudentColorKey(student) : "sage"),
+    version: Number(decorated.version) || 1,
+    canEdit: false,
+    canCancel: false,
+  };
+};
+
 const buildTeacherScheduleActivities = ({
   events = [],
   students = [],
@@ -356,6 +401,7 @@ module.exports = {
   STUDENT_COLOR_KEYS,
   WEEKDAY_LABELS,
   assignStudentColorKeys,
+  buildStudentScheduleViewEvent,
   buildDefaultStudentScheduleEvents,
   buildBookingRange,
   buildTeacherScheduleActivities,
@@ -366,6 +412,7 @@ module.exports = {
   getDefaultBookingDurationMinutes,
   isStudentBookingEnabled,
   isStudentLessonEvent,
+  isStudentScheduleEventVisible,
   isWeekdayBookingOpen,
   getStudentColorKey,
   normalizeClosedWeekdays,

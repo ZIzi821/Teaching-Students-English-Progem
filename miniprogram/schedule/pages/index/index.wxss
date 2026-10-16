@@ -309,6 +309,7 @@
 .schedule-event-actionable { box-shadow: 0 6rpx 16rpx rgba(59, 70, 60, 0.13); }
 .event-time { font-size: 20rpx; font-weight: 800; }
 .event-title { overflow: hidden; margin-top: 2rpx; font-size: 23rpx; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+.event-own-badge { display: inline-flex; margin-left: 8rpx; padding: 2rpx 8rpx; border-radius: 999rpx; color: #ffffff; background: rgba(50, 109, 86, 0.82); font-size: 16rpx; vertical-align: 3rpx; }
 .event-note { overflow: hidden; color: rgba(36, 59, 49, 0.72); font-size: 18rpx; text-overflow: ellipsis; white-space: nowrap; }
 .event-action { position: absolute; right: 12rpx; bottom: 7rpx; font-size: 16rpx; opacity: 0.75; }
 

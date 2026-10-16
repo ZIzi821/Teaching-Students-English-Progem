@@ -13,8 +13,10 @@ const pageMarkup = fs.readFileSync(
 );
 assert(pageMarkup.includes("currentQuestion.answerMode === 'choice'"));
 assert(pageMarkup.includes("currentQuestion.feedbackAnswer"));
+assert(pageMarkup.includes("letter-word") && pageMarkup.includes("填满后自动判断"));
 assert(pageScript.includes("answerMode: question.answerMode"));
 assert(pageScript.includes("question.answerMode, isCorrect"));
+assert(pageScript.includes("normalizeLetterCompletionInput") && pageScript.includes("shouldAutoJudge"));
 
 const words = Array.from({ length: 8 }, (_, index) => ({
   key: `word-${index}`,
@@ -67,6 +69,9 @@ const letterInput = questions.find((item) => (
 assert(letterInput.promptHint.includes("只填写"));
 assert(letterInput.promptHint.includes("不要输入完整单词"));
 assert.strictEqual(letterInput.inputPlaceholder, "只填缺少的字母");
+assert.strictEqual(letterInput.autoJudge, true);
+assert.strictEqual(letterInput.letterAnswerLength, letterInput.answer.length);
+assert.strictEqual(letterInput.letterSlots.filter((item) => item.hidden).length, letterInput.answer.length);
 assert.notStrictEqual(challenge.normalizeAnswer(letterInput.answer), challenge.normalizeAnswer(letterInput.word));
 const letterChoice = questions.find((item) => (
   item.taskType === "letterCompletion" && item.answerMode === "choice"
@@ -85,10 +90,19 @@ const fullWordInput = questions.find((item) => (
 assert.strictEqual(fullWordInput.answer, fullWordInput.word);
 assert.strictEqual(fullWordInput.typeLabel, "完整单词 · 填空题");
 assert.strictEqual(challenge.normalizeAnswer("  I'M  Ready "), "i'm ready");
-assert.deepStrictEqual(challenge.buildLetterCompletion("two"), {
-  prompt: "t _ o",
-  answer: "w",
-});
+const twoCompletion = challenge.buildLetterCompletion("two");
+assert.strictEqual(twoCompletion.prompt, "t _ o");
+assert.strictEqual(twoCompletion.answer, "w");
+assert.strictEqual(twoCompletion.slots.length, 3);
+assert.strictEqual(twoCompletion.slots[1].hidden, true);
+assert.strictEqual(twoCompletion.slots[1].answerIndex, 0);
+assert.strictEqual(challenge.normalizeLetterCompletionInput(" W!x ", 1), "W");
+const filledTwo = challenge.fillLetterCompletionSlots(twoCompletion.slots, "w");
+assert.strictEqual(filledTwo[1].displayValue, "w");
+assert.strictEqual(filledTwo[1].state, "filled");
+const wrongTwo = challenge.fillLetterCompletionSlots(twoCompletion.slots, "q", { answered: true, correct: false });
+assert.strictEqual(wrongTwo[1].displayValue, "q");
+assert.strictEqual(wrongTwo[1].state, "wrong");
 
 const coolingWeak = challenge.selectChallengeWords({
   todayWords: [],

@@ -195,32 +195,9 @@ const createWeeklyScheduleService = ({
     };
   };
 
-  const sanitizeStudentEvent = (event, student) => {
-    const decorated = schedule.decorateEvent(event);
-    const isOwn = schedule.isStudentLessonEvent(decorated)
-      && student
-      && decorated.studentId === student._id;
-    return {
-      _id: decorated._id,
-      eventType: decorated.eventType,
-      weekday: decorated.weekday,
-      startMinute: decorated.startMinute,
-      endMinute: decorated.endMinute,
-      startTime: decorated.startTime,
-      endTime: decorated.endTime,
-      timeLabel: decorated.timeLabel,
-      durationMinutes: decorated.durationMinutes,
-      title: isOwn
-        ? decorated.title || `${student.name || "我的"}课程`
-        : decorated.publicTitle || "老师有安排",
-      note: isOwn ? String(decorated.note || "") : "",
-      studentId: isOwn ? decorated.studentId : "",
-      colorKey: decorated.colorKey || (isOwn ? schedule.getStudentColorKey(student) : "teacher"),
-      version: Number(decorated.version) || 1,
-      canEdit: false,
-      canCancel: false,
-    };
-  };
+  const sanitizeStudentEvent = (event, student) => (
+    schedule.buildStudentScheduleViewEvent(event, student)
+  );
 
   const getPreviewStudentId = (data = {}) => String(data.previewStudentId || data.studentId || "").trim();
 
@@ -248,7 +225,7 @@ const createWeeklyScheduleService = ({
     const [allEvents, availabilityState, allStudents] = await Promise.all([
       loadAllEvents(),
       loadAvailabilityState(),
-      identity.role === "teacher" && !isTeacherPreview ? loadAllStudents() : Promise.resolve([]),
+      loadAllStudents(),
     ]);
     const activeEvents = allEvents.filter((item) => item.status === "active");
     const events = schedule.sortEvents(activeEvents);
@@ -260,6 +237,12 @@ const createWeeklyScheduleService = ({
         : item
     ));
     const canWrite = identity.role === "teacher" && !isTeacherPreview;
+    const visibleStudentIds = new Set(
+      allStudents
+        .filter(schedule.isStudentBookingEnabled)
+        .map((item) => String(item._id || ""))
+        .filter(Boolean)
+    );
     const students = identity.role === "teacher" && !isTeacherPreview
       ? allStudents
         .filter(schedule.isStudentBookingEnabled)
@@ -286,9 +269,11 @@ const createWeeklyScheduleService = ({
       events: identity.role === "teacher" && !isTeacherPreview
         ? displayEvents.map(sanitizeTeacherEvent)
         : displayEvents
-          .filter((item) => schedule.isStudentLessonEvent(item)
-            && student
-            && String(item.studentId || "") === String(student._id || ""))
+          .filter((item) => schedule.isStudentScheduleEventVisible(
+            item,
+            student && student._id,
+            visibleStudentIds
+          ))
           .map((item) => sanitizeStudentEvent(item, student)),
     };
   };

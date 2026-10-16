@@ -28,8 +28,16 @@
 
       <view class="card question-card">
         <view class="question-type">{{currentQuestion.promptHint}}</view>
-        <view class="question-prompt {{currentQuestion.direction === 'wordToMeaning' ? 'english-prompt' : ''}}">{{currentQuestion.prompt}}</view>
+        <view class="question-prompt {{currentQuestion.direction === 'wordToMeaning' ? 'english-prompt' : ''}}">{{currentQuestion.taskType === 'letterCompletion' ? currentQuestion.meaning : currentQuestion.prompt}}</view>
         <view class="question-meta" wx:if="{{currentQuestion.partOfSpeech}}">{{currentQuestion.partOfSpeech}}</view>
+
+        <view class="letter-word" wx:if="{{currentQuestion.taskType === 'letterCompletion'}}">
+          <view
+            class="letter-slot {{item.hidden ? 'letter-slot-gap' : 'letter-slot-fixed'}} {{item.state === 'correct' ? 'letter-slot-correct' : item.state === 'wrong' ? 'letter-slot-wrong' : item.state === 'filled' ? 'letter-slot-filled' : ''}} {{item.character === ' ' ? 'letter-slot-space' : ''}}"
+            wx:for="{{currentQuestion.letterSlots}}"
+            wx:key="id"
+          >{{item.displayValue}}</view>
+        </view>
 
         <view class="choice-list" wx:if="{{currentQuestion.answerMode === 'choice'}}">
           <view
@@ -44,17 +52,36 @@
           </view>
         </view>
 
-        <view class="spelling-area" wx:else>
+        <view class="spelling-area {{currentQuestion.taskType === 'letterCompletion' ? 'letter-spelling-area' : ''}}" wx:else>
           <input
-            class="spelling-input"
+            class="spelling-input letter-spelling-input"
+            style="width: {{currentQuestion.letterInputWidthRpx}}rpx;"
+            wx:if="{{currentQuestion.taskType === 'letterCompletion'}}"
             value="{{spellingAnswer}}"
             disabled="{{answered}}"
+            maxlength="{{currentQuestion.inputMaxLength}}"
+            focus="{{currentQuestion.autoFocusInput}}"
+            cursor-spacing="36"
+            placeholder="填入 {{currentQuestion.letterAnswerLength}} 个字母"
+            confirm-type="done"
+            bindinput="onSpellingInput"
+            bindconfirm="submitSpelling"
+          />
+          <input
+            class="spelling-input"
+            wx:else
+            value="{{spellingAnswer}}"
+            disabled="{{answered}}"
+            maxlength="{{currentQuestion.inputMaxLength}}"
+            focus="{{currentQuestion.autoFocusInput}}"
+            cursor-spacing="36"
             placeholder="{{currentQuestion.inputPlaceholder}}"
             confirm-type="done"
             bindinput="onSpellingInput"
             bindconfirm="submitSpelling"
           />
-          <view class="spelling-submit {{answered ? 'action-disabled' : ''}}" bindtap="submitSpelling">确认答案</view>
+          <view class="letter-auto-hint" wx:if="{{currentQuestion.taskType === 'letterCompletion' && !answered}}">填满后自动判断，不需要再点确认</view>
+          <view class="spelling-submit {{answered ? 'action-disabled' : ''}}" wx:if="{{currentQuestion.taskType !== 'letterCompletion'}}" bindtap="submitSpelling">确认答案</view>
         </view>
       </view>
 

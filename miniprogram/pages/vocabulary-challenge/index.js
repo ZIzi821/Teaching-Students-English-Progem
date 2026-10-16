@@ -132,12 +132,16 @@ Page({
 
   showQuestion(index) {
     const current = this.questions[index];
+    this.autoSubmittingAnswer = false;
     this.questionStartedAtMs = Date.now();
     this.setData({
       questionIndex: index,
       progressPercent: Math.round(index / this.questions.length * 100),
       currentQuestion: Object.assign({}, current, {
         options: current.options.map((item) => Object.assign({}, item, { state: "" })),
+        letterSlots: challenge.fillLetterCompletionSlots(current.letterSlots, ""),
+        letterInputWidthRpx: Math.min(360, Math.max(176, 116 + Number(current.letterAnswerLength || 0) * 46)),
+        autoFocusInput: current.answerMode === "input",
       }),
       spellingAnswer: "",
       answered: false,
@@ -157,22 +161,54 @@ Page({
   },
 
   onSpellingInput(e) {
-    this.setData({ spellingAnswer: String(e.detail.value || "") });
+    if (this.data.answered || this.data.saving) return this.data.spellingAnswer;
+    const question = this.data.currentQuestion || {};
+    const rawValue = String(e.detail.value || "");
+    if (question.taskType !== "letterCompletion") {
+      this.setData({ spellingAnswer: rawValue });
+      return rawValue;
+    }
+    const value = challenge.normalizeLetterCompletionInput(rawValue, question.letterAnswerLength);
+    const shouldAutoJudge = question.autoJudge === true
+      && value.length === Number(question.letterAnswerLength || 0)
+      && !this.autoSubmittingAnswer;
+    if (shouldAutoJudge) this.autoSubmittingAnswer = true;
+    this.setData({
+      spellingAnswer: value,
+      currentQuestion: Object.assign({}, question, {
+        letterSlots: challenge.fillLetterCompletionSlots(question.letterSlots, value),
+      }),
+    }, () => {
+      if (shouldAutoJudge) this.finishAnswer(value);
+    });
+    return value;
   },
 
   submitSpelling() {
     if (this.data.answered || this.data.saving) return;
-    if (!challenge.normalizeAnswer(this.data.spellingAnswer)) {
+    const question = this.data.currentQuestion || {};
+    const answer = question.taskType === "letterCompletion"
+      ? challenge.normalizeLetterCompletionInput(this.data.spellingAnswer, question.letterAnswerLength)
+      : this.data.spellingAnswer;
+    if (!challenge.normalizeAnswer(answer)) {
       wx.showToast({
-        title: this.data.currentQuestion.emptyAnswerMessage || "请先输入英文答案",
+        title: question.emptyAnswerMessage || "请先输入英文答案",
         icon: "none",
       });
       return;
     }
-    this.finishAnswer(this.data.spellingAnswer);
+    if (question.taskType === "letterCompletion" && answer.length < Number(question.letterAnswerLength || 0)) {
+      wx.showToast({
+        title: `还差 ${Number(question.letterAnswerLength || 0) - answer.length} 个字母`,
+        icon: "none",
+      });
+      return;
+    }
+    this.finishAnswer(answer);
   },
 
   finishAnswer(answer) {
+    if (this.data.answered || this.data.saving) return;
     const question = this.data.currentQuestion;
     const isCorrect = challenge.normalizeAnswer(answer) === challenge.normalizeAnswer(question.answer);
     const options = question.options.map((item) => {
@@ -193,7 +229,14 @@ Page({
       responseTimeMs: Math.max(0, Date.now() - Number(this.questionStartedAtMs || Date.now())),
     });
     this.setData({
-      currentQuestion: Object.assign({}, question, { options }),
+      currentQuestion: Object.assign({}, question, {
+        options,
+        autoFocusInput: false,
+        letterSlots: challenge.fillLetterCompletionSlots(question.letterSlots, answer, {
+          answered: true,
+          correct: isCorrect,
+        }),
+      }),
       answered: true,
       answerCorrect: isCorrect,
       answerMessage: isCorrect

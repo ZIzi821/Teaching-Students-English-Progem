@@ -108,7 +108,7 @@ const buildLetterCompletion = (value) => {
     if (/[a-z]/i.test(letter)) letterIndexes.push(index);
   });
   if (!letterIndexes.length) {
-    return { prompt: word, answer: "" };
+    return { prompt: word, answer: "", slots: [] };
   }
   const hideCount = Math.max(1, Math.min(4, Math.ceil(letterIndexes.length / 3)));
   const hidden = new Set();
@@ -116,13 +116,51 @@ const buildLetterCompletion = (value) => {
     const position = Math.floor((offset + 1) * letterIndexes.length / (hideCount + 1));
     hidden.add(letterIndexes[Math.min(letterIndexes.length - 1, position)]);
   }
+  let answerIndex = 0;
+  const slots = word.split("").map((letter, index) => {
+    const isHidden = hidden.has(index) && /[a-z]/i.test(letter);
+    const slot = {
+      id: `${index}-${isHidden ? "gap" : "fixed"}`,
+      hidden: isHidden,
+      character: isHidden ? "" : letter,
+      answerIndex: isHidden ? answerIndex : -1,
+    };
+    if (isHidden) answerIndex += 1;
+    return slot;
+  });
   return {
     prompt: word.split("").map((letter, index) => hidden.has(index) ? "_" : letter).join(" "),
     answer: word.split("").filter((letter, index) => hidden.has(index) && /[a-z]/i.test(letter)).join(""),
+    slots,
   };
 };
 
 const buildLetterGap = (value) => buildLetterCompletion(value).prompt;
+
+const normalizeLetterCompletionInput = (value, maxLength) => {
+  const letters = String(value || "").replace(/[^a-z]/gi, "");
+  const limit = Math.max(0, Number(maxLength) || letters.length);
+  return letters.slice(0, limit);
+};
+
+const fillLetterCompletionSlots = (slots, value, options = {}) => {
+  const safeSlots = Array.isArray(slots) ? slots : [];
+  const hiddenCount = safeSlots.filter((item) => item && item.hidden).length;
+  const letters = normalizeLetterCompletionInput(value, hiddenCount);
+  return safeSlots.map((item) => {
+    const slot = item || {};
+    if (!slot.hidden) {
+      return Object.assign({}, slot, {
+        displayValue: slot.character || "",
+        state: "fixed",
+      });
+    }
+    const displayValue = letters[Number(slot.answerIndex)] || "";
+    let state = displayValue ? "filled" : "empty";
+    if (options.answered === true) state = options.correct === true ? "correct" : "wrong";
+    return Object.assign({}, slot, { displayValue, state });
+  });
+};
 
 const buildLetterChoiceCandidates = (word, answer, pool) => {
   const normalizedAnswer = normalizeAnswer(answer).replace(/[^a-z]/g, "");
@@ -232,6 +270,10 @@ const buildChallengeQuestions = (selectedWords, allWords, random = Math.random) 
         : `${asText(word.word)} · ${asText(word.meaning)}`,
       answer,
       options,
+      letterSlots: type === "letterGap" ? letterCompletion.slots : [],
+      letterAnswerLength: type === "letterGap" ? answer.length : 0,
+      inputMaxLength: type === "letterGap" ? answer.length : 80,
+      autoJudge: type === "letterGap" && answerMode === "input",
     };
   });
 };
@@ -240,8 +282,10 @@ module.exports = {
   buildChallengeQuestions,
   buildLetterCompletion,
   buildLetterGap,
+  fillLetterCompletionSlots,
   isWeakWord,
   normalizeAnswer,
+  normalizeLetterCompletionInput,
   selectChallengeWords,
   shuffle,
   uniqueWords,

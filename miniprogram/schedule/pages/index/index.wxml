@@ -2,7 +2,7 @@
   <view class="preview-banner" wx:if="{{isTeacherPreview}}">
     <view>
       <view class="preview-title">正在查看 {{student.name}} 的学生日程</view>
-      <view class="preview-hint">界面与家长看到的一样，只显示这个孩子自己的课程，预览中的点击不会改动日程。</view>
+      <view class="preview-hint">界面与家长看到的一样，会显示当前在读学生的上课时间；预览中的点击不会改动日程。</view>
     </view>
     <view class="preview-action" bindtap="goBackToTeacher">返回教师端</view>
   </view>
@@ -11,7 +11,7 @@
     <view class="hero-kicker">WEEKLY SCHEDULE</view>
     <view class="hero-title">每周上课日程</view>
     <view class="hero-hint" wx:if="{{isTeacher}}">查看所有课程，并按学生维护每周固定上课日和时间。</view>
-    <view class="hero-hint" wx:elif="{{student}}">这里显示 {{student.name}} 每周什么时候上课；日程由朱老师统一维护。</view>
+    <view class="hero-hint" wx:elif="{{student}}">这里显示当前在读学生每周什么时候上课；日程由朱老师统一维护。</view>
   </view>
 
   <view class="card loading-card" wx:if="{{loading}}">正在整理本周日程…</view>
@@ -38,7 +38,7 @@
       <view>
         <view class="summary-title">{{selectedDayLabel}}</view>
         <view class="summary-hint" wx:if="{{isTeacher}}">本页显示每周固定课程和临时安排；固定课表可在下方按学生调整。</view>
-        <view class="summary-hint" wx:else>只显示当前孩子自己的课程，不再展示其他学生或老师的空闲时间。</view>
+        <view class="summary-hint" wx:else>可以查看同学们的上课时间；不会显示课程备注，也不能修改任何日程。</view>
       </view>
       <view class="summary-actions">
         <view class="schedule-add" wx:if="{{isTeacher && canWrite}}" bindtap="openForm">＋ 添加临时安排</view>
@@ -48,7 +48,7 @@
     <view class="legend-row">
       <view class="legend-item" wx:if="{{isTeacher}}"><view class="legend-dot legend-monash"></view>MONASH</view>
       <view class="legend-item" wx:if="{{isTeacher}}"><view class="legend-dot legend-teacher"></view>老师安排</view>
-      <view class="legend-item"><view class="legend-dot legend-student"></view>学生课程</view>
+      <view class="legend-item"><view class="legend-dot legend-student"></view>同学课程</view>
     </view>
 
     <view class="fixed-schedule-card" wx:if="{{isTeacher}}">
@@ -86,7 +86,7 @@
           bindtap="handleEventTap"
         >
           <view class="event-time">{{item.timeLabel}}</view>
-          <view class="event-title">{{item.title}}</view>
+          <view class="event-title">{{item.title}}<text class="event-own-badge" wx:if="{{isStudent && item.isOwn}}">我的</text></view>
           <view class="event-note" wx:if="{{item.note}}">{{item.note}}</view>
           <view class="event-action" wx:if="{{item.actionable}}">点按可编辑</view>
         </view>

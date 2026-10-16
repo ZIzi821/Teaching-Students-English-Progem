@@ -68,6 +68,61 @@ assert(fixedStudentEvents.every((item) => item.eventType === "fixed_student_less
 assert(fixedStudentEvents.every((item) => item.studentId === "molly" || item.studentId === "feng"));
 assert.strictEqual(schedule.isStudentLessonEvent({ eventType: "fixed_student_lesson" }), true);
 assert.strictEqual(schedule.isStudentLessonEvent({ eventType: "lesson_booking" }), true);
+assert.strictEqual(schedule.isStudentScheduleEventVisible(
+  { eventType: "fixed_student_lesson", studentId: "molly" },
+  "molly",
+  new Set(["xu"])
+), true);
+assert.strictEqual(schedule.isStudentScheduleEventVisible(
+  { eventType: "fixed_student_lesson", studentId: "xu" },
+  "molly",
+  new Set(["molly", "xu"])
+), true);
+assert.strictEqual(schedule.isStudentScheduleEventVisible(
+  { eventType: "fixed_student_lesson", studentId: "hidden" },
+  "molly",
+  new Set(["molly", "xu"])
+), false);
+assert.strictEqual(schedule.isStudentScheduleEventVisible(
+  { eventType: "teacher_busy", studentId: "xu" },
+  "molly",
+  new Set(["molly", "xu"])
+), false);
+const ownScheduleView = schedule.buildStudentScheduleViewEvent({
+  _id: "molly-monday",
+  eventType: "fixed_student_lesson",
+  studentId: "molly",
+  studentNameSnapshot: "Molly",
+  weekday: 1,
+  startMinute: 18 * 60,
+  endMinute: 18 * 60 + 45,
+  title: "Molly英语课",
+  note: "教师给本人的备注",
+  colorKey: "rose",
+}, { _id: "molly", name: "Molly" });
+assert.strictEqual(ownScheduleView.isOwn, true);
+assert.strictEqual(ownScheduleView.studentId, "molly");
+assert.strictEqual(ownScheduleView.note, "教师给本人的备注");
+const peerScheduleView = schedule.buildStudentScheduleViewEvent({
+  _id: "xu-saturday",
+  eventType: "fixed_student_lesson",
+  studentId: "xu",
+  studentNameSnapshot: "徐浩成",
+  weekday: 6,
+  startMinute: 20 * 60,
+  endMinute: 21 * 60,
+  title: "徐浩成英语课",
+  publicTitle: "徐浩成英语课",
+  note: "不应公开给其他学生",
+  colorKey: "sky",
+}, { _id: "molly", name: "Molly" });
+assert.strictEqual(peerScheduleView.isOwn, false);
+assert.strictEqual(peerScheduleView.title, "徐浩成英语课");
+assert.strictEqual(peerScheduleView.studentName, "徐浩成");
+assert.strictEqual(peerScheduleView.studentId, "");
+assert.strictEqual(peerScheduleView.note, "");
+assert.strictEqual(peerScheduleView.canEdit, false);
+assert.strictEqual(peerScheduleView.canCancel, false);
 assert.strictEqual(schedule.buildBookingRange({ name: "冯嘉文" }, 2, "19:30").endMinute, 1210);
 assert.strictEqual(schedule.buildBookingRange({ name: "徐浩成" }, 6, "20:00").endMinute, 1260);
 

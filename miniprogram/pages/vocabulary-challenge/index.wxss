@@ -127,6 +127,63 @@
   text-align: center;
 }
 
+.letter-word {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  margin-top: 28rpx;
+}
+
+.letter-slot {
+  display: flex;
+  width: 48rpx;
+  height: 66rpx;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+  color: #243f35;
+  font-size: 38rpx;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: lowercase;
+}
+
+.letter-slot-fixed {
+  border-bottom: 3rpx solid #cfc2b1;
+  border-radius: 0;
+}
+
+.letter-slot-gap {
+  border: 3rpx solid #8db9a4;
+  background: #f1f8f4;
+}
+
+.letter-slot-filled {
+  border-color: #4f8f73;
+  background: #e4f3eb;
+}
+
+.letter-slot-correct {
+  border-color: #4f8f73;
+  color: #24563f;
+  background: #dcefe5;
+}
+
+.letter-slot-wrong {
+  border-color: #c9785f;
+  color: #8d4632;
+  background: #fff0ea;
+}
+
+.letter-slot-space {
+  width: 20rpx;
+  border: 0;
+  background: transparent;
+}
+
 .choice-list {
   display: flex;
   flex-direction: column;
@@ -181,6 +238,12 @@
   margin-top: 34rpx;
 }
 
+.letter-spelling-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .spelling-input {
   box-sizing: border-box;
   width: 100%;
@@ -191,6 +254,25 @@
   color: #243f35;
   background: #fbf7ef;
   font-size: 32rpx;
+  text-align: center;
+}
+
+.letter-spelling-input {
+  height: 78rpx;
+  padding: 0 18rpx;
+  border-color: #8db9a4;
+  border-radius: 999rpx;
+  background: #ffffff;
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 8rpx;
+}
+
+.letter-auto-hint {
+  margin-top: 12rpx;
+  color: #6f776e;
+  font-size: 22rpx;
+  line-height: 1.45;
   text-align: center;
 }
 

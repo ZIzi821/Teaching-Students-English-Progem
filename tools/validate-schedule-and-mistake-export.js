@@ -62,9 +62,10 @@ assert(mistakeService.includes("withoutDocumentId(current)"), "Mistake export up
   assert(backend.includes(`case "${action}"`), `Missing schedule cloud action: ${action}`);
 });
 assert(
-  scheduleService.includes(".filter((item) => schedule.isStudentLessonEvent(item)")
-    && scheduleService.includes('String(item.studentId || "") === String(student._id || "")'),
-  "Parent schedule must filter out every other student and teacher event"
+  scheduleService.includes("isStudentScheduleEventVisible")
+    && scheduleService.includes("visibleStudentIds")
+    && scheduleService.includes("buildStudentScheduleViewEvent"),
+  "Student schedule must include current students' lessons through the redacted public view"
 );
 assert(scheduleService.includes('source: "teacher_booking"'), "Teacher-created student schedule source is missing");
 assert(scheduleService.includes("canManageEvent") && scheduleService.includes("expectedVersion"), "Schedule edit permissions or optimistic concurrency are missing");
@@ -74,7 +75,13 @@ assert(scheduleService.includes('enforceBookingOpen: false'), "Teacher-created t
 assert(scheduleService.includes("currentVersion !== expectedVersion"), "Schedule availability updates must reject stale versions");
 assert(schedulePageWxml.includes("每周上课日程"), "Schedule page heading is missing");
 assert(schedulePageWxml.includes("学生临时课程") && schedulePageWxml.includes("保存修改"), "Teacher temporary lesson or editable schedule UI is missing");
-assert(schedulePageWxml.includes("家长看到的一样") && schedulePageWxml.includes("只显示当前孩子自己的课程"), "Parent and teacher-preview read-only copy is missing");
+assert(
+  schedulePageWxml.includes("家长看到的一样")
+    && schedulePageWxml.includes("当前在读学生的上课时间")
+    && schedulePageWxml.includes("可以查看同学们的上课时间"),
+  "Student and teacher-preview shared timetable copy is missing"
+);
+assert(!schedulePageWxml.includes("只显示当前孩子自己的课程"), "Student timetable still claims that peer lessons are hidden");
 assert(!schedulePageWxml.includes("空白时段均可预约") && !schedulePageWxml.includes("预约上课"), "Parent schedule still suggests self-booking");
 assert(
   schedulePageWxml.includes("长期固定上课时间")
