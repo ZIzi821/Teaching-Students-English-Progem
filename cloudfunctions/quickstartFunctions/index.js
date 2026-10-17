@@ -3061,6 +3061,16 @@ const getEmptyVocabularySummary = (dailyGoal) => ({
   todayCount: 0,
   todayReviewedCount: 0,
   todayRemainingCount: 0,
+  memoryAlgorithmVersion: "english-adaptive-v1",
+  memoryReviewedCount: 0,
+  memoryRetentionPercent: null,
+  memoryAtRiskCount: 0,
+  memoryDueNowCount: 0,
+  memoryDueTomorrowCount: 0,
+  memoryDueInThreeDaysCount: 0,
+  memoryDueInSevenDaysCount: 0,
+  memoryNextReviewAtMs: 0,
+  memoryDisclaimer: "开始复习后，系统会根据真实反馈逐步安排间隔。",
 });
 
 const getVocabularyDailyStatsId = (studentId, learningDay) => (

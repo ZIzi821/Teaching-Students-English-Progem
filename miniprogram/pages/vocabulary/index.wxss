@@ -127,6 +127,108 @@
   text-align: center;
 }
 
+.memory-scheduler-card {
+  padding: 28rpx;
+  background: linear-gradient(145deg, #f4faf6 0%, #fffaf0 100%);
+}
+
+.memory-scheduler-head,
+.memory-retention-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.memory-scheduler-head .section-hint {
+  margin-bottom: 0;
+}
+
+.memory-scheduler-badge {
+  flex-shrink: 0;
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  color: #356f57;
+  background: #dff0e7;
+  font-size: 21rpx;
+  font-weight: 800;
+}
+
+.memory-retention-row {
+  align-items: flex-end;
+  margin-top: 24rpx;
+  padding: 22rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.memory-retention-value {
+  color: #2f7458;
+  font-size: 54rpx;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.memory-retention-label,
+.memory-load-label {
+  margin-top: 8rpx;
+  color: #7a7065;
+  font-size: 21rpx;
+}
+
+.memory-risk-copy {
+  max-width: 390rpx;
+  color: #665c52;
+  font-size: 22rpx;
+  line-height: 1.55;
+  text-align: right;
+}
+
+.memory-load-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10rpx;
+  margin-top: 16rpx;
+}
+
+.memory-load-item {
+  min-width: 0;
+  padding: 18rpx 6rpx;
+  border-radius: 16rpx;
+  background: #ffffff;
+  text-align: center;
+}
+
+.memory-load-value {
+  color: #8b6531;
+  font-size: 32rpx;
+  font-weight: 900;
+}
+
+.memory-empty {
+  margin-top: 22rpx;
+  padding: 22rpx;
+  border-radius: 18rpx;
+  color: #6f655b;
+  background: rgba(255, 255, 255, 0.74);
+  font-size: 23rpx;
+  line-height: 1.6;
+}
+
+.memory-disclaimer {
+  margin-top: 16rpx;
+  color: #8b8176;
+  font-size: 20rpx;
+  line-height: 1.5;
+}
+
+.word-memory-schedule {
+  margin-top: 10rpx;
+  color: #4f7e68;
+  font-size: 21rpx;
+  font-weight: 650;
+}
+
 .daily-goal-card,
 .teacher-daily-card {
   background: #fffdfa;

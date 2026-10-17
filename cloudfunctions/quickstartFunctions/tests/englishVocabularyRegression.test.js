@@ -273,9 +273,40 @@ const results = ["forgot", "hard", "known", "easy"].map((rating) => (
   vocabulary.buildReviewProgress({ stage: 2, reviewCount: 3 }, rating, now)
 ));
 assert(results.every((item) => item.reviewCount === 4));
+assert(results.every((item) => item.algorithmVersion === "english-adaptive-v1"));
 assert(results[0].nextReviewAtMs < results[1].nextReviewAtMs);
 assert(results[1].nextReviewAtMs < results[2].nextReviewAtMs);
 assert(results[2].nextReviewAtMs < results[3].nextReviewAtMs);
+assert.strictEqual(results[0].nextReviewAtMs, now + 10 * 60 * 1000);
+
+const dueEasyView = vocabulary.buildVocabularyView({
+  library,
+  settings: {
+    levelIds: ["0A"],
+    dailyGoal: 5,
+    includeMistakeWords: false,
+    learningOrder: "smart",
+  },
+  mistakes: [],
+  progressItems: [{
+    wordKey: beginnerWords[0].key,
+    stage: 5,
+    reviewCount: 2,
+    correctCount: 2,
+    isEasy: true,
+    lastResult: "easy",
+    lastReviewedAtMs: now - 15 * 24 * 60 * 60 * 1000,
+    nextReviewAtMs: now - 60 * 60 * 1000,
+  }],
+  isTeacher: false,
+  nowMs: now,
+  student: { name: "记忆调度学生" },
+});
+assert.strictEqual(dueEasyView.todayWords[0].key, beginnerWords[0].key);
+assert.strictEqual(dueEasyView.todayWords[0].isDue, true);
+assert.strictEqual(dueEasyView.summary.memoryReviewedCount, 1);
+assert.strictEqual(dueEasyView.summary.memoryDueNowCount, 1);
+assert(Number.isInteger(dueEasyView.summary.memoryRetentionPercent));
 
 assert.notStrictEqual(
   frenchContent.normalizeFrenchCanonical("ou"),

@@ -229,7 +229,7 @@ Page({
       return;
     }
     if (this.data.readOnly) {
-      this.finishRating(result, word, false);
+      this.finishRating(result, word, false, null);
       return;
     }
     if (!this.data.canReview) return;
@@ -247,7 +247,7 @@ Page({
     }).then((res) => {
       const response = res.result || {};
       if (!response.success) throw new Error(response.message || "暂时无法保存学习结果");
-      this.finishRating(result, word, true);
+      this.finishRating(result, word, true, response);
     }).catch((err) => {
       console.error(err);
       wx.showToast({ title: getFriendlyCloudErrorMessage(err, "保存失败，请重试"), icon: "none" });
@@ -256,7 +256,7 @@ Page({
     });
   },
 
-  finishRating(result, word, saved) {
+  finishRating(result, word, saved, schedule) {
     const resultCounts = Object.assign({}, this.data.resultCounts, {
       [result]: Number(this.data.resultCounts[result] || 0) + 1,
     });
@@ -269,11 +269,12 @@ Page({
     }
     const nextIndex = this.data.currentIndex + 1;
     const sessionDone = nextIndex >= words.length;
+    const scheduleHint = this.formatNextReviewHint(schedule && schedule.nextReviewAtMs);
     const feedback = {
-      forgot: "没关系，本轮后面再见一次",
-      hard: "已放到本轮后面再练一次",
-      known: "记住了，继续下一个",
-      easy: "很熟练，之后减少出现",
+      forgot: scheduleHint || "本轮后面再见一次",
+      hard: scheduleHint || "已缩短复习间隔",
+      known: scheduleHint || "已安排下次复习",
+      easy: scheduleHint || "已降低出现频率",
     };
     wx.showToast({
       title: this.data.readOnly ? "预览选择，不保存进度" : feedback[result],
@@ -295,6 +296,20 @@ Page({
     if (saved && sessionDone && typeof wx.vibrateShort === "function") {
       wx.vibrateShort({ type: "light" });
     }
+  },
+
+  formatNextReviewHint(nextReviewAtMs) {
+    const target = Number(nextReviewAtMs || 0);
+    if (!target) return "";
+    const remainingMs = Math.max(0, target - Date.now());
+    if (remainingMs < 60 * 60 * 1000) {
+      return `${Math.max(1, Math.ceil(remainingMs / 60000))} 分钟后复习`;
+    }
+    if (remainingMs < 24 * 60 * 60 * 1000) {
+      return `${Math.max(1, Math.ceil(remainingMs / 3600000))} 小时后复习`;
+    }
+    const days = Math.max(1, Math.ceil(remainingMs / (24 * 60 * 60 * 1000)));
+    return days === 1 ? "明天复习" : `${days} 天后复习`;
   },
 
   initPronunciationPlayer() {

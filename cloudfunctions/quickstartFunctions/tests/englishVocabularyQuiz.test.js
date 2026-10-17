@@ -55,6 +55,9 @@ const progress = vocabulary.buildQuizProgress(
   nowMs
 );
 assert.strictEqual(progress.stage, 3);
+assert.strictEqual(progress.algorithmVersion, "english-adaptive-v1");
+assert.strictEqual(progress.lastQuizChangedMemorySchedule, true);
+assert.strictEqual(progress.reviewCount, 4);
 const sameDay = vocabulary.buildQuizProgress(
   progress,
   { correct: true, questionType: "spelling", learningDay: 123 },
@@ -68,6 +71,8 @@ const choice = vocabulary.buildQuizProgress(
 );
 assert.strictEqual(choice.stage, 2, "choice questions must not raise the SRS stage");
 assert.strictEqual(choice.lastQuizAnswerMode, "choice");
+assert.strictEqual(choice.lastQuizChangedMemorySchedule, false);
+assert.strictEqual(choice.reviewCount, 0, "a correct choice must not create a strong memory review");
 const letterChoice = vocabulary.buildQuizProgress(
   { stage: 2 },
   { correct: true, questionType: "letterGap", answerMode: "choice", learningDay: 123 },
@@ -75,6 +80,7 @@ const letterChoice = vocabulary.buildQuizProgress(
 );
 assert.strictEqual(letterChoice.stage, 2, "letter-completion choices must not raise the SRS stage");
 assert.strictEqual(letterChoice.lastQuizAnswerMode, "choice");
+assert.strictEqual(letterChoice.lastQuizChangedMemorySchedule, false);
 const letterInput = vocabulary.buildQuizProgress(
   { stage: 2 },
   { correct: true, questionType: "letterGap", answerMode: "input", learningDay: 123 },
@@ -82,6 +88,16 @@ const letterInput = vocabulary.buildQuizProgress(
 );
 assert.strictEqual(letterInput.stage, 3, "typed missing letters should count as active recall");
 assert.strictEqual(letterInput.lastQuizAnswerMode, "input");
+assert.strictEqual(letterInput.lastQuizChangedMemorySchedule, true);
+assert.strictEqual(letterInput.reviewCount, 1);
+const wrongChoice = vocabulary.buildQuizProgress(
+  { stage: 2, reviewCount: 2, lastReviewedAtMs: nowMs - 86400000, nextReviewAtMs: nowMs },
+  { correct: false, questionType: "wordToMeaning", answerMode: "choice", learningDay: 123 },
+  nowMs
+);
+assert.strictEqual(wrongChoice.lastQuizChangedMemorySchedule, true);
+assert.strictEqual(wrongChoice.lastResult, "quizWrong");
+assert.strictEqual(wrongChoice.nextReviewAtMs, nowMs + 10 * 60 * 1000);
 assert.strictEqual(vocabulary.normalizeQuizAnswerMode("meaningToWord", ""), "choice");
 assert.strictEqual(vocabulary.normalizeQuizAnswerMode("spelling", ""), "input");
 

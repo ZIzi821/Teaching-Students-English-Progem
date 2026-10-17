@@ -51,19 +51,19 @@
         <view class="rating-grid">
           <view class="rating-button rating-forgot {{reviewing ? 'rating-disabled' : ''}}" data-result="forgot" bindtap="rateWord">
             <view class="rating-title">没记住</view>
-            <view class="rating-note">本轮再出现</view>
+            <view class="rating-note">优先重新出现</view>
           </view>
           <view class="rating-button rating-hard {{reviewing ? 'rating-disabled' : ''}}" data-result="hard" bindtap="rateWord">
             <view class="rating-title">有点难</view>
-            <view class="rating-note">很快再练</view>
+            <view class="rating-note">缩短复习间隔</view>
           </view>
           <view class="rating-button rating-known {{reviewing ? 'rating-disabled' : ''}}" data-result="known" bindtap="rateWord">
             <view class="rating-title">记住了</view>
-            <view class="rating-note">之后复习</view>
+            <view class="rating-note">正常延长间隔</view>
           </view>
           <view class="rating-button rating-easy {{reviewing ? 'rating-disabled' : ''}}" data-result="easy" bindtap="rateWord">
             <view class="rating-title">太简单</view>
-            <view class="rating-note">减少出现</view>
+            <view class="rating-note">明显延长间隔</view>
           </view>
         </view>
       </view>
@@ -73,7 +73,7 @@
       <view class="completion-mark">✓</view>
       <view class="completion-title">这一轮背完了</view>
       <view class="completion-hint" wx:if="{{readOnly}}">老师预览已结束，没有修改学生记录。</view>
-      <view class="completion-hint" wx:else>没记牢的词已经重新安排，接下来用小测检查一下。</view>
+      <view class="completion-hint" wx:else>系统已经按刚才的记忆情况安排下次复习，接下来用小测检查一下。</view>
       <view class="result-summary">
         <view><text class="result-number">{{resultCounts.forgot}}</text><text>没记住</text></view>
         <view><text class="result-number">{{resultCounts.hard}}</text><text>有点难</text></view>

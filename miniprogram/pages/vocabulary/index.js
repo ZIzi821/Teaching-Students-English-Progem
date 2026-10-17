@@ -66,6 +66,15 @@ Page({
       mistakeWordCount: 0,
       weakCount: 0,
       easyCount: 0,
+      memoryReviewedCount: 0,
+      memoryRetentionPercent: null,
+      memoryAtRiskCount: 0,
+      memoryDueNowCount: 0,
+      memoryDueTomorrowCount: 0,
+      memoryDueInThreeDaysCount: 0,
+      memoryDueInSevenDaysCount: 0,
+      memoryNextReviewAtMs: 0,
+      memoryDisclaimer: "开始复习后，系统会根据真实反馈逐步安排间隔。",
     },
     activeTab: "all",
     wordTabs: WORD_TABS,
@@ -425,6 +434,10 @@ Page({
 
   prepareSummary(summary, todayWords, words) {
     const source = summary || {};
+    const rawRetention = source.memoryRetentionPercent;
+    const memoryRetentionPercent = rawRetention === null || rawRetention === undefined
+      ? null
+      : Math.max(0, Math.min(100, Number(rawRetention) || 0));
     return {
       todayCount: getFirstCount(
         [source.todayCount, source.todayTotal, source.todayRemaining, source.dueCount],
@@ -439,6 +452,17 @@ Page({
       easyCount: getFirstCount([source.easyCount], 0),
       todayReviewedCount: getFirstCount([source.todayReviewedCount], 0),
       todayRemainingCount: getFirstCount([source.todayRemainingCount], todayWords.length),
+      memoryReviewedCount: getFirstCount([source.memoryReviewedCount], 0),
+      memoryRetentionPercent,
+      memoryAtRiskCount: getFirstCount([source.memoryAtRiskCount], 0),
+      memoryDueNowCount: getFirstCount([source.memoryDueNowCount], 0),
+      memoryDueTomorrowCount: getFirstCount([source.memoryDueTomorrowCount], 0),
+      memoryDueInThreeDaysCount: getFirstCount([source.memoryDueInThreeDaysCount], 0),
+      memoryDueInSevenDaysCount: getFirstCount([source.memoryDueInSevenDaysCount], 0),
+      memoryNextReviewAtMs: Number(source.memoryNextReviewAtMs || 0),
+      memoryDisclaimer: String(
+        source.memoryDisclaimer || "开始复习后，系统会根据真实反馈逐步安排间隔。"
+      ),
     };
   },
 
@@ -521,6 +545,12 @@ Page({
       correctCount: Math.max(0, Number(source.correctCount) || 0),
       wrongCount: Math.max(0, Number(source.wrongCount) || 0),
       nextReviewAtMs: Number(source.nextReviewAtMs || 0),
+      estimatedRetentionPercent: source.estimatedRetentionPercent === null
+        || source.estimatedRetentionPercent === undefined
+        ? null
+        : Math.max(0, Math.min(100, Number(source.estimatedRetentionPercent) || 0)),
+      memoryState: String(source.memoryState || "new"),
+      memoryScheduleLabel: String(source.memoryScheduleLabel || ""),
       pronunciationFileId: String(source.pronunciationFileId || ""),
       pronunciationUrl: String(source.pronunciationUrl || ""),
       pronunciationStartMs: Math.max(0, Number(source.pronunciationStartMs) || 0),
@@ -529,7 +559,7 @@ Page({
       pronunciationDirectUrl: String(source.pronunciationDirectUrl || ""),
       pronunciationDirectDurationMs: Math.max(0, Number(source.pronunciationDirectDurationMs) || 0),
       progressLabel: source.isEasy === true
-        ? "太简单 · 已跳过"
+        ? source.isDue === true ? "熟悉词 · 到期复习" : "太简单 · 降低频率"
         : source.reviewedToday === true && source.isDue === false
           ? source.lastResult === "forgot" ? "稍后再复习" : "今日已完成"
         : String(source.progressLabel || "待学习"),
@@ -892,11 +922,14 @@ Page({
       .then((res) => {
         const result = res.result || {};
         if (!result.success) throw new Error(result.message || "暂时无法保存");
+        const nextReviewHint = this.formatNextReviewHint(result.nextReviewAtMs);
         const messages = {
-          forgot: "稍后再复习",
-          hard: this.data.activeTab === "mastered" ? "已重新加入学习" : "很快再练一次",
-          known: "记住了",
-          easy: "已跳过这个词",
+          forgot: nextReviewHint || "已优先安排复习",
+          hard: this.data.activeTab === "mastered"
+            ? "已重新加入学习"
+            : nextReviewHint || "已缩短复习间隔",
+          known: nextReviewHint || "已安排下次复习",
+          easy: nextReviewHint || "已降低出现频率",
         };
         wx.showToast({ title: messages[resultValue], icon: "none" });
         return this.loadVocabularyData();
@@ -908,6 +941,20 @@ Page({
       .finally(() => {
         this.setData({ reviewingWordKey: "" });
       });
+  },
+
+  formatNextReviewHint(nextReviewAtMs) {
+    const target = Number(nextReviewAtMs || 0);
+    if (!target) return "";
+    const remainingMs = Math.max(0, target - Date.now());
+    if (remainingMs < 60 * 60 * 1000) {
+      return `${Math.max(1, Math.ceil(remainingMs / 60000))} 分钟后复习`;
+    }
+    if (remainingMs < 24 * 60 * 60 * 1000) {
+      return `${Math.max(1, Math.ceil(remainingMs / 3600000))} 小时后复习`;
+    }
+    const days = Math.max(1, Math.ceil(remainingMs / (24 * 60 * 60 * 1000)));
+    return days === 1 ? "明天复习" : `${days} 天后复习`;
   },
 
   onPendingInput(e) {

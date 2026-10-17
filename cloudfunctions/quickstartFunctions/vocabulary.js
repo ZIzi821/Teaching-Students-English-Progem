@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const vocabularyAudioManifest = require("./data/vocabulary-audio-sprites.json");
+const englishMemoryScheduler = require("./englishMemoryScheduler");
 
 const VOCABULARY_CANDIDATES_VERSION = 3;
 const VOCABULARY_PROFILE_VERSION = 7;
@@ -10,15 +11,6 @@ const MAX_CANDIDATES_PER_MISTAKE = 40;
 const MAX_EXPLICIT_VOCABULARY_WORDS = 200;
 const LEARNING_DAY_OFFSET_MS = 8 * 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
-const SRS_INTERVALS_MS = [
-  10 * 60 * 1000,
-  24 * 60 * 60 * 1000,
-  3 * 24 * 60 * 60 * 1000,
-  7 * 24 * 60 * 60 * 1000,
-  14 * 24 * 60 * 60 * 1000,
-  30 * 24 * 60 * 60 * 1000,
-];
-
 const COMMON_STRUCTURE_WORDS = new Set([
   "a", "an", "the", "and", "or", "of", "to", "in", "on", "at", "for", "from", "by", "with",
   "as", "if", "then", "than", "this", "that", "these", "those", "there", "here", "it", "its",
@@ -508,6 +500,20 @@ const getProgressLabel = (stage) => {
   return "未学习";
 };
 
+const getMemoryScheduleLabel = ({ reviewCount, isDue, nextReviewAtMs }, nowMs = Date.now()) => {
+  if (!reviewCount) return "新词 · 尚未建立记忆间隔";
+  if (isDue || !nextReviewAtMs) return "现在复习";
+  const remainingMs = Math.max(0, nextReviewAtMs - nowMs);
+  if (remainingMs < 60 * 60 * 1000) {
+    return `约 ${Math.max(1, Math.ceil(remainingMs / (60 * 1000)))} 分钟后复习`;
+  }
+  if (remainingMs < DAY_MS) {
+    return `约 ${Math.max(1, Math.ceil(remainingMs / (60 * 60 * 1000)))} 小时后复习`;
+  }
+  const remainingDays = Math.max(1, Math.ceil(remainingMs / DAY_MS));
+  return remainingDays === 1 ? "明天复习" : `约 ${remainingDays} 天后复习`;
+};
+
 const isVocabularyWeakWord = (word) => {
   const source = word || {};
   if (source.isEasy === true) return false;
@@ -668,9 +674,12 @@ const buildVocabularyView = ({
   itemByKey.forEach((baseItem, key) => {
     const progress = progressByKey.get(key) || {};
     if (progress.excluded === true) return;
+    const memoryProgress = englishMemoryScheduler.normalizeProgress(progress, nowMs);
+    const memorySnapshot = englishMemoryScheduler.getMemorySnapshot(memoryProgress, nowMs);
     const stage = clampStage(progress.stage);
-    const nextReviewAtMs = Number(progress.nextReviewAtMs) || 0;
-    const lastReviewedAtMs = Number(progress.lastReviewedAtMs) || 0;
+    const nextReviewAtMs = Number(memorySnapshot.nextReviewAtMs) || 0;
+    const lastReviewedAtMs = Number(memorySnapshot.lastReviewedAtMs) || 0;
+    const reviewCount = Number(memorySnapshot.reviewCount || 0);
     const customMeaning = Object.prototype.hasOwnProperty.call(progress, "customMeaning")
       ? asText(progress.customMeaning)
       : "";
@@ -678,6 +687,7 @@ const buildVocabularyView = ({
       ? asText(progress.customPartOfSpeech)
       : "";
     const meaning = customMeaning || baseItem.meaning || "";
+    const isDue = reviewCount <= 0 || !nextReviewAtMs || nextReviewAtMs <= nowMs;
     const item = Object.assign({}, baseItem, {
       meaning,
       partOfSpeech: customPartOfSpeech || baseItem.partOfSpeech || "",
@@ -687,13 +697,23 @@ const buildVocabularyView = ({
       nextReviewAtMs,
       lastReviewedAtMs,
       lastResult: asText(progress.lastResult),
-      reviewCount: Number(progress.reviewCount || 0),
+      reviewCount,
       correctCount: Number(progress.correctCount || 0),
       wrongCount: Number(progress.wrongCount || 0),
       isEasy: progress.isEasy === true,
-      isDue: !nextReviewAtMs || nextReviewAtMs <= nowMs,
+      isDue,
       reviewedToday: lastReviewedAtMs > 0
         && Math.floor((lastReviewedAtMs + LEARNING_DAY_OFFSET_MS) / DAY_MS) === currentLearningDay,
+      algorithmVersion: memorySnapshot.algorithmVersion,
+      memoryState: memorySnapshot.state,
+      estimatedRetentionPercent: memorySnapshot.estimatedRetentionPercent,
+      stabilityDays: memorySnapshot.stabilityDays,
+      difficulty: memorySnapshot.difficulty,
+      lapses: memorySnapshot.lapses,
+      hardCount: memorySnapshot.hardCount,
+      currentIntervalDays: memorySnapshot.currentIntervalDays,
+      memoryPriorityScore: englishMemoryScheduler.getReviewPriorityScore(memoryProgress, nowMs),
+      memoryScheduleLabel: getMemoryScheduleLabel({ reviewCount, isDue, nextReviewAtMs }, nowMs),
     });
     if (!meaning) {
       if (isTeacher) pendingWords.push(item);
@@ -713,13 +733,20 @@ const buildVocabularyView = ({
   confirmedWords.sort(wordSort);
   pendingWords.sort(wordSort);
 
-  const studyWords = confirmedWords.filter((item) => !item.isEasy);
-  const dueWords = studyWords.filter((item) => item.isDue).sort((a, b) => {
-    const aNext = a.nextReviewAtMs || Number.MAX_SAFE_INTEGER;
-    const bNext = b.nextReviewAtMs || Number.MAX_SAFE_INTEGER;
-    if (aNext !== bNext) return aNext - bNext;
-    return wordSort(a, b);
-  });
+  const dueReviewWords = confirmedWords
+    .filter((item) => item.reviewCount > 0 && item.isDue)
+    .sort((a, b) => {
+      const priorityDiff = Number(b.memoryPriorityScore || 0) - Number(a.memoryPriorityScore || 0);
+      if (priorityDiff) return priorityDiff;
+      const aNext = a.nextReviewAtMs || 0;
+      const bNext = b.nextReviewAtMs || 0;
+      if (aNext !== bNext) return aNext - bNext;
+      return wordSort(a, b);
+    });
+  const newWords = confirmedWords
+    .filter((item) => item.reviewCount <= 0)
+    .sort(wordSort);
+  const dueWords = dueReviewWords.concat(newWords);
   const reviewedTodayWords = confirmedWords
     .filter((item) => item.reviewedToday)
     .sort((a, b) => a.lastReviewedAtMs - b.lastReviewedAtMs || wordSort(a, b));
@@ -729,6 +756,7 @@ const buildVocabularyView = ({
   const newDueWords = dueWords.filter((item) => !reviewedTodayKeys.has(item.key));
   const todayWords = retainedReviewedWords.concat(newDueWords.slice(0, remainingSlots));
   const todayReviewedCount = retainedReviewedWords.length;
+  const memoryOverview = englishMemoryScheduler.buildMemoryOverview(confirmedWords, nowMs);
   const summary = {
     totalCount: confirmedWords.length,
     totalWords: confirmedWords.length,
@@ -753,6 +781,16 @@ const buildVocabularyView = ({
     todayCount: todayWords.length,
     todayReviewedCount,
     todayRemainingCount: todayWords.filter((item) => item.isDue).length,
+    memoryAlgorithmVersion: memoryOverview.algorithmVersion,
+    memoryReviewedCount: memoryOverview.reviewedWordCount,
+    memoryRetentionPercent: memoryOverview.estimatedRetentionPercent,
+    memoryAtRiskCount: memoryOverview.atRiskCount,
+    memoryDueNowCount: memoryOverview.dueNowCount,
+    memoryDueTomorrowCount: memoryOverview.dueTomorrowCount,
+    memoryDueInThreeDaysCount: memoryOverview.dueInThreeDaysCount,
+    memoryDueInSevenDaysCount: memoryOverview.dueInSevenDaysCount,
+    memoryNextReviewAtMs: memoryOverview.nextReviewAtMs,
+    memoryDisclaimer: memoryOverview.disclaimer,
   };
 
   return {
@@ -773,18 +811,13 @@ const buildReviewProgress = (existing, result, nowMs = Date.now()) => {
   if (result === "forgot") nextStage = Math.max(0, currentStage - 2);
   if (result === "hard") nextStage = current.isEasy === true ? 2 : Math.max(0, currentStage);
   if (result === "easy") nextStage = 5;
-  const nextIntervalMs = result === "forgot"
-    ? SRS_INTERVALS_MS[0]
-    : result === "hard"
-      ? Math.max(30 * 60 * 1000, Math.floor(SRS_INTERVALS_MS[Math.max(0, nextStage)] / 2))
-      : result === "easy"
-        ? 90 * DAY_MS
-        : SRS_INTERVALS_MS[nextStage];
+  const scheduled = englishMemoryScheduler.scheduleReview(current, result, nowMs, {
+    source: "self_rating",
+  });
   const isCorrect = result === "known" || result === "easy";
-  return {
+  return Object.assign({}, scheduled, {
     stage: nextStage,
     status: getProgressLabel(nextStage),
-    reviewCount: Number(current.reviewCount || 0) + 1,
     correctCount: Number(current.correctCount || 0) + (isCorrect ? 1 : 0),
     wrongCount: Number(current.wrongCount || 0) + (result === "forgot" ? 1 : 0),
     streak: isCorrect
@@ -792,9 +825,7 @@ const buildReviewProgress = (existing, result, nowMs = Date.now()) => {
       : result === "hard" && current.isEasy !== true ? Number(current.streak || 0) : 0,
     lastResult: result,
     isEasy: result === "easy",
-    lastReviewedAtMs: nowMs,
-    nextReviewAtMs: nowMs + nextIntervalMs,
-  };
+  });
 };
 
 const normalizeQuizAnswerMode = (questionType, answerMode) => {
@@ -821,20 +852,25 @@ const buildQuizProgress = (existing, options = {}, nowMs = Date.now()) => {
     : correct
       ? currentStage
       : Math.max(0, currentStage - 1);
-  const nextIntervalMs = correct
-    ? SRS_INTERVALS_MS[nextStage]
-    : SRS_INTERVALS_MS[0];
-  return {
+  const shouldApplyMemorySchedule = !correct || (strongRecall && !alreadyAdvancedToday);
+  const scheduled = shouldApplyMemorySchedule
+    ? englishMemoryScheduler.scheduleReview(
+      current,
+      correct ? "known" : "forgot",
+      nowMs,
+      { source: correct ? "quiz_input" : `quiz_${answerMode}_wrong` }
+    )
+    : englishMemoryScheduler.normalizeProgress(current, nowMs);
+  return Object.assign({}, scheduled, {
     stage: nextStage,
     status: getProgressLabel(nextStage),
-    reviewCount: Number(current.reviewCount || 0) + 1,
     correctCount: Number(current.correctCount || 0) + (correct ? 1 : 0),
     wrongCount: Number(current.wrongCount || 0) + (correct ? 0 : 1),
     streak: correct ? Number(current.streak || 0) + 1 : 0,
-    lastResult: correct ? "quizCorrect" : "quizWrong",
+    lastResult: shouldApplyMemorySchedule
+      ? correct ? "quizCorrect" : "quizWrong"
+      : asText(current.lastResult),
     isEasy: false,
-    lastReviewedAtMs: nowMs,
-    nextReviewAtMs: nowMs + nextIntervalMs,
     quizCorrectCount: Number(current.quizCorrectCount || 0) + (correct ? 1 : 0),
     quizWrongCount: Number(current.quizWrongCount || 0) + (correct ? 0 : 1),
     lastQuizAtMs: nowMs,
@@ -844,7 +880,9 @@ const buildQuizProgress = (existing, options = {}, nowMs = Date.now()) => {
     lastQuizStageAdvancedLearningDay: correct && strongRecall && !alreadyAdvancedToday
       ? learningDay
       : Number(current.lastQuizStageAdvancedLearningDay || 0),
-  };
+    quizEvidenceCount: Number(current.quizEvidenceCount || 0) + 1,
+    lastQuizChangedMemorySchedule: shouldApplyMemorySchedule,
+  });
 };
 
 module.exports = {

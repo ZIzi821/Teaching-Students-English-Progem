@@ -93,6 +93,48 @@
         </view>
       </view>
 
+      <view class="card memory-scheduler-card">
+        <view class="memory-scheduler-head">
+          <view>
+            <view class="section-title">英语记忆调度</view>
+            <view class="section-hint">按照每个词的真实反馈，动态决定下次出现时间。</view>
+          </view>
+          <view class="memory-scheduler-badge">自适应</view>
+        </view>
+        <block wx:if="{{summary.memoryReviewedCount}}">
+          <view class="memory-retention-row">
+            <view>
+              <view class="memory-retention-value">{{summary.memoryRetentionPercent}}%</view>
+              <view class="memory-retention-label">当前预计保持率</view>
+            </view>
+            <view class="memory-risk-copy">
+              已建立间隔 {{summary.memoryReviewedCount}} 词
+              <text wx:if="{{summary.memoryAtRiskCount}}"> · {{summary.memoryAtRiskCount}} 词需优先关注</text>
+            </view>
+          </view>
+          <view class="memory-load-grid">
+            <view class="memory-load-item">
+              <view class="memory-load-value">{{summary.memoryDueNowCount}}</view>
+              <view class="memory-load-label">现在到期</view>
+            </view>
+            <view class="memory-load-item">
+              <view class="memory-load-value">{{summary.memoryDueTomorrowCount}}</view>
+              <view class="memory-load-label">明天前</view>
+            </view>
+            <view class="memory-load-item">
+              <view class="memory-load-value">{{summary.memoryDueInThreeDaysCount}}</view>
+              <view class="memory-load-label">3 天内</view>
+            </view>
+            <view class="memory-load-item">
+              <view class="memory-load-value">{{summary.memoryDueInSevenDaysCount}}</view>
+              <view class="memory-load-label">7 天内</view>
+            </view>
+          </view>
+        </block>
+        <view class="memory-empty" wx:else>完成第一次单词复习后，这里会出现个人复习节奏。</view>
+        <view class="memory-disclaimer">{{summary.memoryDisclaimer}}</view>
+      </view>
+
       <view class="card weekly-card">
         <view class="weekly-head">
           <view>
@@ -227,6 +269,7 @@
           <view class="word-text">{{item.word}}</view>
           <view class="word-level" wx:if="{{item.levelLabel}}">{{item.levelLabel}}<text wx:if="{{item.unitLabel}}"> · {{item.unitLabel}}</text></view>
           <view class="word-edition" wx:if="{{item.edition}}">{{item.edition}}</view>
+          <view class="word-memory-schedule" wx:if="{{item.memoryScheduleLabel}}">{{item.memoryScheduleLabel}}<text wx:if="{{item.estimatedRetentionPercent !== null}}"> · 预计保持 {{item.estimatedRetentionPercent}}%</text></view>
           <view class="meaning-hidden" wx:if="{{!item.meaningShown}}">
             <view class="meaning-question">?</view>
             <view>点一下查看意思</view>
