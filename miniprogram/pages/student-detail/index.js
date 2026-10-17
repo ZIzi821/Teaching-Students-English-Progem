@@ -469,6 +469,14 @@ Page({
     });
   },
 
+  goMemoryEvaluation() {
+    const student = this.data.student;
+    if (!this.data.isTeacher || !student || !student._id) return;
+    wx.navigateTo({
+      url: "/insights/pages/memory-evaluation/index?studentId=" + encodeURIComponent(student._id),
+    });
+  },
+
   goFrenchLearning() {
     const student = this.data.student;
     if (!student || !student.frenchLearningEnabled) return;

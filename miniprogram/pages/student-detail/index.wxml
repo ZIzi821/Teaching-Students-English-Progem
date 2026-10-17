@@ -167,6 +167,7 @@
         </view>
         <view class="ghost-btn overview-challenge" bindtap="goVocabularyChallenge">② 背完后做个性化小测</view>
         <view class="vocabulary-record-link" bindtap="goVocabulary">查词与查看学习记录 →</view>
+        <view class="vocabulary-record-link" wx:if="{{isTeacher}}" bindtap="goMemoryEvaluation">查看记忆算法评估 →</view>
       </view>
     </view>
 

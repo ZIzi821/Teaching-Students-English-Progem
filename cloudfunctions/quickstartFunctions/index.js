@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const appConfig = require("./config");
 const vocabulary = require("./vocabulary");
 const vocabularyQuiz = require("./vocabularyQuiz");
+const englishMemoryAnalytics = require("./englishMemoryAnalytics");
 const frenchLearning = require("./frenchLearning");
 const courseWorkflow = require("./courseWorkflow");
 const teacherTodos = require("./teacherTodos");
@@ -3043,6 +3044,27 @@ const loadAllVocabularyDocuments = async (collectionName, condition, orderByFiel
     if (items.length < pageSize) break;
   }
   return documents;
+};
+
+const getEnglishMemoryEvaluation = async (event) => {
+  await ensureTeacher();
+  await createOneCollection("vocabularyProgress");
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const progressItems = await loadAllVocabularyDocuments("vocabularyProgress", { studentId });
+  return {
+    success: true,
+    student: {
+      _id: studentId,
+      name: String(studentRes.data.name || "学生").slice(0, 40),
+      grade: String(studentRes.data.grade || "").slice(0, 40),
+      vocabularyEnabled: studentRes.data.vocabularyEnabled === true,
+    },
+    evaluation: englishMemoryAnalytics.buildMemoryEvaluation(progressItems),
+  };
 };
 
 const getEmptyVocabularySummary = (dailyGoal) => ({
@@ -6195,6 +6217,8 @@ exports.main = async (event) => {
         return await setVocabularyDailyGoal(event);
       case "getVocabularyData":
         return await getVocabularyData(event);
+      case "getEnglishMemoryEvaluation":
+        return await getEnglishMemoryEvaluation(event);
       case "getVocabularyCatalog":
         return await getVocabularyCatalog(event);
       case "reviewVocabularyWord":

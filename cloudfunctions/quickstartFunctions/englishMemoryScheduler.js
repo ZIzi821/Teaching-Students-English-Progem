@@ -230,6 +230,7 @@ const scheduleReview = (progress, rating, nowMs = Date.now(), metadata = {}) => 
     rating: normalizedRating,
   });
   const reviewEvent = {
+    algorithmVersion: ALGORITHM_VERSION,
     reviewedAtMs: safeNowMs,
     rating: normalizedRating,
     source: String(metadata.source || "self_rating").slice(0, 30),

@@ -74,7 +74,8 @@
       "name": "insights",
       "root": "insights",
       "pages": [
-        "pages/learning-radar/index"
+        "pages/learning-radar/index",
+        "pages/memory-evaluation/index"
       ]
     }
   ],
