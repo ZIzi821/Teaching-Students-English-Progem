@@ -9,6 +9,7 @@ const teacherTodos = require("./teacherTodos");
 const recordingFeedback = require("./recordingFeedback");
 const studentEngagement = require("./studentEngagement");
 const ketMock = require("./ketMock");
+const learningRadar = require("./learningRadar");
 const { createKetMockService } = require("./ketMockService");
 const followReading = require("./followReading");
 const { createFollowReadingService } = require("./followReadingService");
@@ -871,6 +872,12 @@ const sanitizeStudent = (student, includePrivate) => {
   };
   Object.assign(result, buildProgress(student));
   if (includePrivate) {
+    const learningPlanDefinition = learningRadar.getPlanForStudent(Object.assign({}, student, {
+      lessonTemplateKey: getStudentLessonTemplateKey(student),
+    }));
+    result.learningPlan = learningPlanDefinition
+      ? learningRadar.normalizeLearningPlan(student, learningPlanDefinition)
+      : null;
     result.accessCode = student.accessCode || "";
     result.studentOpenId = student.studentOpenId || "";
     result.studentOpenIds = getStudentOpenIds(student);
@@ -2816,6 +2823,122 @@ const setStudentLessonTemplate = async (event) => {
   return { success: true, studentId, lessonTemplateKey };
 };
 
+const getStudentLearningRadar = async (event) => {
+  await ensureTeacher();
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const student = Object.assign({}, studentRes.data, {
+    lessonTemplateKey: getStudentLessonTemplateKey(studentRes.data),
+  });
+  const plan = learningRadar.getPlanForStudent(student);
+  if (!plan) {
+    return {
+      success: true,
+      radar: {
+        available: false,
+        reason: "当前课程模板尚未配置阶段学习计划",
+      },
+    };
+  }
+  await Promise.all([
+    createOneCollection("vocabularyQuizSessions"),
+    createOneCollection("lessonSubmissions"),
+    createOneCollection("ketMockSessions"),
+  ]);
+  const [lessons, quizSessions, submissions, ketSessions, mistakes] = await Promise.all([
+    loadAllStudentDocuments("lessons", studentId),
+    loadAllStudentDocuments("vocabularyQuizSessions", studentId),
+    loadAllStudentDocuments("lessonSubmissions", studentId),
+    loadAllStudentDocuments("ketMockSessions", studentId),
+    loadAllStudentDocuments("mistakes", studentId),
+  ]);
+  return {
+    success: true,
+    radar: learningRadar.buildLearningRadar({
+      student,
+      lessons,
+      quizSessions,
+      submissions,
+      ketSessions,
+      mistakes,
+    }),
+  };
+};
+
+const updateStudentLearningPlan = async (event) => {
+  const teacherIdentity = await ensureTeacher();
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  const studentRes = await db.collection("students").doc(studentId).get();
+  if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const student = Object.assign({}, studentRes.data, {
+    lessonTemplateKey: getStudentLessonTemplateKey(studentRes.data),
+  });
+  const plan = learningRadar.getPlanForStudent(student);
+  if (!plan) throw createError("LEARNING_PLAN_UNAVAILABLE", "请先选择 Molly 或嘉文的课程记录模板");
+  const current = learningRadar.normalizeLearningPlan(student, plan);
+  const validStageIds = (plan.stages || []).map((stage) => stage.stageId);
+  const requestedStageId = String(data.currentStageId || current.currentStageId).trim();
+  if (!validStageIds.includes(requestedStageId)) {
+    throw createError("INVALID_LEARNING_STAGE", "请选择有效的学习阶段");
+  }
+  const stageChanged = requestedStageId !== current.currentStageId;
+  if (stageChanged && data.confirmStageChange !== true) {
+    throw createError("STAGE_CONFIRMATION_REQUIRED", "切换阶段前需要老师再次确认");
+  }
+  const targetStage = plan.stages.find((stage) => stage.stageId === requestedStageId);
+  const validTargetSkillIds = new Set((targetStage.skills || []).map((skill) => skill.skillId));
+  const requestedPins = Array.isArray(data.teacherPinnedSkillIds)
+    ? data.teacherPinnedSkillIds
+    : current.teacherPinnedSkillIds;
+  const teacherPinnedSkillIds = Array.from(new Set(requestedPins
+    .map((skillId) => String(skillId || "").trim())
+    .filter((skillId) => validTargetSkillIds.has(skillId))))
+    .slice(0, 12);
+  const changedAtMs = Date.now();
+  const stageHistory = current.stageHistory.slice();
+  if (stageChanged) {
+    stageHistory.push({
+      fromStageId: current.currentStageId,
+      toStageId: requestedStageId,
+      changedAtMs,
+    });
+  }
+  const nextLearningPlan = {
+    planKey: plan.planKey,
+    planVersion: learningRadar.LEARNING_PLAN_CONFIG.version,
+    currentStageId: requestedStageId,
+    stageStartedAtMs: stageChanged
+      ? changedAtMs
+      : current.stageStartedAtMs || changedAtMs,
+    teacherPinnedSkillIds,
+    stageHistory: stageHistory.slice(-20),
+  };
+  await db.collection("students").doc(studentId).update({
+    data: {
+      learningPlan: nextLearningPlan,
+      learningPlanUpdatedAt: db.serverDate(),
+      learningPlanUpdatedBy: teacherIdentity.openid || "",
+    },
+  });
+  return {
+    success: true,
+    studentId,
+    stageChanged,
+    learningPlan: nextLearningPlan,
+    currentStage: {
+      stageId: targetStage.stageId,
+      stageLabel: targetStage.stageLabel,
+      stageTitle: targetStage.stageTitle,
+      goal: targetStage.goal,
+    },
+  };
+};
+
 const setVocabularyDailyGoal = async (event) => {
   await ensureTeacher();
   const data = event.data || {};
@@ -3890,7 +4013,19 @@ const getNextLessonNo = async (event) => {
   };
 };
 
-const LESSON_OBSERVATION_STATUSES = ["独立完成", "提示后完成", "暂未掌握"];
+const LESSON_EVIDENCE_MODES = [
+  "speaking",
+  "listening",
+  "reading",
+  "writing",
+  "recognition",
+  "phonics",
+  "grammar",
+  "interaction",
+  "mixed",
+];
+const LESSON_PROMPT_TYPES = ["none", "visual", "verbal", "sentence_frame", "choice", "model", "mixed"];
+const LESSON_FOCUS_TYPES = Object.keys(learningRadar.FOCUS_LABELS);
 const RECORDING_PREPARATION_OPTIONS = [0, 3, 5, 10, 15];
 const HONG_KONG_OFFSET_MS = 8 * 60 * 60 * 1000;
 const HOMEWORK_REMINDER_HOUR = 18;
@@ -3926,16 +4061,75 @@ const normalizeHomeworkDueDays = (value, recordingTaskEnabled) => {
   return days;
 };
 
+const normalizeLessonObservationStatus = (value) => (
+  learningRadar.STATUS_DEFINITIONS[learningRadar.normalizeObservationStatus(value)].label
+);
+
 const normalizeLearningObservations = (items) => (Array.isArray(items) ? items : [])
   .slice(0, 20)
-  .map((item) => ({
-    content: normalizeLessonText(item && item.content, 200),
-    status: LESSON_OBSERVATION_STATUSES.includes(item && item.status)
-      ? item.status
-      : LESSON_OBSERVATION_STATUSES[0],
-    note: normalizeLessonText(item && item.note, 300),
-  }))
+  .map((item) => {
+    const status = normalizeLessonObservationStatus(item && item.status);
+    const defaultPromptType = status === "独立完成"
+      ? "none"
+      : status === "提示后完成" ? "verbal" : "mixed";
+    return {
+      skillId: normalizeLessonText(item && item.skillId, 100),
+      content: normalizeLessonText(item && item.content, 200),
+      status,
+      evidenceMode: LESSON_EVIDENCE_MODES.includes(item && item.evidenceMode)
+        ? item.evidenceMode
+        : "mixed",
+      promptType: LESSON_PROMPT_TYPES.includes(item && item.promptType)
+        ? item.promptType
+        : defaultPromptType,
+      note: normalizeLessonText(item && item.note, 300),
+    };
+  })
   .filter((item) => item.content);
+
+const normalizeLessonPlanFields = (data, student, existingLesson = null) => {
+  const lessonTemplateKey = LESSON_TEMPLATE_KEYS.includes(data.lessonTemplateKey)
+    ? data.lessonTemplateKey
+    : getStudentLessonTemplateKey(student);
+  const studentForPlan = Object.assign({}, student, { lessonTemplateKey });
+  const plan = learningRadar.getPlanForStudent(studentForPlan);
+  if (!plan) {
+    return {
+      lessonFocusType: "",
+      skillTargetIds: [],
+      learningPlanSnapshot: null,
+    };
+  }
+  const normalizedPlan = learningRadar.normalizeLearningPlan(studentForPlan, plan);
+  const allSkillIds = new Set(learningRadar.getAllSkills(plan).map((skill) => skill.skillId));
+  const hasFocusType = Object.prototype.hasOwnProperty.call(data, "lessonFocusType");
+  const hasSkillTargets = Object.prototype.hasOwnProperty.call(data, "skillTargetIds");
+  const requestedFocusType = String(
+    hasFocusType ? data.lessonFocusType : existingLesson && existingLesson.lessonFocusType || ""
+  ).trim();
+  const requestedSkillIds = hasSkillTargets
+    ? data.skillTargetIds
+    : existingLesson && existingLesson.skillTargetIds;
+  const existingSnapshot = existingLesson && existingLesson.learningPlanSnapshot;
+  return {
+    lessonFocusType: LESSON_FOCUS_TYPES.includes(requestedFocusType) ? requestedFocusType : "",
+    skillTargetIds: Array.from(new Set((Array.isArray(requestedSkillIds) ? requestedSkillIds : [])
+      .map((skillId) => String(skillId || "").trim())
+      .filter((skillId) => allSkillIds.has(skillId))))
+      .slice(0, 8),
+    learningPlanSnapshot: existingSnapshot && existingSnapshot.planKey === plan.planKey
+      ? {
+        planKey: plan.planKey,
+        planVersion: String(existingSnapshot.planVersion || normalizedPlan.planVersion),
+        stageId: String(existingSnapshot.stageId || normalizedPlan.currentStageId),
+      }
+      : {
+        planKey: plan.planKey,
+        planVersion: normalizedPlan.planVersion,
+        stageId: normalizedPlan.currentStageId,
+      },
+  };
+};
 
 const findOfficialKetSpeakingTask = (taskId) => KET_SPEAKING_TASKS.find((item) => item.id === taskId) || null;
 
@@ -4141,6 +4335,17 @@ const normalizeLessonRequestPayload = (data = {}, options = {}) => ({
   lessonNo: String(data.lessonNo || "").trim(),
   summary: String(data.summary || "").trim(),
   ...normalizeLessonWorkspacePayload(data, options),
+  lessonFocusType: LESSON_FOCUS_TYPES.includes(data.lessonFocusType) ? data.lessonFocusType : "",
+  skillTargetIds: Array.isArray(data.skillTargetIds)
+    ? Array.from(new Set(data.skillTargetIds.map((skillId) => String(skillId || "").trim()).filter(Boolean))).slice(0, 8)
+    : [],
+  learningPlanSnapshot: data.learningPlanSnapshot && typeof data.learningPlanSnapshot === "object"
+    ? {
+      planKey: normalizeLessonText(data.learningPlanSnapshot.planKey, 100),
+      planVersion: normalizeLessonText(data.learningPlanSnapshot.planVersion, 40),
+      stageId: normalizeLessonText(data.learningPlanSnapshot.stageId, 100),
+    }
+    : null,
   paperFileIds: Array.isArray(data.paperFileIds)
     ? data.paperFileIds.map((fileId) => String(fileId || "").trim()).filter(Boolean)
     : [],
@@ -4174,6 +4379,10 @@ const addLesson = async (event) => {
     }),
     { acceptDurationMinutes }
   );
+  Object.assign(lessonPayload, normalizeLessonPlanFields(
+    Object.assign({}, data, { lessonTemplateKey: requestedTemplateKey }),
+    targetStudentRes.data
+  ));
   if (!acceptDurationMinutes) delete lessonPayload.durationMinutes;
   if (!lessonPayload.title || !lessonPayload.lessonDate) {
     throw createError("INVALID_LESSON", "请填写学生、课程标题和日期");
@@ -4280,6 +4489,11 @@ const updateLessonWorkspace = async (event) => {
     Object.assign({}, data, { lessonTemplateKey: requestedTemplateKey }),
     { acceptDurationMinutes }
   );
+  Object.assign(workspace, normalizeLessonPlanFields(
+    Object.assign({}, data, { lessonTemplateKey: requestedTemplateKey }),
+    targetStudentRes.data,
+    currentLessonRes.data
+  ));
   if (!workspace.title) throw createError("INVALID_LESSON_TITLE", "请填写课程名称");
   await assertContentSafe({
     texts: [
@@ -4678,6 +4892,7 @@ const getLessonDetail = async (event) => {
     student: {
       _id: student._id,
       name: student.name || "学生",
+      lessonTemplateKey: getStudentLessonTemplateKey(student),
       lessonAccountingMode,
       progressUnit: lessonAccountingMode === "minute" ? "minute" : "lesson",
     },
@@ -5962,6 +6177,10 @@ exports.main = async (event) => {
         return await setEnglishCourseSettings(event);
       case "setStudentLessonTemplate":
         return await setStudentLessonTemplate(event);
+      case "getStudentLearningRadar":
+        return await getStudentLearningRadar(event);
+      case "updateStudentLearningPlan":
+        return await updateStudentLearningPlan(event);
       case "setVocabularyDailyGoal":
         return await setVocabularyDailyGoal(event);
       case "getVocabularyData":

@@ -69,6 +69,13 @@
       "pages": [
         "pages/index/index"
       ]
+    },
+    {
+      "name": "insights",
+      "root": "insights",
+      "pages": [
+        "pages/learning-radar/index"
+      ]
     }
   ],
   "window": {

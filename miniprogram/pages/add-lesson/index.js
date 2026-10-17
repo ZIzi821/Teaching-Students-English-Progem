@@ -33,6 +33,17 @@ const HOMEWORK_DUE_OPTIONS = [
   { value: 6, label: "6 天后截止" },
   { value: 7, label: "7 天后截止" },
 ];
+const LESSON_FOCUS_LABELS = {
+  speaking: "口语表达",
+  grammar: "语法运用",
+  input: "听读与表达",
+  ket: "KET 基础与复习",
+  foundation: "字母、数字与书写",
+  vocabulary: "主题词汇与听辨",
+  phonics: "拼读与认词",
+  oral: "句型口语",
+  reading: "短阅读与衔接",
+};
 
 function formatDate(date) {
   const year = date.getFullYear();
@@ -81,6 +92,11 @@ Page({
     followReadingResponseOptions: [3, 5, 8, 10, 15, 20],
     followReadingResponseIndex: 2,
     showLessonRecord: false,
+    learningPlanAvailable: false,
+    learningStageLabel: "",
+    learningFocusOptions: [{ value: "", label: "暂不标记课程类型" }],
+    learningFocusIndex: 0,
+    suggestedSkillLabel: "",
     form: {
       title: "",
       subject: "英语",
@@ -111,6 +127,8 @@ Page({
       followReadingContent: "",
       ketSpeakingTaskId: "",
       ketMockSetId: "",
+      lessonFocusType: "",
+      skillTargetIds: [],
     },
   },
 
@@ -162,6 +180,7 @@ Page({
       this.applyLessonTemplate(students[studentIndex], "", () => {
         this.updateLessonNoSuggestion();
         this.checkKetWeeklyStatus();
+        this.loadLearningPlanSuggestion();
       });
     });
   },
@@ -178,6 +197,7 @@ Page({
       this.applyLessonTemplate(student, "", () => {
         this.updateLessonNoSuggestion();
         this.checkKetWeeklyStatus();
+        this.loadLearningPlanSuggestion();
       });
     });
   },
@@ -232,6 +252,7 @@ Page({
     this.applyLessonTemplate(student, option.key, () => {
       this.updateLessonNoSuggestion();
       this.checkKetWeeklyStatus();
+      this.loadLearningPlanSuggestion();
     });
   },
 
@@ -242,6 +263,66 @@ Page({
     }
     this.setData({
       ["form." + field]: e.detail.value,
+    });
+  },
+
+  loadLearningPlanSuggestion() {
+    const student = this.data.students[this.data.studentIndex];
+    const requestId = (this.learningPlanRequestId || 0) + 1;
+    this.learningPlanRequestId = requestId;
+    if (!student || inferLessonTemplateKey(student) !== this.data.form.lessonTemplateKey) {
+      this.setData({
+        learningPlanAvailable: false,
+        learningStageLabel: "",
+        learningFocusOptions: [{ value: "", label: "暂不标记课程类型" }],
+        learningFocusIndex: 0,
+        suggestedSkillLabel: "",
+        "form.lessonFocusType": "",
+        "form.skillTargetIds": [],
+      });
+      return;
+    }
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "getStudentLearningRadar",
+        data: { studentId: student._id },
+      },
+    }).then((res) => {
+      if (requestId !== this.learningPlanRequestId) return;
+      const result = res.result || {};
+      const radar = result.radar || {};
+      if (!result.success || !radar.available) {
+        this.setData({ learningPlanAvailable: false });
+        return;
+      }
+      const focusValues = Array.from(new Set((radar.skills || []).map((skill) => skill.focusType).filter(Boolean)));
+      const learningFocusOptions = [{ value: "", label: "暂不标记课程类型" }]
+        .concat(focusValues.map((value) => ({ value, label: LESSON_FOCUS_LABELS[value] || value })));
+      const suggestedFocus = radar.prepSuggestion && radar.prepSuggestion.focusType || "";
+      const learningFocusIndex = Math.max(0, learningFocusOptions.findIndex((item) => item.value === suggestedFocus));
+      const suggestedSkillId = radar.prepSuggestion && radar.prepSuggestion.targetSkillId || "";
+      this.setData({
+        learningPlanAvailable: true,
+        learningStageLabel: `${radar.currentStage.stageLabel} · ${radar.currentStage.stageTitle}`,
+        learningFocusOptions,
+        learningFocusIndex,
+        suggestedSkillLabel: radar.prepSuggestion && radar.prepSuggestion.targetSkillLabel || "",
+        "form.lessonFocusType": (learningFocusOptions[learningFocusIndex] || {}).value || "",
+        "form.skillTargetIds": suggestedSkillId ? [suggestedSkillId] : [],
+      });
+    }).catch((err) => {
+      console.error(err);
+      if (requestId === this.learningPlanRequestId) this.setData({ learningPlanAvailable: false });
+    });
+  },
+
+  onLearningFocusChange(e) {
+    const index = Number(e.detail.value);
+    const option = this.data.learningFocusOptions[index] || this.data.learningFocusOptions[0];
+    this.setData({
+      learningFocusIndex: index,
+      "form.lessonFocusType": option.value || "",
     });
   },
 
@@ -553,6 +634,8 @@ Page({
       followReadingContent: form.followReadingContent,
       ketSpeakingTaskId: form.ketSpeakingTaskId,
       ketMockSetId: form.ketMockSetId,
+      lessonFocusType: form.lessonFocusType,
+      skillTargetIds: form.skillTargetIds,
       learningObservations: [],
       paperFileIds: [],
       requestId: this.lessonRequestId,

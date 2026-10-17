@@ -1,0 +1,178 @@
+{
+  "version": "2026.10.1",
+  "plans": [
+    {
+      "planKey": "molly_oral_ket",
+      "templateKey": "molly_oral_ket",
+      "label": "英语口语＋KET 衔接计划",
+      "lessonDurationMinutes": 45,
+      "dimensions": [
+        { "dimensionId": "oral_output", "label": "口语表达", "description": "从完整短句逐步发展到连续、有顺序的表达" },
+        { "dimensionId": "grammar_application", "label": "语法运用", "description": "把每周一个核心语法点真正用于口语和短写作" },
+        { "dimensionId": "input_extraction", "label": "听读提取", "description": "从短材料中找到人物、时间、地点和活动等关键信息" },
+        { "dimensionId": "pronunciation_interaction", "label": "发音互动", "description": "清楚朗读、听懂提问并自然回应同伴" },
+        { "dimensionId": "ket_task", "label": "KET 任务", "description": "逐步熟悉个人问答、图片表达、选择讨论与短写作" }
+      ],
+      "stages": [
+        {
+          "stageId": "molly_stage_1",
+          "stageLabel": "第 1 阶段",
+          "stageTitle": "基础句型与个人表达",
+          "goal": "能在少量提示下完成约 30 秒自我介绍，并介绍家人或喜好。",
+          "skills": [
+            { "skillId": "molly_s1_self_intro", "dimensionId": "oral_output", "label": "连续说出姓名、年龄和学校", "core": true, "weight": 1.2, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback"] },
+            { "skillId": "molly_s1_family_like", "dimensionId": "oral_output", "label": "用完整短句介绍家人或喜好", "core": true, "weight": 1.1, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback"] },
+            { "skillId": "molly_s1_be_have_like", "dimensionId": "grammar_application", "label": "正确使用 I am、I have、I like", "core": true, "weight": 1.2, "focusType": "grammar", "evidenceModes": ["teacher_observation", "ket_assessment"] },
+            { "skillId": "molly_s1_people_nouns", "dimensionId": "grammar_application", "label": "区分 he/she、be 动词及常见单复数", "core": false, "weight": 0.8, "focusType": "grammar", "evidenceModes": ["teacher_observation", "ket_assessment"] },
+            { "skillId": "molly_s1_short_input", "dimensionId": "input_extraction", "label": "从个人信息卡和短句中找到关键信息", "core": true, "weight": 1.1, "focusType": "input", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "molly_s1_clear_response", "dimensionId": "pronunciation_interaction", "label": "听懂问题并清楚地用完整短句回应", "core": true, "weight": 1.0, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback", "ket_assessment"] },
+            { "skillId": "molly_s1_ket_personal_qa", "dimensionId": "ket_task", "label": "完成 5–6 个 KET 风格个人信息问答", "core": true, "weight": 1.1, "focusType": "ket", "evidenceModes": ["teacher_observation", "ket_assessment"] }
+          ]
+        },
+        {
+          "stageId": "molly_stage_2",
+          "stageLabel": "第 2 阶段",
+          "stageTitle": "日常生活口语与情景交流",
+          "goal": "能围绕日常生活主题连续说 3–5 句，并完成简单邀请和回应。",
+          "skills": [
+            { "skillId": "molly_s2_daily_routine", "dimensionId": "oral_output", "label": "按顺序用 3–5 句介绍自己的一天", "core": true, "weight": 1.2, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback"] },
+            { "skillId": "molly_s2_scene_description", "dimensionId": "oral_output", "label": "描述房间、天气、穿着和正在进行的动作", "core": true, "weight": 1.1, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback"] },
+            { "skillId": "molly_s2_present_simple", "dimensionId": "grammar_application", "label": "在表达习惯时区分 I do 与 he/she does", "core": true, "weight": 1.2, "focusType": "grammar", "evidenceModes": ["teacher_observation", "ket_assessment"] },
+            { "skillId": "molly_s2_location_continuous", "dimensionId": "grammar_application", "label": "正确使用位置介词、there be 和现在进行时", "core": false, "weight": 0.9, "focusType": "grammar", "evidenceModes": ["teacher_observation", "ket_assessment"] },
+            { "skillId": "molly_s2_input_details", "dimensionId": "input_extraction", "label": "从作息表、天气和活动对话中提取关键信息", "core": true, "weight": 1.1, "focusType": "input", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "molly_s2_invite_respond", "dimensionId": "pronunciation_interaction", "label": "发出邀请并自然接受或礼貌拒绝", "core": true, "weight": 1.1, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback", "ket_assessment"] },
+            { "skillId": "molly_s2_ket_choice", "dimensionId": "ket_task", "label": "听短对话选图并说明自己的选择", "core": true, "weight": 1.0, "focusType": "ket", "evidenceModes": ["teacher_observation", "ket_assessment"] }
+          ]
+        },
+        {
+          "stageId": "molly_stage_3",
+          "stageLabel": "第 3 阶段",
+          "stageTitle": "KET 听读能力与口语任务衔接",
+          "goal": "能完成简短听读任务、4–5 句图片表达及基础 KET 口语任务。",
+          "skills": [
+            { "skillId": "molly_s3_picture_description", "dimensionId": "oral_output", "label": "按人物＋动作＋地点描述图片 4–5 句", "core": true, "weight": 1.2, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback", "ket_assessment"] },
+            { "skillId": "molly_s3_grammar_review", "dimensionId": "grammar_application", "label": "在表达中使用第三人称、疑问句、some/any 和介词", "core": true, "weight": 1.1, "focusType": "grammar", "evidenceModes": ["teacher_observation", "ket_assessment"] },
+            { "skillId": "molly_s3_short_reading", "dimensionId": "input_extraction", "label": "定位标志、短信、海报和邮件中的主要信息", "core": true, "weight": 1.2, "focusType": "input", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "molly_s3_listening_details", "dimensionId": "input_extraction", "label": "听出数字、日期、时间、价格、地点和活动", "core": true, "weight": 1.1, "focusType": "input", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "molly_s3_interaction", "dimensionId": "pronunciation_interaction", "label": "回应同伴并补充一条相关信息", "core": true, "weight": 1.0, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback", "ket_assessment"] },
+            { "skillId": "molly_s3_ket_part1", "dimensionId": "ket_task", "label": "用完整句完成 KET 口语 Part 1 问答", "core": true, "weight": 1.1, "focusType": "ket", "evidenceModes": ["teacher_observation", "ket_assessment"] },
+            { "skillId": "molly_s3_ket_part2", "dimensionId": "ket_task", "label": "表达喜好、提出建议并说明简单原因", "core": true, "weight": 1.1, "focusType": "ket", "evidenceModes": ["teacher_observation", "ket_assessment"] },
+            { "skillId": "molly_s3_short_writing", "dimensionId": "ket_task", "label": "先口头组织，再写 3–5 个连贯句子", "core": false, "weight": 0.8, "focusType": "ket", "evidenceModes": ["teacher_observation", "ket_assessment"] }
+          ]
+        },
+        {
+          "stageId": "molly_stage_4",
+          "stageLabel": "第 4 阶段",
+          "stageTitle": "综合表达与 KET 输出训练",
+          "goal": "能完成约 1 分钟综合表达、基础口语模拟和简短 KET 写作。",
+          "skills": [
+            { "skillId": "molly_s4_picture_story", "dimensionId": "oral_output", "label": "用顺序词讲出有开头、经过和结尾的图片故事", "core": true, "weight": 1.2, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback", "ket_assessment"] },
+            { "skillId": "molly_s4_one_minute", "dimensionId": "oral_output", "label": "在有限提示下完成约 1 分钟表达", "core": true, "weight": 1.2, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback", "ket_assessment"] },
+            { "skillId": "molly_s4_past_future", "dimensionId": "grammar_application", "label": "用常见过去式讲经历并用 going to 表达计划", "core": true, "weight": 1.1, "focusType": "grammar", "evidenceModes": ["teacher_observation", "ket_assessment"] },
+            { "skillId": "molly_s4_core_grammar", "dimensionId": "grammar_application", "label": "综合运用核心语法并减少基础错误", "core": true, "weight": 1.0, "focusType": "grammar", "evidenceModes": ["teacher_observation", "ket_assessment"] },
+            { "skillId": "molly_s4_integrated_input", "dimensionId": "input_extraction", "label": "从短文、对话、表格和活动安排中提取主要信息", "core": true, "weight": 1.1, "focusType": "input", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "molly_s4_natural_interaction", "dimensionId": "pronunciation_interaction", "label": "在模拟口语中清楚表达并自然回应", "core": true, "weight": 1.0, "focusType": "speaking", "evidenceModes": ["teacher_observation", "recording_feedback", "ket_assessment"] },
+            { "skillId": "molly_s4_ket_writing", "dimensionId": "ket_task", "label": "写清人物、时间、活动和简单原因的短留言或故事", "core": true, "weight": 1.1, "focusType": "ket", "evidenceModes": ["teacher_observation", "ket_assessment"] },
+            { "skillId": "molly_s4_mock_speaking", "dimensionId": "ket_task", "label": "完成个人问答、看图表达和同伴讨论", "core": true, "weight": 1.2, "focusType": "ket", "evidenceModes": ["teacher_observation", "ket_assessment"] }
+          ]
+        }
+      ]
+    },
+    {
+      "planKey": "feng_beginner",
+      "templateKey": "feng_beginner",
+      "label": "二年级英语阶段学习计划",
+      "lessonDurationMinutes": 40,
+      "dimensions": [
+        { "dimensionId": "foundation", "label": "字母数字书写", "description": "建立字母形状、名称、顺序、书写和数字数量的稳定对应" },
+        { "dimensionId": "vocabulary_listening", "label": "词汇听辨", "description": "听到能找、看到能说，并能把图片、实物和英文配对" },
+        { "dimensionId": "phonics_recognition", "label": "拼读认词", "description": "建立字母声音意识并尝试拼读简单 CVC 单词" },
+        { "dimensionId": "sentence_oral", "label": "句型口语", "description": "在提示下使用固定句型完成简短表达" },
+        { "dimensionId": "grammar_reading", "label": "语法短读", "description": "理解基础词序、书写习惯和短句大意" }
+      ],
+      "stages": [
+        {
+          "stageId": "feng_stage_0",
+          "stageLabel": "阶段 0",
+          "stageTitle": "复课回顾与基础诊断",
+          "goal": "区分已经掌握、提示后完成和暂时不会的字母与数字。",
+          "skills": [
+            { "skillId": "feng_s0_letters", "dimensionId": "foundation", "label": "随机听辨并指认大小写字母", "core": true, "weight": 1.2, "focusType": "foundation", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "feng_s0_numbers", "dimensionId": "foundation", "label": "把 one–ten 与数字和数量对应", "core": true, "weight": 1.1, "focusType": "foundation", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "feng_s0_routine", "dimensionId": "sentence_oral", "label": "听懂看老师、听指令、指卡和跟读", "core": true, "weight": 1.0, "focusType": "oral", "evidenceModes": ["teacher_observation"] }
+          ]
+        },
+        {
+          "stageId": "feng_stage_1",
+          "stageLabel": "第 1 阶段",
+          "stageTitle": "字母、数字与书写基础",
+          "goal": "稳定认出大部分字母和数字，并按四线三格正确书写。",
+          "skills": [
+            { "skillId": "feng_s1_letter_names", "dimensionId": "foundation", "label": "听到字母名后随机指认 A–Z", "core": true, "weight": 1.2, "focusType": "foundation", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "feng_s1_case_pair", "dimensionId": "foundation", "label": "完成常见大小写字母配对", "core": true, "weight": 1.1, "focusType": "foundation", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "feng_s1_order_writing", "dimensionId": "foundation", "label": "理解字母前后顺序并按规范书写", "core": true, "weight": 1.1, "focusType": "foundation", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "feng_s1_numbers", "dimensionId": "foundation", "label": "看数字说英文、听英文找 one–ten", "core": true, "weight": 1.0, "focusType": "foundation", "evidenceModes": ["teacher_observation"] }
+          ]
+        },
+        {
+          "stageId": "feng_stage_2",
+          "stageLabel": "第 2 阶段",
+          "stageTitle": "主题单词与听辨基础",
+          "goal": "在轻提示下完成听音找图、看图找词和简单跟读。",
+          "skills": [
+            { "skillId": "feng_s2_listen_point", "dimensionId": "vocabulary_listening", "label": "听到主题单词后找对图片或实物", "core": true, "weight": 1.2, "focusType": "vocabulary", "evidenceModes": ["teacher_observation", "quiz_choice"] },
+            { "skillId": "feng_s2_picture_word", "dimensionId": "vocabulary_listening", "label": "将图片、实物与英文词卡配对", "core": true, "weight": 1.1, "focusType": "vocabulary", "evidenceModes": ["teacher_observation", "quiz_choice"] },
+            { "skillId": "feng_s2_follow_say", "dimensionId": "sentence_oral", "label": "看到图片后愿意跟读并说出部分单词", "core": true, "weight": 1.0, "focusType": "oral", "evidenceModes": ["teacher_observation", "recording_feedback"] }
+          ]
+        },
+        {
+          "stageId": "feng_stage_3",
+          "stageLabel": "第 3 阶段",
+          "stageTitle": "自然拼读启蒙与单词认读",
+          "goal": "在教师带领下拼读部分简单 CVC 单词并认读已学主题词。",
+          "skills": [
+            { "skillId": "feng_s3_short_vowels", "dimensionId": "phonics_recognition", "label": "初步听辨 a、e、i、o、u 常见短音", "core": true, "weight": 1.1, "focusType": "phonics", "evidenceModes": ["teacher_observation", "quiz_input"] },
+            { "skillId": "feng_s3_cvc", "dimensionId": "phonics_recognition", "label": "在带领下拆音并拼读简单 CVC 单词", "core": true, "weight": 1.2, "focusType": "phonics", "evidenceModes": ["teacher_observation", "quiz_input"] },
+            { "skillId": "feng_s3_initial_final", "dimensionId": "phonics_recognition", "label": "听音找出常见首音或尾音字母", "core": true, "weight": 1.0, "focusType": "phonics", "evidenceModes": ["teacher_observation", "quiz_input"] },
+            { "skillId": "feng_s3_known_words", "dimensionId": "vocabulary_listening", "label": "结合词义、图片和发音认读已学词", "core": true, "weight": 1.0, "focusType": "vocabulary", "evidenceModes": ["teacher_observation", "quiz_choice", "quiz_input"] }
+          ]
+        },
+        {
+          "stageId": "feng_stage_4",
+          "stageLabel": "第 4 阶段",
+          "stageTitle": "简单句型与口语表达",
+          "goal": "在图片、词卡或教师提示下完成 2–3 句简单表达。",
+          "skills": [
+            { "skillId": "feng_s4_greeting_name", "dimensionId": "sentence_oral", "label": "完成问好并用 My name is… 介绍自己", "core": true, "weight": 1.1, "focusType": "oral", "evidenceModes": ["teacher_observation", "recording_feedback"] },
+            { "skillId": "feng_s4_like_this", "dimensionId": "sentence_oral", "label": "用 I like… 和 This is a… 做替换表达", "core": true, "weight": 1.2, "focusType": "oral", "evidenceModes": ["teacher_observation", "recording_feedback"] },
+            { "skillId": "feng_s4_have_can", "dimensionId": "sentence_oral", "label": "用 I have… 和 I can… 表达物品与能力", "core": true, "weight": 1.2, "focusType": "oral", "evidenceModes": ["teacher_observation", "recording_feedback"] }
+          ]
+        },
+        {
+          "stageId": "feng_stage_5",
+          "stageLabel": "第 5 阶段",
+          "stageTitle": "基础语法意识与短句理解",
+          "goal": "借助词卡拼出简单正确句子，并发现常见词序或形式问题。",
+          "skills": [
+            { "skillId": "feng_s5_word_order", "dimensionId": "grammar_reading", "label": "按正确顺序拼出基础英语句子", "core": true, "weight": 1.2, "focusType": "grammar", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "feng_s5_sentence_form", "dimensionId": "grammar_reading", "label": "注意句首大写、句末句号和 a/an", "core": true, "weight": 1.0, "focusType": "grammar", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "feng_s5_people_be", "dimensionId": "grammar_reading", "label": "区分 I/you/he/she 及 I am、He/She is", "core": true, "weight": 1.1, "focusType": "grammar", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "feng_s5_plural", "dimensionId": "grammar_reading", "label": "区分一个和多个物品的表达", "core": true, "weight": 1.0, "focusType": "grammar", "evidenceModes": ["teacher_observation"] }
+          ]
+        },
+        {
+          "stageId": "feng_stage_6",
+          "stageLabel": "第 6 阶段",
+          "stageTitle": "综合复习、短阅读与三年级衔接",
+          "goal": "分类回忆主题词，理解 2–3 句短文并适应基础听辨与选择题。",
+          "skills": [
+            { "skillId": "feng_s6_theme_review", "dimensionId": "vocabulary_listening", "label": "按主题回忆并使用已学词汇", "core": true, "weight": 1.1, "focusType": "vocabulary", "evidenceModes": ["teacher_observation", "quiz_choice", "quiz_input"] },
+            { "skillId": "feng_s6_short_reading", "dimensionId": "grammar_reading", "label": "圈出认识的词并理解 2–3 句短文大意", "core": true, "weight": 1.2, "focusType": "reading", "evidenceModes": ["teacher_observation"] },
+            { "skillId": "feng_s6_listening_test", "dimensionId": "vocabulary_listening", "label": "完成字母、数字、单词和简单句型听辨", "core": true, "weight": 1.1, "focusType": "vocabulary", "evidenceModes": ["teacher_observation", "quiz_choice"] },
+            { "skillId": "feng_s6_bridge_oral", "dimensionId": "sentence_oral", "label": "完成问好、自我介绍和常用课堂指令", "core": true, "weight": 1.0, "focusType": "oral", "evidenceModes": ["teacher_observation", "recording_feedback"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

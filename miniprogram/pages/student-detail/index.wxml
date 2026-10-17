@@ -57,6 +57,32 @@
       </view>
     </view>
 
+    <view class="card learning-radar-summary" wx:if="{{isTeacher && learningRadarAvailable && learningRadarSummary}}" bindtap="goLearningInsights">
+      <view class="learning-radar-summary-head">
+        <view>
+          <view class="learning-radar-eyebrow">学习雷达 · 当前阶段</view>
+          <view class="learning-radar-stage">{{learningRadarSummary.stageDisplay}}</view>
+        </view>
+        <view class="learning-radar-link">查看完整雷达 →</view>
+      </view>
+      <view class="learning-radar-goal">{{learningRadarSummary.stageGoal}}</view>
+      <view class="learning-radar-grid">
+        <view class="learning-radar-cell">
+          <view class="learning-radar-cell-label">证据覆盖</view>
+          <view class="learning-radar-cell-value">{{learningRadarSummary.evidenceCoverage}}</view>
+        </view>
+        <view class="learning-radar-cell">
+          <view class="learning-radar-cell-label">当前重点</view>
+          <view class="learning-radar-cell-value">{{learningRadarSummary.topPriorityLabel}}</view>
+        </view>
+      </view>
+      <view class="learning-radar-next">
+        <view class="learning-radar-next-label">下节课建议 · {{learningRadarSummary.nextLessonDurationMinutes}} 分钟</view>
+        <view class="learning-radar-next-title">{{learningRadarSummary.nextLessonTitle}}</view>
+      </view>
+      <view class="learning-radar-readiness">{{learningRadarSummary.readinessLabel}}</view>
+    </view>
+
     <view class="card progress-editor" wx:if="{{showProgressEditor}}">
       <view class="field" wx:if="{{student.progressUnit !== 'minute'}}">
         <view class="label">计划课时</view>

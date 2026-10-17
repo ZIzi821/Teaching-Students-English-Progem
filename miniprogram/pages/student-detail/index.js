@@ -59,6 +59,9 @@ Page({
     lessonTemplateSaving: false,
     lessonTemplateOptions: LESSON_TEMPLATE_OPTIONS,
     lessonTemplateIndex: 0,
+    learningRadarLoading: false,
+    learningRadarAvailable: false,
+    learningRadarSummary: null,
     mistakeLearningForm: {
       enabled: true,
     },
@@ -183,6 +186,7 @@ Page({
           mistakeStatusSegments: this.prepareMistakeStatusSegments(analytics),
           message: "",
         }, () => {
+          if (this.data.isTeacher) this.loadLearningRadar();
           if (!this.focusVocabularySettings || !this.data.isTeacher) return;
           this.focusVocabularySettings = false;
           wx.pageScrollTo({ selector: "#vocabulary-settings", duration: 250 });
@@ -198,6 +202,39 @@ Page({
           analytics: null,
         });
       });
+  },
+
+  loadLearningRadar() {
+    if (!this.data.isTeacher || !this.data.studentId || this.data.learningRadarLoading) return;
+    const requestedStudentId = this.data.studentId;
+    this.setData({ learningRadarLoading: true });
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "getStudentLearningRadar",
+        data: { studentId: requestedStudentId },
+      },
+    }).then((res) => {
+      if (this.data.studentId !== requestedStudentId) return;
+      const result = res.result || {};
+      if (!result.success) throw new Error(result.message || "学习雷达加载失败");
+      const radar = result.radar || {};
+      this.setData({
+        learningRadarAvailable: radar.available === true,
+        learningRadarSummary: radar.available ? radar.summary : null,
+      });
+    }).catch((err) => {
+      console.error(err);
+      if (this.data.studentId !== requestedStudentId) return;
+      this.setData({
+        learningRadarAvailable: false,
+        learningRadarSummary: null,
+      });
+    }).finally(() => {
+      if (this.data.studentId === requestedStudentId) {
+        this.setData({ learningRadarLoading: false });
+      }
+    });
   },
 
   prepareAnalytics(analytics) {
@@ -344,6 +381,13 @@ Page({
   goAddLesson() {
     wx.navigateTo({
       url: "/pages/add-lesson/index?studentId=" + this.data.student._id,
+    });
+  },
+
+  goLearningInsights() {
+    if (!this.data.student || !this.data.learningRadarAvailable) return;
+    wx.navigateTo({
+      url: `/insights/pages/learning-radar/index?studentId=${encodeURIComponent(this.data.student._id)}`,
     });
   },
 

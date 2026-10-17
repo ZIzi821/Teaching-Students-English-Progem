@@ -13,7 +13,38 @@ const LOCAL_MATERIAL_ORIGIN = "http://127.0.0.1:3211";
 const LOCAL_MATERIAL_TOKEN = "fd5b0c8301b641b5b28651b0d6b414ee637f0c4e6a5fb984";
 const LOCAL_MATERIAL_PROTOCOL_VERSION = 1;
 
-const OBSERVATION_STATUSES = ["独立完成", "提示后完成", "暂未掌握"];
+const OBSERVATION_STATUSES = ["独立完成", "提示后完成", "暂时不会"];
+const OBSERVATION_EVIDENCE_MODE_OPTIONS = [
+  { value: "mixed", label: "综合表现" },
+  { value: "speaking", label: "口语表达" },
+  { value: "listening", label: "听力" },
+  { value: "reading", label: "阅读" },
+  { value: "writing", label: "写作" },
+  { value: "recognition", label: "指认／辨认" },
+  { value: "phonics", label: "拼读" },
+  { value: "grammar", label: "语法运用" },
+  { value: "interaction", label: "互动回应" },
+];
+const OBSERVATION_PROMPT_TYPE_OPTIONS = [
+  { value: "none", label: "无提示" },
+  { value: "visual", label: "图片／实物提示" },
+  { value: "verbal", label: "口头提示" },
+  { value: "sentence_frame", label: "句型框架" },
+  { value: "choice", label: "选项提示" },
+  { value: "model", label: "示范后完成" },
+  { value: "mixed", label: "多种提示" },
+];
+const LESSON_FOCUS_LABELS = {
+  speaking: "口语表达",
+  grammar: "语法运用",
+  input: "听读与表达",
+  ket: "KET 基础与复习",
+  foundation: "字母、数字与书写",
+  vocabulary: "主题词汇与听辨",
+  phonics: "拼读与认词",
+  oral: "句型口语",
+  reading: "短阅读与衔接",
+};
 const BASIC_RECORDING_TASK_TYPE_OPTIONS = [
   { value: "manual", label: "独立朗读（不播放示范）" },
   { value: "follow_reading", label: "跟读（先听老师示范）" },
@@ -169,9 +200,20 @@ Page({
       followReadingContent: "",
       ketSpeakingTaskId: "",
       ketMockSetId: "",
+      lessonFocusType: "",
+      skillTargetIds: [],
       learningObservations: [],
     },
     observationStatuses: OBSERVATION_STATUSES,
+    observationEvidenceModeOptions: OBSERVATION_EVIDENCE_MODE_OPTIONS,
+    observationPromptTypeOptions: OBSERVATION_PROMPT_TYPE_OPTIONS,
+    learningPlanAvailable: false,
+    learningPlanLoading: false,
+    learningStageLabel: "",
+    learningSkillOptions: [{ skillId: "", label: "暂不关联能力点" }],
+    learningFocusOptions: [{ value: "", label: "暂不标记课程类型" }],
+    lessonFocusIndex: 0,
+    suggestedSkillId: "",
     recordingRepeatOptions: [1, 2, 3, 4, 5],
     recordingPreparationOptions: [0, 3, 5, 10, 15],
     recordingRepeatIndex: 1,
@@ -348,11 +390,137 @@ Page({
       }, () => {
         if (lesson.recordingTaskType === "ket_mock") this.loadKetMockSessions();
         else this.setData({ ketMockSessions: [], ketMockLatestSession: null });
+        if (isTeacher) this.loadLearningPlanOptions();
         this.scrollToFocusedSection();
       });
     }).catch((err) => {
       console.error(err);
       this.setData({ message: "服务暂时不可用，请稍后再试" });
+    });
+  },
+
+  loadLearningPlanOptions() {
+    if (!this.data.isTeacher || !this.data.student) return;
+    const requestId = (this.learningPlanOptionsRequestId || 0) + 1;
+    this.learningPlanOptionsRequestId = requestId;
+    if (this.data.workspaceForm.lessonTemplateKey !== this.data.student.lessonTemplateKey) {
+      this.setData({
+        learningPlanAvailable: false,
+        learningPlanLoading: false,
+        learningStageLabel: "",
+        learningSkillOptions: [{ skillId: "", label: "暂不关联能力点" }],
+        learningFocusOptions: [{ value: "", label: "暂不标记课程类型" }],
+        lessonFocusIndex: 0,
+        suggestedSkillId: "",
+      });
+      return;
+    }
+    this.setData({ learningPlanLoading: true });
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: {
+        type: "getStudentLearningRadar",
+        data: { studentId: this.data.student._id },
+      },
+    }).then((res) => {
+      if (requestId !== this.learningPlanOptionsRequestId) return;
+      const result = res.result || {};
+      if (!result.success) throw new Error(result.message || "阶段能力加载失败");
+      const radar = result.radar || {};
+      if (!radar.available) {
+        this.setData({
+          learningPlanAvailable: false,
+          learningStageLabel: "",
+          learningSkillOptions: [{ skillId: "", label: "暂不关联能力点" }],
+          learningFocusOptions: [{ value: "", label: "暂不标记课程类型" }],
+          lessonFocusIndex: 0,
+          suggestedSkillId: "",
+        });
+        return;
+      }
+      const currentSkillIds = new Set((radar.skills || []).map((skill) => skill.skillId));
+      const linkedSkillIds = new Set([].concat(
+        this.data.lesson.skillTargetIds || [],
+        (this.data.lesson.learningObservations || []).map((item) => item && item.skillId)
+      ).filter(Boolean));
+      const historicalLinkedSkills = (radar.skillCatalog || []).filter((skill) => (
+        linkedSkillIds.has(skill.skillId) && !currentSkillIds.has(skill.skillId)
+      ));
+      const learningSkillOptions = [{ skillId: "", label: "暂不关联能力点", displayLabel: "暂不关联能力点" }]
+        .concat((radar.skills || []).map((skill) => ({
+          skillId: skill.skillId,
+          label: skill.label,
+          displayLabel: `${skill.dimensionLabel} · ${skill.label}`,
+          focusType: skill.focusType,
+        })))
+        .concat(historicalLinkedSkills.map((skill) => ({
+          skillId: skill.skillId,
+          label: skill.label,
+          displayLabel: `${skill.stageLabel} · ${skill.label}`,
+          focusType: skill.focusType,
+          historical: true,
+        })));
+      const existingFocus = String(this.data.workspaceForm.lessonFocusType || "");
+      const focusValues = Array.from(new Set((radar.skills || []).map((skill) => skill.focusType).filter(Boolean)));
+      if (existingFocus && !focusValues.includes(existingFocus)) focusValues.push(existingFocus);
+      const learningFocusOptions = [{ value: "", label: "暂不标记课程类型" }]
+        .concat(focusValues.map((value) => ({
+          value,
+          label: LESSON_FOCUS_LABELS[value] || value,
+        })));
+      const lessonFocusIndex = Math.max(0, learningFocusOptions.findIndex((item) => item.value === existingFocus));
+      const decorate = (item) => this.decorateLearningObservation(item, learningSkillOptions);
+      const lesson = Object.assign({}, this.data.lesson, {
+        lessonFocusLabel: (learningFocusOptions[lessonFocusIndex] || {}).label || "",
+        learningObservations: (this.data.lesson.learningObservations || []).map(decorate),
+      });
+      this.setData({
+        learningPlanAvailable: true,
+        learningStageLabel: `${radar.currentStage.stageLabel} · ${radar.currentStage.stageTitle}`,
+        learningSkillOptions,
+        learningFocusOptions,
+        lessonFocusIndex,
+        suggestedSkillId: radar.prepSuggestion && radar.prepSuggestion.targetSkillId || "",
+        lesson,
+        "workspaceForm.learningObservations": (this.data.workspaceForm.learningObservations || []).map(decorate),
+      });
+    }).catch((err) => {
+      if (requestId !== this.learningPlanOptionsRequestId) return;
+      console.error(err);
+      this.setData({ learningPlanAvailable: false });
+    }).finally(() => {
+      if (requestId === this.learningPlanOptionsRequestId) {
+        this.setData({ learningPlanLoading: false });
+      }
+    });
+  },
+
+  decorateLearningObservation(item, skillOptions = this.data.learningSkillOptions) {
+    const status = item && item.status === "暂未掌握"
+      ? "暂时不会"
+      : OBSERVATION_STATUSES.includes(item && item.status) ? item.status : OBSERVATION_STATUSES[0];
+    const evidenceMode = OBSERVATION_EVIDENCE_MODE_OPTIONS.some((option) => option.value === (item && item.evidenceMode))
+      ? item.evidenceMode
+      : "mixed";
+    const defaultPromptType = status === "独立完成" ? "none" : status === "提示后完成" ? "verbal" : "mixed";
+    const promptType = OBSERVATION_PROMPT_TYPE_OPTIONS.some((option) => option.value === (item && item.promptType))
+      ? item.promptType
+      : defaultPromptType;
+    const skillIndex = Math.max(0, (skillOptions || []).findIndex((option) => option.skillId === String(item && item.skillId || "")));
+    const skill = (skillOptions || [])[skillIndex] || (skillOptions || [])[0] || {};
+    const evidenceModeIndex = Math.max(0, OBSERVATION_EVIDENCE_MODE_OPTIONS.findIndex((option) => option.value === evidenceMode));
+    const promptTypeIndex = Math.max(0, OBSERVATION_PROMPT_TYPE_OPTIONS.findIndex((option) => option.value === promptType));
+    return Object.assign({}, item, {
+      skillId: skill.skillId || "",
+      skillLabel: skill.skillId ? skill.label : "",
+      status,
+      evidenceMode,
+      evidenceModeIndex,
+      evidenceModeLabel: OBSERVATION_EVIDENCE_MODE_OPTIONS[evidenceModeIndex].label,
+      promptType,
+      promptTypeIndex,
+      promptTypeLabel: OBSERVATION_PROMPT_TYPE_OPTIONS[promptTypeIndex].label,
+      skillIndex,
     });
   },
 
@@ -437,6 +605,10 @@ Page({
       ketSpeakingTask: lesson.ketSpeakingTask || findKetSpeakingTask(lesson.ketSpeakingTaskId),
       ketMockSetId: lesson.ketMockSetId || "",
       ketMockSet: lesson.ketMockSet || findKetMockSet(lesson.ketMockSetId),
+      lessonFocusType: lesson.lessonFocusType || "",
+      lessonFocusLabel: LESSON_FOCUS_LABELS[lesson.lessonFocusType] || "",
+      skillTargetIds: Array.isArray(lesson.skillTargetIds) ? lesson.skillTargetIds : [],
+      learningPlanSnapshot: lesson.learningPlanSnapshot || null,
       hasHomeworkTask: Boolean(String(lesson.homeworkTask || "").trim() || lesson.recordingTaskEnabled === true),
       homeworkCompleted: lesson.homeworkCompleted === true || Number(lesson.homeworkCompletedAtMs) > 0,
       homeworkCompletedAtMs: Number(lesson.homeworkCompletedAtMs) || 0,
@@ -454,7 +626,10 @@ Page({
       homeworkSubmittedOnTime: lesson.homeworkSubmittedOnTime === true,
       homeworkSubmittedLate: lesson.homeworkSubmittedLate === true,
       homeworkSubmissionTimingLabel: lesson.homeworkSubmissionTimingLabel || "",
-      learningObservations: Array.isArray(lesson.learningObservations) ? lesson.learningObservations : [],
+      learningObservations: (Array.isArray(lesson.learningObservations) ? lesson.learningObservations : [])
+        .map((item) => Object.assign({}, item, {
+          status: item.status === "暂未掌握" ? "暂时不会" : item.status,
+        })),
       hasStructuredRecord,
     });
   },
@@ -497,7 +672,11 @@ Page({
       followReadingContent: (lesson.followReadingItems || []).map((item) => item.text || "").filter(Boolean).join("\n"),
       ketSpeakingTaskId: lesson.ketSpeakingTaskId || "",
       ketMockSetId: lesson.ketMockSetId || "",
-      learningObservations: (lesson.learningObservations || []).map((item) => Object.assign({}, item)),
+      lessonFocusType: lesson.lessonFocusType || "",
+      skillTargetIds: Array.isArray(lesson.skillTargetIds) ? lesson.skillTargetIds.slice() : [],
+      learningObservations: (lesson.learningObservations || []).map((item) => (
+        this.decorateLearningObservation(item)
+      )),
     };
   },
 
@@ -581,6 +760,9 @@ Page({
     const recordingTaskTypeOptions = this.data.lesson.lessonTemplateKey === "molly_oral_ket"
       ? KET_RECORDING_TASK_TYPE_OPTIONS
       : BASIC_RECORDING_TASK_TYPE_OPTIONS;
+    const lessonFocusIndex = Math.max(0, this.data.learningFocusOptions.findIndex((item) => (
+      item.value === this.data.lesson.lessonFocusType
+    )));
     this.setData({
       showWorkspaceEditor: opening,
       workspaceForm: this.createWorkspaceForm(this.data.lesson),
@@ -590,6 +772,7 @@ Page({
       followReadingModeIndex: Math.max(0, FOLLOW_READING_MODE_OPTIONS.findIndex((item) => item.value === this.data.lesson.followReadingMode)),
       followReadingGapIndex: Math.max(0, this.data.followReadingGapOptions.indexOf(this.data.lesson.followReadingGapSeconds)),
       followReadingResponseIndex: Math.max(0, this.data.followReadingResponseOptions.indexOf(this.data.lesson.followReadingResponseSeconds)),
+      lessonFocusIndex,
     }, () => {
       if (opening) this.checkKetWeeklyStatus();
     });
@@ -647,7 +830,7 @@ Page({
         "workspaceForm.ketMockSetId": "",
       });
     }
-    this.setData(updates);
+    this.setData(updates, () => this.loadLearningPlanOptions());
   },
 
   onRecordingTaskChange(e) {
@@ -803,9 +986,44 @@ Page({
     });
   },
 
+  onLessonFocusChange(e) {
+    const index = Number(e.detail.value);
+    const option = this.data.learningFocusOptions[index] || this.data.learningFocusOptions[0];
+    this.setData({
+      lessonFocusIndex: index,
+      "workspaceForm.lessonFocusType": option.value || "",
+    });
+  },
+
+  getDefaultEvidenceMode(focusType) {
+    const mapping = {
+      speaking: "speaking",
+      grammar: "grammar",
+      input: "mixed",
+      ket: "mixed",
+      foundation: "recognition",
+      vocabulary: "recognition",
+      phonics: "phonics",
+      oral: "speaking",
+      reading: "reading",
+    };
+    return mapping[focusType] || "mixed";
+  },
+
   addObservation() {
     const observations = this.data.workspaceForm.learningObservations.slice();
-    observations.push({ content: "", status: OBSERVATION_STATUSES[0], note: "" });
+    const suggestedIndex = Math.max(0, this.data.learningSkillOptions.findIndex((option) => (
+      option.skillId === this.data.suggestedSkillId
+    )));
+    const suggested = this.data.learningSkillOptions[suggestedIndex] || this.data.learningSkillOptions[0] || {};
+    observations.push(this.decorateLearningObservation({
+      skillId: suggested.skillId || "",
+      content: suggested.skillId ? suggested.label : "",
+      status: OBSERVATION_STATUSES[0],
+      evidenceMode: this.getDefaultEvidenceMode(suggested.focusType),
+      promptType: "none",
+      note: "",
+    }));
     this.setData({ "workspaceForm.learningObservations": observations });
   },
 
@@ -821,10 +1039,57 @@ Page({
     this.setData({ [`workspaceForm.learningObservations[${index}].${field}`]: e.detail.value });
   },
 
+  onObservationSkillChange(e) {
+    const index = Number(e.currentTarget.dataset.index);
+    const optionIndex = Number(e.detail.value);
+    const option = this.data.learningSkillOptions[optionIndex] || this.data.learningSkillOptions[0] || {};
+    const observations = this.data.workspaceForm.learningObservations.slice();
+    const current = observations[index] || {};
+    const previousOption = this.data.learningSkillOptions[current.skillIndex] || {};
+    const shouldReplaceContent = !String(current.content || "").trim()
+      || current.content === previousOption.label;
+    observations[index] = this.decorateLearningObservation(Object.assign({}, current, {
+      skillId: option.skillId || "",
+      content: shouldReplaceContent && option.skillId ? option.label : current.content,
+      evidenceMode: current.evidenceMode === "mixed"
+        ? this.getDefaultEvidenceMode(option.focusType)
+        : current.evidenceMode,
+    }));
+    this.setData({ "workspaceForm.learningObservations": observations });
+  },
+
+  onObservationEvidenceModeChange(e) {
+    const index = Number(e.currentTarget.dataset.index);
+    const optionIndex = Number(e.detail.value);
+    const option = OBSERVATION_EVIDENCE_MODE_OPTIONS[optionIndex] || OBSERVATION_EVIDENCE_MODE_OPTIONS[0];
+    this.setData({
+      [`workspaceForm.learningObservations[${index}].evidenceMode`]: option.value,
+      [`workspaceForm.learningObservations[${index}].evidenceModeIndex`]: optionIndex,
+      [`workspaceForm.learningObservations[${index}].evidenceModeLabel`]: option.label,
+    });
+  },
+
+  onObservationPromptTypeChange(e) {
+    const index = Number(e.currentTarget.dataset.index);
+    const optionIndex = Number(e.detail.value);
+    const option = OBSERVATION_PROMPT_TYPE_OPTIONS[optionIndex] || OBSERVATION_PROMPT_TYPE_OPTIONS[0];
+    this.setData({
+      [`workspaceForm.learningObservations[${index}].promptType`]: option.value,
+      [`workspaceForm.learningObservations[${index}].promptTypeIndex`]: optionIndex,
+      [`workspaceForm.learningObservations[${index}].promptTypeLabel`]: option.label,
+    });
+  },
+
   onObservationStatusChange(e) {
     const index = Number(e.currentTarget.dataset.index);
+    const status = OBSERVATION_STATUSES[Number(e.detail.value)];
+    const promptType = status === "独立完成" ? "none" : status === "提示后完成" ? "verbal" : "mixed";
+    const promptTypeIndex = Math.max(0, OBSERVATION_PROMPT_TYPE_OPTIONS.findIndex((item) => item.value === promptType));
     this.setData({
-      [`workspaceForm.learningObservations[${index}].status`]: OBSERVATION_STATUSES[Number(e.detail.value)],
+      [`workspaceForm.learningObservations[${index}].status`]: status,
+      [`workspaceForm.learningObservations[${index}].promptType`]: promptType,
+      [`workspaceForm.learningObservations[${index}].promptTypeIndex`]: promptTypeIndex,
+      [`workspaceForm.learningObservations[${index}].promptTypeLabel`]: OBSERVATION_PROMPT_TYPE_OPTIONS[promptTypeIndex].label,
     });
   },
 
@@ -856,8 +1121,23 @@ Page({
         return;
       }
     }
+    const learningObservations = form.learningObservations
+      .filter((item) => String(item.content || "").trim())
+      .map((item) => ({
+        skillId: item.skillId || "",
+        content: item.content,
+        status: item.status,
+        evidenceMode: item.evidenceMode || "mixed",
+        promptType: item.promptType || "mixed",
+        note: item.note || "",
+      }));
+    const skillTargetIds = Array.from(new Set([].concat(
+      form.skillTargetIds || [],
+      learningObservations.map((item) => item.skillId)
+    ).filter(Boolean)));
     const workspacePayload = Object.assign({ lessonId: this.data.lessonId }, form, {
-      learningObservations: form.learningObservations.filter((item) => String(item.content || "").trim()),
+      learningObservations,
+      skillTargetIds,
     });
     if (!durationApplies) delete workspacePayload.durationMinutes;
     this.setData({ savingWorkspace: true });

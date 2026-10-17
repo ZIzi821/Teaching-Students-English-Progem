@@ -60,6 +60,21 @@
 
   </view>
 
+  <view class="card learning-plan-card" wx:if="{{learningPlanAvailable}}">
+    <view class="learning-plan-kicker">当前学习计划</view>
+    <view class="learning-plan-stage">{{learningStageLabel}}</view>
+    <view class="field learning-focus-field">
+      <view class="label">本节课类型</view>
+      <picker mode="selector" range="{{learningFocusOptions}}" range-key="label" value="{{learningFocusIndex}}" bindchange="onLearningFocusChange">
+        <view class="picker-value">{{learningFocusOptions[learningFocusIndex].label}}</view>
+      </picker>
+    </view>
+    <view class="learning-plan-suggestion" wx:if="{{suggestedSkillLabel}}">
+      建议重点：{{suggestedSkillLabel}}
+    </view>
+    <view class="learning-plan-note">这里只标记课程在计划中的位置，不会按周数自动推进阶段。</view>
+  </view>
+
   <view class="card previous-reference-card" wx:if="{{previousLessonReference}}">
     <view class="previous-reference-head" bindtap="togglePreviousLessonReference">
       <view>

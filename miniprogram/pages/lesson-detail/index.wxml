@@ -100,11 +100,19 @@
         </view>
       </view>
 
+      <view class="lesson-focus-summary" wx:if="{{isTeacher && lesson.lessonFocusLabel}}">
+        <text>本节类型</text>{{lesson.lessonFocusLabel}}
+      </view>
+
       <view class="observation-list" wx:if="{{lesson.learningObservations.length}}">
         <view class="record-label observation-title">学习观察</view>
         <view class="observation-row" wx:for="{{lesson.learningObservations}}" wx:key="index">
           <view class="observation-main">
+            <view class="observation-skill" wx:if="{{isTeacher && item.skillLabel}}">{{item.skillLabel}}</view>
             <view class="observation-content">{{item.content}}</view>
+            <view class="observation-evidence-meta" wx:if="{{isTeacher && (item.evidenceModeLabel || item.promptTypeLabel)}}">
+              {{item.evidenceModeLabel}}<text wx:if="{{item.promptTypeLabel}}"> · {{item.promptTypeLabel}}</text>
+            </view>
             <view class="observation-note" wx:if="{{item.note}}">{{item.note}}</view>
           </view>
           <view class="observation-status status-{{item.status === '独立完成' ? 'independent' : item.status === '提示后完成' ? 'prompted' : 'pending'}}">{{item.status}}</view>
@@ -336,22 +344,54 @@
         一次完成 · 考官录音自动播放 · 回答分段保存 · 不允许返回重录
       </view>
 
+      <view class="learning-plan-lesson-box" wx:if="{{learningPlanAvailable}}">
+        <view class="learning-plan-lesson-kicker">当前学习计划</view>
+        <view class="learning-plan-lesson-stage">{{learningStageLabel}}</view>
+        <view class="field learning-focus-field">
+          <view class="label">本节课类型</view>
+          <picker mode="selector" range="{{learningFocusOptions}}" range-key="label" value="{{lessonFocusIndex}}" bindchange="onLessonFocusChange">
+            <view class="picker-value">{{learningFocusOptions[lessonFocusIndex].label}}</view>
+          </picker>
+          <view class="field-hint">用于 Molly 的 2＋1＋1＋1 课程配比，停课或日历间隔不会影响评分。</view>
+        </view>
+      </view>
+
       <view class="observation-editor-head">
         <view>
           <view class="label">学习观察</view>
-          <view class="field-hint">记录表现，不会进入英语错题系统。</view>
+          <view class="field-hint">记录具体表现；没有证据不会被当成 0 分，也不会进入英语错题系统。</view>
         </view>
         <view class="add-observation" bindtap="addObservation">＋ 添加一项</view>
       </view>
 
       <view class="observation-editor" wx:for="{{workspaceForm.learningObservations}}" wx:key="index">
+        <view class="field observation-skill-field" wx:if="{{learningPlanAvailable}}">
+          <view class="observation-mini-label">对应当前阶段能力</view>
+          <picker mode="selector" range="{{learningSkillOptions}}" range-key="displayLabel" value="{{item.skillIndex}}" data-index="{{index}}" bindchange="onObservationSkillChange">
+            <view class="picker-value">{{learningSkillOptions[item.skillIndex].displayLabel || learningSkillOptions[item.skillIndex].label}}</view>
+          </picker>
+        </view>
         <view class="observation-editor-top">
-          <input class="observation-input" placeholder="例如：A–E 大小写对应" value="{{item.content}}" data-index="{{index}}" data-field="content" bindinput="onObservationInput" />
+          <input class="observation-input" placeholder="写出这次实际观察到的任务" value="{{item.content}}" data-index="{{index}}" data-field="content" bindinput="onObservationInput" />
           <view class="remove-observation" data-index="{{index}}" bindtap="removeObservation">删除</view>
         </view>
         <picker mode="selector" range="{{observationStatuses}}" value="{{item.status === '独立完成' ? 0 : item.status === '提示后完成' ? 1 : 2}}" data-index="{{index}}" bindchange="onObservationStatusChange">
           <view class="picker-value">{{item.status}}</view>
         </picker>
+        <view class="observation-detail-grid" wx:if="{{learningPlanAvailable}}">
+          <view>
+            <view class="observation-mini-label">证据方式</view>
+            <picker mode="selector" range="{{observationEvidenceModeOptions}}" range-key="label" value="{{item.evidenceModeIndex}}" data-index="{{index}}" bindchange="onObservationEvidenceModeChange">
+              <view class="picker-value compact-picker">{{item.evidenceModeLabel}}</view>
+            </picker>
+          </view>
+          <view>
+            <view class="observation-mini-label">提示方式</view>
+            <picker mode="selector" range="{{observationPromptTypeOptions}}" range-key="label" value="{{item.promptTypeIndex}}" data-index="{{index}}" bindchange="onObservationPromptTypeChange">
+              <view class="picker-value compact-picker">{{item.promptTypeLabel}}</view>
+            </picker>
+          </view>
+        </view>
         <input class="observation-note-input" placeholder="补充说明（可不填）" value="{{item.note}}" data-index="{{index}}" data-field="note" bindinput="onObservationInput" />
       </view>
       </block>

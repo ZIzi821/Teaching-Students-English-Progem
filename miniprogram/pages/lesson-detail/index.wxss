@@ -212,6 +212,24 @@
   border-top: 1rpx solid #eee5d9;
 }
 
+.lesson-focus-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-top: 18rpx;
+  padding: 9rpx 14rpx;
+  border-radius: 999rpx;
+  color: #39765d;
+  background: #e9f4ee;
+  font-size: 21rpx;
+  font-weight: 700;
+}
+
+.lesson-focus-summary text {
+  color: #6f8178;
+  font-weight: 500;
+}
+
 .observation-title {
   margin-bottom: 10rpx;
 }
@@ -234,6 +252,19 @@
   color: #3b352f;
   font-size: 25rpx;
   line-height: 1.5;
+}
+
+.observation-skill {
+  margin-bottom: 5rpx;
+  color: #39765d;
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+.observation-evidence-meta {
+  margin-top: 5rpx;
+  color: #8b8176;
+  font-size: 19rpx;
 }
 
 .observation-note,
@@ -492,11 +523,60 @@
   align-items: flex-end;
 }
 
+.learning-plan-lesson-box {
+  padding: 20rpx;
+  border: 1rpx solid #d6e5dc;
+  border-radius: 18rpx;
+  background: #f0f8f4;
+}
+
+.learning-plan-lesson-kicker,
+.observation-mini-label {
+  color: #728279;
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+.learning-plan-lesson-stage {
+  margin-top: 7rpx;
+  color: #315f4d;
+  font-size: 26rpx;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.learning-focus-field {
+  margin-top: 18rpx;
+}
+
 .observation-editor {
   padding: 20rpx;
   border: 1rpx solid #eadfcf;
   border-radius: 16rpx;
   background: #fffdfa;
+}
+
+.observation-skill-field {
+  margin-bottom: 14rpx;
+}
+
+.observation-skill-field .picker-value {
+  margin-top: 8rpx;
+}
+
+.observation-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12rpx;
+  margin-top: 14rpx;
+}
+
+.compact-picker {
+  min-height: 68rpx;
+  margin-top: 8rpx !important;
+  padding: 0 14rpx;
+  font-size: 22rpx;
+  line-height: 68rpx;
 }
 
 .observation-input {

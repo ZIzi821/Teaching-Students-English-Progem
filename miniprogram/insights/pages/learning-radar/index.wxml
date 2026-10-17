@@ -1,0 +1,146 @@
+<view class="page radar-page">
+  <view class="card state-card" wx:if="{{loading}}">正在整理学习证据…</view>
+  <view class="card state-card error" wx:elif="{{message}}">
+    <view>{{message}}</view>
+    <view class="retry" bindtap="loadRadar">重新加载</view>
+  </view>
+
+  <block wx:if="{{radar}}">
+    <view class="stage-hero">
+      <view class="stage-kicker">{{radar.studentName}} · {{radar.planLabel}}</view>
+      <view class="stage-title">{{radar.currentStage.stageLabel}} · {{radar.currentStage.stageTitle}}</view>
+      <view class="stage-goal">{{radar.currentStage.goal}}</view>
+      <view class="stage-meta-row">
+        <view class="stage-chip">按能力达标推进</view>
+        <view class="stage-chip">单节 {{radar.lessonDurationMinutes}} 分钟</view>
+      </view>
+      <picker mode="selector" range="{{radar.stageOptions}}" range-key="displayLabel" value="{{stageIndex}}" disabled="{{saving}}" bindchange="onStageChange">
+        <view class="stage-picker">老师调整当前阶段 <text>⌄</text></view>
+      </picker>
+    </view>
+
+    <view class="card evidence-card">
+      <view class="section-head">
+        <view>
+          <view class="section-title">学习雷达</view>
+          <view class="section-subtitle">{{radar.evidenceSummary.label}}</view>
+        </view>
+        <view class="coverage-badge">{{radar.evidenceSummary.coveragePercent}}%</view>
+      </view>
+      <view class="evidence-note">{{radar.evidenceSummary.note}}</view>
+
+      <view class="dimension-list">
+        <view class="dimension-row" wx:for="{{radar.dimensions}}" wx:key="dimensionId">
+          <view class="dimension-head">
+            <view class="dimension-name">{{item.label}}</view>
+            <view class="state-pill state-{{item.stateTone}}">{{item.stateLabel}}</view>
+          </view>
+          <view class="dimension-description">{{item.description}}</view>
+          <view class="radar-bar" wx:if="{{item.hasScore}}">
+            <view class="radar-fill fill-{{item.stateTone}}" style="width: {{item.barPercent}}%;"></view>
+          </view>
+          <view class="unassessed-line" wx:elif="{{item.active}}">等待课堂观察，不按 0 分计算</view>
+          <view class="unassessed-line" wx:else>当前阶段暂不安排，不计入达标判断</view>
+          <view class="dimension-foot">
+            <text>{{item.coverageLabel}}</text>
+            <text wx:if="{{item.hasScore}}">综合 {{item.score}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card priority-card">
+      <view class="section-title">当前优先事项</view>
+      <view class="priority-list" wx:if="{{radar.priorities.length}}">
+        <view class="priority-item" wx:for="{{radar.priorities}}" wx:key="skillId">
+          <view class="priority-rank">{{index + 1}}</view>
+          <view class="priority-copy">
+            <view class="priority-title">{{item.label}}</view>
+            <view class="priority-meta">{{item.dimensionLabel}} · {{item.stateLabel}}</view>
+            <view class="priority-reason">{{item.reason}}</view>
+          </view>
+          <view class="priority-score">优先 {{item.priorityScore}}</view>
+        </view>
+      </view>
+      <view class="observation-block" wx:if="{{radar.observationNeeds.length}}">
+        <view class="observation-title">还需要课堂观察</view>
+        <view class="observation-item" wx:for="{{radar.observationNeeds}}" wx:key="skillId">
+          <view class="observation-dot"></view>
+          <view>
+            <view>{{item.label}}</view>
+            <view class="observation-reason">{{item.reason}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card prep-card">
+      <view class="prep-head">
+        <view>
+          <view class="section-title">下节课备课提示</view>
+          <view class="section-subtitle">{{radar.prepSuggestion.focusLabel}} · {{radar.prepSuggestion.durationMinutes}} 分钟</view>
+        </view>
+        <view class="prep-duration">{{radar.prepSuggestion.totalMinutes}}′</view>
+      </view>
+      <view class="prep-title">{{radar.prepSuggestion.title}}</view>
+      <view class="prep-reason">为什么：{{radar.prepSuggestion.reason}}</view>
+      <view class="content-rule">内容控制：{{radar.prepSuggestion.contentRule}}</view>
+
+      <view class="mix-card" wx:if="{{mixRows.length}}">
+        <view class="mix-title">最近 5 节已标记课程配比</view>
+        <view class="mix-row" wx:for="{{mixRows}}" wx:key="key">
+          <view>{{item.label}}</view>
+          <view class="mix-value {{item.complete ? 'mix-complete' : ''}}">{{item.recent}} / {{item.target}}</view>
+        </view>
+      </view>
+
+      <view class="timeline">
+        <view class="timeline-item" wx:for="{{radar.prepSuggestion.blocks}}" wx:key="index">
+          <view class="timeline-minute">{{item.minutes}}′</view>
+          <view class="timeline-line-wrap"><view class="timeline-dot"></view><view class="timeline-line"></view></view>
+          <view class="timeline-copy">
+            <view class="timeline-title">{{item.title}}</view>
+            <view class="timeline-detail">{{item.detail}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="evidence-prompt">{{radar.prepSuggestion.evidencePrompt}}</view>
+    </view>
+
+    <view class="card readiness-card">
+      <view class="section-title">阶段达标检查</view>
+      <view class="readiness-status">{{radar.stageReadiness.statusLabel}}</view>
+      <view class="criteria-list">
+        <view class="criteria-row" wx:for="{{radar.stageReadiness.criteria}}" wx:key="key">
+          <view class="criteria-icon {{item.passed ? 'criteria-pass' : ''}}">{{item.passed ? '✓' : '·'}}</view>
+          <view>{{item.label}}</view>
+        </view>
+      </view>
+      <view class="teacher-gate">系统只提供达标建议，阶段切换始终由老师确认。</view>
+      <view class="primary-btn advance-btn" wx:if="{{radar.stageReadiness.eligibleForTeacherConfirmation && radar.stageReadiness.nextStageId}}" bindtap="confirmNextStage">
+        确认进入下一阶段
+      </view>
+    </view>
+
+    <view class="card skill-card">
+      <view class="section-title">本阶段能力明细</view>
+      <view class="section-subtitle">可把某项设为备课重点；置顶不会直接改变能力评分。</view>
+      <view class="skill-row" wx:for="{{radar.skills}}" wx:key="skillId">
+        <view class="skill-main">
+          <view class="skill-title-row">
+            <view class="skill-title">{{item.label}}</view>
+            <view class="core-badge" wx:if="{{item.core}}">核心</view>
+          </view>
+          <view class="skill-meta">{{item.dimensionLabel}} · {{item.stateLabel}} · {{item.confidenceLabel}}</view>
+          <view class="skill-bar" wx:if="{{item.hasScore}}">
+            <view class="skill-fill fill-{{item.stateTone}}" style="width: {{item.barPercent}}%;"></view>
+          </view>
+          <view class="skill-evidence">{{item.teacherLessonCount}} 节课堂证据 · {{item.independentLessonCount}} 节独立完成</view>
+        </view>
+        <view class="pin-button {{item.pinned ? 'pin-active' : ''}}" data-skill-id="{{item.skillId}}" bindtap="togglePinnedSkill">
+          {{item.pinned ? '已置顶' : '置顶'}}
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

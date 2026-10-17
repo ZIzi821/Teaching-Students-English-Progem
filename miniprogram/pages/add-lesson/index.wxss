@@ -95,6 +95,48 @@
   line-height: 1.55;
 }
 
+.learning-plan-card {
+  border-color: #d3e4da;
+  background: linear-gradient(145deg, #fffdfa 0%, #eef7f2 100%);
+}
+
+.learning-plan-kicker {
+  color: #728279;
+  font-size: 21rpx;
+  font-weight: 800;
+  letter-spacing: 1rpx;
+}
+
+.learning-plan-stage {
+  margin-top: 8rpx;
+  color: #315f4d;
+  font-size: 28rpx;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.learning-focus-field {
+  margin-top: 20rpx;
+}
+
+.learning-plan-suggestion {
+  margin-top: 14rpx;
+  padding: 15rpx 17rpx;
+  border-radius: 14rpx;
+  color: #765825;
+  background: #f8edcf;
+  font-size: 23rpx;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.learning-plan-note {
+  margin-top: 12rpx;
+  color: #756d64;
+  font-size: 21rpx;
+  line-height: 1.5;
+}
+
 .action-disabled {
   opacity: 0.55;
 }

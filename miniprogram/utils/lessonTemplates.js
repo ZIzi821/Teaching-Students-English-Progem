@@ -11,7 +11,7 @@ const LESSON_TEMPLATE_OPTIONS = [
     key: "feng_beginner",
     label: "零基础夯实",
     shortLabel: "冯嘉文 · 零基础",
-    description: "少量新内容＋反复提取，观察独立完成、提示后完成和暂未掌握。",
+    description: "少量新内容＋反复提取，观察独立完成、提示后完成和暂时不会。",
     titlePlaceholder: "例如：字母 A–I 与数字 1–3 复习",
     recordingPlaceholder: "例如：依次朗读 A–I 和数字 1–3",
   },

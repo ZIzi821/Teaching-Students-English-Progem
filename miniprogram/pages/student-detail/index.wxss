@@ -210,6 +210,93 @@
   background: #b98743;
 }
 
+.learning-radar-summary {
+  border-color: #d8e7df;
+  background: linear-gradient(145deg, #fffdfa 0%, #eef7f2 100%);
+}
+
+.learning-radar-summary-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.learning-radar-eyebrow,
+.learning-radar-cell-label,
+.learning-radar-next-label {
+  color: #718379;
+  font-size: 21rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+}
+
+.learning-radar-stage {
+  margin-top: 8rpx;
+  color: #29473b;
+  font-size: 31rpx;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.learning-radar-link {
+  flex-shrink: 0;
+  color: #39765d;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.learning-radar-goal {
+  margin-top: 14rpx;
+  color: #6f675e;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.learning-radar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+  margin-top: 20rpx;
+}
+
+.learning-radar-cell {
+  min-width: 0;
+  padding: 16rpx;
+  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.learning-radar-cell-value {
+  margin-top: 7rpx;
+  color: #403831;
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.learning-radar-next {
+  margin-top: 15rpx;
+  padding: 18rpx;
+  border-radius: 16rpx;
+  background: #f8edcf;
+}
+
+.learning-radar-next-title {
+  margin-top: 7rpx;
+  color: #765825;
+  font-size: 25rpx;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.learning-radar-readiness {
+  margin-top: 14rpx;
+  color: #4f6f63;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
 .progress-editor-hint {
   margin-top: 10rpx;
   color: #817669;
