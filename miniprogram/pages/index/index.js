@@ -1,6 +1,5 @@
-const sampleData = require("../../utils/sampleData");
 const { prefetchVocabularyAudio } = require("../../utils/vocabularyAudio");
-const { buildPrimaryLearningAction } = require("../../utils/studentLearningFlow");
+const { buildHomeworkPlanStep, buildPrimaryLearningAction } = require("../../utils/studentLearningFlow");
 
 const formatHomeworkActivityTime = (timestamp) => {
   const date = new Date(Number(timestamp || 0));
@@ -210,15 +209,17 @@ Page({
       isStudent: false,
       isTeacherPreview: false,
       isGuest: true,
+      openid: "",
+      currentStudent: null,
       errorMessage: message,
       stats: {
-        mistakeCount: sampleData.mistakes.length,
+        mistakeCount: 0,
         progress: {
           progressText: "0 / 0",
           progressPercent: 0,
         },
       },
-      recentLessons: sampleData.lessons.slice(0, 2),
+      recentLessons: [],
       homeworkCompletionNotices: [],
       learningActivityNotices: [],
       studentLearningActivities: [],
@@ -315,17 +316,10 @@ Page({
       : student.mistakeLearningEnabled !== false;
     if (courseEnabled) {
       const summary = homeworkSummary || {};
-      steps.push({
+      steps.push(Object.assign({
         action: "homework",
         tone: "gold",
-        title: "查看课后任务",
-        hint: pendingHomework
-          ? `${pendingHomework.title || "最近英语课"} · ${pendingHomework.recordingTaskEnabled ? "需要完成任务并提交录音" : "还有任务等待完成"}`
-          : Number(summary.completedCount) > 0
-            ? "目前没有待完成任务，可以查看以前的完成记录"
-            : "老师布置后会显示在这里",
-        actionLabel: pendingHomework ? "去完成 →" : "查看 →",
-      });
+      }, buildHomeworkPlanStep({ pendingHomework, homeworkSummary: summary })));
     }
     return steps.map((item, index) => Object.assign({}, item, { number: index + 1 }));
   },

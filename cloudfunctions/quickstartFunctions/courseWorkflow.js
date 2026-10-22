@@ -10,6 +10,15 @@ const HOMEWORK_LIST_GROUPS = Object.freeze({
   awaitingReview: "awaitingReview",
   completed: "completed",
 });
+const HOMEWORK_LIST_GROUP_ORDER = Object.freeze([
+  HOMEWORK_LIST_GROUPS.returned,
+  HOMEWORK_LIST_GROUPS.overdue,
+  HOMEWORK_LIST_GROUPS.today,
+  HOMEWORK_LIST_GROUPS.upcoming,
+  HOMEWORK_LIST_GROUPS.noDeadline,
+  HOMEWORK_LIST_GROUPS.awaitingReview,
+  HOMEWORK_LIST_GROUPS.completed,
+]);
 const LESSON_ACCOUNTING_MODES = Object.freeze({
   lesson: "lesson",
   minute: "minute",
@@ -355,18 +364,53 @@ const getHomeworkListGroup = (lesson = {}, completed = false) => {
   return HOMEWORK_LIST_GROUPS.noDeadline;
 };
 
+const sortHomeworkLessons = (lessons = [], completed = false) => {
+  const groupOrder = new Map(HOMEWORK_LIST_GROUP_ORDER.map((group, index) => [group, index]));
+  return (Array.isArray(lessons) ? lessons : []).slice().sort((left, right) => {
+    const leftGroup = getHomeworkListGroup(left, completed);
+    const rightGroup = getHomeworkListGroup(right, completed);
+    const groupDiff = (groupOrder.get(leftGroup) || 0) - (groupOrder.get(rightGroup) || 0);
+    if (groupDiff) return groupDiff;
+
+    if (!completed) {
+      const leftDueDate = String(left && left.homeworkDueDate || "");
+      const rightDueDate = String(right && right.homeworkDueDate || "");
+      if (leftDueDate && rightDueDate && leftDueDate !== rightDueDate) {
+        return leftDueDate.localeCompare(rightDueDate);
+      }
+    }
+
+    const leftActivityAtMs = Math.max(
+      0,
+      Number(left && left.homeworkLastSubmittedAtMs) || 0,
+      Number(left && left.homeworkTeacherReviewedAtMs) || 0
+    );
+    const rightActivityAtMs = Math.max(
+      0,
+      Number(right && right.homeworkLastSubmittedAtMs) || 0,
+      Number(right && right.homeworkTeacherReviewedAtMs) || 0
+    );
+    if (leftActivityAtMs !== rightActivityAtMs) return rightActivityAtMs - leftActivityAtMs;
+
+    const lessonDateDiff = String(right && right.lessonDate || "")
+      .localeCompare(String(left && left.lessonDate || ""));
+    if (lessonDateDiff) return lessonDateDiff;
+    return String(left && left._id || "").localeCompare(String(right && right._id || ""));
+  });
+};
+
 const buildHomeworkListGrouping = ({ pendingLessons = [], completedLessons = [] } = {}) => {
   const groups = Object.keys(HOMEWORK_LIST_GROUPS).reduce((result, key) => {
     result[HOMEWORK_LIST_GROUPS[key]] = [];
     return result;
   }, {});
-  const decoratedPendingLessons = (Array.isArray(pendingLessons) ? pendingLessons : []).map((lesson) => {
+  const decoratedPendingLessons = sortHomeworkLessons(pendingLessons, false).map((lesson) => {
     const homeworkListGroup = getHomeworkListGroup(lesson, false);
     const decorated = Object.assign({}, lesson, { homeworkListGroup });
     groups[homeworkListGroup].push(decorated);
     return decorated;
   });
-  const decoratedCompletedLessons = (Array.isArray(completedLessons) ? completedLessons : []).map((lesson) => {
+  const decoratedCompletedLessons = sortHomeworkLessons(completedLessons, true).map((lesson) => {
     const decorated = Object.assign({}, lesson, {
       homeworkListGroup: HOMEWORK_LIST_GROUPS.completed,
     });
@@ -419,6 +463,7 @@ module.exports = {
   getPlannedLessonMinutes,
   isLateHomeworkSubmission,
   normalizeLessonDurationMinutes,
+  sortHomeworkLessons,
   usesLessonDurationMinutes,
   withApplicableLessonDuration,
 };

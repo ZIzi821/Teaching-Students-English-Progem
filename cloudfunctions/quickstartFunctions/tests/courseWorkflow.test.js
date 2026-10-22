@@ -243,27 +243,40 @@ assert.strictEqual(
 
 const homeworkGrouping = courseWorkflow.buildHomeworkListGrouping({
   pendingLessons: [
-    { _id: "returned", homeworkTeacherReviewStatus: "incomplete", homeworkHasSubmission: true, homeworkDueStatus: "overdue" },
-    { _id: "overdue", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "overdue" },
-    { _id: "today", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "today" },
-    { _id: "upcoming", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "upcoming" },
-    { _id: "no-deadline", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "none" },
     { _id: "awaiting", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: true, homeworkDueStatus: "overdue" },
+    { _id: "no-deadline", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "none" },
+    { _id: "upcoming", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "upcoming", homeworkDueDate: "2026-10-25" },
+    { _id: "today", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "today" },
+    { _id: "overdue-later", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "overdue", homeworkDueDate: "2026-10-20" },
+    { _id: "returned", homeworkTeacherReviewStatus: "incomplete", homeworkHasSubmission: true, homeworkDueStatus: "overdue" },
+    { _id: "overdue-earlier", homeworkTeacherReviewStatus: "unreviewed", homeworkHasSubmission: false, homeworkDueStatus: "overdue", homeworkDueDate: "2026-10-18" },
   ],
-  completedLessons: [{ _id: "completed", homeworkTeacherReviewStatus: "completed" }],
+  completedLessons: [
+    { _id: "completed-older", homeworkTeacherReviewStatus: "completed", homeworkDueDate: "2026-10-20", homeworkTeacherReviewedAtMs: 100 },
+    { _id: "completed-newer", homeworkTeacherReviewStatus: "completed", homeworkDueDate: "2026-10-18", homeworkTeacherReviewedAtMs: 200 },
+  ],
 });
 assert.deepStrictEqual(homeworkGrouping.groups.returned.map((item) => item._id), ["returned"]);
-assert.deepStrictEqual(homeworkGrouping.groups.overdue.map((item) => item._id), ["overdue"]);
+assert.deepStrictEqual(homeworkGrouping.groups.overdue.map((item) => item._id), ["overdue-earlier", "overdue-later"]);
 assert.deepStrictEqual(homeworkGrouping.groups.today.map((item) => item._id), ["today"]);
 assert.deepStrictEqual(homeworkGrouping.groups.upcoming.map((item) => item._id), ["upcoming"]);
 assert.deepStrictEqual(homeworkGrouping.groups.noDeadline.map((item) => item._id), ["no-deadline"]);
 assert.deepStrictEqual(homeworkGrouping.groups.awaitingReview.map((item) => item._id), ["awaiting"]);
-assert.deepStrictEqual(homeworkGrouping.groups.completed.map((item) => item._id), ["completed"]);
-assert.strictEqual(homeworkGrouping.summary.actionableCount, 5);
+assert.deepStrictEqual(
+  homeworkGrouping.groups.completed.map((item) => item._id),
+  ["completed-newer", "completed-older"],
+  "completed homework history must keep the most recently reviewed work first"
+);
+assert.deepStrictEqual(
+  homeworkGrouping.pendingLessons.map((item) => item._id),
+  ["returned", "overdue-earlier", "overdue-later", "today", "upcoming", "no-deadline", "awaiting"],
+  "homework must follow the same action-priority order on every student surface"
+);
+assert.strictEqual(homeworkGrouping.summary.actionableCount, 6);
 assert.strictEqual(homeworkGrouping.summary.awaitingReviewCount, 1);
-assert.strictEqual(homeworkGrouping.summary.urgentCount, 3);
-assert.strictEqual(homeworkGrouping.summary.pendingCount, 6);
-assert.strictEqual(homeworkGrouping.summary.completedCount, 1);
+assert.strictEqual(homeworkGrouping.summary.urgentCount, 4);
+assert.strictEqual(homeworkGrouping.summary.pendingCount, 7);
+assert.strictEqual(homeworkGrouping.summary.completedCount, 2);
 assert.strictEqual(
   courseWorkflow.getHomeworkListGroup({ homeworkTeacherReviewStatus: "incomplete", homeworkHasSubmission: true }),
   "returned",

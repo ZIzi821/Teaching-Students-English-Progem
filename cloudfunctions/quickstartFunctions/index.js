@@ -1029,13 +1029,13 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
   const mistakeLearningEnabled = isMistakeLearningEnabled(syncedStudent);
   const englishCourseEnabled = isEnglishCourseEnabled(syncedStudent);
   const learningDay = vocabulary.getLearningDay();
-  const [mistakeCount, recentLessonRes, todayStats, quizSessions, learningActivityState, studentReminders] = await Promise.all([
+  const [mistakeCount, lessonDocuments, todayStats, quizSessions, learningActivityState, studentReminders] = await Promise.all([
     mistakeLearningEnabled
       ? db.collection("mistakes").where({ studentId }).count()
       : Promise.resolve({ total: 0 }),
     englishCourseEnabled
-      ? db.collection("lessons").where({ studentId }).orderBy("lessonDate", "desc").limit(20).get()
-      : Promise.resolve({ data: [] }),
+      ? loadAllStudentDocuments("lessons", studentId)
+      : Promise.resolve([]),
     syncedStudent.vocabularyEnabled === true
       ? loadAllVocabularyDocuments("vocabularyDailyStats", { studentId, learningDay })
       : Promise.resolve([]),
@@ -1048,11 +1048,24 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
     loadAllStudentDocuments("studentReminders", studentId),
   ]);
   const progress = buildProgress(syncedStudent);
-  const studentLessons = (recentLessonRes.data || [])
+  const studentLessons = (lessonDocuments || [])
+    .slice()
+    .sort((left, right) => (
+      String(right.lessonDate || "").localeCompare(String(left.lessonDate || ""))
+      || getCreatedTime(right) - getCreatedTime(left)
+    ))
     .map(withTeacherConfirmedHomeworkState)
     .map((lesson) => withHomeworkDeadlineState(lesson));
   const homeworkLessons = studentLessons.filter(hasLessonHomework);
   const pendingHomeworkLessons = homeworkLessons.filter((lesson) => !isLessonHomeworkCompleted(lesson));
+  const completedHomeworkLessons = homeworkLessons.filter(isLessonHomeworkCompleted);
+  const homeworkGrouping = courseWorkflow.buildHomeworkListGrouping({
+    pendingLessons: pendingHomeworkLessons,
+    completedLessons: completedHomeworkLessons,
+  });
+  const pendingHomework = homeworkGrouping.pendingLessons.find((lesson) => (
+    lesson.homeworkListGroup !== courseWorkflow.HOMEWORK_LIST_GROUPS.awaitingReview
+  )) || null;
   return {
     success: true,
     role: identity.role,
@@ -1069,12 +1082,8 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
       progress,
     },
     recentLessons: studentLessons.slice(0, 3),
-    pendingHomework: pendingHomeworkLessons[0] || null,
-    homeworkSummary: {
-      pendingCount: pendingHomeworkLessons.length,
-      completedCount: homeworkLessons.length - pendingHomeworkLessons.length,
-      totalCount: homeworkLessons.length,
-    },
+    pendingHomework,
+    homeworkSummary: homeworkGrouping.summary,
     studentLearningActivities: buildStudentLearningActivities({
       lessons: studentLessons,
       sessions: quizSessions,
@@ -2402,23 +2411,7 @@ const listStudentHomework = async (event) => {
     .map(withTeacherConfirmedHomeworkState)
     .map((lesson) => withHomeworkDeadlineState(lesson));
   const homeworkLessons = lessons.filter(hasLessonHomework);
-  const deadlinePriority = { overdue: 0, today: 1, upcoming: 2, none: 3 };
-  const pendingLessons = homeworkLessons
-    .filter((lesson) => !isLessonHomeworkCompleted(lesson))
-    .sort((left, right) => {
-      const leftPriority = Object.prototype.hasOwnProperty.call(deadlinePriority, left.homeworkDueStatus)
-        ? deadlinePriority[left.homeworkDueStatus]
-        : 3;
-      const rightPriority = Object.prototype.hasOwnProperty.call(deadlinePriority, right.homeworkDueStatus)
-        ? deadlinePriority[right.homeworkDueStatus]
-        : 3;
-      const statusDiff = leftPriority - rightPriority;
-      if (statusDiff) return statusDiff;
-      const dueDiff = String(left.homeworkDueDate || "9999-12-31")
-        .localeCompare(String(right.homeworkDueDate || "9999-12-31"));
-      if (dueDiff) return dueDiff;
-      return String(right.lessonDate || "").localeCompare(String(left.lessonDate || ""));
-    });
+  const pendingLessons = homeworkLessons.filter((lesson) => !isLessonHomeworkCompleted(lesson));
   const completedLessons = homeworkLessons.filter(isLessonHomeworkCompleted);
   const homeworkGrouping = courseWorkflow.buildHomeworkListGrouping({
     pendingLessons,
