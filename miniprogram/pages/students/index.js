@@ -26,7 +26,7 @@ Page({
           this.setData({
             isTeacher: false,
             noPermission: true,
-            message: result.message || "只有朱老师可以查看学生列表",
+            message: result.message || "请使用朱老师教师账号查看学生列表",
             students: [],
           });
           return;
@@ -44,7 +44,7 @@ Page({
         this.setData({
           isTeacher: false,
           noPermission: true,
-          message: "服务暂时不可用，请稍后再试",
+          message: "加载遇到问题，请稍后重试",
         });
       });
   },
@@ -86,7 +86,7 @@ Page({
     if (!studentId || this.data.hidingId) return;
     wx.showModal({
       title: `隐藏${studentName}？`,
-      content: "隐藏后不会删除学生账号、课程、错题和学习进度，可随时在教师工作台恢复。",
+      content: "隐藏后，学生账号、课程、错题和学习进度继续保留，可随时在教师工作台恢复。",
       confirmText: "确认隐藏",
       confirmColor: "#9a6a34",
       success: (modalResult) => {

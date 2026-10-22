@@ -40,7 +40,7 @@ Page({
         progressPercent: set.audioTotalCount ? Math.round(set.audioReadyCount / set.audioTotalCount * 100) : 0,
         cues: (set.cues || []).map((cue) => Object.assign({}, cue, {
           partLabel: `Part ${cue.part}`,
-          responseLabel: cue.responseExpected ? `回答最长 ${cue.maxResponseSeconds} 秒` : "只播放，不录回答",
+          responseLabel: cue.responseExpected ? `回答最长 ${cue.maxResponseSeconds} 秒` : "考官提示音",
         })),
       }));
       this.setData({
@@ -157,7 +157,7 @@ Page({
     if (!set || !cue || !cue.audioReady || this.data.deletingKey) return;
     wx.showModal({
       title: "删除这段考官录音？",
-      content: `删除后“${set.title}”会暂时无法开始考试，直到重新上传。`,
+      content: `删除后，“${set.title}”会进入待补充状态；重新上传即可开放考试。`,
       confirmText: "删除",
       confirmColor: "#b6534b",
       success: (modal) => {

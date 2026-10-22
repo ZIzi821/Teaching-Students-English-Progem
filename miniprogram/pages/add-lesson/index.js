@@ -9,7 +9,7 @@ const { buildNextLessonTitleSuggestion } = require("../../utils/lessonTitle");
 const { usesLessonDurationMinutes } = require("../../utils/lessonDuration");
 
 const BASIC_RECORDING_TASK_TYPE_OPTIONS = [
-  { value: "manual", label: "独立朗读（不播放示范）" },
+  { value: "manual", label: "独立朗读（学生直接开始）" },
   { value: "follow_reading", label: "跟读（先听老师示范）" },
 ];
 const KET_RECORDING_TASK_TYPE_OPTIONS = [
@@ -23,7 +23,7 @@ const FOLLOW_READING_MODE_OPTIONS = [
 ];
 
 const HOMEWORK_DUE_OPTIONS = [
-  { value: -1, label: "暂不设置" },
+  { value: -1, label: "以后设置" },
   { value: 0, label: "当天截止" },
   { value: 1, label: "1 天后截止" },
   { value: 2, label: "2 天后截止" },
@@ -94,7 +94,7 @@ Page({
     showLessonRecord: false,
     learningPlanAvailable: false,
     learningStageLabel: "",
-    learningFocusOptions: [{ value: "", label: "暂不标记课程类型" }],
+    learningFocusOptions: [{ value: "", label: "以后标记课程类型" }],
     learningFocusIndex: 0,
     suggestedSkillLabel: "",
     form: {
@@ -152,7 +152,7 @@ Page({
         const result = res.result || {};
         if (!result.success) {
           this.setData({
-            message: result.message || "只有朱老师可以添加课程",
+            message: result.message || "请使用朱老师教师账号添加课程",
           });
           return;
         }
@@ -161,7 +161,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "服务暂时不可用，请稍后再试",
+          message: "加载遇到问题，请稍后重试",
         });
       });
   },
@@ -274,7 +274,7 @@ Page({
       this.setData({
         learningPlanAvailable: false,
         learningStageLabel: "",
-        learningFocusOptions: [{ value: "", label: "暂不标记课程类型" }],
+        learningFocusOptions: [{ value: "", label: "以后标记课程类型" }],
         learningFocusIndex: 0,
         suggestedSkillLabel: "",
         "form.lessonFocusType": "",
@@ -297,7 +297,7 @@ Page({
         return;
       }
       const focusValues = Array.from(new Set((radar.skills || []).map((skill) => skill.focusType).filter(Boolean)));
-      const learningFocusOptions = [{ value: "", label: "暂不标记课程类型" }]
+      const learningFocusOptions = [{ value: "", label: "以后标记课程类型" }]
         .concat(focusValues.map((value) => ({ value, label: LESSON_FOCUS_LABELS[value] || value })));
       const suggestedFocus = radar.prepSuggestion && radar.prepSuggestion.focusType || "";
       const learningFocusIndex = Math.max(0, learningFocusOptions.findIndex((item) => item.value === suggestedFocus));
@@ -389,7 +389,7 @@ Page({
         this.setData({
           lessonNoTip: "",
           lessonTitleSuggestion: "",
-          message: "服务暂时不可用，请稍后再试",
+          message: "加载遇到问题，请稍后重试",
         });
       });
   },
@@ -674,7 +674,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "服务暂时不可用，请稍后再试",
+          message: "加载遇到问题，请稍后重试",
         });
       })
       .finally(() => {

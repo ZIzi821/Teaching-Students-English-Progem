@@ -9,10 +9,10 @@ const formatCompletedTime = (timestamp) => {
 const HOMEWORK_SECTION_DEFINITIONS = Object.freeze([
   { key: "returned", title: "老师让你继续完成", hint: "老师已经检查，请按反馈补充或重新提交。", tone: "returned" },
   { key: "overdue", title: "已逾期", hint: "这些任务已经超过截止时间，请优先完成。", tone: "overdue" },
-  { key: "today", title: "今天截止", hint: "今天完成并提交，就不会变成逾期。", tone: "today" },
+  { key: "today", title: "今天截止", hint: "今天完成并提交，任务会按时进入教师检查。", tone: "today" },
   { key: "upcoming", title: "即将到期", hint: "按截止时间从近到远排列。", tone: "upcoming" },
   { key: "noDeadline", title: "其他待完成", hint: "老师暂时没有设置截止日期。", tone: "neutral" },
-  { key: "awaitingReview", title: "已提交，等待老师", hint: "不需要重复提交；老师检查后会更新结果。", tone: "awaiting" },
+  { key: "awaitingReview", title: "已提交，等待老师", hint: "提交已完成，老师检查后会更新结果。", tone: "awaiting" },
 ]);
 
 const inferHomeworkListGroup = (lesson = {}, completed = false) => {

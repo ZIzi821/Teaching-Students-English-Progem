@@ -13,7 +13,7 @@ const token = "8393a7c9ed00a70b5cb76a3b466dfb1a198e73a8a9393a3f";
 assert(serverSource.includes("const PROTOCOL_VERSION = 2"));
 assert(!serverSource.includes('pathname === "/api/image"'));
 assert(!pageSource.includes('type="file" accept="image/'));
-assert(pageSource.includes("不再读取、传输或上传题目截图"));
+assert(pageSource.includes("包含完整题目、选项和答案的文字 JSON"));
 
 const request = (port, method, pathname, payload) => new Promise((resolve, reject) => {
   const body = payload === undefined ? null : Buffer.from(JSON.stringify(payload));

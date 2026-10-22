@@ -32,7 +32,7 @@ const appendToUrl = (context, rawUrl) => {
 const blockWrite = (context) => {
   const state = getState(context);
   if (!state.isTeacherPreview) return false;
-  wx.showToast({ title: "老师预览不会保存学生记录", icon: "none" });
+  wx.showToast({ title: "老师预览 · 学生记录保持原状态", icon: "none" });
   return true;
 };
 

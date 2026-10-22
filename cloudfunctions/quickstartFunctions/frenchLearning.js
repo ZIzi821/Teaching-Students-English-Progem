@@ -329,7 +329,7 @@ const createFrenchLearningService = ({ db, cloud, getIdentity, createError, isPr
     const data = (event && event.data) || {};
     const isTeacherPreview = data.mode === "teacherPreview";
     if (isTeacherPreview && identity.role !== "teacher") {
-      throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
+      throw createError("PERMISSION_DENIED", "请使用教师账号进入学生视角");
     }
     if (identity.role === "teacher" && isTeacherPreview) {
       const studentId = asString(data.previewStudentId || data.studentId);
@@ -339,7 +339,7 @@ const createFrenchLearningService = ({ db, cloud, getIdentity, createError, isPr
       if (!student) throw createError("INVALID_STUDENT", "学生信息不存在或已删除");
       const assignedTeacherOpenId = asString(student.teacherOpenId || student.ownerOpenId);
       if (assignedTeacherOpenId && assignedTeacherOpenId !== identity.openid) {
-        throw createError("PERMISSION_DENIED", "你只能预览自己名下学生的法语学习");
+        throw createError("PERMISSION_DENIED", "请从负责该学生的教师账号进入法语预览");
       }
       if (
         !assignedTeacherOpenId
@@ -394,7 +394,7 @@ const createFrenchLearningService = ({ db, cloud, getIdentity, createError, isPr
 
   const ensureWritableLearner = (learner) => {
     if (learner && learner.readOnly) {
-      throw createError("TEACHER_PREVIEW_READ_ONLY", "老师预览不会改动学生的法语学习记录");
+      throw createError("TEACHER_PREVIEW_READ_ONLY", "当前为老师预览，学生法语学习记录保持原状态");
     }
   };
 
@@ -747,7 +747,7 @@ const createFrenchLearningService = ({ db, cloud, getIdentity, createError, isPr
       word: publicWord(word, stored, nowMs),
       memory: getMemorySnapshot(normalized, nowMs),
       curve: buildRetentionCurve(normalized, nowMs, 9),
-      disclaimer: "记忆保持率是基于当前复习模型的估算，不是对真实记忆的医学或科学测量。",
+      disclaimer: "记忆保持率由当前复习模型估算，用于安排个人复习节奏。",
     };
   };
 
@@ -815,7 +815,7 @@ const createFrenchLearningService = ({ db, cloud, getIdentity, createError, isPr
   const setSettings = async (event) => {
     const identity = await getIdentity();
     if (identity.role !== "teacher") {
-      throw createError("PERMISSION_DENIED", "仅教师端可设置法语学习功能");
+      throw createError("PERMISSION_DENIED", "请使用教师账号设置法语学习功能");
     }
     const data = (event && event.data) || {};
     const studentId = asString(data.studentId);
@@ -828,7 +828,7 @@ const createFrenchLearningService = ({ db, cloud, getIdentity, createError, isPr
     if (!student) throw createError("INVALID_STUDENT", "学生不存在或已删除");
     const assignedTeacherOpenId = asString(student.teacherOpenId || student.ownerOpenId);
     if (assignedTeacherOpenId && assignedTeacherOpenId !== identity.openid) {
-      throw createError("PERMISSION_DENIED", "你只能设置自己名下学生的法语学习功能");
+      throw createError("PERMISSION_DENIED", "请从负责该学生的教师账号设置法语学习功能");
     }
     if (
       !assignedTeacherOpenId

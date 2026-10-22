@@ -346,7 +346,7 @@ const buildMemoryOverview = (progressItems, nowMs = Date.now()) => {
     dueInThreeDaysCount: dueBy(3),
     dueInSevenDaysCount: dueBy(7),
     nextReviewAtMs: nextFuture,
-    disclaimer: "预计保持率只用于安排复习，不是考试成绩。",
+    disclaimer: "预计保持率用于安排复习节奏。",
   };
 };
 

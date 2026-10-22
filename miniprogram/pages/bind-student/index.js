@@ -60,7 +60,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "服务暂时不可用，请稍后再试",
+          message: "加载遇到问题，请稍后重试",
         });
       })
       .finally(() => {

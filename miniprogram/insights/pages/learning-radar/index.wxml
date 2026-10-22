@@ -39,8 +39,8 @@
           <view class="radar-bar" wx:if="{{item.hasScore}}">
             <view class="radar-fill fill-{{item.stateTone}}" style="width: {{item.barPercent}}%;"></view>
           </view>
-          <view class="unassessed-line" wx:elif="{{item.active}}">等待课堂观察，不按 0 分计算</view>
-          <view class="unassessed-line" wx:else>当前阶段暂不安排，不计入达标判断</view>
+          <view class="unassessed-line" wx:elif="{{item.active}}">等待课堂观察，取得证据后评分</view>
+          <view class="unassessed-line" wx:else>后续阶段再纳入达标判断</view>
           <view class="dimension-foot">
             <text>{{item.coverageLabel}}</text>
             <text wx:if="{{item.hasScore}}">综合 {{item.score}}</text>
@@ -116,7 +116,7 @@
           <view>{{item.label}}</view>
         </view>
       </view>
-      <view class="teacher-gate">系统只提供达标建议，阶段切换始终由老师确认。</view>
+      <view class="teacher-gate">阶段切换由老师结合达标建议确认。</view>
       <view class="primary-btn advance-btn" wx:if="{{radar.stageReadiness.eligibleForTeacherConfirmation && radar.stageReadiness.nextStageId}}" bindtap="confirmNextStage">
         确认进入下一阶段
       </view>
@@ -124,7 +124,7 @@
 
     <view class="card skill-card">
       <view class="section-title">本阶段能力明细</view>
-      <view class="section-subtitle">可把某项设为备课重点；置顶不会直接改变能力评分。</view>
+      <view class="section-subtitle">可把某项设为备课重点；能力评分继续依据课堂证据。</view>
       <view class="skill-row" wx:for="{{radar.skills}}" wx:key="skillId">
         <view class="skill-main">
           <view class="skill-title-row">

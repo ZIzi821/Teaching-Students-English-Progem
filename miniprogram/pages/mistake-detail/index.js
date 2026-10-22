@@ -37,7 +37,7 @@ Page({
         const result = res.result || {};
         if (!result.success) {
           this.setData({
-            message: result.message || "无权查看该错题",
+            message: result.message || "请使用对应的教师或学生账号查看错题",
           });
           return;
         }
@@ -51,7 +51,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "服务暂时不可用，请稍后再试",
+          message: "加载遇到问题，请稍后重试",
         });
       });
   },

@@ -15,7 +15,7 @@
       </view>
       <view class="preview-badge" wx:if="{{readOnly}}">老师预览</view>
     </view>
-    <view class="preview-tip" wx:if="{{readOnly}}">老师预览不会改动学生进度，答题结果也不会保存。</view>
+    <view class="preview-tip" wx:if="{{readOnly}}">老师预览 · 答题结果在本页展示。</view>
 
     <block wx:if="{{!completed}}">
       <view class="progress-meta">
@@ -80,7 +80,7 @@
             bindinput="onSpellingInput"
             bindconfirm="submitSpelling"
           />
-          <view class="letter-auto-hint" wx:if="{{currentQuestion.taskType === 'letterCompletion' && !answered}}">填满后自动判断，不需要再点确认</view>
+          <view class="letter-auto-hint" wx:if="{{currentQuestion.taskType === 'letterCompletion' && !answered}}">填满后自动判断</view>
           <view class="spelling-submit {{answered ? 'action-disabled' : ''}}" wx:if="{{currentQuestion.taskType !== 'letterCompletion'}}" bindtap="submitSpelling">确认答案</view>
         </view>
       </view>
@@ -106,7 +106,7 @@
         aria-label="本轮答对 {{score}} 题，需要巩固 {{incorrectCount}} 题"
       ></data-chart>
       <view class="result-tip result-warning" wx:if="{{saveFailureCount}}">{{saveFailureCount}} 题的结果没有保存，请回单词页重试。</view>
-      <view class="result-tip" wx:elif="{{incorrectCount && readOnly}}">这是老师预览，答题结果不会保存。</view>
+      <view class="result-tip" wx:elif="{{incorrectCount && readOnly}}">预览结果已展示。</view>
       <view class="result-tip" wx:elif="{{incorrectCount}}">答错的词已加入复习，可以趁热再练一次。</view>
       <view class="result-tip" wx:else>全对！继续完成今天的单词吧。</view>
       <view class="result-actions">

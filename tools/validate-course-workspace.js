@@ -89,7 +89,7 @@ assert(lessonWxml.includes('bindtap="openMaterial"'), "Inline course images cann
 assert(lessonWxml.includes('show-menu-by-longpress="{{true}}"'), "Inline course images do not expose the native long-press menu");
 assert(lessonWxml.includes("保存原图"), "Inline course images do not expose original-image saving");
 assert(/\.material-image-preview\s*\{[\s\S]*?height:\s*380rpx/.test(read("miniprogram/pages/lesson-detail/index.wxss")), "Inline course image preview has no stable readable height");
-assert(lessonWxml.includes("不再显示乱码名"), "Friendly multi-file naming guidance is missing");
+assert(lessonWxml.includes("多文件自动编号并显示清晰名称"), "Friendly multi-file naming guidance is missing");
 assert(lessonWxml.includes("bindtap=\"saveMaterial\""), "Material save action is missing");
 assert(lessonWxml.includes("学生已提交"), "Teacher recording list is missing");
 assert(lessonWxml.includes("删除录音"), "Teacher recording delete action is missing");
@@ -149,7 +149,7 @@ assert(studentJs.includes("onStudentLessonTemplateChange"), "Student lesson temp
 assert(studentWxml.includes("英语课程与作业功能"), "Course feature switch UI is missing");
 assert(addLessonJs.includes("wx.redirectTo"), "New lesson does not open the course workspace");
 assert(addLessonJs.includes("inferLessonTemplateKey"), "New lessons do not inherit the student template");
-assert(addLessonWxml.includes("上一节课对照") && addLessonWxml.includes("不会自动复制"), "Previous-lesson read-only reference is missing");
+assert(addLessonWxml.includes("上一节课对照") && addLessonWxml.includes("当前表单保持独立"), "Previous-lesson reference is missing");
 assert(backend.includes("buildPreviousLessonReference"), "Previous lesson data is not returned by the protected teacher endpoint");
 assert.strictEqual(buildNextLessonTitleSuggestion("基础句型与个人表达-5"), "基础句型与个人表达-6", "Lesson title sequence did not advance");
 assert.strictEqual(buildNextLessonTitleSuggestion("单词阶段-1"), "单词阶段-2", "A teacher-created lesson stage did not advance");
@@ -169,7 +169,7 @@ assert(backend.includes('progressUnit: lessonAccountingMode === "minute" ? "minu
 assert(backend.includes("Number(value) === 0"), "Normalized empty lesson durations cannot be fingerprinted safely");
 assert(backend.includes("countLessonProgressRecords") && backend.includes("sync lesson count after course type update failed"), "Institution courses do not trigger an authoritative lesson-progress recount");
 assert.strictEqual(courseWorkflow.countLessonProgressRecords([{}, { institutionCourse: true }, { institutionCourse: false }]), 2, "Institution courses must be the only lesson records excluded from progress");
-assert(homeWxml.includes("不计入个人课程进度") && studentWxml.includes("不计入个人课程进度"), "Institution courses are not labelled in English course records");
+assert(homeWxml.includes("个人课程进度维持原数值") && studentWxml.includes("个人课程进度维持原数值"), "Institution courses are not labelled in English course records");
 assert(addLessonWxml.includes("录音作业期限") && lessonWxml.includes("录音作业期限"), "Teacher recording deadline controls are missing");
 assert(backend.includes("homeworkDueDays") && backend.includes("syncLessonSubmissionTiming"), "Homework deadline or late-submission state is not persisted");
 assert(homeworkWxml.includes("deadlineLabel") && lessonWxml.includes("逾期提交"), "Student deadline and late-submission labels are missing");

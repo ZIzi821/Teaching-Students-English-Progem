@@ -5,11 +5,11 @@
       <view>
         <view class="title">教师待办</view>
         <view class="subtitle" wx:if="{{summary.totalCount}}">还有 {{summary.totalCount}} 项需要处理，涉及 {{summary.studentCount}} 位学生。</view>
-        <view class="subtitle" wx:else>当前没有尚未解决的事项。</view>
+        <view class="subtitle" wx:else>当前事项均已解决。</view>
       </view>
       <view class="hero-count">{{summary.totalCount}}</view>
     </view>
-    <view class="hero-note">这里按真实状态更新，不会因为“已查看”而提前消失。</view>
+    <view class="hero-note">待办按真实状态更新，解决后自动归档。</view>
   </view>
 
   <view class="card status-card" wx:if="{{loading}}">正在整理待办…</view>
@@ -80,7 +80,7 @@
     </view>
 
     <view class="evidence-note">
-      “学习关注”只统计小程序内可确认的背词、小测和录音记录，不代表学生在线下没有学习。
+      “学习关注”依据小程序内可确认的背词、小测和录音记录生成。
     </view>
   </block>
 

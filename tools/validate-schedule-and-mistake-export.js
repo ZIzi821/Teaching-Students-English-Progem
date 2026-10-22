@@ -76,9 +76,9 @@ assert(scheduleService.includes("currentVersion !== expectedVersion"), "Schedule
 assert(schedulePageWxml.includes("每周上课日程"), "Schedule page heading is missing");
 assert(schedulePageWxml.includes("学生临时课程") && schedulePageWxml.includes("保存修改"), "Teacher temporary lesson or editable schedule UI is missing");
 assert(
-  schedulePageWxml.includes("家长看到的一样")
+  schedulePageWxml.includes("界面与家长端一致")
     && schedulePageWxml.includes("当前在读学生的上课时间")
-    && schedulePageWxml.includes("可以查看同学们的上课时间"),
+    && schedulePageWxml.includes("日程由朱老师统一维护"),
   "Student and teacher-preview shared timetable copy is missing"
 );
 assert(!schedulePageWxml.includes("只显示当前孩子自己的课程"), "Student timetable still claims that peer lessons are hidden");
@@ -129,7 +129,7 @@ const coaching = lessonTemplates.findTemplate("vocabulary_coaching");
 assert.strictEqual(coaching.requiresLessonNo, false, "Vocabulary coaching still requires a lesson number");
 assert.strictEqual(coaching.showPostLessonRecord, false, "Vocabulary coaching still requires a post-lesson record");
 assert(addLessonWxml.includes("本次上课时长（分钟）"), "New vocabulary coaching lessons cannot record minutes");
-assert(lessonDetailWxml.includes("不生成课后整理"), "Vocabulary coaching edit flow does not explain the no-record rule");
+assert(lessonDetailWxml.includes("单词陪练记录名称和实际时长，课程编号与课后整理保持简洁"), "Vocabulary coaching edit flow does not explain the concise record rule");
 
 [
   [schedulePageJs, schedulePageWxml, "schedule"],

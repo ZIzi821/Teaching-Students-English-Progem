@@ -2,7 +2,7 @@
   <view class="library-hero">
     <view class="eyebrow">KET MOCK AUDIO</view>
     <view class="title">模拟考官录音库</view>
-    <view class="subtitle">每套需准备完整一组考官与虚拟搭档音频。英文录制稿只在教师端显示；学生端只会听到你的录音。</view>
+    <view class="subtitle">每套需准备完整一组考官与虚拟搭档音频。英文录制稿显示在教师端，学生端播放教师录音。</view>
   </view>
 
   <view class="card status-card" wx:if="{{loading}}">正在检查模拟题录音…</view>
@@ -16,8 +16,8 @@
       <view class="summary-card"><view class="summary-number">{{summary.completeSetCount}} / {{summary.setCount}}</view><view class="summary-label">可开始套题</view></view>
       <view class="summary-card"><view class="summary-number">{{summary.readyCount}} / {{summary.totalCount}}</view><view class="summary-label">已备音频</view></view>
     </view>
-    <view class="truth-note">题库分三类：第 1 套“官方公开样题结构改编”；第 2–8 套“独家原创题目”；第 9–12 套“机构-独家原创题”。第三类表示按机构级完整模考标准原创，并不是复制某家机构的出版原题。</view>
-    <view class="truth-note">录制衔接：把 “Thank you. Now, let’s talk about …” 直接放在下一段提示音开头；不要使用 “Good / 不错” 等评价性话语，也不需要单独上传一条衔接音频。</view>
+    <view class="truth-note">题库分三类：第 1 套“官方公开样题结构改编”；第 2–8 套“独家原创题目”；第 9–12 套“机构-独家原创题”。第三类为机构级完整模考标准原创题。</view>
+    <view class="truth-note">录制衔接：把 “Thank you. Now, let’s talk about …” 直接放在下一段提示音开头；衔接保持中性，可直接使用下一段音频。</view>
 
     <view class="card set-card" wx:for="{{sets}}" wx:key="id" wx:for-item="set" wx:for-index="setIndex">
       <view class="set-head" data-id="{{set.id}}" bindtap="toggleSet">
@@ -46,7 +46,7 @@
           <view class="script-label">你的英文录制稿</view>
           <view class="script-text">{{cue.script}}</view>
           <view class="backup-box" wx:if="{{cue.backupPrompts && cue.backupPrompts.length}}">
-            <view class="backup-title">教师备用追问 · 无需预录</view>
+            <view class="backup-title">教师现场备用追问</view>
             <view class="backup-line" wx:for="{{cue.backupPrompts}}" wx:key="*this" wx:for-item="backupPrompt">• {{backupPrompt}}</view>
           </view>
           <view class="cue-actions">

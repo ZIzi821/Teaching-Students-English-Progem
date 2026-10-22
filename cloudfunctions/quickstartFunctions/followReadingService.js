@@ -63,10 +63,10 @@ const createFollowReadingService = ({
       throw createError("PERMISSION_DENIED", "请从教师预览入口进入学生跟读页");
     }
     if (isTeacherPreview && data.previewStudentId && lesson.studentId !== data.previewStudentId) {
-      throw createError("PERMISSION_DENIED", "当前课程不属于这位学生，请刷新后重试");
+      throw createError("PERMISSION_DENIED", "请从对应学生的课程页进入跟读任务");
     }
     if (identity.role === "student" && (!identity.student || identity.student._id !== lesson.studentId)) {
-      throw createError("PERMISSION_DENIED", "你只能完成自己的跟读任务");
+      throw createError("PERMISSION_DENIED", "请使用当前学生账号完成跟读任务");
     }
     await ensureStudentAccess(lesson.studentId);
     const studentResult = await db.collection("students").doc(lesson.studentId).get();
@@ -263,7 +263,7 @@ const createFollowReadingService = ({
   const submitBatch = async (event) => {
     const identity = await getIdentity();
     if (identity.role !== "student" || !identity.student) {
-      throw createError("PERMISSION_DENIED", "教师预览不会保存跟读录音，请使用学生账号提交");
+      throw createError("PERMISSION_DENIED", "当前为教师预览，请使用学生账号提交跟读录音");
     }
     const data = event.data || {};
     const lessonId = String(data.lessonId || "").trim();

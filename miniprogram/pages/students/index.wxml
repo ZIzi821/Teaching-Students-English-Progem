@@ -2,7 +2,7 @@
   <view class="page-head">
     <view>
       <view class="title">朱老师的学生</view>
-      <view class="subtitle">学生列表仅老师可见。学生账号只能查看自己的学习内容。</view>
+      <view class="subtitle">教师学生列表 · 每位学生进入自己的学习页面。</view>
     </view>
   </view>
 

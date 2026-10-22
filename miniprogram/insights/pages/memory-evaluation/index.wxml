@@ -29,7 +29,7 @@
     <view class="card empty-evaluation" wx:if="{{!evaluation.hasSample}}">
       <view class="empty-icon">∿</view>
       <view class="empty-title">还没有可评估的数据</view>
-      <view class="empty-copy">第一次学习用于建立初始记忆状态，不参加校准。从同一单词的第二次有效复习开始，页面会逐步出现结果。</view>
+      <view class="empty-copy">第一次学习用于建立初始记忆状态；同一单词从第二次有效复习开始进入校准，页面会逐步出现结果。</view>
     </view>
 
     <view class="metric-grid" wx:if="{{evaluation.hasSample}}">
@@ -99,7 +99,7 @@
           <view class="quality-label">小测证据占比</view>
         </view>
       </view>
-      <view class="quality-note">已排除 {{evaluation.excludedColdStartCount}} 次首次学习；另有 {{evaluation.excludedQualityCount}} 条无效或其他版本记录未参与。</view>
+      <view class="quality-note">校准样本已整理：{{evaluation.excludedColdStartCount}} 次首次学习用于建立初始状态，{{evaluation.excludedQualityCount}} 条其他版本记录归入独立统计。</view>
 
       <view class="source-list" wx:if="{{evaluation.sourceBreakdown.length}}">
         <view class="source-row" wx:for="{{evaluation.sourceBreakdown}}" wx:key="key">
@@ -140,7 +140,7 @@
       <view class="method-line">{{evaluation.samplingNote}}</view>
       <view class="method-line">{{evaluation.evidenceNote}}</view>
       <view class="method-line">{{evaluation.scoreNote}}</view>
-      <view class="teacher-note">这些指标用于检查调度算法，不是学生分数，也不会自动修改参数。是否调整仍由老师决定。</view>
+      <view class="teacher-note">这些指标用于检查调度算法，参数调整由老师结合课堂表现决定。</view>
     </view>
   </block>
 </view>

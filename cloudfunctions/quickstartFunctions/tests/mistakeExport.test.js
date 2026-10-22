@@ -59,6 +59,6 @@ assert.throws(() => mistakeExport.resolveLessonSelection(lessons, {
   mode: "range",
   startLessonId: "late-created",
   endLessonId: "first",
-}), /起始课程不能晚于结束课程/);
+}), /请选择早于结束课程的起始课程/);
 
 console.log("mistakeExport tests passed");

@@ -104,7 +104,7 @@ Page({
         history,
         hasCurve: curve.length > 1,
         hasReview: Number(memory.reviewCount) > 0,
-        disclaimer: payload.disclaimer || "曲线是学习规划提示，不代表真实记忆测量。",
+        disclaimer: payload.disclaimer || "曲线用于学习规划参考。",
       });
     }).catch((error) => {
       console.error(error);

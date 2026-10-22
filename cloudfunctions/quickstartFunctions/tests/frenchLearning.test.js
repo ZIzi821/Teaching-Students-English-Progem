@@ -89,7 +89,7 @@ const run = async () => {
   assert.strictEqual(overview.wordSummary.byLevel.A2.totalCount, 220);
   assert.strictEqual(overview.sentenceSummary.totalCount, 98);
   assert.strictEqual(overview.dashboard.levelProgress.length, 2);
-  assert.strictEqual(overview.dashboard.levelProgress[0].disclaimer.includes("不是官方"), true);
+  assert.strictEqual(overview.dashboard.levelProgress[0].disclaimer.includes("用于安排 CEFR 学习进度"), true);
   assert.strictEqual(overview.dashboard.memoryOverview.reviewedWordCount, 0);
   assert.strictEqual(overview.dashboard.dailyPath.steps.length, 3);
   assert(overview.dailySpotlight && overview.dailySpotlight.text);

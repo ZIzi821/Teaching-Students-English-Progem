@@ -46,12 +46,12 @@ assert(studentsJs.includes("hidden: true"), "Student list must hide without dele
 assert(studentsWxml.includes('catchtap="hideStudent"'), "Hide action must not accidentally open the student card");
 assert(workbenchJs.includes("includeHidden: true"), "Workbench must request hidden students");
 assert(workbenchJs.includes("hidden: false"), "Workbench must support restoring students");
-assert(workbenchWxml.includes("隐藏不会删除访问码、课程、错题或学习进度"), "Workbench must explain non-destructive hiding");
+assert(workbenchWxml.includes("隐藏后，访问码、课程、错题和学习进度继续保留"), "Workbench must explain reversible hiding");
 assert(todosJs.includes('type: "getTeacherTodos"'), "Todo page must load persistent teacher todos");
 assert(todosJs.includes('activeFilter: "all"'), "Todo page must support task filtering");
 assert(todosJs.includes('&focus=" + focus'), "Todo actions must deep-link to the relevant lesson section");
-assert(todosWxml.includes("不会因为“已查看”而提前消失"), "Todo page must explain persistent resolution semantics");
-assert(todosWxml.includes("只统计小程序内可确认"), "Inactivity copy must state its evidence boundary");
+assert(todosWxml.includes("待办按真实状态更新，解决后自动归档"), "Todo page must explain persistent resolution semantics");
+assert(todosWxml.includes("依据小程序内可确认的背词、小测和录音记录生成"), "Inactivity copy must state its evidence boundary");
 
 const backend = read("cloudfunctions", "quickstartFunctions", "index.js");
 assert(backend.includes("const isStudentHiddenFromTeacher"), "Backend is missing visibility normalization");

@@ -18,7 +18,7 @@
 
     <view class="card status-card" wx:if="{{session.status === 'submitted'}}">
       <view class="status-title">{{canReview ? '等待你的练习评分' : '已提交，等待老师评分'}}</view>
-      <view class="status-copy">回答已按 Part 1 和 Part 2 分段保存，回听时不会混入考官录音。</view>
+      <view class="status-copy">回答已按 Part 1 和 Part 2 分段保存，回听列表呈现学生回答。</view>
     </view>
 
     <view class="section-title">Part 1 · Interview</view>
@@ -27,7 +27,7 @@
       <view class="script-box" wx:if="{{canReview && row.script}}"><view class="script-label">考官录制稿</view><view>{{row.script}}</view></view>
       <view class="teacher-support" wx:if="{{canReview && ((row.backupPrompts && row.backupPrompts.length) || row.modelAnswer)}}">
         <block wx:if="{{row.backupPrompts && row.backupPrompts.length}}"><view class="support-label">学生卡住时可选追问</view><view class="support-line" wx:for="{{row.backupPrompts}}" wx:key="*this" wx:for-item="guidePrompt">• {{guidePrompt}}</view></block>
-        <block wx:if="{{row.modelAnswer}}"><view class="support-label model-label">A2 参考示范 · 不要求照背</view><view class="model-answer">{{row.modelAnswer}}</view></block>
+        <block wx:if="{{row.modelAnswer}}"><view class="support-label model-label">A2 表达参考 · 请用自己的话回答</view><view class="model-answer">{{row.modelAnswer}}</view></block>
       </view>
       <view class="audio-actions">
         <view class="audio-btn prompt-btn" data-part="1" data-index="{{rowIndex}}" data-type="prompt" bindtap="playAudio">{{playingKey === 'prompt:' + row.cueId ? '停止考官音频' : '播放考官问题'}}</view>
@@ -46,7 +46,7 @@
       <view class="script-box" wx:if="{{canReview && row.script}}"><view class="script-label">考官／虚拟搭档录制稿</view><view>{{row.script}}</view></view>
       <view class="teacher-support" wx:if="{{canReview && ((row.backupPrompts && row.backupPrompts.length) || row.modelAnswer)}}">
         <block wx:if="{{row.backupPrompts && row.backupPrompts.length}}"><view class="support-label">学生卡住时可选追问</view><view class="support-line" wx:for="{{row.backupPrompts}}" wx:key="*this" wx:for-item="guidePrompt">• {{guidePrompt}}</view></block>
-        <block wx:if="{{row.modelAnswer}}"><view class="support-label model-label">A2 参考示范 · 不要求照背</view><view class="model-answer">{{row.modelAnswer}}</view></block>
+        <block wx:if="{{row.modelAnswer}}"><view class="support-label model-label">A2 表达参考 · 请用自己的话回答</view><view class="model-answer">{{row.modelAnswer}}</view></block>
       </view>
       <view class="audio-actions">
         <view class="audio-btn prompt-btn" data-part="2" data-index="{{rowIndex}}" data-type="prompt" bindtap="playAudio">{{playingKey === 'prompt:' + row.cueId ? '停止提示音频' : '播放提示音频'}}</view>
@@ -55,10 +55,10 @@
     </view>
 
     <view class="section-title score-title">四维练习评分</view>
-    <view class="score-notice">教师练习评分，用于后续学习调整，不是 Cambridge 官方考试成绩。</view>
+    <view class="score-notice">教师练习评分，用于后续学习调整。</view>
 
     <view class="card guide-toggle" wx:if="{{canReview && set.teacherGuide}}" bindtap="toggleScoreGuide">
-      <view><view class="guide-toggle-title">查看本套评分参考</view><view class="guide-toggle-copy">逐项锚点、观察重点与示范回答仅教师可见</view></view>
+      <view><view class="guide-toggle-title">查看本套评分参考</view><view class="guide-toggle-copy">教师评分参考 · 逐项锚点、观察重点与示范回答</view></view>
       <view class="guide-toggle-mark">{{scoreGuideExpanded ? '收起' : '展开'}}</view>
     </view>
     <view class="card score-guide" wx:if="{{canReview && scoreGuideExpanded && set.teacherGuide}}">

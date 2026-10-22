@@ -25,7 +25,7 @@
       <view class="state-pill {{item.enabled ? 'state-on' : 'state-off'}}">{{item.stateLabel}}</view>
     </view>
 
-    <view class="disabled-note" wx:if="{{!item.enabled}}">当前只显示预配置；开启背词后才会出现在学生端。</view>
+    <view class="disabled-note" wx:if="{{!item.enabled}}">当前展示预配置；开启背词后同步到学生端。</view>
 
     <view class="library-list" wx:if="{{item.libraries.length}}">
       <view class="library-row" wx:for="{{item.libraries}}" wx:key="id" wx:for-item="library">

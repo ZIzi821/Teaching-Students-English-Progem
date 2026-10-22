@@ -341,11 +341,11 @@ const createWeeklyScheduleService = ({
   const createScheduleBooking = async (event) => {
     const identity = await getIdentity();
     if (identity.role !== "teacher") {
-      throw createError("PERMISSION_DENIED", "日程现由教师统一安排，家长端仅查看课程时间");
+      throw createError("PERMISSION_DENIED", "日程由教师统一安排，家长端可查看课程时间");
     }
     const data = event.data || {};
     if (data.mode === "teacherPreview") {
-      throw createError("PERMISSION_DENIED", "学生预览与家长端保持一致，仅查看课程时间");
+      throw createError("PERMISSION_DENIED", "学生预览与家长端一致，可查看课程时间");
     }
     const requestedStudentId = String(data.studentId || data.previewStudentId || "").trim();
     const studentId = requestedStudentId;
@@ -400,7 +400,7 @@ const createWeeklyScheduleService = ({
 
   const saveTeacherScheduleBlock = async (event) => {
     const identity = await getIdentity();
-    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "仅教师端可添加日程");
+    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "请使用教师账号添加日程");
     const data = event.data || {};
     if (data.mode === "teacherPreview") throw createError("PERMISSION_DENIED", "请在教师日程中添加老师安排");
     await ensureDefaults();
@@ -462,10 +462,10 @@ const createWeeklyScheduleService = ({
     const initial = initialResult.data || null;
     if (!initial || initial.status !== "active") throw createError("INVALID_SCHEDULE_EVENT", "这段日程已不存在，请刷新后重试");
     if (initial.eventType === "fixed_student_lesson") {
-      throw createError("FIXED_SCHEDULE_CONTROL_REQUIRED", "固定课表请使用下方开关控制，不支持直接改写");
+      throw createError("FIXED_SCHEDULE_CONTROL_REQUIRED", "请使用下方开关调整固定课表");
     }
     if (!canManageEvent({ identity, data, current: initial })) {
-      throw createError("PERMISSION_DENIED", "你没有权限编辑这段日程");
+      throw createError("PERMISSION_DENIED", "请使用创建这段日程的教师账号编辑");
     }
 
     let eventData;
@@ -529,7 +529,7 @@ const createWeeklyScheduleService = ({
           : Promise.resolve(null),
       ]);
       if (!current || current.status !== "active") throw createError("INVALID_SCHEDULE_EVENT", "这段日程已不存在，请刷新后重试");
-      if (!canManageEvent({ identity, data, current })) throw createError("PERMISSION_DENIED", "你没有权限编辑这段日程");
+      if (!canManageEvent({ identity, data, current })) throw createError("PERMISSION_DENIED", "请使用创建这段日程的教师账号编辑");
       if (Number(current.version) !== expectedVersion) throw createError("SCHEDULE_VERSION_CONFLICT", "这段日程刚被修改过，请刷新后再编辑");
       if (current.eventType !== initial.eventType || String(current.studentId || "") !== String(initial.studentId || "")) {
         throw createError("SCHEDULE_VERSION_CONFLICT", "这段日程内容已变化，请刷新后再编辑");
@@ -593,9 +593,9 @@ const createWeeklyScheduleService = ({
       ]);
       if (!current || current.status === "cancelled") return false;
       if (current.eventType === "fixed_student_lesson") {
-        throw createError("FIXED_SCHEDULE_CONTROL_REQUIRED", "固定课表请使用开关关闭，不会删除记录");
+        throw createError("FIXED_SCHEDULE_CONTROL_REQUIRED", "请使用开关暂停固定课表，原记录继续保留");
       }
-      if (!canManageEvent({ identity, data, current })) throw createError("PERMISSION_DENIED", "你没有权限取消这段日程");
+      if (!canManageEvent({ identity, data, current })) throw createError("PERMISSION_DENIED", "请使用创建这段日程的教师账号取消");
       if (Number(data.expectedVersion) > 0 && Number(current.version) !== Number(data.expectedVersion)) {
         throw createError("SCHEDULE_VERSION_CONFLICT", "这段日程刚被修改过，请刷新后再操作");
       }
@@ -627,7 +627,7 @@ const createWeeklyScheduleService = ({
 
   const setScheduleDayAvailability = async (event) => {
     const identity = await getIdentity();
-    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "仅教师端可调整预约开放状态");
+    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "请使用教师账号调整预约开放状态");
     const data = event.data || {};
     if (data.mode === "teacherPreview") throw createError("PERMISSION_DENIED", "请返回教师日程调整预约开放状态");
     const weekday = schedule.normalizeWeekday(data.weekday);
@@ -667,7 +667,7 @@ const createWeeklyScheduleService = ({
 
   const setFixedStudentScheduleEnabled = async (event) => {
     const identity = await getIdentity();
-    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "仅教师端可调整固定课表");
+    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "请使用教师账号调整固定课表");
     const data = event.data || {};
     if (data.mode === "teacherPreview") {
       throw createError("PERMISSION_DENIED", "请返回教师日程调整固定课表");
@@ -735,7 +735,7 @@ const createWeeklyScheduleService = ({
 
   const saveFixedStudentSchedule = async (event) => {
     const identity = await getIdentity();
-    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "仅教师端可调整固定课表");
+    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "请使用教师账号调整固定课表");
     const data = event.data || {};
     if (data.mode === "teacherPreview") {
       throw createError("PERMISSION_DENIED", "请返回教师日程调整固定课表");

@@ -14,7 +14,7 @@
       <view class="preview-badge" wx:if="{{readOnly}}">老师预览</view>
     </view>
 
-    <view class="preview-tip" wx:if="{{readOnly}}">这是孩子会看到的完整背词流程。你可以翻答案和切换单词，但不会写入学生进度。</view>
+    <view class="preview-tip" wx:if="{{readOnly}}">这是孩子的完整背词流程；答案和切换操作以预览方式呈现。</view>
 
     <view class="session-progress" wx:if="{{!sessionDone}}">
       <view class="session-progress-meta">
@@ -38,7 +38,7 @@
         {{audioLoadingWordKey === currentWord.key ? '正在加载读音…' : (playingWordKey === currentWord.key ? '正在播放…' : '🔊 听发音')}}
       </view>
       <view class="audio-preload-note audio-preload-{{audioPreloadState}}" wx:if="{{audioPreloadLabel}}">{{audioPreloadLabel}}</view>
-      <view class="audio-output-hint">显示播放但没听到时，请按手机音量＋，并确认声音没有连接到蓝牙耳机。</view>
+      <view class="audio-output-hint">播放声音异常时，请检查手机音量和蓝牙音频输出。</view>
 
       <view class="memory-prompt" wx:if="{{!answerShown}}">{{currentWord.memoryPrompt}}</view>
       <view class="reveal-action" wx:if="{{!answerShown}}" bindtap="revealAnswer">想好了，查看答案</view>
@@ -47,7 +47,7 @@
         <view class="answer-label">中文意思</view>
         <view class="answer-meaning">{{currentWord.meaning}}</view>
         <view class="answer-pos" wx:if="{{currentWord.partOfSpeech}}">{{currentWord.partOfSpeech}}</view>
-        <view class="rating-guide">刚才是不看答案想出来的吗？诚实选择，系统才会安排合适的复习时间。</view>
+        <view class="rating-guide">请按真实记忆情况选择，系统会安排合适的复习时间。</view>
         <view class="rating-grid">
           <view class="rating-button rating-forgot {{reviewing ? 'rating-disabled' : ''}}" data-result="forgot" bindtap="rateWord">
             <view class="rating-title">没记住</view>
@@ -72,7 +72,7 @@
     <view class="card completion-card" wx:if="{{sessionDone}}">
       <view class="completion-mark">✓</view>
       <view class="completion-title">这一轮背完了</view>
-      <view class="completion-hint" wx:if="{{readOnly}}">老师预览已结束，没有修改学生记录。</view>
+      <view class="completion-hint" wx:if="{{readOnly}}">老师预览已结束，学生记录保持原状态。</view>
       <view class="completion-hint" wx:else>系统已经按刚才的记忆情况安排下次复习，接下来用小测检查一下。</view>
       <view class="result-summary">
         <view><text class="result-number">{{resultCounts.forgot}}</text><text>没记住</text></view>
@@ -83,6 +83,6 @@
       <view class="completion-secondary" bindtap="goVocabularyHome">查看单词记录与词库</view>
     </view>
 
-    <view class="study-tip" wx:if="{{!sessionDone}}">没记住并不是失败，它会在本轮后面再出现一次。</view>
+    <view class="study-tip" wx:if="{{!sessionDone}}">需要巩固的词会在本轮后面再出现一次，继续练就好。</view>
   </block>
 </view>

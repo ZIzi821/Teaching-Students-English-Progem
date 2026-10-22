@@ -19,7 +19,7 @@ const getFriendlyCloudErrorMessage = (err, fallback) => {
   }
   const message = String(err && (err.message || err.errMsg) || "").trim();
   if (!message || /(?:document|collection|transaction)\.(?:get|set|update|add|remove):fail/i.test(message)) {
-    return fallback || "服务暂时不可用，请稍后再试";
+    return fallback || "加载遇到问题，请稍后重试";
   }
   return message;
 };

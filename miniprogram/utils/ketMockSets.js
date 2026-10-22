@@ -1,7 +1,7 @@
 const OFFICIAL_SAMPLE_URL = "https://www.cambridgeenglish.org/Images/561990-key-for-schools-speaking-sa-sample-test-2020-.pdf";
 
 const DEFAULT_TEACHER_GUIDE = {
-  practiceNotice: "以下锚点只用于本小程序的教师练习评分，不是 Cambridge 官方分数换算。",
+  practiceNotice: "以下锚点用于本小程序的教师练习评分和后续学习调整。",
   scoreGuidance: [
     {
       key: "grammarVocabulary",
@@ -275,7 +275,7 @@ const RAW_KET_MOCK_SETS = [
     sourceType: "institution_exclusive_original",
     sourceBadge: "机构-独家原创题",
     sourceLabel: "按机构级完整模考标准设计的本小程序独家原创题",
-    sourceReference: "参考公开考试结构与高质量模考编排标准，未复制任何机构出版题目",
+    sourceReference: "依据公开考试结构与高质量模考编排标准原创",
     sourceUrl: "",
     topic: "Digital life and keeping in touch",
     visualAsset: "/ket-mock/images/set-09-digital-contact.webp",
@@ -330,7 +330,7 @@ const RAW_KET_MOCK_SETS = [
     sourceType: "institution_exclusive_original",
     sourceBadge: "机构-独家原创题",
     sourceLabel: "按机构级完整模考标准设计的本小程序独家原创题",
-    sourceReference: "参考公开考试结构与高质量模考编排标准，未复制任何机构出版题目",
+    sourceReference: "依据公开考试结构与高质量模考编排标准原创",
     sourceUrl: "",
     topic: "Home responsibilities and helping family",
     visualAsset: "/ket-mock/images/set-10-helping-home.webp",
@@ -385,7 +385,7 @@ const RAW_KET_MOCK_SETS = [
     sourceType: "institution_exclusive_original",
     sourceBadge: "机构-独家原创题",
     sourceLabel: "按机构级完整模考标准设计的本小程序独家原创题",
-    sourceReference: "参考公开考试结构与高质量模考编排标准，未复制任何机构出版题目",
+    sourceReference: "依据公开考试结构与高质量模考编排标准原创",
     sourceUrl: "",
     topic: "Birthdays and choosing gifts",
     visualAsset: "/ket-mock/images/set-11-birthday-gifts.webp",
@@ -429,7 +429,7 @@ const RAW_KET_MOCK_SETS = [
       ],
     },
     teacherGuide: {
-      focus: ["能否从兴趣、实用性和价格多个角度比较", "能否自然使用 would rather、because 等表达", "能否回应观点而不是只说自己的答案"],
+      focus: ["能否从兴趣、实用性和价格多个角度比较", "能否自然使用 would rather、because 等表达", "能否先回应观点再补充自己的答案"],
     },
   },
   {
@@ -440,7 +440,7 @@ const RAW_KET_MOCK_SETS = [
     sourceType: "institution_exclusive_original",
     sourceBadge: "机构-独家原创题",
     sourceLabel: "按机构级完整模考标准设计的本小程序独家原创题",
-    sourceReference: "参考公开考试结构与高质量模考编排标准，未复制任何机构出版题目",
+    sourceReference: "依据公开考试结构与高质量模考编排标准原创",
     sourceUrl: "",
     topic: "Town life and local improvements",
     visualAsset: "/ket-mock/images/set-12-town-improvements.webp",
@@ -484,7 +484,7 @@ const RAW_KET_MOCK_SETS = [
       ],
     },
     teacherGuide: {
-      focus: ["能否比较受益人群、成本和便利性", "能否用 however、but 等连接相反观点", "能否提出具体改善建议而不是只复述图片"],
+      focus: ["能否比较受益人群、成本和便利性", "能否用 however、but 等连接相反观点", "能否结合图片提出具体改善建议"],
     },
   },
 ];

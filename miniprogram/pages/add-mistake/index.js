@@ -2,13 +2,13 @@ Page({
   data: {
     students: [],
     lessons: [],
-    papers: [{ _id: "", displayTitle: "不关联试卷" }],
+    papers: [{ _id: "", displayTitle: "独立错题" }],
     studentIndex: 0,
     lessonIndex: 0,
     paperIndex: 0,
     selectedStudentName: "请选择学生",
     selectedLessonTitle: "请先选择学生",
-    selectedPaperTitle: "不关联试卷",
+    selectedPaperTitle: "独立错题",
     message: "",
     showAdvanced: false,
     saving: false,
@@ -17,7 +17,7 @@ Page({
     paperSectionIndex: 1,
     questionTypes: ["听力细节", "听力主旨", "单词拼写", "词义理解", "语法选择", "动词时态", "介词/连词", "阅读细节", "阅读推理", "写作句子", "粗心错误"],
     questionTypeIndex: 0,
-    reasonTypes: ["粗心", "没听清", "单词不认识", "语法规则不会", "题意理解错", "固定搭配不熟"],
+    reasonTypes: ["粗心", "没听清", "单词不认识", "语法规则不熟", "题意理解错", "固定搭配不熟"],
     reasonTypeIndex: 0,
     reviewPriorities: ["高", "中", "低"],
     reviewPriorityIndex: 1,
@@ -103,7 +103,7 @@ Page({
         const result = res.result || {};
         if (!result.success) {
           this.setData({
-            message: result.message || "只有朱老师可以添加错题",
+            message: result.message || "请使用朱老师教师账号添加错题",
           });
           return;
         }
@@ -112,7 +112,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "服务暂时不可用，请稍后再试",
+          message: "加载遇到问题，请稍后重试",
         });
       });
   },
@@ -236,7 +236,7 @@ Page({
   },
 
   applyPapers(papers) {
-    const paperOptions = [{ _id: "", displayTitle: "不关联试卷" }].concat(
+    const paperOptions = [{ _id: "", displayTitle: "独立错题" }].concat(
       (papers || []).map((paper) =>
         Object.assign({}, paper, {
           displayTitle: paper.paperTitle || paper.title || paper.fileName || "课程资料",
@@ -262,7 +262,7 @@ Page({
     const paperIndex = Number(e.detail.value);
     this.setData({
       paperIndex,
-      selectedPaperTitle: this.data.papers[paperIndex] ? this.data.papers[paperIndex].displayTitle : "不关联试卷",
+      selectedPaperTitle: this.data.papers[paperIndex] ? this.data.papers[paperIndex].displayTitle : "独立错题",
     });
   },
 
@@ -365,7 +365,7 @@ Page({
       .catch((err) => {
         console.error(err);
         this.setData({
-          message: "服务暂时不可用，请稍后再试",
+          message: "加载遇到问题，请稍后重试",
         });
       })
       .finally(() => {

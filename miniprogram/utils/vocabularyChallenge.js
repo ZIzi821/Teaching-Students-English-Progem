@@ -241,7 +241,7 @@ const buildChallengeQuestions = (selectedWords, allWords, random = Math.random) 
     const promptHint = type === "letterGap"
       ? answerMode === "choice"
         ? "选择按顺序缺少的字母"
-        : "只填写按顺序缺少的字母，不要输入完整单词"
+        : "按顺序填写缺少的字母"
       : type === "wordToMeaning"
         ? "选择最合适的中文释义"
         : answerMode === "choice"

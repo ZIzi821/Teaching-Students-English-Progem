@@ -28,7 +28,7 @@
   <main>
     <div class="card">
       <h1>电脑课程资料上传助手</h1>
-      <p>先在这里选电脑文件，再回到微信开发者工具的课程页点击“读取电脑资料”。支持 PPT/PPTX、PDF、Word/Excel、图片和音频；不会保存云密钥。</p>
+      <p>先在这里选电脑文件，再回到微信开发者工具的课程页点击“读取电脑资料”。支持 PPT/PPTX、PDF、Word/Excel、图片和音频，文件通过本机助手交给微信开发者工具读取。</p>
       <label for="label">这批资料的名称（可选）</label>
       <input id="label" type="text" maxlength="120" placeholder="例如：冯嘉文第 3 节课资料">
       <label for="files">选择资料（最多 20 个）</label>
@@ -37,7 +37,7 @@
       <button id="prepare">准备给小程序读取</button>
       <div class="progress"><div id="bar"></div></div>
       <div id="status"></div>
-      <p class="note">资料只保存在当前助手的内存中，关闭命令窗口即清除。实际上传仍由微信开发者工具中的教师账号完成。</p>
+      <p class="note">资料暂存在当前助手的内存中，关闭命令窗口后自动清除；微信开发者工具中的教师账号负责实际上传。</p>
     </div>
   </main>
   <script>

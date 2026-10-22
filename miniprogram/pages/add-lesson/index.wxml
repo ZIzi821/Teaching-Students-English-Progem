@@ -1,7 +1,7 @@
 <view class="page">
   <view class="form-head">
     <view class="title">建立英语课记录</view>
-    <view class="subtitle">{{showPostLessonRecord ? '先建立课次；课后观察、复习提醒和任务可以现在填写，也可以进入课程后补充。' : '记录实际陪练日期和分钟即可，不需要填写课后整理。'}}</view>
+    <view class="subtitle">{{showPostLessonRecord ? '先建立课次；课后观察、复习提醒和任务可以现在填写，也可以进入课程后补充。' : '记录实际陪练日期和分钟即可，课后整理保持简洁。'}}</view>
   </view>
 
   <view class="card message-card" wx:if="{{message}}">{{message}}</view>
@@ -53,7 +53,7 @@
     <view class="institution-course-row">
       <view class="institution-course-copy">
         <view class="label institution-course-label">机构课程</view>
-        <view class="institution-course-hint">开启后仍保留本节课的课堂记录、作业、错题、录音和单词功能，但不会计入“已上 / 总课时”的课程进度。</view>
+        <view class="institution-course-hint">开启后，本节课保留全部课堂记录与学习功能，个人课程进度维持原数值。</view>
       </view>
       <switch checked="{{form.institutionCourse}}" color="#b18145" bindchange="onInstitutionCourseChange" />
     </view>
@@ -72,7 +72,7 @@
     <view class="learning-plan-suggestion" wx:if="{{suggestedSkillLabel}}">
       建议重点：{{suggestedSkillLabel}}
     </view>
-    <view class="learning-plan-note">这里只标记课程在计划中的位置，不会按周数自动推进阶段。</view>
+    <view class="learning-plan-note">这里标记课程所在阶段，阶段依据能力达标情况推进。</view>
   </view>
 
   <view class="card previous-reference-card" wx:if="{{previousLessonReference}}">
@@ -84,7 +84,7 @@
       </view>
       <view class="previous-reference-toggle">{{showPreviousLessonReference ? '收起' : '展开'}}</view>
     </view>
-    <view class="previous-reference-note">这里只显示上次填写内容，不会自动复制到本节课。</view>
+    <view class="previous-reference-note">上次填写内容供本节备课参考，当前表单保持独立。</view>
     <view class="previous-reference-body" wx:if="{{showPreviousLessonReference}}">
       <view class="previous-reference-empty" wx:if="{{!previousLessonReference.hasReferenceContent}}">上一节课没有填写课后整理内容。</view>
       <block wx:if="{{previousLessonReference.lessonTemplateKey === 'feng_beginner'}}">
@@ -150,7 +150,7 @@
         </view>
         <view class="field">
           <view class="label">需要纠正</view>
-          <textarea class="textarea compact-textarea" placeholder="只记录最值得下次继续纠正的 1–3 项" value="{{form.correctionNotes}}" data-field="correctionNotes" bindinput="onInput"></textarea>
+          <textarea class="textarea compact-textarea" placeholder="记录最值得下次继续纠正的 1–3 项" value="{{form.correctionNotes}}" data-field="correctionNotes" bindinput="onInput"></textarea>
         </view>
         <view class="field">
           <view class="label">本节 KET 技能</view>
@@ -165,7 +165,7 @@
       </view>
       <view class="field">
         <view class="label">掌握情况</view>
-        <textarea class="textarea compact-textarea" placeholder="只写最关键的表现" value="{{form.masterySummary}}" data-field="masterySummary" bindinput="onInput"></textarea>
+        <textarea class="textarea compact-textarea" placeholder="写下最关键的表现" value="{{form.masterySummary}}" data-field="masterySummary" bindinput="onInput"></textarea>
       </view>
       </block>
       <view class="field">
@@ -195,7 +195,7 @@
         <picker mode="selector" range="{{recordingTaskTypeOptions}}" range-key="label" value="{{recordingTaskTypeIndex}}" bindchange="onRecordingTaskTypeChange">
           <view class="picker-value">{{recordingTaskTypeOptions[recordingTaskTypeIndex].label}}</view>
         </picker>
-        <view class="field-tip" wx:if="{{form.lessonTemplateKey === 'molly_oral_ket'}}">独立朗读不播放教师示范；跟读会先播放你的逐条录音。Molly 还可选择 KET 单题或全流程模拟。</view>
+        <view class="field-tip" wx:if="{{form.lessonTemplateKey === 'molly_oral_ket'}}">独立朗读由学生直接开始；跟读会先播放你的逐条录音。Molly 还可选择 KET 单题或全流程模拟。</view>
         <view class="field-tip" wx:else>独立朗读由学生直接录音；跟读会先播放你的逐条示范，再自动打开麦克风。</view>
       </view>
       <view class="field" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType === 'ket_official'}}">
@@ -209,8 +209,8 @@
           <view class="ket-source-line">官方定位：{{selectedKetSpeakingTask.sourceReference}}</view>
           <view class="ket-source-line">{{selectedKetSpeakingTask.timingLabel}}</view>
           <view class="ket-source-copy" bindtap="copyKetSource">复制 Cambridge 官方来源</view>
-          <view class="ket-source-warning" wx:if="{{selectedKetSpeakingTask.preparationSeconds}}">本页 {{selectedKetSpeakingTask.preparationSeconds}} 秒仅为练习读题时间，不是官方固定准备时间。</view>
-          <view class="ket-source-warning" wx:else>正式练习按直接听题回答处理，不设置准备倒计时。</view>
+          <view class="ket-source-warning" wx:if="{{selectedKetSpeakingTask.preparationSeconds}}">本页 {{selectedKetSpeakingTask.preparationSeconds}} 秒用于练习读题；正式任务以实际题目流程为准。</view>
+          <view class="ket-source-warning" wx:else>正式练习采用直接听题回答流程。</view>
         </view>
         <view class="ket-weekly-hint" wx:if="{{ketWeeklyHint}}">{{ketWeeklyHint}}</view>
       </view>
@@ -278,7 +278,7 @@
         建议录音约 {{selectedKetSpeakingTask.suggestedRecordingSeconds}} 秒 · 录制 1 次即可
       </view>
       <view class="ket-recording-meta" wx:if="{{form.recordingTaskEnabled && form.recordingTaskType === 'ket_mock'}}">
-        学生一次完成 · 考官录音自动播放 · 回答分段保存 · 不允许返回重录
+        学生一次连续完成 · 考官录音自动播放 · 回答分段保存
       </view>
     </block>
   </view>

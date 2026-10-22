@@ -18,9 +18,9 @@
       <view class="date">{{lesson.lessonDate}}</view>
       <view class="institution-course-banner" wx:if="{{lesson.institutionCourse}}">
         <text>机构课程</text>
-        <view>本节保留完整学习记录，但不计入个人课程进度。</view>
+        <view>本节保留完整学习记录，个人课程进度维持原数值。</view>
       </view>
-      <view class="preview-tip" wx:if="{{isTeacherPreview}}">教师预览：这里与学生实际看到的课程页面一致，不能提交录音。</view>
+      <view class="preview-tip" wx:if="{{isTeacherPreview}}">教师预览：页面与学生端一致，录音入口以预览方式呈现。</view>
     </view>
 
     <view class="section-head">
@@ -36,7 +36,7 @@
     <view class="card record-card" wx:if="{{!showWorkspaceEditor}}">
       <view class="empty-record" wx:if="{{lesson.lessonTemplateKey === 'vocabulary_coaching'}}">
         <view class="empty-record-title">本次单词陪练已记录 {{lesson.durationMinutes}} 分钟</view>
-        <view class="empty-record-hint">单词陪练不需要填写课后整理，时长已计入小时进度。</view>
+        <view class="empty-record-hint">单词陪练记录名称和实际时长，时长已计入小时进度。</view>
       </view>
       <view class="empty-record" wx:elif="{{!lesson.hasStructuredRecord && !lesson.summary}}">
         <view class="empty-record-title">还没有填写课后记录</view>
@@ -145,7 +145,7 @@
       <view class="institution-course-setting">
         <view>
           <view class="label institution-course-setting-label">机构课程</view>
-          <view class="field-hint">只控制本节是否计入个人课程进度；作业、错题、录音、背词和成就记录均保持正常。</view>
+          <view class="field-hint">该开关管理个人课程进度统计；作业、错题、录音、背词和成就记录继续正常使用。</view>
         </view>
         <switch checked="{{workspaceForm.institutionCourse}}" color="#b18145" bindchange="onInstitutionCourseChange" />
       </view>
@@ -159,7 +159,7 @@
           </view>
           <view class="previous-lesson-reference-toggle">{{showPreviousLessonReference ? '收起' : '展开'}}</view>
         </view>
-        <view class="previous-lesson-reference-note">只读对照，不会覆盖本节课已经填写的内容。</view>
+        <view class="previous-lesson-reference-note">上节课内容供对照，本节课表单保持独立。</view>
         <view class="previous-lesson-reference-body" wx:if="{{showPreviousLessonReference}}">
           <view class="previous-lesson-reference-empty" wx:if="{{!previousLessonReference.hasReferenceContent}}">上一节课没有填写课后整理内容。</view>
           <view class="previous-lesson-reference-row" wx:if="{{previousLessonReference.reviewContent}}"><text>复习</text><view>{{previousLessonReference.reviewContent}}</view></view>
@@ -178,7 +178,7 @@
       </view>
 
       <block wx:if="{{workspaceForm.lessonTemplateKey === 'vocabulary_coaching'}}">
-        <view class="field-hint">单词陪练只记录名称和实际时长，不填写第几节课，也不生成课后整理。</view>
+        <view class="field-hint">单词陪练记录名称和实际时长，课程编号与课后整理保持简洁。</view>
       </block>
 
       <block wx:elif="{{workspaceForm.lessonTemplateKey === 'feng_beginner'}}">
@@ -222,7 +222,7 @@
       <block wx:else>
       <view class="field">
         <view class="label">今天学了什么</view>
-        <textarea class="textarea" placeholder="只写本节实际完成的内容" value="{{workspaceForm.taughtContent}}" data-field="taughtContent" bindinput="onWorkspaceInput"></textarea>
+        <textarea class="textarea" placeholder="写下本节实际完成的内容" value="{{workspaceForm.taughtContent}}" data-field="taughtContent" bindinput="onWorkspaceInput"></textarea>
       </view>
       <view class="field">
         <view class="label">掌握情况</view>
@@ -258,7 +258,7 @@
         <picker mode="selector" range="{{recordingTaskTypeOptions}}" range-key="label" value="{{recordingTaskTypeIndex}}" bindchange="onRecordingTaskTypeChange">
           <view class="picker-value">{{recordingTaskTypeOptions[recordingTaskTypeIndex].label}}</view>
         </picker>
-        <view class="field-hint" wx:if="{{workspaceForm.lessonTemplateKey === 'molly_oral_ket'}}">独立朗读不播放教师示范；跟读会先播放你的逐条录音。Molly 还可选择 KET 单题或全流程模拟。</view>
+        <view class="field-hint" wx:if="{{workspaceForm.lessonTemplateKey === 'molly_oral_ket'}}">独立朗读由学生直接开始；跟读会先播放你的逐条录音。Molly 还可选择 KET 单题或全流程模拟。</view>
         <view class="field-hint" wx:else>独立朗读由学生直接录音；跟读会先播放你的逐条示范，再自动打开麦克风。</view>
       </view>
       <view class="field" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.recordingTaskType === 'ket_official'}}">
@@ -272,8 +272,8 @@
           <view class="ket-source-line">官方定位：{{selectedKetSpeakingTask.sourceReference}}</view>
           <view class="ket-source-line">{{selectedKetSpeakingTask.timingLabel}}</view>
           <view class="ket-source-copy" bindtap="copyKetSource">复制 Cambridge 官方来源</view>
-          <view class="ket-source-warning" wx:if="{{selectedKetSpeakingTask.preparationSeconds}}">本页 {{selectedKetSpeakingTask.preparationSeconds}} 秒仅为练习读题时间，不是官方固定准备时间。</view>
-          <view class="ket-source-warning" wx:else>正式练习按直接听题回答处理，不设置准备倒计时。</view>
+          <view class="ket-source-warning" wx:if="{{selectedKetSpeakingTask.preparationSeconds}}">本页 {{selectedKetSpeakingTask.preparationSeconds}} 秒用于练习读题；正式任务以实际题目流程为准。</view>
+          <view class="ket-source-warning" wx:else>正式练习采用直接听题回答流程。</view>
         </view>
         <view class="ket-weekly-hint" wx:if="{{ketWeeklyHint}}">{{ketWeeklyHint}}</view>
       </view>
@@ -341,7 +341,7 @@
         建议录音约 {{selectedKetSpeakingTask.suggestedRecordingSeconds}} 秒 · 录制 1 次即可
       </view>
       <view class="ket-recording-meta" wx:if="{{workspaceForm.recordingTaskEnabled && workspaceForm.recordingTaskType === 'ket_mock'}}">
-        一次完成 · 考官录音自动播放 · 回答分段保存 · 不允许返回重录
+        一次连续完成 · 考官录音自动播放 · 回答分段保存
       </view>
 
       <view class="learning-plan-lesson-box" wx:if="{{learningPlanAvailable}}">
@@ -352,14 +352,14 @@
           <picker mode="selector" range="{{learningFocusOptions}}" range-key="label" value="{{lessonFocusIndex}}" bindchange="onLessonFocusChange">
             <view class="picker-value">{{learningFocusOptions[lessonFocusIndex].label}}</view>
           </picker>
-          <view class="field-hint">用于 Molly 的 2＋1＋1＋1 课程配比，停课或日历间隔不会影响评分。</view>
+          <view class="field-hint">用于 Molly 的 2＋1＋1＋1 课程配比，评分依据课程配比和课堂证据。</view>
         </view>
       </view>
 
       <view class="observation-editor-head">
         <view>
           <view class="label">学习观察</view>
-          <view class="field-hint">记录具体表现；没有证据不会被当成 0 分，也不会进入英语错题系统。</view>
+          <view class="field-hint">记录具体表现；评分使用已收集的课堂证据，英语错题继续独立管理。</view>
         </view>
         <view class="add-observation" bindtap="addObservation">＋ 添加一项</view>
       </view>
@@ -449,11 +449,11 @@
           </view>
         </view>
         <view class="ket-timing-note" wx:if="{{lesson.recordingTaskType === 'ket_official' && lesson.ketSpeakingTask}}">{{lesson.ketSpeakingTask.timingLabel}}</view>
-        <view class="recording-privacy" wx:if="{{isStudent || isTeacherPreview}}">{{lesson.recordingTaskType === 'ket_mock' ? '考试中不显示题目文字；每段考官录音结束后自动开始录制回答。' : lesson.recordingTaskType === 'follow_reading' ? '示范音会提前加载；播放结束后自动准备并打开麦克风。' : '录音只用于老师检查本次朗读。'}}</view>
+        <view class="recording-privacy" wx:if="{{isStudent || isTeacherPreview}}">{{lesson.recordingTaskType === 'ket_mock' ? '考试按听题流程进行；每段考官录音结束后自动开始录制回答。' : lesson.recordingTaskType === 'follow_reading' ? '示范音会提前加载；播放结束后自动准备并打开麦克风。' : '录音用于老师检查本次朗读。'}}</view>
         <view class="record-btn {{lesson.recordingTaskType === 'follow_reading' && !lesson.followReadingAudioComplete ? 'disabled-action' : ''}}" wx:if="{{isStudent || (isTeacherPreview && lesson.recordingTaskType === 'follow_reading')}}" bindtap="goRecordingPractice">
           {{lesson.recordingTaskType === 'ket_mock' ? (ketMockLatestSession && (ketMockLatestSession.status === 'submitted' || ketMockLatestSession.status === 'reviewed') ? '查看模拟考试结果' : '进入模拟考场') : lesson.recordingTaskType === 'follow_reading' ? (isTeacherPreview ? '进入跟读练习（预览）' : lesson.followReadingAudioComplete ? '进入跟读练习' : '等待老师准备示范音频') : '进入独立朗读'}}
         </view>
-        <view class="preview-recording-note" wx:if="{{isTeacherPreview}}">{{lesson.recordingTaskType === 'follow_reading' ? '教师预览可体验跟读流程，但不会上传录音或写入学生记录。' : '教师预览中不能代学生录音。'}}</view>
+        <view class="preview-recording-note" wx:if="{{isTeacherPreview}}">{{lesson.recordingTaskType === 'follow_reading' ? '教师预览可体验跟读流程，录音结果在本页展示。' : '教师预览：录音由学生本人完成。'}}</view>
       </view>
 
       <view class="ket-session-list" wx:if="{{lesson.recordingTaskType === 'ket_mock' && ketMockSessions.length}}">
@@ -491,11 +491,11 @@
           <view class="homework-reminder-box">
             <view wx:if="{{lesson.homeworkReminderNotifyStatus === 'pending'}}">
               <view class="homework-reminder-title">已开启 {{lesson.homeworkReminderTargetDate}} 18:00 微信提醒</view>
-              <view class="homework-reminder-hint">如果提前完成，系统不会再发送这次提醒。</view>
+              <view class="homework-reminder-hint">提前完成后，本次提醒自动结束。</view>
             </view>
             <view wx:else>
               <view class="homework-reminder-title">需要微信在18:00提醒吗？</view>
-              <view class="homework-reminder-hint">微信一次授权只能发送一次；第二天仍未完成时，可再次开启下一次提醒。</view>
+              <view class="homework-reminder-hint">每次授权对应一次提醒；第二天仍有任务时，可继续开启下一次提醒。</view>
               <view class="homework-reminder-btn {{subscribingHomeworkReminder ? 'disabled-action' : ''}}" bindtap="enableHomeworkReminder">
                 {{subscribingHomeworkReminder ? '正在开启…' : lesson.homeworkReminderNotifyStatus === 'sent' ? '开启下一次18:00提醒' : '开启18:00微信提醒'}}
               </view>
@@ -504,7 +504,7 @@
         </block>
 
         <view class="homework-completed-copy" wx:elif="{{isTeacher}}">{{lesson.homeworkTeacherReviewStatus === 'incomplete' ? '老师已批改为未完成，等待学生继续完成。' : '学生还没有确认完成课后任务。'}}</view>
-        <view class="preview-recording-note" wx:elif="{{isTeacherPreview}}">教师预览中不能代学生确认完成或开启提醒。</view>
+        <view class="preview-recording-note" wx:elif="{{isTeacherPreview}}">教师预览：完成确认和提醒由学生本人操作。</view>
 
         <view class="teacher-homework-review" id="teacher-homework-review" wx:if="{{isTeacher}}">
           <view class="teacher-homework-review-head">
@@ -598,7 +598,7 @@
       <view class="upload-hint">支持 PPT/PPTX、PDF、PNG/JPG 和音频；图片会保留原图，并另生成快速预览图。电脑上传需先启动 tools/local-material-uploader 中的助手。</view>
       <view class="advanced-toggle" bindtap="toggleMaterialAdvanced">{{showMaterialAdvanced ? '收起更多信息' : '填写标题或学期（可选）'}}</view>
       <view class="advanced-fields" wx:if="{{showMaterialAdvanced}}">
-        <input class="input" placeholder="课件标题；多文件自动编号，不再显示乱码名" value="{{paperForm.paperTitle}}" data-field="paperTitle" bindinput="onPaperMetaInput" />
+        <input class="input" placeholder="课件标题；多文件自动编号并显示清晰名称" value="{{paperForm.paperTitle}}" data-field="paperTitle" bindinput="onPaperMetaInput" />
         <input class="input" placeholder="学期，如 2026 Term 1" value="{{paperForm.term}}" data-field="term" bindinput="onPaperMetaInput" />
       </view>
       <view class="danger-text-action" wx:if="{{hasPapers}}" bindtap="deleteAllLessonMaterials">删除本节全部 {{materialCount}} 份课件</view>
@@ -639,7 +639,7 @@
       <view>
         <view class="section-kicker">REAL QUESTIONS ONLY</view>
         <view class="section-title">英语错题整理</view>
-        <view class="section-hint">学习表现记录在上方；这里只放真实做错的题。</view>
+        <view class="section-hint">学习表现在上方记录；本区整理真实做错的题。</view>
       </view>
       <view class="submission-count">{{mistakes.length}} 题</view>
     </view>

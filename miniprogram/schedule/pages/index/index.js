@@ -217,7 +217,7 @@ Page({
 
   openForm() {
     if (!this.data.canWrite) {
-      wx.showToast({ title: "家长端日程仅供查看", icon: "none" });
+      wx.showToast({ title: "家长端日程用于查看课程时间", icon: "none" });
       return;
     }
     if (this.data.actorRole !== "teacher" && !this.data.selectedDayBookingOpen) {
@@ -590,7 +590,7 @@ Page({
       title: nextBookingOpen ? `重新开放每${day.label || "周"}预约？` : `暂停每${day.label || "周"}预约？`,
       content: nextBookingOpen
         ? "开放后，学生可以在这一天的空白时段预约。"
-        : "暂停后学生不能新增或改到这一天；已经存在的课程不会被删除。这个设置会按星期持续生效。",
+        : "暂停后，该星期停止新增与调整；现有课程继续保留。设置会按星期持续生效。",
       confirmText: nextBookingOpen ? "重新开放" : "暂停预约",
       confirmColor: nextBookingOpen ? "#4f8f73" : "#b4544d",
       success: (modal) => {

@@ -38,7 +38,7 @@
 
     <view class="card">
       <view class="section-title">最需要复习的题型</view>
-      <view class="empty" wx:if="{{!analytics.topQuestionTypes.length}}">错题较少，暂时无法统计。</view>
+      <view class="empty" wx:if="{{!analytics.topQuestionTypes.length}}">积累更多错题后，这里会生成题型统计。</view>
       <view class="rank-row" wx:for="{{analytics.topQuestionTypes}}" wx:key="label">
         <view class="rank-name">{{item.label}}</view>
         <view class="rank-bar"><view class="rank-fill" style="width: {{item.percent}}%;"></view></view>

@@ -5,7 +5,7 @@
   </view>
 
   <view class="card error-card" wx:elif="{{state === 'error'}}">
-    <view class="error-title">录音练习暂时无法打开</view>
+    <view class="error-title">请重新加载录音练习</view>
     <view class="error-message">{{message}}</view>
     <view class="primary-btn error-action" bindtap="loadPractice">重新加载</view>
   </view>
@@ -13,7 +13,7 @@
   <block wx:else>
     <view class="practice-head">
       <view class="eyebrow">{{isKetTask ? 'KET SPEAKING PRACTICE' : 'READING PRACTICE'}}</view>
-      <view class="practice-title">{{isKetTask ? '像考试一样，听清再回答' : '独立朗读，不播放示范音'}}</view>
+      <view class="practice-title">{{isKetTask ? '像考试一样，听清再回答' : '独立朗读，学生直接开始'}}</view>
       <view class="lesson-name">{{lesson.title}}<text wx:if="{{lesson.lessonNo}}"> · 第 {{lesson.lessonNo}} 节</text><text wx:if="{{lesson.durationMinutes}}"> · {{lesson.durationMinutes}} 分钟</text></view>
     </view>
 
@@ -52,7 +52,7 @@
       <block wx:elif="{{state === 'starting'}}">
         <view class="state-icon microphone-icon">●</view>
         <view class="state-title">正在打开麦克风…</view>
-        <view class="state-hint">请稍等，不要离开本页</view>
+        <view class="state-hint">请稍等，保持当前页面</view>
       </block>
 
       <block wx:elif="{{state === 'recording'}}">
@@ -72,7 +72,7 @@
       <block wx:elif="{{state === 'uploading'}}">
         <view class="upload-spinner"></view>
         <view class="state-title">正在提交第 {{nextAttemptNo}} 次录音</view>
-        <view class="state-hint">请不要关闭小程序</view>
+        <view class="state-hint">正在提交，请保持小程序开启</view>
       </block>
 
       <block wx:elif="{{state === 'success'}}">
@@ -87,6 +87,6 @@
     </view>
 
     <view class="submission-note" wx:if="{{previousSubmissionCount}}">本节课已成功提交 {{previousSubmissionCount}} 次录音</view>
-    <view class="privacy-note">录音只用于老师检查本次朗读，不会保存到手机相册或音乐播放器。</view>
+    <view class="privacy-note">录音用于老师检查本次朗读，提交后保存在课程记录中。</view>
   </block>
 </view>

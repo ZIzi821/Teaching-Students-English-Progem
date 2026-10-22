@@ -33,8 +33,8 @@ assert(detailPage.includes("学习雷达 · 当前阶段"), "student detail rada
 assert(detailPage.includes("下节课建议"), "student detail prep summary is missing");
 
 const radarPage = read("miniprogram/insights/pages/learning-radar/index.wxml");
-assert(radarPage.includes("没有证据") || radarPage.includes("不按 0 分"), "missing-evidence explanation is missing");
-assert(radarPage.includes("系统只提供达标建议，阶段切换始终由老师确认"), "teacher confirmation notice is missing");
+assert(radarPage.includes("等待课堂观察，取得证据后评分"), "missing-evidence explanation is missing");
+assert(radarPage.includes("阶段切换由老师结合达标建议确认"), "teacher confirmation notice is missing");
 assert(!radarPage.includes("总周数"), "fixed total weeks must not be displayed");
 
 const lessonDetail = read("miniprogram/pages/lesson-detail/index.js");

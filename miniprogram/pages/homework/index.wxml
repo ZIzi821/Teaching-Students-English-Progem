@@ -1,8 +1,8 @@
 <view class="page homework-page">
   <view class="preview-banner" wx:if="{{isTeacherPreview}}">
     <view>
-      <view class="preview-title">老师只读预览</view>
-      <view class="preview-hint">这是学生看到的课后任务列表；进入任务后也不会代学生提交。</view>
+      <view class="preview-title">老师预览</view>
+      <view class="preview-hint">这是学生看到的课后任务列表，任务操作以预览方式呈现。</view>
     </view>
     <view class="preview-action" bindtap="goBackToTeacher">返回教师端</view>
   </view>

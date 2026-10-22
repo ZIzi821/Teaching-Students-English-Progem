@@ -78,7 +78,7 @@
     </view>
 
     <view class="card level-card" wx:if="{{dashboard.levelProgress.length}}">
-      <view class="section-head"><view><view class="section-kicker">PROGRESSION</view><view class="section-title level-title">A1 / A2 学习进度</view><view class="section-hint">学习记录的估算，不是官方语言认证。</view></view><view class="quiet-link" data-url="/pages/french-dashboard/index" bindtap="navigate">完整报告 →</view></view>
+      <view class="section-head"><view><view class="section-kicker">PROGRESSION</view><view class="section-title level-title">A1 / A2 学习进度</view><view class="section-hint">依据学习记录估算，用于安排后续学习。</view></view><view class="quiet-link" data-url="/pages/french-dashboard/index" bindtap="navigate">完整报告 →</view></view>
       <view class="level-item" wx:for="{{dashboard.levelProgress}}" wx:key="cefrLevel"><view class="level-meta"><view><text class="level-name">{{item.cefrLevel || item.label}}</text><text class="level-status">{{item.status || '持续学习中'}}</text></view><view class="level-percent">{{item.overallPercent}}%</view></view><view class="level-track"><view class="level-fill" style="width: {{item.overallPercent}}%;"></view></view></view>
     </view>
 

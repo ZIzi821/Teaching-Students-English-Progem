@@ -103,13 +103,13 @@ assert.ok(addLessonJs.includes('value: "ket_mock"'), "Lesson creation cannot ass
 assert.ok(lessonDetailJs.includes("/ket-mock/pages/exam/index?lessonId="), "Lesson detail does not open the mock exam");
 assert.ok(workbenchJs.includes("/ket-mock/pages/library/index"), "Teacher workbench does not open the audio library");
 assert.ok(libraryWxml.includes("官方公开样题结构改编") && libraryWxml.includes("独家原创题目") && libraryWxml.includes("机构-独家原创题"), "Teacher library does not explain all three source categories");
-assert.ok(libraryWxml.includes("教师备用追问 · 无需预录"), "Teacher library does not expose optional backup prompts");
-assert.ok(libraryWxml.includes("下一段提示音开头") && libraryWxml.includes("不要使用 “Good / 不错”"), "Teacher library lacks neutral transition guidance");
+assert.ok(libraryWxml.includes("教师现场备用追问"), "Teacher library does not expose optional backup prompts");
+assert.ok(libraryWxml.includes("下一段提示音开头") && libraryWxml.includes("衔接保持中性"), "Teacher library lacks neutral transition guidance");
 assert.ok(examJs.includes("playReliableAudio") && examJs.includes("onEnded"), "Exam does not verify and advance after examiner audio ends");
 assert.ok(examJs.includes("startExamAudioPreload"), "Exam does not preload examiner audio when the page opens");
 assert.ok(examJs.includes("this.startRecording(cue)"), "Exam does not start the microphone automatically");
 assert.ok(examJs.includes("interruptExam"), "Exam has no interruption handling");
-assert.ok(examWxml.includes("中途不能暂停、回放或重录"), "Exam rules do not explain the no-replay rule");
+assert.ok(examWxml.includes("请按顺序连续完成"), "Exam rules do not explain the continuous-flow rule");
 assert.ok(examWxml.includes("虚拟搭档"), "Automated Part 2 boundary is not disclosed");
 assert.ok(!examWxml.includes("{{currentCue.script}}"), "Student exam must not display the examiner script");
 assert.ok(reviewJs.includes("grammarVocabulary") && reviewJs.includes("interactiveCommunication"), "Four-dimension scoring fields are missing");
@@ -118,8 +118,8 @@ assert.strictEqual(app.usingComponents && app.usingComponents["ket-score-trend"]
 assert.ok(trendWxml.includes("KET 四维成绩趋势") && trendWxml.includes("dimension.points"), "KET score trend does not render all four histories");
 assert.ok(trendWxss.includes("fill-grammar") && trendWxss.includes("fill-pronunciation") && trendWxss.includes("fill-interaction") && trendWxss.includes("fill-global"), "KET score dimensions are not visually distinguishable");
 assert.strictEqual(ketMockLogic.buildScoreTrend([]).hasData, false, "Empty KET histories must remain renderable");
-assert.ok(reviewWxml.includes("不是 Cambridge 官方考试成绩"), "Practice-score disclaimer is missing");
-assert.ok(reviewWxml.includes("A2 参考示范 · 不要求照背"), "Teacher review does not expose model-answer guidance");
+assert.ok(reviewWxml.includes("教师练习评分，用于后续学习调整"), "Practice-score purpose is missing");
+assert.ok(reviewWxml.includes("A2 表达参考 · 请用自己的话回答"), "Teacher review does not expose model-answer guidance");
 assert.ok(reviewWxml.includes("四项分数锚点"), "Teacher review does not expose scoring anchors");
 assert.ok(!examWxml.includes("modelAnswer") && !examWxml.includes("backupPrompts"), "Teacher-only guidance leaked into the student exam template");
 assert.ok(recordingPracticeJs.includes("/ket-mock/pages/exam/index?lessonId="), "Legacy recording route does not redirect full mocks to the exam");

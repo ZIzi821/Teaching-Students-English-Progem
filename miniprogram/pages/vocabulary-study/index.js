@@ -277,7 +277,7 @@ Page({
       easy: scheduleHint || "已降低出现频率",
     };
     wx.showToast({
-      title: this.data.readOnly ? "预览选择，不保存进度" : feedback[result],
+      title: this.data.readOnly ? "预览选择，进度保持原状态" : feedback[result],
       icon: "none",
     });
     this.stopPronunciation();

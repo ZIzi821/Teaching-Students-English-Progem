@@ -893,7 +893,7 @@ const sanitizeStudent = (student, includePrivate) => {
 const ensureTeacher = async () => {
   const identity = await getIdentity();
   if (identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "仅教师端可操作");
+    throw createError("PERMISSION_DENIED", "请使用教师账号完成此操作");
   }
   return identity;
 };
@@ -902,7 +902,7 @@ const ensureStudentAccess = async (studentId) => {
   const identity = await getIdentity();
   if (identity.role === "teacher") return identity;
   if (identity.role === "student" && identity.student && identity.student._id === studentId) return identity;
-  throw createError("PERMISSION_DENIED", "你只能查看自己绑定的学习数据");
+  throw createError("PERMISSION_DENIED", "请从当前绑定的学习账号进入");
 };
 
 const ensureMistakeLearningAccess = (identity, student, data = {}) => {
@@ -1124,7 +1124,7 @@ const getHomeData = async (event = {}) => {
   const isTeacherPreview = data.mode === "teacherPreview";
   if (isTeacherPreview) {
     if (identity.role !== "teacher") {
-      throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
+      throw createError("PERMISSION_DENIED", "请使用教师账号进入学生视角");
     }
     const previewStudentId = String(data.previewStudentId || "").trim();
     if (!previewStudentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
@@ -1365,7 +1365,7 @@ const buildStudentLearningActivities = ({ lessons, sessions, reminders, viewedTh
 const markHomeworkActivitiesViewed = async (event = {}) => {
   const identity = await getIdentity();
   if (identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "仅教师端可更新课后任务动态");
+    throw createError("PERMISSION_DENIED", "请使用教师账号更新课后任务动态");
   }
   const requestedAtMs = Math.min(
     Date.now(),
@@ -1394,7 +1394,7 @@ const markHomeworkActivitiesViewed = async (event = {}) => {
 const markStudentLearningActivitiesViewed = async (event = {}) => {
   const identity = await getIdentity();
   if (identity.role !== "student" || !identity.student) {
-    throw createError("PERMISSION_DENIED", "老师预览不会修改学生端已读状态");
+    throw createError("PERMISSION_DENIED", "当前为老师预览，学生已读状态保持原记录");
   }
   const requestedAtMs = Math.min(
     Date.now(),
@@ -1481,8 +1481,8 @@ const normalizeStudentReminderInput = (data = {}) => {
   const rawContent = String(data.content || "").trim();
   if (!rawTitle) throw createError("INVALID_REMINDER", "请填写提醒标题");
   if (!rawContent) throw createError("INVALID_REMINDER", "请填写提醒内容");
-  if (rawTitle.length > 40) throw createError("INVALID_REMINDER", "提醒标题不能超过 40 个字");
-  if (rawContent.length > 300) throw createError("INVALID_REMINDER", "提醒内容不能超过 300 个字");
+  if (rawTitle.length > 40) throw createError("INVALID_REMINDER", "提醒标题最多 40 个字");
+  if (rawContent.length > 300) throw createError("INVALID_REMINDER", "提醒内容最多 300 个字");
   return { title: rawTitle, content: rawContent };
 };
 
@@ -1550,7 +1550,7 @@ const saveStudentReminder = async (event = {}) => {
         throw createError("REMINDER_NOT_FOUND", "这条提醒不存在或已经撤回");
       }
       if (current.status === "withdrawn") {
-        throw createError("REMINDER_WITHDRAWN", "已撤回的提醒不能再编辑，请新建一条提醒");
+        throw createError("REMINDER_WITHDRAWN", "这条提醒已撤回；新建提醒即可继续发布");
       }
       const updateData = {
         title: input.title,
@@ -1724,7 +1724,7 @@ const saveStudentPkEligibility = async (event = {}) => {
   const studentRef = db.collection("students").doc(studentId);
   const student = await getOptionalTransactionDocument(studentRef);
   if (!student || !isStudentManagedByTeacher(student, teacherIdentity)) {
-    throw createError("PERMISSION_DENIED", "只能管理自己的学生 PK 设置");
+    throw createError("PERMISSION_DENIED", "请从负责该学生的教师账号管理 PK 设置");
   }
   const pkEnabled = data.pkEnabled === true;
   await studentRef.update({
@@ -1772,7 +1772,7 @@ const savePkChallengeProfile = async (event = {}) => {
     const current = await getOptionalTransactionDocument(profileRef);
     if (profileId && !current) throw createError("PK_CHALLENGE_NOT_FOUND", "挑战选手不存在或已删除");
     if (current && String(current.teacherOpenId || "") !== String(teacherIdentity.openid || "")) {
-      throw createError("PERMISSION_DENIED", "只能修改自己创建的挑战选手");
+      throw createError("PERMISSION_DENIED", "请管理由当前教师创建的挑战选手");
     }
     const payload = Object.assign({}, input, {
       teacherOpenId: teacherIdentity.openid || "",
@@ -1800,7 +1800,7 @@ const deletePkChallengeProfile = async (event = {}) => {
   const current = await getOptionalTransactionDocument(profileRef);
   if (!current) return { success: true, alreadyDeleted: true };
   if (String(current.teacherOpenId || "") !== String(teacherIdentity.openid || "")) {
-    throw createError("PERMISSION_DENIED", "只能删除自己创建的挑战选手");
+    throw createError("PERMISSION_DENIED", "请管理由当前教师创建的挑战选手");
   }
   await profileRef.remove();
   return { success: true, profileId };
@@ -1812,7 +1812,7 @@ const getStudentEngagement = async (event = {}) => {
   const isTeacherPreview = data.mode === "teacherPreview";
   if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
   if (isTeacherPreview && identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
+    throw createError("PERMISSION_DENIED", "请使用教师账号进入学生视角");
   }
   if (identity.role === "teacher" && !isTeacherPreview) {
     throw createError("PERMISSION_DENIED", "请从学生详情进入学生端预览");
@@ -1908,7 +1908,7 @@ const bindAccessCode = async (event) => {
   }
 
   if (identity.role === "teacher") {
-    throw createError("ALREADY_TEACHER", "当前是教师账号，无需绑定学生");
+    throw createError("ALREADY_TEACHER", "当前是教师账号，可直接进入教师首页");
   }
   if (identity.role === "student") {
     return {
@@ -2097,7 +2097,7 @@ const addStudent = async (event) => {
     throw createError("INVALID_STUDENT", "请填写学生姓名、年级和访问码");
   }
   if (isTeacherAccessCode(accessCode)) {
-    throw createError("ACCESS_CODE_RESERVED", "学生访问码不能与老师访问码相同");
+    throw createError("ACCESS_CODE_RESERVED", "请设置与老师访问码不同的学生访问码");
   }
   const existing = await db.collection("students").where({ accessCode }).limit(1).get();
   if (existing.data && existing.data.length) {
@@ -2112,7 +2112,7 @@ const addStudent = async (event) => {
     ? toLessonPackageSize(data.lessonPackageSize)
     : courseWorkflow.getDefaultLessonPackageSize(data);
   if (plannedLessonCount > 0 && completedLessonCount > plannedLessonCount) {
-    throw createError("INVALID_PROGRESS", "已上课时不能大于总课时");
+    throw createError("INVALID_PROGRESS", "已上课时范围为 0 至总课时");
   }
   const lessonAccountingMode = courseWorkflow.getLessonAccountingMode(data);
   const plannedLessonMinutes = lessonAccountingMode === "minute" ? plannedLessonCount * 60 : 0;
@@ -2240,7 +2240,7 @@ const updateStudentProgress = async (event) => {
       "已上课时"
     );
     if (plannedLessonMinutes > 0 && completedLessonMinutes > plannedLessonMinutes) {
-      throw createError("INVALID_PROGRESS", "已上时长不能大于总时长");
+      throw createError("INVALID_PROGRESS", "已上时长范围为 0 至总时长");
     }
     const updateData = {
       lessonAccountingMode: "minute",
@@ -2256,7 +2256,7 @@ const updateStudentProgress = async (event) => {
   const plannedLessonCount = toNonNegativeNumber(data.plannedLessonCount, "总课时");
   const completedLessonCount = toNonNegativeNumber(data.completedLessonCount, "已上课时");
   if (plannedLessonCount > 0 && completedLessonCount > plannedLessonCount) {
-    throw createError("INVALID_PROGRESS", "已上课时不能大于总课时");
+    throw createError("INVALID_PROGRESS", "已上课时范围为 0 至总课时");
   }
   const lessonPackageSize = Object.prototype.hasOwnProperty.call(data, "lessonPackageSize")
     ? toLessonPackageSize(data.lessonPackageSize)
@@ -2340,7 +2340,7 @@ const getStudentDetail = async (event) => {
   const identity = await getIdentity();
   const data = event.data || {};
   if (data.mode === "teacherPreview" && identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
+    throw createError("PERMISSION_DENIED", "请使用教师账号进入学生视角");
   }
   const requestedId = data.previewStudentId || data.studentId;
   const studentId = identity.role === "student" ? identity.student._id : requestedId;
@@ -2396,7 +2396,7 @@ const listStudentHomework = async (event) => {
   const data = event.data || {};
   const isTeacherPreview = data.mode === "teacherPreview";
   if (isTeacherPreview && identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
+    throw createError("PERMISSION_DENIED", "请使用教师账号进入学生视角");
   }
   if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
   const requestedStudentId = String(data.previewStudentId || data.studentId || "").trim();
@@ -2637,7 +2637,7 @@ const getVocabularyCatalog = async (event) => {
   if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
   const data = event.data || {};
   if (data.scope === "teacher") {
-    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "仅教师端可查看学生词库目录");
+    if (identity.role !== "teacher") throw createError("PERMISSION_DENIED", "请使用教师账号查看学生词库目录");
     const res = await db.collection("students").orderBy("createdAt", "desc").get();
     const students = (res.data || [])
       .filter((student) => !isStudentHiddenFromTeacher(student))
@@ -2981,7 +2981,7 @@ const setVocabularyDailyGoal = async (event) => {
     if (dailyGoal < reviewedCount) {
       throw createError(
         "INVALID_VOCABULARY_SETTINGS",
-        `今天已完成 ${reviewedCount} 个，目标不能调到更低`
+        `今天已完成 ${reviewedCount} 个，目标下限为当前完成数`
       );
     }
     await studentRef.update({
@@ -3530,12 +3530,12 @@ const reviewVocabularyWord = async (event) => {
   ]);
   const identity = await getIdentity();
   if (identity.role !== "student" || !identity.student) {
-    throw createError("PERMISSION_DENIED", "当前是老师预览，不能记录学习进度");
+    throw createError("PERMISSION_DENIED", "当前为老师预览，学习进度保持原记录");
   }
   const data = event.data || {};
   const studentId = String(data.studentId || "").trim();
   if (!studentId || studentId !== identity.student._id) {
-    throw createError("PERMISSION_DENIED", "只能记录自己的单词进度");
+    throw createError("PERMISSION_DENIED", "请使用当前学生账号记录单词进度");
   }
   if (["forgot", "hard", "known", "easy"].indexOf(data.result) < 0) {
     throw createError("INVALID_VOCABULARY_REVIEW", "请选择没记住、有点难、记住了或太简单");
@@ -3646,12 +3646,12 @@ const reviewVocabularyQuizAnswer = async (event) => {
   await createOneCollection("vocabularyProgress");
   const identity = await getIdentity();
   if (identity.role !== "student" || !identity.student) {
-    throw createError("PERMISSION_DENIED", "老师预览不会记录小测结果");
+    throw createError("PERMISSION_DENIED", "当前为老师预览，小测记录保持原状态");
   }
   const data = event.data || {};
   const studentId = String(data.studentId || "").trim();
   if (!studentId || studentId !== identity.student._id) {
-    throw createError("PERMISSION_DENIED", "只能记录自己的小测结果");
+    throw createError("PERMISSION_DENIED", "请使用当前学生账号记录小测结果");
   }
   const questionType = String(data.questionType || "").trim();
   if (["wordToMeaning", "meaningToWord", "letterGap", "spelling"].indexOf(questionType) < 0) {
@@ -3722,12 +3722,12 @@ const completeVocabularyQuiz = async (event) => {
   await createOneCollection("vocabularyQuizSessions");
   const identity = await getIdentity();
   if (identity.role !== "student" || !identity.student) {
-    throw createError("PERMISSION_DENIED", "老师预览不会保存小测记录");
+    throw createError("PERMISSION_DENIED", "当前为老师预览，小测记录保持原状态");
   }
   const data = event.data || {};
   const studentId = String(data.studentId || "").trim();
   if (!studentId || studentId !== identity.student._id) {
-    throw createError("PERMISSION_DENIED", "只能保存自己的小测记录");
+    throw createError("PERMISSION_DENIED", "请使用当前学生账号保存小测记录");
   }
   const rawResults = Array.isArray(data.results) ? data.results : [];
   if (!rawResults.length || rawResults.length > 30) {
@@ -4081,7 +4081,7 @@ const normalizeHomeworkDueDays = (value, recordingTaskEnabled) => {
   if (value === undefined || value === null || value === "") return -1;
   const days = Number(value);
   if (!Number.isInteger(days) || days < -1 || days > courseWorkflow.MAX_HOMEWORK_DUE_DAYS) {
-    throw createError("INVALID_HOMEWORK_DEADLINE", "录音作业期限只能设置为当天至 7 天后");
+    throw createError("INVALID_HOMEWORK_DEADLINE", "录音作业期限可设置为当天至 7 天后");
   }
   return days;
 };
@@ -4829,14 +4829,14 @@ const getLessonDetail = async (event) => {
   const identity = await getIdentity();
   if (identity.role === "guest") throw createError("PERMISSION_DENIED", "请先绑定学习账号");
   if (data.mode === "teacherPreview" && identity.role !== "teacher") {
-    throw createError("PERMISSION_DENIED", "仅教师端可使用学生视角");
+    throw createError("PERMISSION_DENIED", "请使用教师账号进入学生视角");
   }
 
   const lessonRes = await db.collection("lessons").doc(lessonId).get();
   const lesson = lessonRes.data;
   if (!lesson) throw createError("LESSON_NOT_FOUND", "课程不存在或已删除");
   if (data.mode === "teacherPreview" && data.previewStudentId && lesson.studentId !== data.previewStudentId) {
-    throw createError("PERMISSION_DENIED", "当前课程不属于这位学生，请刷新后重试");
+    throw createError("PERMISSION_DENIED", "请从对应学生的课程页进入");
   }
   await ensureStudentAccess(lesson.studentId);
   await createOneCollection("lessonSubmissions");
@@ -5025,7 +5025,7 @@ const updatePaper = async (event) => {
   const updates = {};
   if (Object.prototype.hasOwnProperty.call(data, "paperTitle")) {
     const paperTitle = normalizeLessonText(data.paperTitle, 200);
-    if (!paperTitle) throw createError("INVALID_PAPER", "资料标题不能为空");
+    if (!paperTitle) throw createError("INVALID_PAPER", "请填写资料标题");
     updates.paperTitle = paperTitle;
   }
   if (Object.prototype.hasOwnProperty.call(data, "purpose")) {
@@ -5562,7 +5562,7 @@ const subscribeHomeworkReminder = async (event) => {
       throw createError("HOMEWORK_NOT_ASSIGNED", "老师尚未为这节课布置课后任务");
     }
     if (isLessonHomeworkCompleted(lesson)) {
-      throw createError("HOMEWORK_COMPLETED", "课后任务已经完成，不需要再开启提醒");
+      throw createError("HOMEWORK_COMPLETED", "课后任务已完成，本次提醒已结束");
     }
     const target = getNextHomeworkReminderTarget(lesson);
     const homeworkTaskVersion = Math.max(1, Number(lesson.homeworkTaskVersion) || 1);
@@ -5808,7 +5808,7 @@ const runMistakeImportTransaction = async (transactionCallback, importItemIndex)
     if (!isTransactionBusyError(err)) throw err;
     throw createError(
       "TRANSACTION_BUSY",
-      "云数据库暂时繁忙，已自动重试，请稍后重新导入；已写入的错题不会重复创建"
+      "云数据库暂时繁忙，已自动重试，请稍后重新导入；已写入错题会按批次去重"
     );
   }
 };
@@ -6350,7 +6350,7 @@ exports.main = async (event) => {
         return {
           success: false,
           code: "UNKNOWN_TYPE",
-          message: "暂不支持该操作，请刷新后重试",
+          message: "请刷新页面后重试该操作",
         };
     }
   } catch (err) {

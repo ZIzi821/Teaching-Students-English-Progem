@@ -40,8 +40,8 @@ assert(detailMarkup.includes('wx:if="{{isTeacher}}" bindtap="goMemoryEvaluation"
 
 const pageMarkup = read("miniprogram/insights/pages/memory-evaluation/index.wxml");
 assert(pageMarkup.includes("Brier Score"), "Brier score explanation is missing");
-assert(pageMarkup.includes("不是学生分数"), "student-score safety note is missing");
-assert(pageMarkup.includes("不会自动修改参数"), "teacher parameter gate is missing");
+assert(pageMarkup.includes("参数调整由老师结合课堂表现决定"), "teacher decision note is missing");
+assert(pageMarkup.includes("参数调整由老师结合课堂表现决定"), "teacher parameter gate is missing");
 assert(pageMarkup.includes("校准分组"), "calibration bins are missing");
 
 const scheduler = read("cloudfunctions/quickstartFunctions/englishMemoryScheduler.js");

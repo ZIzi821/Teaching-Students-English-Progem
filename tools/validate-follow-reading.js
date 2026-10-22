@@ -53,12 +53,12 @@ assert.ok(practice.includes('task.mode === "automatic"'), "automatic mode is mis
 assert.ok(practice.includes('"awaiting_play"'), "manual play mode is missing");
 assert.ok(practice.includes("this.startGapCountdown()"), "audio does not lead into the 1-3 second preparation gap");
 assert.ok(practice.includes("this.recorder.start"), "microphone does not start automatically");
-assert.ok(practiceWxml.includes("播放老师示范") && practiceWxml.includes("不需要再点录音"), "student instructions do not explain manual playback and automatic recording");
-assert.ok(practiceWxml.includes("教师预览没有上传录音"), "preview no-write result is not disclosed");
+assert.ok(practiceWxml.includes("播放老师示范") && practiceWxml.includes("麦克风随后自动打开并开始录音"), "student instructions do not explain manual playback and automatic recording");
+assert.ok(practiceWxml.includes("学生的完成记录保持原状态"), "preview result handling is not explained");
 
 assert.ok(reliableAudio.includes("onTimeUpdate"), "reliable audio playback does not confirm real timeline progress");
 assert.ok(reliableAudio.includes("AUDIO_NO_PROGRESS"), "silent playback fallback is missing");
 assert.ok(ketExam.includes("startExamAudioPreload") && ketExam.includes("playReliableAudio"), "KET exam does not use background preload and verified playback");
-assert.ok(ketLibrary.includes("不要使用 “Good / 不错”") && ketLibrary.includes("下一段提示音开头"), "KET neutral transition recording guidance is missing");
+assert.ok(ketLibrary.includes("衔接保持中性") && ketLibrary.includes("下一段提示音开头"), "KET neutral transition recording guidance is missing");
 
 console.log("follow-reading validation passed");

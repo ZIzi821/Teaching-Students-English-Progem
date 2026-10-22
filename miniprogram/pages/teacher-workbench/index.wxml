@@ -47,7 +47,7 @@
     <view class="archive-head">
       <view>
         <view class="section-title archive-title">已隐藏学生</view>
-        <view class="archive-hint">隐藏不会删除访问码、课程、错题或学习进度，学生端也不会受到影响。</view>
+        <view class="archive-hint">隐藏后，访问码、课程、错题和学习进度继续保留；可随时恢复学生。</view>
       </view>
       <view class="archive-count">{{hiddenCount}}</view>
     </view>

@@ -84,7 +84,7 @@ function readBody(req, limit) {
     });
     req.on("end", () => {
       if (tooLarge) {
-        const err = new Error(`单个文件不能超过 ${Math.round(limit / 1024 / 1024)} MB`);
+        const err = new Error(`单个文件上限为 ${Math.round(limit / 1024 / 1024)} MB`);
         err.statusCode = 413;
         reject(err);
         return;
@@ -111,12 +111,12 @@ async function createSession(req, res) {
     const name = basename(item && item.name);
     const size = Math.max(0, Number(item && item.size) || 0);
     const extension = path.extname(name).toLowerCase();
-    if (!name || !ALLOWED_EXTENSIONS.has(extension)) throw new Error(`不支持的文件格式：${name || `第 ${index + 1} 个文件`}`);
+    if (!name || !ALLOWED_EXTENSIONS.has(extension)) throw new Error(`请选择支持的文件格式：${name || `第 ${index + 1} 个文件`}`);
     if (size > MAX_FILE_BYTES) throw new Error(`文件超过 50 MB：${name}`);
     total += size;
     return { index, name, size, contentType: contentTypeForName(name, item && item.type), buffer: null };
   });
-  if (total > MAX_TOTAL_BYTES) throw new Error("全部资料合计不能超过 250 MB");
+  if (total > MAX_TOTAL_BYTES) throw new Error("全部资料合计上限为 250 MB");
   session = {
     version: crypto.randomBytes(12).toString("hex"),
     ready: false,
@@ -135,7 +135,7 @@ async function uploadFile(req, res, url) {
   const body = await readBody(req, MAX_FILE_BYTES);
   if (!body.length) throw new Error(`文件为空：${file.name}`);
   const total = session.files.reduce((sum, item) => sum + (item.index === index ? 0 : item.buffer ? item.buffer.length : 0), 0) + body.length;
-  if (total > MAX_TOTAL_BYTES) throw new Error("全部资料合计不能超过 250 MB");
+  if (total > MAX_TOTAL_BYTES) throw new Error("全部资料合计上限为 250 MB");
   file.buffer = body;
   file.size = body.length;
   file.contentType = contentTypeForName(file.name, req.headers["content-type"]);

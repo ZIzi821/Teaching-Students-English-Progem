@@ -198,7 +198,7 @@ Page({
       })
       .catch((err) => {
         console.error(err);
-        this.setFallbackData("服务暂时不可用，请稍后再试");
+        this.setFallbackData("加载遇到问题，请稍后重试");
       });
   },
 
@@ -393,7 +393,7 @@ Page({
   },
 
   markLearningActivitiesViewed(viewedThroughAtMs) {
-    if (!wx.cloud || !viewedThroughAtMs) return Promise.reject(new Error("云服务暂时不可用"));
+    if (!wx.cloud || !viewedThroughAtMs) return Promise.reject(new Error("云服务连接遇到问题"));
     return wx.cloud.callFunction({
       name: "quickstartFunctions",
       data: {
@@ -440,7 +440,7 @@ Page({
     this.markLearningActivitiesViewed(viewedThroughAtMs).catch((err) => {
       console.error("dismiss learning activities failed", err);
       this.setData({ learningActivityNotices: notices });
-      wx.showToast({ title: "暂时未同步，请重试", icon: "none" });
+      wx.showToast({ title: "同步遇到问题，请重试", icon: "none" });
     });
   },
 
@@ -554,7 +554,7 @@ Page({
       : `${this.data.currentStudent && this.data.currentStudent.name || "学生"}的学生端`;
     wx.showModal({
       title: "退出当前身份？",
-      content: `即将退出${roleLabel}。课程、错题和学习记录都不会删除，以后可以再次输入访问码进入。`,
+      content: `即将退出${roleLabel}。课程、错题和学习记录继续保留，以后可再次输入访问码进入。`,
       confirmText: "确认退出",
       confirmColor: "#a04f43",
       success: (modalResult) => {

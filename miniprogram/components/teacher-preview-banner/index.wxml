@@ -1,4 +1,4 @@
 <view class="preview-banner">
   <view class="preview-dot"></view>
-  <view><view class="preview-title">老师只读预览</view><view class="preview-hint">正在查看该学生的法语记录，练习操作不会保存。</view></view>
+  <view><view class="preview-title">老师预览</view><view class="preview-hint">正在查看该学生的法语记录，练习结果在预览页单独呈现。</view></view>
 </view>

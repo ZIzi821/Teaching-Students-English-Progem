@@ -31,7 +31,7 @@
       <button class="listen-btn" data-key="{{currentSentence.audioKey}}" bindtap="playAudio" disabled="{{audioLoading}}">{{audioLoading ? '准备发音…' : '🔊 播放示范'}}</button>
     </view>
 
-    <view class="repeat-hint">不录音、不评分，听完后自己读一遍即可。</view>
+    <view class="repeat-hint">听完后自己读一遍，专注模仿节奏和发音。</view>
     <view class="sentence-actions">
       <button class="primary-btn action-btn" wx:if="{{!isTeacherPreview}}" disabled="{{submitting}}" bindtap="completeSentence">我跟读了</button>
       <button class="ghost-btn action-btn" disabled="{{submitting || audioLoading}}" bindtap="playAudio" data-key="{{currentSentence.audioKey}}">{{audioLoading ? '准备中…' : '再听一次'}}</button>

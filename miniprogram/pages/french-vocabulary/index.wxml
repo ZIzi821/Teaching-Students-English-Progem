@@ -50,7 +50,7 @@
       </block>
     </view>
 
-    <view class="card preview-rating-tip" wx:if="{{revealed && isTeacherPreview}}">只读预览：可以查看答案和记忆曲线，但不能替学生评分。</view>
+    <view class="card preview-rating-tip" wx:if="{{revealed && isTeacherPreview}}">老师预览：可以查看答案和记忆曲线，评分由学生本人完成。</view>
     <view wx:if="{{revealed && !isTeacherPreview}}" class="rating-grid">
       <button class="rating-btn again-btn" data-result="again" bindtap="review" disabled="{{submitting}}">再来一次 · Again</button>
       <button class="rating-btn hard-btn" data-result="hard" bindtap="review" disabled="{{submitting}}">有点难 · Hard</button>

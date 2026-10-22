@@ -157,7 +157,7 @@ Page({
     if (!item || !item.audioReady || this.data.deletingItemId) return;
     wx.showModal({
       title: "删除这段示范音？",
-      content: `删除第 ${item.order} 条后，学生暂时不能开始整项跟读，直到重新上传。`,
+      content: `删除第 ${item.order} 条后，整项跟读会进入待补充状态；重新上传即可开放给学生。`,
       confirmText: "删除",
       confirmColor: "#b6534b",
       success: (modal) => {

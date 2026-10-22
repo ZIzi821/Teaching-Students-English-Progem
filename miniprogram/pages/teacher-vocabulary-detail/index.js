@@ -44,7 +44,7 @@ Page({
       this.setData({
         loading: false,
         noPermission: true,
-        message: err.message || "只有老师可以查看学生词库",
+        message: err.message || "请使用教师账号查看学生词库",
       });
     }).finally(() => {
       if (options.stopRefresh) wx.stopPullDownRefresh();

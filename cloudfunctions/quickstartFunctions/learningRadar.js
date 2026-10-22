@@ -663,7 +663,7 @@ const buildPrepSuggestion = (context, skillMetrics, priorities, observationNeeds
     : [
       { minutes: 5, title: "旧内容复现", detail: "用听、指、说快速确认上节内容" },
       { minutes: 8, title: "示范与理解", detail: `用图片、实物或卡片示范：${targetSkill ? targetSkill.label : context.stage.goal}` },
-      { minutes: 10, title: "听辨或认读", detail: "先理解和指认，不要求一次记住" },
+      { minutes: 10, title: "听辨或认读", detail: "先理解和指认，逐步形成记忆" },
       { minutes: 10, title: "引导练习", detail: "通过配对、排序、动作或替换反复练习" },
       { minutes: 5, title: "独立尝试", detail: "逐步减少提示，观察能否独立完成" },
       { minutes: 2, title: "记录结果", detail: "记录独立完成、提示后完成或暂时不会" },
@@ -758,8 +758,8 @@ const buildLearningRadar = (input = {}) => {
       unlinkedObservationCount: collected.unlinkedObservationCount,
       label: `本阶段 ${assessedSkillCount}/${skillMetrics.length} 项能力已有证据`,
       note: collected.unlinkedObservationCount
-        ? `另有 ${collected.unlinkedObservationCount} 条历史课堂观察尚未关联到能力点，不会被当作 0 分。`
-        : "没有证据的能力会显示为待观察，不会按 0 分计算。",
+        ? `另有 ${collected.unlinkedObservationCount} 条历史课堂观察等待关联；评分使用已关联证据。`
+        : "待观察能力会在取得课堂证据后评分。",
     },
     summary: {
       stageDisplay: `${context.stage.stageLabel} · ${context.stage.stageTitle}`,

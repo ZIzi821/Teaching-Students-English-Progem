@@ -46,7 +46,7 @@ const LESSON_FOCUS_LABELS = {
   reading: "短阅读与衔接",
 };
 const BASIC_RECORDING_TASK_TYPE_OPTIONS = [
-  { value: "manual", label: "独立朗读（不播放示范）" },
+  { value: "manual", label: "独立朗读（学生直接开始）" },
   { value: "follow_reading", label: "跟读（先听老师示范）" },
 ];
 const KET_RECORDING_TASK_TYPE_OPTIONS = [
@@ -59,7 +59,7 @@ const FOLLOW_READING_MODE_OPTIONS = [
   { value: "manual", label: "手动逐条播放" },
 ];
 const HOMEWORK_DUE_OPTIONS = [
-  { value: -1, label: "暂不设置" },
+  { value: -1, label: "以后设置" },
   { value: 0, label: "当天截止" },
   { value: 1, label: "1 天后截止" },
   { value: 2, label: "2 天后截止" },
@@ -85,7 +85,7 @@ const MATERIAL_PURPOSES = [
   { label: "听力／跟读", value: "listening", hint: "听力或示范音频" },
   { label: "学校试卷", value: "school_exam", hint: "保留学校原卷" },
   { label: "板书／课堂照片", value: "board_photo", hint: "课堂照片或板书" },
-  { label: "仅教师留存", value: "teacher_only", hint: "学生端不会显示" },
+  { label: "教师留存", value: "teacher_only", hint: "供教师备课查看" },
 ];
 
 const MATERIAL_TYPE_LABELS = { pdf: "PDF", document: "课件", image: "图片", canva: "图片", audio: "音频" };
@@ -210,8 +210,8 @@ Page({
     learningPlanAvailable: false,
     learningPlanLoading: false,
     learningStageLabel: "",
-    learningSkillOptions: [{ skillId: "", label: "暂不关联能力点" }],
-    learningFocusOptions: [{ value: "", label: "暂不标记课程类型" }],
+    learningSkillOptions: [{ skillId: "", label: "以后关联能力点" }],
+    learningFocusOptions: [{ value: "", label: "以后标记课程类型" }],
     lessonFocusIndex: 0,
     suggestedSkillId: "",
     recordingRepeatOptions: [1, 2, 3, 4, 5],
@@ -318,7 +318,7 @@ Page({
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) {
-        this.setData({ message: result.message || "无权查看该课程" });
+        this.setData({ message: result.message || "请使用对应的教师或学生账号查看课程" });
         return;
       }
       const isTeacherPreview = result.role === "teacher" && this.data.mode === "teacherPreview";
@@ -395,7 +395,7 @@ Page({
       });
     }).catch((err) => {
       console.error(err);
-      this.setData({ message: "服务暂时不可用，请稍后再试" });
+      this.setData({ message: "加载遇到问题，请稍后重试" });
     });
   },
 
@@ -408,8 +408,8 @@ Page({
         learningPlanAvailable: false,
         learningPlanLoading: false,
         learningStageLabel: "",
-        learningSkillOptions: [{ skillId: "", label: "暂不关联能力点" }],
-        learningFocusOptions: [{ value: "", label: "暂不标记课程类型" }],
+        learningSkillOptions: [{ skillId: "", label: "以后关联能力点" }],
+        learningFocusOptions: [{ value: "", label: "以后标记课程类型" }],
         lessonFocusIndex: 0,
         suggestedSkillId: "",
       });
@@ -431,8 +431,8 @@ Page({
         this.setData({
           learningPlanAvailable: false,
           learningStageLabel: "",
-          learningSkillOptions: [{ skillId: "", label: "暂不关联能力点" }],
-          learningFocusOptions: [{ value: "", label: "暂不标记课程类型" }],
+          learningSkillOptions: [{ skillId: "", label: "以后关联能力点" }],
+          learningFocusOptions: [{ value: "", label: "以后标记课程类型" }],
           lessonFocusIndex: 0,
           suggestedSkillId: "",
         });
@@ -446,7 +446,7 @@ Page({
       const historicalLinkedSkills = (radar.skillCatalog || []).filter((skill) => (
         linkedSkillIds.has(skill.skillId) && !currentSkillIds.has(skill.skillId)
       ));
-      const learningSkillOptions = [{ skillId: "", label: "暂不关联能力点", displayLabel: "暂不关联能力点" }]
+      const learningSkillOptions = [{ skillId: "", label: "以后关联能力点", displayLabel: "以后关联能力点" }]
         .concat((radar.skills || []).map((skill) => ({
           skillId: skill.skillId,
           label: skill.label,
@@ -463,7 +463,7 @@ Page({
       const existingFocus = String(this.data.workspaceForm.lessonFocusType || "");
       const focusValues = Array.from(new Set((radar.skills || []).map((skill) => skill.focusType).filter(Boolean)));
       if (existingFocus && !focusValues.includes(existingFocus)) focusValues.push(existingFocus);
-      const learningFocusOptions = [{ value: "", label: "暂不标记课程类型" }]
+      const learningFocusOptions = [{ value: "", label: "以后标记课程类型" }]
         .concat(focusValues.map((value) => ({
           value,
           label: LESSON_FOCUS_LABELS[value] || value,
@@ -694,7 +694,7 @@ Page({
           ? (getFileExtension(item.fileName).toUpperCase() || MATERIAL_TYPE_LABELS.document)
           : MATERIAL_TYPE_LABELS[item.type] || "文件",
         studentVisible: item.studentVisible !== false,
-        visibilityLabel: item.studentVisible === false ? "仅教师" : "学生可见",
+        visibilityLabel: item.studentVisible === false ? "教师留存" : "学生可见",
         fileID: item.fileID || (item.fileIds && item.fileIds.length ? item.fileIds[0] : ""),
         fileExtension: item.fileExtension || getFileExtension(item.fileName),
         displayFileName: item.fileName && !looksHashedFileName(item.fileName) ? item.fileName : "",
@@ -1198,7 +1198,7 @@ Page({
           if (!type) unsupported.push(fileName);
           return { type, filePath: tempFile.path, fileName, fileSize: tempFile.size || 0 };
         }).filter((file) => file.type);
-          if (unsupported.length) wx.showToast({ title: "仅支持 PPT、PDF、图片和音频", icon: "none" });
+          if (unsupported.length) wx.showToast({ title: "可上传 PPT、PDF、图片和音频", icon: "none" });
         this.uploadSelectedFiles(files);
       },
     });
@@ -1241,7 +1241,7 @@ Page({
           }
           if (manifest.files.length > 20) throw new Error("每次最多读取 20 个资料");
           const unsupported = manifest.files.find((item) => !detectMaterialType(item.name));
-          if (unsupported) throw new Error(`不支持的文件格式：${unsupported.name}`);
+          if (unsupported) throw new Error(`请选择 PPT、PDF、图片或音频：${unsupported.name}`);
           wx.hideLoading();
           wx.showModal({
             title: "核对电脑资料",
@@ -1308,7 +1308,7 @@ Page({
         const failureMessages = Array.from(new Set(failedFiles.map((item) => item.message).filter(Boolean)));
         wx.showModal({
           title: `已上传 ${successCount} 个，失败 ${failedFiles.length} 个`,
-          content: `未成功：${failedNames.slice(0, 8).join("、")}${failedNames.length > 8 ? "等" : ""}\n原因：${failureMessages.join("；") || "上传未完成"}\n请不要离开本页，重新选择这些文件。`,
+          content: `未成功：${failedNames.slice(0, 8).join("、")}${failedNames.length > 8 ? "等" : ""}\n原因：${failureMessages.join("；") || "上传未完成"}\n请留在本页，重新选择这些文件。`,
           showCancel: false,
         });
       } else {
@@ -1641,7 +1641,7 @@ Page({
     const group = this.data.materialGroups[Number(e.currentTarget.dataset.groupIndex)];
     const material = group.papers[Number(e.currentTarget.dataset.paperIndex)];
     wx.showActionSheet({
-      itemList: ["重命名", "更换分类", material.studentVisible ? "改为仅教师可见" : "改为学生可见", "替换文件", "删除资料"],
+      itemList: ["重命名", "更换分类", material.studentVisible ? "改为教师留存" : "改为学生可见", "替换文件", "删除资料"],
       success: (res) => {
         if (res.tapIndex === 0) this.renameMaterial(material);
         if (res.tapIndex === 1) this.changeMaterialPurpose(material);
@@ -1709,7 +1709,7 @@ Page({
               const fileName = tempFile.name || "replacement-" + Date.now();
               const type = detectMaterialType(fileName);
               if (!type) {
-                wx.showToast({ title: "仅支持 PPT、PDF、图片和音频", icon: "none" });
+                wx.showToast({ title: "可上传 PPT、PDF、图片和音频", icon: "none" });
                 return;
               }
               this.uploadReplacement(material, {
@@ -1840,7 +1840,7 @@ Page({
       return;
     }
     if (this.data.isTeacherPreview) {
-      wx.showToast({ title: "教师预览中不能代学生录音", icon: "none" });
+      wx.showToast({ title: "教师预览 · 录音由学生本人完成", icon: "none" });
       return;
     }
     if (this.data.lesson.recordingTaskType === "ket_mock") {
@@ -1880,7 +1880,7 @@ Page({
         submittedLabel: formatDateTime(session.submittedAtMs || session.startedAtMs),
         canOpen: !this.data.isTeacherPreview && ["submitted", "reviewed"].includes(session.status),
         actionLabel: this.data.isTeacherPreview
-          ? "只读预览"
+          ? "教师预览"
           : ["submitted", "reviewed"].includes(session.status)
             ? (this.data.isTeacher ? "回听评分" : "查看")
             : "可重新开始",
@@ -1943,7 +1943,7 @@ Page({
       wx.hideLoading();
       clearPlaying();
       wx.showToast({
-        title: options.submissionId ? "录音暂不能播放，请刷新后重试" : "音频暂不能播放",
+        title: options.submissionId ? "录音加载遇到问题，请刷新后重试" : "音频加载遇到问题",
         icon: "none",
       });
     });
@@ -1970,7 +1970,7 @@ Page({
     if (!this.data.isTeacher || !this.data.hasLegacySubmissions || this.data.organizingRecordings) return;
     wx.showModal({
       title: "整理旧录音文件？",
-      content: "系统会按学生姓名、课程日期和录音次数复制到清晰目录；数据库更新成功后才删除旧文件。录音内容不会改变。",
+      content: "系统会按学生姓名、课程日期和录音次数整理到清晰目录，并同步数据库；录音内容保持原样。",
       confirmText: "开始整理",
       success: (modalRes) => {
         if (!modalRes.confirm) return;
@@ -2172,7 +2172,7 @@ Page({
       title: markCompleted ? "确认学生已完成？" : "确认学生未完成？",
       content: markCompleted
         ? "确认后，学生端会显示本节课后任务已完成。"
-        : "确认后，学生端会恢复为待完成；已有任务内容和录音不会被删除。",
+        : "确认后，学生端恢复为待完成；已有任务内容和录音继续保留。",
       // 微信真机要求 showModal 的按钮文字不超过 4 个汉字；超长时弹窗可能无法打开。
       confirmText: markCompleted ? "已完成" : "未完成",
       confirmColor: markCompleted ? "#4f8f73" : "#b36b3f",
@@ -2205,7 +2205,7 @@ Page({
   enableHomeworkReminder() {
     if (!this.data.isStudent || !this.data.lesson || this.data.lesson.homeworkCompleted || this.data.subscribingHomeworkReminder) return;
     if (typeof wx.requestSubscribeMessage !== "function") {
-      wx.showToast({ title: "当前微信版本不支持订阅提醒", icon: "none" });
+      wx.showToast({ title: "请升级微信后使用订阅提醒", icon: "none" });
       return;
     }
     this.setData({ subscribingHomeworkReminder: true });
@@ -2217,7 +2217,7 @@ Page({
           this.setData({ subscribingHomeworkReminder: false });
           wx.showModal({
             title: "没有开启提醒",
-            content: "课后任务仍然保留，但微信不会在18:00发送这一次提醒。",
+            content: "课后任务继续保留；需要提醒时可再次开启 18:00 通知。",
             showCancel: false,
           });
           return;
@@ -2234,7 +2234,7 @@ Page({
           if (!result.success) throw new Error(result.message || "提醒保存失败");
           wx.showModal({
             title: "18:00提醒已开启",
-            content: `${result.targetDate || "下一次"} 18:00 若任务仍未完成，微信会发送一次提醒。一次授权只能发送一次。`,
+            content: `${result.targetDate || "下一次"} 18:00 若任务仍未完成，微信会发送一次提醒。每次授权对应一次提醒。`,
             showCancel: false,
           });
           this.loadLesson();

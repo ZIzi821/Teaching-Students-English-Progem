@@ -98,7 +98,7 @@ const normalizeAssessment = (data = {}) => {
     strengths: asText(data.strengths, 500),
     nextFocus: asText(data.nextFocus, 500),
     comment: asText(data.comment, 800),
-    scoreNotice: "教师练习评分，用于后续学习调整，不是 Cambridge 官方考试成绩。",
+    scoreNotice: "教师练习评分用于观察四维表现和安排后续学习。",
   });
 };
 
@@ -235,7 +235,7 @@ const buildScoreTrend = (sessions = [], options = {}) => {
       average: point.average,
     })),
     emptyMessage: "还没有老师完成评分的 KET 模拟；第一次评分会建立基线，第二次开始显示变化。",
-    notice: "趋势只来自老师已完成的四维练习评分，用于观察学习变化，不是 Cambridge 官方成绩。",
+    notice: "趋势来自老师已完成的四维练习评分，用于观察学习变化。",
   };
 };
 

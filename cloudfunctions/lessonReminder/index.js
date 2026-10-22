@@ -230,7 +230,7 @@ const recoverStaleHomeworkNotifications = async (now) => {
             ? 0
             : now + HOMEWORK_RETRY_DELAY_MS,
           homeworkReminderNotifyError: deliveryUnknown
-            ? "微信接口已调用，但最终投递状态无法确认"
+            ? "微信接口已接收请求，请在微信服务通知中确认投递结果"
             : exhausted ? "课后任务提醒重试次数已用完" : lesson.homeworkReminderNotifyError || "",
           homeworkReminderNotifyRecoveredAt: db.serverDate(),
           updatedAt: db.serverDate(),

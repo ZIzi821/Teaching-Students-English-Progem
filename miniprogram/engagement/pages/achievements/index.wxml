@@ -2,7 +2,7 @@
   <view class="preview-banner" wx:if="{{isTeacherPreview && student}}">
     <view>
       <view class="preview-banner-title">正在查看 {{student.name}} 的真实学生成就页</view>
-      <view class="preview-banner-hint">积分、成就和本周 PK 与学生看到的一样；本页没有可写入的按钮。</view>
+      <view class="preview-banner-hint">积分、成就和本周 PK 与学生端一致，预览结果在本页展示。</view>
     </view>
     <view class="preview-banner-action" bindtap="goBackToTeacher">返回教师端</view>
   </view>
@@ -49,7 +49,7 @@
     <view class="section-head">
       <view>
         <view class="section-title">成就收藏</view>
-        <view class="section-hint">只由真实学习记录自动点亮</view>
+        <view class="section-hint">依据真实学习记录自动点亮</view>
       </view>
       <view class="section-count">{{dashboard.unlockedAchievementCount}} / {{dashboard.achievements.length}}</view>
     </view>
@@ -75,8 +75,8 @@
       </view>
       <view class="pk-message">{{dashboard.pkMessage}}</view>
       <view class="pk-relation-note">
-        <view>真实学生：本周学习积分 1:1 等于 PK 分，老师不能手动改分。</view>
-        <view wx:if="{{dashboard.challengeParticipantCount}}">挑战选手：由老师设置激励分数，不计入任何学生的总积分、等级或成就。</view>
+        <view>真实学生：本周学习积分按 1:1 形成 PK 分。</view>
+        <view wx:if="{{dashboard.challengeParticipantCount}}">挑战选手：使用独立激励分数；学生积分、等级与成就依据本人真实记录。</view>
       </view>
       <view class="ranking-list">
         <view class="ranking-row {{item.isCurrent ? 'ranking-current' : ''}}" wx:for="{{dashboard.weeklyRanking}}" wx:key="rowKey">
@@ -88,15 +88,15 @@
           <view class="rank-points">{{item.pkScore}} PK 分</view>
         </view>
       </view>
-      <view class="privacy-note">为保护学生隐私，其他真实同学只显示简化名称；不能查看任何对方资料，也没有聊天功能。</view>
+      <view class="privacy-note">榜单以简化名称展示其他真实同学，并聚焦本周学习积分。</view>
     </view>
 
     <view class="card breakdown-card">
       <view class="section-title card-section-title">积分从哪里来？</view>
-      <view class="section-hint">以下是学习积分，也是实际学生进入 PK 榜的唯一分数来源；不能手动领取或靠重复点按钮增加。</view>
+      <view class="section-hint">以下学习积分会按 1:1 计入真实学生的本周 PK 分。</view>
       <view class="rule-summary">
         <view>英语单词 +{{dashboard.rules.vocabularyPerWord}} / 个（每天最多 {{dashboard.rules.vocabularyDailyCap}} 个）</view>
-        <view>单词小测每天只计最好一轮：完成 +{{dashboard.rules.quizCompletion}}，正确率最多 +{{dashboard.rules.quizAccuracyMax}}</view>
+        <view>单词小测每天取最好一轮：完成 +{{dashboard.rules.quizCompletion}}，正确率最多 +{{dashboard.rules.quizAccuracyMax}}</view>
         <view>录音任务 +{{dashboard.rules.recordingPerTask}} / 项 · 老师确认作业 +{{dashboard.rules.homeworkConfirmed}} / 项</view>
         <view>KET 模拟 +{{dashboard.rules.ketMockCompleted}} / 套 · 法语 +{{dashboard.rules.frenchPerActivity}} / 项（每天最多 {{dashboard.rules.frenchDailyCap}} 项）</view>
       </view>
@@ -121,7 +121,7 @@
       </view>
     </view>
 
-    <view class="evidence-note">积分用于鼓励稳定学习，不代表考试成绩，也不影响老师对作业和口语的真实评价。</view>
+    <view class="evidence-note">积分记录稳定学习；作业和口语继续使用老师的课堂评价。</view>
   </block>
 
   <student-tabbar

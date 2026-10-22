@@ -79,7 +79,7 @@ Page({
 
   setupRecorder() {
     if (typeof wx.getRecorderManager !== "function") {
-      this.setData({ state: "error", message: "当前微信版本不支持录音，请升级微信后重试。" });
+      this.setData({ state: "error", message: "请升级微信后使用录音功能。" });
       return false;
     }
     this.recorderManager = wx.getRecorderManager();

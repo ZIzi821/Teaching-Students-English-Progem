@@ -63,7 +63,7 @@ Page({
       console.error(err);
       this.setData({
         radar: null,
-        message: err.message || "服务暂时不可用，请稍后再试",
+        message: err.message || "加载遇到问题，请稍后重试",
       });
     }).finally(() => {
       this.setData({ loading: false });

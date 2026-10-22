@@ -10,7 +10,7 @@
   <view class="card computer-import-card" wx:if="{{isDevTools}}">
     <view class="computer-import-badge">推荐方式</view>
     <view class="section-title">从电脑读取错题 JSON</view>
-    <view class="hint">先启动电脑导入助手并选择 JSON，再点击下面按钮。错题图片不再上传或保存。</view>
+    <view class="hint">先启动电脑导入助手并选择 JSON，再点击下面按钮。导入内容使用完整文字 JSON。</view>
     <view class="computer-import-btn {{localBridgeLoading ? 'disabled-btn' : ''}}" bindtap="loadFromComputer">
       {{localBridgeLoading ? '正在从电脑读取...' : '从电脑导入'}}
     </view>
@@ -31,7 +31,7 @@
       <block wx:else>{{importText ? '请检查 JSON 格式' : '请选择文件或粘贴内容'}}</block>
     </view>
     <view class="missing-box" wx:if="{{missingQuestionTextNumbers.length}}">
-      第 {{missingQuestionTextLabel}} 条缺少完整题目文字，暂时不能导入。
+      第 {{missingQuestionTextLabel}} 条需要补充完整题目文字后再导入。
     </view>
   </view>
 

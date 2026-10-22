@@ -716,7 +716,7 @@ Page({
     }
     if (dailyGoal < this.data.summary.todayReviewedCount) {
       wx.showToast({
-        title: `今天已完成 ${this.data.summary.todayReviewedCount} 个，只能选择更高目标`,
+        title: `今天已完成 ${this.data.summary.todayReviewedCount} 个，目标下限为当前完成数`,
         icon: "none",
       });
       return;
@@ -976,7 +976,7 @@ Page({
     if (action === "exclude") {
       wx.showModal({
         title: "忽略这个单词？",
-        content: "忽略后，这个词不会加入学生词库。",
+        content: "确认后，这个词会归入已忽略列表。",
         confirmText: "确认忽略",
         confirmColor: "#b6534b",
         success: (res) => {

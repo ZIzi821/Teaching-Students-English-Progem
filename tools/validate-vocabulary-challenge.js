@@ -66,8 +66,7 @@ questions.filter((item) => item.answerMode === "input").forEach((item) => {
 const letterInput = questions.find((item) => (
   item.taskType === "letterCompletion" && item.answerMode === "input"
 ));
-assert(letterInput.promptHint.includes("只填写"));
-assert(letterInput.promptHint.includes("不要输入完整单词"));
+assert.strictEqual(letterInput.promptHint, "按顺序填写缺少的字母");
 assert.strictEqual(letterInput.inputPlaceholder, "只填缺少的字母");
 assert.strictEqual(letterInput.autoJudge, true);
 assert.strictEqual(letterInput.letterAnswerLength, letterInput.answer.length);

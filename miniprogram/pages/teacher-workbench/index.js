@@ -29,7 +29,7 @@ Page({
           loading: false,
           isTeacher: false,
           noPermission: true,
-          message: result.message || "只有教师账号可以使用工作台",
+          message: result.message || "请使用教师账号进入工作台",
           hiddenStudents: [],
         });
         return;

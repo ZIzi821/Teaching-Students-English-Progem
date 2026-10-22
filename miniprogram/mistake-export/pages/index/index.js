@@ -10,8 +10,8 @@ const EXPORT_FORMATS = [
 
 const EXCLUDE_OPTIONS = [
   { value: "exported_mistakes", label: "排除以前已导出的错题（推荐）", hint: "同一节课后来新增的错题仍可继续导出。" },
-  { value: "exported_lessons", label: "排除以前已导出的整节课程", hint: "适合按月份或阶段一次性整理，不再重复旧课程。" },
-  { value: "none", label: "不排除历史记录", hint: "所选范围内的全部错题都会再次导出。" },
+  { value: "exported_lessons", label: "排除以前已导出的整节课程", hint: "适合按月份或阶段一次性整理，后续只处理新课程。" },
+  { value: "none", label: "包含历史记录", hint: "所选范围内的全部错题都会再次导出。" },
 ];
 
 Page({
@@ -86,7 +86,7 @@ Page({
       }, () => this.refreshEstimate());
     }).catch((err) => {
       console.error(err);
-      this.setData({ loading: false, message: err.message || "服务暂时不可用，请稍后再试" });
+      this.setData({ loading: false, message: err.message || "加载遇到问题，请稍后重试" });
     });
   },
 

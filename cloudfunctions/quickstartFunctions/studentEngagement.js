@@ -494,7 +494,7 @@ const buildEngagementDashboard = ({ participants = [], challengeProfiles = [], c
     || String(left.student._id).localeCompare(String(right.student._id))
   ));
   const pkPolicy = {
-    realStudentRule: "真实学生 PK 分与本周可核验学习积分 1:1 相同，教师不能手动改分",
+    realStudentRule: "真实学生 PK 分由本周可核验学习积分按 1:1 生成",
     challengeRule: "挑战选手由教师设置周一起始分和每日增幅，并在榜单中明确标注",
   };
   const ketScoreTrend = ketMock.buildScoreTrend(current.records.ketMockSessions || []);

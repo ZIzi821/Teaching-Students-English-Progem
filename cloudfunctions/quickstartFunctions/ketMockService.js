@@ -242,7 +242,7 @@ const createKetMockService = ({
 
   const abortSession = async (event) => {
     const identity = await getIdentity();
-    if (identity.role !== "student" || !identity.student) throw createError("PERMISSION_DENIED", "只有学生可以中断自己的模拟考试");
+    if (identity.role !== "student" || !identity.student) throw createError("PERMISSION_DENIED", "请使用学生账号管理本人的模拟考试");
     const data = event.data || {};
     const sessionId = String(data.sessionId || "").trim();
     if (!sessionId) return { success: true, skipped: true };
@@ -298,7 +298,7 @@ const createKetMockService = ({
 
   const completeSession = async (event) => {
     const identity = await getIdentity();
-    if (identity.role !== "student" || !identity.student) throw createError("PERMISSION_DENIED", "只有学生可以提交自己的模拟考试");
+    if (identity.role !== "student" || !identity.student) throw createError("PERMISSION_DENIED", "请使用学生账号提交本人的模拟考试");
     const data = event.data || {};
     const sessionId = String(data.sessionId || "").trim();
     if (!sessionId) throw createError("INVALID_KET_SESSION", "模拟考试记录不存在，请重新开始");
@@ -395,7 +395,7 @@ const createKetMockService = ({
     const session = await getOptionalTransactionDocument(db.collection("ketMockSessions").doc(sessionId));
     if (!session) throw createError("INVALID_KET_SESSION", "模拟考试记录不存在或已删除");
     if (identity.role !== "teacher" && (!identity.student || identity.student._id !== session.studentId)) {
-      throw createError("PERMISSION_DENIED", "你只能查看自己的模拟考试");
+      throw createError("PERMISSION_DENIED", "请使用当前学生账号查看模拟考试");
     }
     const set = ketMock.findSet(session.setId);
     if (!set) throw createError("KET_MOCK_SET_NOT_FOUND", "套题已经更新，暂时无法打开");
@@ -425,7 +425,7 @@ const createKetMockService = ({
       set: setWithAudio,
       scoreFields: ketMock.SCORE_FIELDS,
       scoreTrend: ketMock.buildScoreTrend(studentSessions),
-      scoreNotice: "教师练习评分，用于后续学习调整，不是 Cambridge 官方考试成绩。",
+      scoreNotice: "教师练习评分用于观察四维表现和安排后续学习。",
     };
   };
 

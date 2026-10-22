@@ -14,14 +14,14 @@
   <block wx:else>
     <view class="card fairness-card">
       <view class="card-title">积分和 PK 分是什么关系？</view>
-      <view class="fairness-row"><text>1</text><view>真实学生的 PK 分 = 本周可核验学习积分，按 1:1 进入榜单，教师不能手动改动。</view></view>
-      <view class="fairness-row"><text>2</text><view>重复录音、重复小测不会反复加分；单词和法语有每日上限，作业必须由教师确认。</view></view>
-      <view class="fairness-row"><text>3</text><view>挑战选手使用教师设置的分数，但学生端会明确标为“挑战选手”，不会解锁任何学生成就。</view></view>
+      <view class="fairness-row"><text>1</text><view>真实学生的 PK 分由本周可核验学习积分按 1:1 生成。</view></view>
+      <view class="fairness-row"><text>2</text><view>系统按学习行为去重计分；单词和法语采用每日上限，作业积分在教师确认后生成。</view></view>
+      <view class="fairness-row"><text>3</text><view>挑战选手使用教师设置的分数，并在学生端显示“挑战选手”标签；学生成就按真实学习记录计算。</view></view>
       <view class="week-pill" wx:if="{{week}}">本周 {{week.label}}</view>
     </view>
 
     <view class="section-head">
-      <view><view class="section-title">真实学生参榜</view><view class="section-hint">建议只让当前确实在上课、学习机会相近的学生互相比较。</view></view>
+      <view><view class="section-title">真实学生参榜</view><view class="section-hint">建议选择当前在读、学习机会相近的学生互相比较。</view></view>
     </view>
     <view class="card student-card" wx:for="{{studentRows}}" wx:key="_id">
       <view class="student-top">
@@ -42,13 +42,13 @@
         <view><text>{{item.totalPoints}}</text><view>累计学习积分</view></view>
       </view>
       <view class="student-foot">
-        <view class="eligibility-note">{{!item.statusEligible ? '非在读或已隐藏状态不会参榜' : item.effectivePkEnabled ? '正在参与本周 PK' : '已由教师移出 PK'}}</view>
+        <view class="eligibility-note">{{!item.statusEligible ? '当前状态：未参与本周 PK' : item.effectivePkEnabled ? '正在参与本周 PK' : '已由教师移出 PK'}}</view>
         <view class="preview-action" data-id="{{item._id}}" bindtap="previewStudent">预览成就页 →</view>
       </view>
     </view>
 
     <view class="section-head challenge-head">
-      <view><view class="section-title">挑战选手</view><view class="section-hint">不是虚构真实同学，而是公开标注的激励目标。</view></view>
+      <view><view class="section-title">挑战选手</view><view class="section-hint">公开标注的学习激励目标。</view></view>
       <view class="add-action" bindtap="startCreateProfile">＋ 新建</view>
     </view>
 
@@ -69,7 +69,7 @@
         </view>
       </view>
       <view class="formula-note">PK 分 = 周一起始分 + 本周已过天数 × 每日增幅；每周一重新从起始分计算。</view>
-      <view class="enabled-row"><view><view class="label">显示在榜单</view><view class="field-hint">关闭后保留设置，但学生端暂不显示。</view></view><switch checked="{{profileForm.enabled}}" color="#4f8f73" bindchange="onProfileEnabledChange"></switch></view>
+      <view class="enabled-row"><view><view class="label">显示在榜单</view><view class="field-hint">关闭后保留当前设置，再次开启即可显示。</view></view><switch checked="{{profileForm.enabled}}" color="#4f8f73" bindchange="onProfileEnabledChange"></switch></view>
       <view class="form-actions">
         <view class="ghost-action" bindtap="cancelProfileEdit">取消</view>
         <view class="primary-action" bindtap="saveProfile">{{savingProfile ? '保存中…' : '保存挑战选手'}}</view>

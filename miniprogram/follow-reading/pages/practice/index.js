@@ -74,7 +74,7 @@ Page({
 
   setupRecorder() {
     if (typeof wx.getRecorderManager !== "function") {
-      this.setData({ state: "error", message: "当前微信版本不支持录音，请升级微信后重试。" });
+      this.setData({ state: "error", message: "请升级微信后使用录音功能。" });
       return false;
     }
     this.recorder = wx.getRecorderManager();
@@ -501,7 +501,7 @@ Page({
 
   enableLeaveWarning(enabled) {
     if (enabled && wx.enableAlertBeforeUnload) {
-      wx.enableAlertBeforeUnload({ message: "本轮跟读尚未完成，离开后本次录音不会保存。" });
+      wx.enableAlertBeforeUnload({ message: "本轮跟读正在进行，请留在当前页面完成并保存录音。" });
     } else if (!enabled && wx.disableAlertBeforeUnload) {
       wx.disableAlertBeforeUnload();
     }

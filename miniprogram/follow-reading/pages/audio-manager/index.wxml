@@ -17,7 +17,7 @@
       <view class="summary-card"><view class="summary-number">{{gapSeconds}} 秒</view><view class="summary-label">听完后的准备时间</view></view>
     </view>
     <view class="mode-note">{{modeLabel}} · 每条学生录音最长 {{responseSeconds}} 秒</view>
-    <view class="truth-note">每条文字对应一段教师录音。只有全部准备完成，学生才能开始；学生进入后会先把整组音频预载到微信临时目录。</view>
+    <view class="truth-note">每条文字对应一段教师录音。全部音频准备完成后，学生即可开始；进入练习时会先预载整组音频。</view>
 
     <view class="card item-card {{item.audioReady ? 'item-ready' : ''}}" wx:for="{{items}}" wx:key="id">
       <view class="item-head">

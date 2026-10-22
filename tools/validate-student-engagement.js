@@ -61,7 +61,7 @@ assert(backend.includes("studentEngagement.buildReminderActivities"), "Custom re
 assert(backend.includes('identity.role !== "student" || !identity.student'), "Teacher preview read-state protection changed unexpectedly");
 assert(reminderJs.includes('type: "saveStudentReminder"'), "Teacher reminder editor cannot publish or edit");
 assert(reminderJs.includes('type: "withdrawStudentReminder"'), "Teacher reminder editor cannot withdraw");
-assert(reminderWxml.includes("小程序内提醒，不是微信消息推送"), "Reminder UI must state the in-app-only boundary");
+assert(reminderWxml.includes("微信订阅消息由课后任务页单独开启"), "Reminder UI must explain the subscription-message entry");
 assert(detailJs.includes("goStudentReminders"), "Student management has no reminder entry handler");
 assert(detailWxml.includes("给学生的动态提醒"), "Student management has no reminder entry");
 assert(homeJs.includes("this.data.isTeacherPreview") && homeJs.includes("Promise.resolve()"), "Teacher preview must not persist student read state");
@@ -71,9 +71,9 @@ assert(homeWxss.includes("background: #4f9275") && homeWxss.includes("border: 2r
 assert(workbenchJs.includes("/engagement/pages/manager/index") && workbenchWxml.includes("成就与 PK 管理"), "Teacher workbench has no engagement manager entry");
 assert(managerJs.includes('type: "saveStudentPkEligibility"'), "Teacher cannot control real-student PK participation");
 assert(managerJs.includes('type: "savePkChallengeProfile"') && managerJs.includes('type: "deletePkChallengeProfile"'), "Teacher cannot manage challenge participants");
-assert(managerWxml.includes("真实学生的 PK 分 = 本周可核验学习积分") && managerWxml.includes("教师不能手动改动"), "Teacher manager does not explain the fair real-student score rule");
+assert(managerWxml.includes("真实学生的 PK 分由本周可核验学习积分按 1:1 生成"), "Teacher manager does not explain the fair real-student score rule");
 assert(managerWxml.includes("挑战选手") && achievementWxml.includes("挑战选手"), "Challenge participants are not clearly labelled on both sides");
-assert(achievementWxml.includes("本周学习积分 1:1 等于 PK 分"), "Student page does not explain the relationship between points and PK score");
+assert(achievementWxml.includes("本周学习积分按 1:1 形成 PK 分"), "Student page does not explain the relationship between points and PK score");
 assert(achievementWxml.includes("ket-score-trend") && engagementSource.includes("ketScoreTrend"), "Student achievements do not include the reviewed KET four-dimension trend");
 assert(achievementWxml.includes("student.lessonTemplateKey === 'molly_oral_ket' || dashboard.ketScoreTrend.hasData"), "Students without KET learning or reviewed scores should not receive an irrelevant empty trend card");
 assert(engagementLogic.buildAchievements({ recordedLessonCount: 40 }, {}).some((item) => item.id === "lesson_forty" && item.unlocked), "Forty-lesson achievement is missing");

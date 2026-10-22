@@ -158,7 +158,7 @@ const buildRecommendations = ({
   }
 
   if (summary.sampleSize >= MIN_EVALUATION_SAMPLE && summary.brierScore > 0.2) {
-    recommendations.push("单次预测误差仍较大，先按反馈来源和保持率区间定位偏差，不要直接全局改参数。");
+    recommendations.push("单次预测误差仍较大，先按反馈来源和保持率区间定位偏差，再决定参数调整范围。");
   }
 
   if (!recommendations.length) {
@@ -291,9 +291,9 @@ const buildMemoryEvaluation = (progressItems, nowMs = Date.now()) => {
       objectiveEvidencePercent,
     }),
     outcomeDefinition: "没记住记为 0；有点难、记住了、太简单记为 1。首次学习不参与校准。",
-    samplingNote: "仅评估已发生且仍保留的复习反馈；每个单词最多保留最近 30 次。这是预测校准，不是 A/B 因果效果。",
-    evidenceNote: "选择题答对不会改变记忆调度，因此不作为成功样本；主动拼写会提供更强的小测证据。",
-    scoreNote: "Brier Score 越接近 0，概率预测与实际反馈越一致；它不是学生成绩。",
+    samplingNote: "评估已发生且保留的复习反馈；每个单词取最近 30 次，用于检查预测校准。",
+    evidenceNote: "选择题用于小测分析；主动拼写为记忆调度提供更强证据。",
+    scoreNote: "Brier Score 越接近 0，模型概率预测与实际反馈越一致；该指标用于评估记忆调度算法。",
   });
 };
 

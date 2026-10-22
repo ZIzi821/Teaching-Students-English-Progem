@@ -63,7 +63,7 @@ Page({
           loading: false,
           isTeacher: false,
           noPermission: true,
-          message: result.message || "只有教师账号可以查看待办",
+          message: result.message || "请使用教师账号查看待办",
           visibleTodos: [],
         });
         return;

@@ -8,7 +8,7 @@
 
   <view class="card error-card" wx:elif="{{state === 'error'}}">
     <view class="error-mark">!</view>
-    <view class="state-title">跟读练习暂时无法继续</view>
+    <view class="state-title">请重新加载跟读练习</view>
     <view class="state-copy">{{message}}</view>
     <view class="primary-btn error-action" bindtap="loadPractice">重新加载</view>
   </view>
@@ -23,7 +23,7 @@
       <view class="mode-pill">{{task.mode === 'automatic' ? '自动连续跟读' : '手动逐条播放'}}</view>
       <view class="instruction-title">本轮共 {{totalCount}} 条</view>
       <view class="rule-row"><text>1</text><view>{{task.mode === 'automatic' ? '点击开始后，老师的示范音会按顺序自动播放。' : '每一条由你点击“播放老师示范”。'}}</view></view>
-      <view class="rule-row"><text>2</text><view>示范音结束后有 {{task.gapSeconds}} 秒准备时间，麦克风随后自动打开，不需要再点录音。</view></view>
+      <view class="rule-row"><text>2</text><view>示范音结束后有 {{task.gapSeconds}} 秒准备时间，麦克风随后自动打开并开始录音。</view></view>
       <view class="rule-row"><text>3</text><view>每条最长录制 {{task.responseSeconds}} 秒；读完可提前结束，系统会继续下一条。</view></view>
       <view class="supplement" wx:if="{{lesson.recordingPrompt}}">老师补充：{{lesson.recordingPrompt}}</view>
       <view class="preload-state preload-{{preloadState}}">{{preloadLabel}}</view>
@@ -110,7 +110,7 @@
   <view class="card success-card" wx:elif="{{state === 'success'}}">
     <view class="success-mark">✓</view>
     <view class="state-title">{{previewComplete ? '跟读流程预览完成' : '本轮跟读已提交'}}</view>
-    <view class="state-copy" wx:if="{{previewComplete}}">教师预览没有上传录音，也没有写入学生的完成记录。</view>
+    <view class="state-copy" wx:if="{{previewComplete}}">教师预览已完成，学生的完成记录保持原状态。</view>
     <view class="state-copy" wx:else>第 {{submittedAttemptNo}} 轮 · 共 {{totalCount}} 条录音 · 等待老师逐条检查</view>
     <view class="late-pill" wx:if="{{submittedLate}}">逾期提交</view>
     <view class="success-actions">

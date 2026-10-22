@@ -27,7 +27,7 @@ const LESSON_TEMPLATE_OPTIONS = [
     key: "vocabulary_coaching",
     label: "单词陪练",
     shortLabel: "单词陪练",
-    description: "按实际分钟记录陪练时长，不填写第几节课，也不需要课后整理。",
+    description: "按实际分钟记录陪练时长，课程编号与课后整理保持简洁。",
     titlePlaceholder: "例如：单词陪练-1",
     recordingPlaceholder: "例如：朗读今天练习的单词",
     requiresLessonNo: false,

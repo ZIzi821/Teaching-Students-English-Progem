@@ -108,7 +108,7 @@
     </view>
   </view>
 
-  <view class="quick-tip">错题只保留文字：请把长文章、整组小题和全部选项完整写入。</view>
+  <view class="quick-tip">错题使用完整文字记录：请把长文章、整组小题和全部选项完整写入。</view>
   <view class="action-row">
     <view class="ghost-btn action-btn" wx:if="{{!isEditing}}" data-action="continue" bindtap="submitMistake">保存并继续</view>
     <view class="primary-btn action-btn" data-action="back" bindtap="submitMistake">{{isEditing ? '保存修改' : '保存并返回'}}</view>

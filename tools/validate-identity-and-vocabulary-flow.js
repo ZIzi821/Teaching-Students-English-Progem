@@ -26,7 +26,7 @@ assert(homeWxml.includes("退出绑定"), "home is missing the identity exit ent
 assert(detailWxml.includes("建议顺序：先背单词，再做小测"), "student detail does not explain learning order");
 assert(!vocabularyWxml.includes("今天怎么学？"), "vocabulary overview duplicates the guided route from student home");
 assert(vocabularyWxml.indexOf("单词明细") < vocabularyWxml.indexOf("搜索英文、中文或词性"), "search is not nested after the record entry");
-assert(vocabularyWxml.includes("由老师设置；学生端和老师预览均为只读"), "daily goal ownership is not explained");
+assert(vocabularyWxml.includes("老师设置的每日目标"), "daily goal ownership is not explained");
 assert(studyWxml.includes("想好了，查看答案"), "study page is missing active-recall answer reveal");
 ["forgot", "hard", "known", "easy"].forEach((rating) => {
   assert(studyWxml.includes(`data-result="${rating}"`), `study page is missing ${rating} rating`);

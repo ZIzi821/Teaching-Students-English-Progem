@@ -41,7 +41,7 @@
     </view>
 
     <view class="card catalog-empty" wx:if="{{!libraries.length}}">
-      {{mistakeWordsEnabled ? '暂未单独选择课本或基础词库，错题单词可在全部单词中查看。' : '老师暂时还没有为你选择词库。'}}
+      {{mistakeWordsEnabled ? '错题单词已启用，可在全部单词中查看；老师也可以继续选择课本或基础词库。' : '老师选择词库后，这里会显示学习内容。'}}
     </view>
 
     <view class="catalog-detail-button" wx:if="{{enabled}}" bindtap="openVocabularyDetail">
@@ -67,7 +67,7 @@
 
     <view class="card feature-disabled-card" wx:if="{{!enabled}}">
       <view class="disabled-title">背单词功能尚未开启</view>
-      <view class="disabled-hint" wx:if="{{isTeacherManager}}">你仍可以管理词库；学生暂时看不到背单词入口。</view>
+      <view class="disabled-hint" wx:if="{{isTeacherManager}}">可先管理词库；开启后同步到学生端。</view>
       <view class="disabled-hint" wx:else>朱老师开启后，就可以开始背单词了。</view>
     </view>
 
@@ -162,7 +162,7 @@
           <view>
             <view class="section-title">今日单词目标</view>
             <view class="section-hint">
-              {{canSetDailyGoal ? (dailyPlan.hasStudentChoice ? '今天已单独设置；只能调到已完成数量以上。' : '只有老师可以设置学生今天的数量。') : '由老师设置；学生端和老师预览均为只读。'}}
+              {{canSetDailyGoal ? (dailyPlan.hasStudentChoice ? '今天已单独设置；目标下限为已完成数量。' : '老师设置学生今天的数量。') : '每日数量由老师设置。'}}
             </view>
           </view>
           <view class="daily-goal-current">{{dailyPlan.dailyGoal}} 个</view>
@@ -195,7 +195,7 @@
       </view>
 
       <view class="view-mode-tip" wx:if="{{readOnly}}">
-        {{isTeacherManager ? '老师查看模式，不会改动学生进度。' : '老师预览模式，不会改动学生进度。'}}
+        {{isTeacherManager ? '老师查看模式 · 学习记录保持原状态。' : '老师预览模式 · 学习记录保持原状态。'}}
       </view>
 
       <view class="library-toggle card" bindtap="toggleBrowsePanel">
@@ -245,7 +245,7 @@
         <view class="section-title">
           {{searchActive ? '搜索结果' : isStudyMode ? '今天的单词' : activeTab === 'mastered' ? '已掌握的单词' : activeTab === 'weak' ? '还没记牢的单词' : activeTab === 'mistake' ? '错题单词' : activeTab === 'textbook' ? '课本单词' : '全部单词'}}
         </view>
-        <view class="section-hint" wx:if="{{isStudyMode}}">点开释义，再选记得怎么样。没记住的词会稍后再出现。</view>
+        <view class="section-hint" wx:if="{{isStudyMode}}">点开释义，再选记得怎么样。需要巩固的词会稍后再出现。</view>
       </view>
 
       <view class="empty card" wx:if="{{!visibleWords.length}}">
@@ -333,7 +333,7 @@
 
       <view class="pending-section" wx:if="{{isTeacherManager}}">
         <view class="section-title">待确认释义的单词</view>
-        <view class="section-hint">请根据课堂资料补充释义；不确定可以先忽略。</view>
+        <view class="section-hint">请根据课堂资料补充释义；需要核对时可先归入待确认。</view>
         <view class="card empty" wx:if="{{!pendingWords.length}}">目前没有待确认单词。</view>
 
         <view class="card pending-word-card" wx:for="{{pendingWords}}" wx:key="key">

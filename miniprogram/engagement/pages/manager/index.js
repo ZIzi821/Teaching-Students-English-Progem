@@ -173,7 +173,7 @@ Page({
     if (!profileId || this.data.deletingProfileId) return;
     wx.showModal({
       title: "删除挑战选手？",
-      content: `删除“${name}”后会立即从学生 PK 榜消失，不影响任何真实学生积分。`,
+      content: `删除后，“${name}”会从学生 PK 榜移除；真实学生积分保持原记录。`,
       confirmText: "删除",
       confirmColor: "#b6534b",
       success: (modal) => {

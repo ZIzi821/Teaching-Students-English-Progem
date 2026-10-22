@@ -9,7 +9,7 @@
     <view class="hero-card">
       <view class="eyebrow">TEACHER EXPORT</view>
       <view class="hero-title">{{student.name}}的错题汇总</view>
-      <view class="hero-copy">可生成保留完整题目、选项和答案的 Word，也可生成更适合 AI 读取的 Markdown。两种格式分别记录，互不影响后续去重。</view>
+      <view class="hero-copy">可生成保留完整题目、选项和答案的 Word，也可生成更适合 AI 读取的 Markdown。两种格式分别记录，后续去重按各自导出记录计算。</view>
       <view class="hero-stats">
         <view><text>{{totalMistakeCount}}</text><label>现有错题</label></view>
         <view><text>{{exportedMistakeCount}}</text><label>曾导出</label></view>
@@ -44,7 +44,7 @@
         </view>
       </view>
 
-      <view class="empty-lessons" wx:if="{{!lessonOptions.length}}">这位学生还没有课程记录，暂时无法按课程导出错题。</view>
+      <view class="empty-lessons" wx:if="{{!lessonOptions.length}}">添加课程记录后，即可按课程导出错题。</view>
 
       <view class="section-title second-title">3. 是否排除同格式以前导出的内容</view>
       <picker mode="selector" range="{{excludeOptions}}" range-key="label" value="{{excludePolicyIndex}}" bindchange="onExcludePolicyChange">

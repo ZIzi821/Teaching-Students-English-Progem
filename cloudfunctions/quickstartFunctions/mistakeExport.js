@@ -39,7 +39,7 @@ const resolveLessonSelection = (lessons = [], selection = {}) => {
     throw err;
   }
   if (startIndex > endIndex) {
-    const err = new Error("起始课程不能晚于结束课程");
+    const err = new Error("请选择早于结束课程的起始课程");
     err.code = "INVALID_EXPORT_RANGE";
     throw err;
   }

@@ -119,7 +119,7 @@ const buildLevelProgress = (content, progressByKey, nowMs) => {
       overallPercent,
       status: overallPercent >= 85 ? "课程覆盖接近完成" : "学习中",
       dimensions: summary,
-      disclaimer: "小程序内课程覆盖估算，不是官方 CEFR 认证。",
+      disclaimer: "课程覆盖率依据小程序内 A1/A2 内容计算，用于安排 CEFR 学习进度。",
     };
   });
 };
@@ -182,7 +182,7 @@ const buildMemoryOverview = (content, progressByKey, nowMs) => {
     atRiskCount,
     averageStabilityDays: Math.round(averageStabilityDays * 10) / 10,
     points,
-    disclaimer: "依据你的复习时间与记忆稳定度动态估算，不代表绝对记忆概率。",
+    disclaimer: "依据复习时间与记忆稳定度动态估算，用于安排复习节奏。",
   };
 };
 
@@ -294,7 +294,7 @@ const buildDailyPath = (todayRecord, today, nowMs, preferences) => {
       order: index + 1,
       completed,
       state,
-      progressText: step.targetCount === 0 ? "无需复习" : `${step.completedCount}/${step.targetCount}`,
+      progressText: step.targetCount === 0 ? "今日已完成" : `${step.completedCount}/${step.targetCount}`,
     });
   });
   const totalTarget = steps.reduce((sum, step) => sum + step.targetCount, 0);

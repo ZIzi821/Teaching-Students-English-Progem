@@ -150,7 +150,7 @@ const normalizeFixedStudentScheduleEntries = (entries = []) => {
     const source = entries[index] || {};
     const weekday = normalizeWeekday(source.weekday);
     if (!weekday || seenWeekdays.has(weekday) || typeof source.enabled !== "boolean") {
-      return { valid: false, message: "每个星期只能设置一次" };
+      return { valid: false, message: "每个星期可设置一次" };
     }
     const range = validateTimeRange({
       weekday,
