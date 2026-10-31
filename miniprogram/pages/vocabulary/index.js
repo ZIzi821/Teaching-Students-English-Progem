@@ -79,6 +79,7 @@ Page({
     activeTab: "all",
     wordTabs: WORD_TABS,
     browsePanelOpen: true,
+    detailSection: "words",
     searchActive: false,
     isStudyMode: true,
     searchKeyword: "",
@@ -604,6 +605,14 @@ Page({
         meaning: String((item && item.meaning) || ""),
         partOfSpeech: String((item && item.partOfSpeech) || ""),
       });
+    });
+  },
+
+  selectDetailSection(e) {
+    const section = e.currentTarget.dataset.section;
+    if (section === this.data.detailSection) return;
+    this.setData({ detailSection: section }, () => {
+      wx.pageScrollTo({ scrollTop: 0, duration: 0 });
     });
   },
 

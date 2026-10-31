@@ -73,6 +73,12 @@ Page({
     },
     showEnglishLearning: true,
     showVocabularySettings: false,
+    activeSection: "overview",
+    sectionTabs: [
+      { value: "overview", label: "概览" },
+      { value: "lessons", label: "课程" },
+      { value: "settings", label: "设置" },
+    ],
     vocabularyOverview: {
       enabled: false,
       dailyPlan: { dailyGoal: 0 },
@@ -101,6 +107,7 @@ Page({
       previewStudentId,
       mode,
       showVocabularySettings: this.focusVocabularySettings,
+      activeSection: this.focusVocabularySettings ? "settings" : "overview",
     });
     this.loadStudent();
   },
@@ -108,6 +115,14 @@ Page({
   onShow() {
     if (this.hasShown && this.data.studentId) this.loadStudent();
     this.hasShown = true;
+  },
+
+  selectSection(e) {
+    const section = e.currentTarget.dataset.section;
+    if (section === this.data.activeSection) return;
+    this.setData({ activeSection: section }, () => {
+      wx.pageScrollTo({ scrollTop: 0, duration: 0 });
+    });
   },
 
   loadStudent() {
@@ -189,7 +204,7 @@ Page({
           if (this.data.isTeacher) this.loadLearningRadar();
           if (!this.focusVocabularySettings || !this.data.isTeacher) return;
           this.focusVocabularySettings = false;
-          wx.pageScrollTo({ selector: "#vocabulary-settings", duration: 250 });
+          wx.pageScrollTo({ selector: "#vocabulary-settings", offsetTop: -60, duration: 250 });
         });
       })
       .catch((err) => {

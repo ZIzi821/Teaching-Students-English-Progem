@@ -158,6 +158,8 @@ Page({
     deletingLesson: false,
     savingWorkspace: false,
     showWorkspaceEditor: false,
+    activeSection: "record",
+    sectionTabs: [],
     lessonTitleSuggestion: "",
     previousLessonReference: null,
     showPreviousLessonReference: true,
@@ -352,12 +354,23 @@ Page({
             : 0,
         })
         : null;
+      const mistakeLearningEnabled = result.mistakeLearningEnabled !== false;
+      const sectionTabs = this.buildSectionTabs({
+        lesson,
+        isTeacher,
+        submissionCount: submissions.length,
+        materialCount: papers.length,
+        mistakeCount: (result.mistakes || []).length,
+        mistakeLearningEnabled,
+      });
       this.setData({
         role: result.role,
         isTeacher,
         isTeacherPreview,
         isStudent: result.role === "student",
-        mistakeLearningEnabled: result.mistakeLearningEnabled !== false,
+        mistakeLearningEnabled,
+        sectionTabs,
+        activeSection: this.resolveActiveSection(sectionTabs, isTeacher),
         lesson,
         lessonTitleSuggestion: buildNextLessonTitleSuggestion(
           previousLessonReference && previousLessonReference.title
@@ -524,6 +537,32 @@ Page({
     });
   },
 
+  buildSectionTabs({ lesson, isTeacher, submissionCount, materialCount, mistakeCount, mistakeLearningEnabled }) {
+    const tabs = [{ value: "record", label: "记录" }];
+    if (lesson.homeworkTask || lesson.recordingTaskEnabled || submissionCount) tabs.push({ value: "task", label: "任务" });
+    if (isTeacher || materialCount) tabs.push({ value: "material", label: materialCount ? `资料 ${materialCount}` : "资料" });
+    if (isTeacher || mistakeLearningEnabled) tabs.push({ value: "mistake", label: mistakeCount ? `错题 ${mistakeCount}` : "错题" });
+    return tabs;
+  },
+
+  resolveActiveSection(tabs, isTeacher) {
+    const hasTask = tabs.some((tab) => tab.value === "task");
+    if (this.focusSection && hasTask) return "task";
+    if (!this.sectionInitialized) {
+      this.sectionInitialized = true;
+      return !isTeacher && hasTask ? "task" : "record";
+    }
+    return tabs.some((tab) => tab.value === this.data.activeSection) ? this.data.activeSection : "record";
+  },
+
+  selectSection(e) {
+    const section = e.currentTarget.dataset.section;
+    if (section === this.data.activeSection) return;
+    this.setData({ activeSection: section }, () => {
+      wx.pageScrollTo({ scrollTop: 0, duration: 0 });
+    });
+  },
+
   scrollToFocusedSection() {
     const focusSection = this.focusSection;
     if (!focusSection) return;
@@ -536,6 +575,7 @@ Page({
       };
       wx.pageScrollTo({
         selector: selectors[focusSection],
+        offsetTop: -60,
         duration: 280,
       });
     }, 80);

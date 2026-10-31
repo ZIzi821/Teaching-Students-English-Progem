@@ -5,29 +5,26 @@
   </view>
 
   <view wx:if="{{lesson}}">
-    <view class="card lesson-head">
-      <view class="head-row">
-        <view>
-          <view class="subject">{{lesson.subject}}</view>
-          <view class="template-badge">{{lesson.lessonTemplateLabel}}</view>
-        </view>
-        <view class="lesson-badge" wx:if="{{lesson.lessonNo}}">第 {{lesson.lessonNo}} 节</view>
-        <view class="lesson-badge" wx:elif="{{lesson.durationMinutes}}">{{lesson.durationMinutes}} 分钟</view>
+    <view class="lesson-head">
+      <view class="lesson-chips">
+        <text class="ui-chip">{{lesson.subject}}</text>
+        <text class="ui-chip ui-chip-accent">{{lesson.lessonTemplateLabel}}</text>
+        <text class="ui-chip" wx:if="{{lesson.lessonNo}}">第 {{lesson.lessonNo}} 节</text>
+        <text class="ui-chip" wx:elif="{{lesson.durationMinutes}}">{{lesson.durationMinutes}} 分钟</text>
+        <text class="ui-chip ui-chip-warn" wx:if="{{lesson.institutionCourse}}">机构课程</text>
       </view>
       <view class="title">{{lesson.title}}</view>
       <view class="date">{{lesson.lessonDate}}</view>
-      <view class="institution-course-banner" wx:if="{{lesson.institutionCourse}}">
-        <text>机构课程</text>
-        <view>本节保留完整学习记录，个人课程进度维持原数值。</view>
-      </view>
       <view class="preview-tip" wx:if="{{isTeacherPreview}}">教师预览：页面与学生端一致，录音入口以预览方式呈现。</view>
     </view>
 
+    <view class="ui-tabs" wx:if="{{sectionTabs.length > 1}}">
+      <view class="ui-tab {{activeSection === item.value ? 'ui-tab-active' : ''}}" wx:for="{{sectionTabs}}" wx:key="value" data-section="{{item.value}}" bindtap="selectSection">{{item.label}}</view>
+    </view>
+
+    <block wx:if="{{activeSection === 'record'}}">
     <view class="section-head">
-      <view>
-        <view class="section-kicker">课程记录</view>
-        <view class="section-title">本节课记录</view>
-      </view>
+      <view class="section-title">本节课记录</view>
       <view class="small-action" wx:if="{{isTeacher}}" bindtap="toggleWorkspaceEditor">
         {{showWorkspaceEditor ? '取消编辑' : '编辑课程'}}
       </view>
@@ -401,16 +398,20 @@
       </view>
     </view>
 
-    <view class="section-head task-section-head" wx:if="{{lesson.homeworkTask || lesson.recordingTaskEnabled || submissions.length}}">
-      <view>
-        <view class="section-kicker">课后</view>
-        <view class="section-title">课后任务</view>
-      </view>
+    <view class="teacher-danger-zone" wx:if="{{isTeacher && !showWorkspaceEditor}}">
+      <view class="delete-lesson-btn" bindtap="deleteLesson">{{deletingLesson ? '正在删除…' : '删除本节课'}}</view>
+    </view>
+    </block>
+
+    <block wx:if="{{activeSection === 'task'}}">
+    <view class="section-head">
+      <view class="section-title">课后任务</view>
       <view class="submission-count" wx:if="{{lesson.recordingTaskType === 'ket_mock' && ketMockSessions.length}}">{{ketMockSessions.length}} 场模拟</view>
       <view class="submission-count" wx:elif="{{submissions.length}}">{{submissions.length}} 份录音</view>
     </view>
 
-    <view class="card homework-card" id="homework-section" wx:if="{{lesson.homeworkTask || lesson.recordingTaskEnabled || submissions.length}}">
+    <view class="homework-section" id="homework-section">
+    <view class="card homework-card" wx:if="{{lesson.homeworkTask || lesson.recordingTaskEnabled}}">
       <view class="homework-copy" wx:if="{{lesson.homeworkTask}}">
         <view class="homework-copy-label">要完成的任务</view>
         <view class="homework-text">{{lesson.homeworkTask}}</view>
@@ -455,6 +456,7 @@
         </view>
         <view class="preview-recording-note" wx:if="{{isTeacherPreview}}">{{lesson.recordingTaskType === 'follow_reading' ? '教师预览可体验跟读流程，录音结果在本页展示。' : '教师预览：录音由学生本人完成。'}}</view>
       </view>
+    </view>
 
       <view class="ket-session-list" wx:if="{{lesson.recordingTaskType === 'ket_mock' && ketMockSessions.length}}">
         <view class="ket-session-heading">模拟考试记录</view>
@@ -466,6 +468,45 @@
           <view class="ket-session-score" wx:if="{{item.assessment}}">{{item.assessment.average}} / 5</view>
           <view class="ket-session-action" wx:if="{{item.canOpen}}">{{item.actionLabel}} →</view>
           <view class="ket-session-action" wx:else>{{item.actionLabel}}</view>
+        </view>
+      </view>
+
+      <view class="submission-list" id="recording-submissions" wx:if="{{submissions.length}}">
+        <view class="submission-title">学生已提交</view>
+        <view class="submission-row" wx:for="{{submissions}}" wx:key="_id">
+          <view class="submission-main">
+            <view class="submission-name">{{item.displayName}} · {{item.durationLabel}}</view>
+            <view class="submission-prompt" wx:if="{{item.displayPrompt}}">{{item.displayPrompt}}</view>
+            <view class="submission-status-wrap">
+              <view class="submission-status status-{{item.status === '已听' || item.status === '朗读正确' ? 'independent' : item.status === '需要重录' ? 'pending' : 'prompted'}}">{{item.status}}</view>
+              <view class="submission-late-status" wx:if="{{item.submittedLate}}">逾期提交</view>
+            </view>
+          </view>
+          <view class="recording-feedback-card" wx:if="{{item.hasTeacherFeedback}}">
+            <view class="recording-feedback-head">
+              <view class="recording-feedback-title">老师反馈</view>
+              <view class="recording-feedback-time" wx:if="{{item.reviewedLabel}}">{{item.reviewedLabel}}</view>
+            </view>
+            <view class="recording-feedback-tags" wx:if="{{item.teacherFeedbackTags.length}}">
+              <view class="recording-feedback-tag" wx:for="{{item.teacherFeedbackTags}}" wx:key="*this" wx:for-item="feedbackTag">{{feedbackTag}}</view>
+            </view>
+            <view class="recording-feedback-note" wx:if="{{item.teacherFeedbackNote}}">{{item.teacherFeedbackNote}}</view>
+          </view>
+          <view class="submission-actions">
+            <view class="listen-btn {{!item.audioAvailable ? 'disabled-action' : ''}}" data-index="{{index}}" bindtap="playSubmission">{{playingSubmissionId === item._id ? '正在播放' : item.audioAvailable ? '播放录音' : '录音暂不可用'}}</view>
+            <view class="review-btn" wx:if="{{isTeacher}}" data-index="{{index}}" bindtap="markRecordingReviewed">{{item.reviewActionLabel}}</view>
+            <view class="delete-recording-btn {{deletingSubmissionId === item._id ? 'disabled-action' : ''}}" wx:if="{{isTeacher}}" data-index="{{index}}" bindtap="deleteRecording">{{deletingSubmissionId === item._id ? '删除中…' : '删除录音'}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="submission-empty" wx:elif="{{isTeacher && lesson.recordingTaskEnabled && lesson.recordingTaskType !== 'ket_mock'}}">学生还没有提交录音。</view>
+      <view class="recording-maintenance" wx:if="{{isTeacher && hasLegacySubmissions}}">
+        <view class="recording-maintenance-copy">
+          <view class="recording-maintenance-title">发现旧格式录音</view>
+          <view class="recording-maintenance-hint">可按学生、课程和录音次数整理为清晰云存储目录。</view>
+        </view>
+        <view class="organize-recordings-btn {{organizingRecordings ? 'disabled-action' : ''}}" bindtap="organizeLegacyRecordings">
+          {{organizingRecordings ? '整理中…' : '整理旧录音'}}
         </view>
       </view>
 
@@ -527,57 +568,17 @@
           </view>
         </view>
       </view>
-
-      <view class="submission-list" id="recording-submissions" wx:if="{{submissions.length}}">
-        <view class="submission-title">学生已提交</view>
-        <view class="submission-row" wx:for="{{submissions}}" wx:key="_id">
-          <view class="submission-main">
-            <view class="submission-name">{{item.displayName}} · {{item.durationLabel}}</view>
-            <view class="submission-prompt" wx:if="{{item.displayPrompt}}">{{item.displayPrompt}}</view>
-            <view class="submission-status-wrap">
-              <view class="submission-status status-{{item.status === '已听' || item.status === '朗读正确' ? 'independent' : item.status === '需要重录' ? 'pending' : 'prompted'}}">{{item.status}}</view>
-              <view class="submission-late-status" wx:if="{{item.submittedLate}}">逾期提交</view>
-            </view>
-          </view>
-          <view class="recording-feedback-card" wx:if="{{item.hasTeacherFeedback}}">
-            <view class="recording-feedback-head">
-              <view class="recording-feedback-title">老师反馈</view>
-              <view class="recording-feedback-time" wx:if="{{item.reviewedLabel}}">{{item.reviewedLabel}}</view>
-            </view>
-            <view class="recording-feedback-tags" wx:if="{{item.teacherFeedbackTags.length}}">
-              <view class="recording-feedback-tag" wx:for="{{item.teacherFeedbackTags}}" wx:key="*this" wx:for-item="feedbackTag">{{feedbackTag}}</view>
-            </view>
-            <view class="recording-feedback-note" wx:if="{{item.teacherFeedbackNote}}">{{item.teacherFeedbackNote}}</view>
-          </view>
-          <view class="submission-actions">
-            <view class="listen-btn {{!item.audioAvailable ? 'disabled-action' : ''}}" data-index="{{index}}" bindtap="playSubmission">{{playingSubmissionId === item._id ? '正在播放' : item.audioAvailable ? '播放录音' : '录音暂不可用'}}</view>
-            <view class="review-btn" wx:if="{{isTeacher}}" data-index="{{index}}" bindtap="markRecordingReviewed">{{item.reviewActionLabel}}</view>
-            <view class="delete-recording-btn {{deletingSubmissionId === item._id ? 'disabled-action' : ''}}" wx:if="{{isTeacher}}" data-index="{{index}}" bindtap="deleteRecording">{{deletingSubmissionId === item._id ? '删除中…' : '删除录音'}}</view>
-          </view>
-        </view>
-      </view>
-      <view class="submission-empty" wx:elif="{{isTeacher && lesson.recordingTaskEnabled && lesson.recordingTaskType !== 'ket_mock'}}">学生还没有提交录音。</view>
-      <view class="recording-maintenance" wx:if="{{isTeacher && hasLegacySubmissions}}">
-        <view class="recording-maintenance-copy">
-          <view class="recording-maintenance-title">发现旧格式录音</view>
-          <view class="recording-maintenance-hint">可按学生、课程和录音次数整理为清晰云存储目录。</view>
-        </view>
-        <view class="organize-recordings-btn {{organizingRecordings ? 'disabled-action' : ''}}" bindtap="organizeLegacyRecordings">
-          {{organizingRecordings ? '整理中…' : '整理旧录音'}}
-        </view>
-      </view>
     </view>
+    </block>
 
-    <view class="section-head material-section-head" wx:if="{{isTeacher || hasPapers}}">
-      <view>
-        <view class="section-kicker">选填</view>
-        <view class="section-title">课件与资料 <text wx:if="{{hasPapers}}">（{{materialCount}}）</text></view>
-        <view class="section-hint">图片直接显示在下方，点击即可全屏放大；也可保存原图或在文档菜单中下载。</view>
-      </view>
+    <block wx:if="{{activeSection === 'material'}}">
+    <view class="section-head">
+      <view class="section-title">课件与资料 <text wx:if="{{hasPapers}}">（{{materialCount}}）</text></view>
       <view class="small-action" wx:if="{{isTeacher}}" bindtap="toggleMaterialUploader">
         {{showMaterialUploader ? '收起' : '添加资料'}}
       </view>
     </view>
+    <view class="empty" wx:if="{{!hasPapers && !showMaterialUploader}}">本节课还没有资料。</view>
 
     <view class="card upload-card" wx:if="{{isTeacher && showMaterialUploader}}">
       <view class="upload-step">1. 这份资料给谁看、用来做什么？</view>
@@ -634,13 +635,11 @@
         </view>
       </view>
     </view>
+    </block>
 
-    <view class="section-head mistake-section-head" wx:if="{{isTeacher || mistakeLearningEnabled}}">
-      <view>
-        <view class="section-kicker">真实错题</view>
-        <view class="section-title">英语错题整理</view>
-        <view class="section-hint">学习表现在上方记录；本区整理真实做错的题。</view>
-      </view>
+    <block wx:if="{{activeSection === 'mistake'}}">
+    <view class="section-head">
+      <view class="section-title">英语错题整理</view>
       <view class="submission-count">{{mistakes.length}} 题</view>
     </view>
 
@@ -664,11 +663,7 @@
         <text class="tag" wx:for="{{item.displayTags}}" wx:key="*this">{{item}}</text>
       </view>
     </view>
-
-    <view class="teacher-danger-zone" wx:if="{{isTeacher}}">
-      <view class="danger-label">课程管理</view>
-      <view class="delete-lesson-btn" bindtap="deleteLesson">{{deletingLesson ? '正在删除…' : '删除本节课'}}</view>
-    </view>
+    </block>
   </view>
 </view>
 
