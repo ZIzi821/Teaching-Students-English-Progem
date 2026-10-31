@@ -1,6 +1,6 @@
 <view class="page manager-page">
   <view class="hero">
-    <view class="eyebrow">FOLLOW-READING AUDIO</view>
+    <view class="eyebrow">跟读音频</view>
     <view class="title">逐条准备示范音频</view>
     <view class="subtitle" wx:if="{{lesson}}">{{student.name}} · {{lesson.title}} · 第 {{lesson.lessonNo || '—'}} 节</view>
   </view>

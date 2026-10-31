@@ -294,8 +294,8 @@ Page({
       accuracy: total ? Math.round(score / total * 100) : 0,
       incorrectCount,
       resultSegments: [
-        { label: "答对", value: score, color: "#4f8f73" },
-      { label: "没记牢", value: incorrectCount, color: "#e0b96a" },
+        { label: "答对", value: score, color: "#14645A" },
+      { label: "没记牢", value: incorrectCount, color: "#C9A24A" },
       ],
     });
     if (this.data.canReview) this.saveSession();

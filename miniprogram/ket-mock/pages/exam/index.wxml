@@ -21,7 +21,7 @@
     <view class="source-note">{{set.sourceLabel}}</view>
 
     <view class="card instruction-card">
-      <view class="card-kicker">READ BEFORE STARTING</view>
+      <view class="card-kicker">开始前</view>
       <view class="instruction-title">考试须知</view>
       <view class="rule-row"><text>1</text><view>全程约 {{set.expectedMinutes}}，包含 Part 1 和 Part 2，请按顺序连续完成。</view></view>
       <view class="rule-row"><text>2</text><view>每段考官录音结束后，麦克风会自动打开；答完后点击“回答完毕”。</view></view>

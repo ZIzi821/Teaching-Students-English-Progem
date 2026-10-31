@@ -159,7 +159,7 @@ Page({
       title: "删除这段考官录音？",
       content: `删除后，“${set.title}”会进入待补充状态；重新上传即可开放考试。`,
       confirmText: "删除",
-      confirmColor: "#b6534b",
+      confirmColor: "#B0432F",
       success: (modal) => {
         if (!modal.confirm) return;
         const key = `${set.id}:${cue.id}`;

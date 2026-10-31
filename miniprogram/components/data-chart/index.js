@@ -1,5 +1,5 @@
-const DEFAULT_GREEN = "#4f8f73";
-const EMPTY_COLOR = "#ece5da";
+const DEFAULT_GREEN = "#14645A";
+const EMPTY_COLOR = "#E8E4DA";
 
 Component({
   data: {
@@ -163,12 +163,12 @@ Component({
         });
       }
 
-      context.fillStyle = "#243f35";
+      context.fillStyle = "#22302C";
       context.font = "700 28px sans-serif";
       context.textAlign = "center";
       context.textBaseline = "middle";
       context.fillText(String(this.data.centerValue || "0"), centerX, centerY - 8);
-      context.fillStyle = "#817669";
+      context.fillStyle = "#7B837E";
       context.font = "13px sans-serif";
       context.fillText(String(this.data.centerLabel || ""), centerX, centerY + 22);
     },
@@ -182,7 +182,7 @@ Component({
       const gap = points.length ? chartWidth / points.length : chartWidth;
       const barWidth = Math.min(26, gap * 0.48);
 
-      context.strokeStyle = "#e7ded1";
+      context.strokeStyle = "#E8E4DA";
       context.lineWidth = 1;
       context.beginPath();
       context.moveTo(padding.left, padding.top + chartHeight);
@@ -193,7 +193,7 @@ Component({
         const x = padding.left + gap * index + gap / 2;
         const heightRatio = point.value / maxValue;
         const barHeight = Math.max(point.value ? 4 : 0, chartHeight * heightRatio);
-        context.fillStyle = point.goal > 0 && point.value >= point.goal ? "#4f8f73" : "#b9d7c9";
+        context.fillStyle = point.goal > 0 && point.value >= point.goal ? "#14645A" : "#b9d7c9";
         context.beginPath();
         if (context.roundRect) {
           context.roundRect(x - barWidth / 2, padding.top + chartHeight - barHeight, barWidth, barHeight, 6);
@@ -205,7 +205,7 @@ Component({
         if (point.goal > 0) {
           const goalY = padding.top + chartHeight - (point.goal / maxValue) * chartHeight;
           context.save();
-          context.strokeStyle = "#a37d58";
+          context.strokeStyle = "#B5780F";
           context.lineWidth = 2;
           context.lineCap = "round";
           context.beginPath();
@@ -216,12 +216,12 @@ Component({
         }
 
         if (point.value > 0) {
-          context.fillStyle = "#4f6f63";
+          context.fillStyle = "#59645F";
           context.font = "600 12px sans-serif";
           context.textAlign = "center";
           context.fillText(String(point.value), x, padding.top + chartHeight - barHeight - 8);
         }
-        context.fillStyle = "#817669";
+        context.fillStyle = "#7B837E";
         context.font = "11px sans-serif";
         context.textAlign = "center";
         context.fillText(point.label, x, height - 10);
@@ -241,20 +241,20 @@ Component({
 
       [0, 50, 100].forEach((value) => {
         const y = yAt(value);
-        context.strokeStyle = "#e7ded1";
+        context.strokeStyle = "#E8E4DA";
         context.lineWidth = 1;
         context.beginPath();
         context.moveTo(padding.left, y);
         context.lineTo(width - padding.right, y);
         context.stroke();
-        context.fillStyle = "#817669";
+        context.fillStyle = "#7B837E";
         context.font = "10px sans-serif";
         context.textAlign = "right";
         context.fillText(`${value}%`, padding.left - 6, y + 3);
       });
 
       if (!points.length) return;
-      context.strokeStyle = "#4f8f73";
+      context.strokeStyle = "#14645A";
       context.lineWidth = 2.5;
       context.lineJoin = "round";
       context.lineCap = "round";
@@ -269,14 +269,14 @@ Component({
       points.forEach((point, index) => {
         const x = xAt(index);
         const y = yAt(point.value);
-        context.fillStyle = "#fffdfa";
+        context.fillStyle = "#FFFFFF";
         context.beginPath();
         context.arc(x, y, 4.5, 0, Math.PI * 2);
         context.fill();
-        context.strokeStyle = "#326d56";
+        context.strokeStyle = "#14645A";
         context.lineWidth = 2;
         context.stroke();
-        context.fillStyle = "#817669";
+        context.fillStyle = "#7B837E";
         context.font = "10px sans-serif";
         context.textAlign = "center";
         context.fillText(point.label, x, height - 10);

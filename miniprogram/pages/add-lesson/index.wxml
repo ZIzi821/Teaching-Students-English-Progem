@@ -55,7 +55,7 @@
         <view class="label institution-course-label">机构课程</view>
         <view class="institution-course-hint">开启后，本节课保留全部课堂记录与学习功能，个人课程进度维持原数值。</view>
       </view>
-      <switch checked="{{form.institutionCourse}}" color="#b18145" bindchange="onInstitutionCourseChange" />
+      <switch checked="{{form.institutionCourse}}" color="#B5780F" bindchange="onInstitutionCourseChange" />
     </view>
 
   </view>
@@ -181,7 +181,7 @@
           <view class="label recording-label">需要学生提交录音</view>
           <view class="field-tip">学生在课程页录制，教师可以直接播放检查。</view>
         </view>
-        <switch checked="{{form.recordingTaskEnabled}}" color="#4f8f73" bindchange="onRecordingTaskChange" />
+        <switch checked="{{form.recordingTaskEnabled}}" color="#14645A" bindchange="onRecordingTaskChange" />
       </view>
       <view class="field recording-due-field" wx:if="{{form.recordingTaskEnabled}}">
         <view class="label">录音作业期限</view>

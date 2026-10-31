@@ -80,9 +80,9 @@
     }
   ],
   "window": {
-    "backgroundColor": "#F7F3EA",
+    "backgroundColor": "#F7F5F0",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F7F3EA",
+    "navigationBarBackgroundColor": "#F7F5F0",
     "navigationBarTitleText": "朱老师英语课堂",
     "navigationBarTextStyle": "black"
   },

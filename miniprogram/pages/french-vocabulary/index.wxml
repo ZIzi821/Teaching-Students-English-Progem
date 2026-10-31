@@ -1,7 +1,7 @@
 <view class="page french-vocabulary-page">
   <teacher-preview-banner wx:if="{{isTeacherPreview}}"></teacher-preview-banner>
   <view class="difficult-mode-banner" wx:if="{{reviewMode === 'difficult' && !freeBrowse}}">
-    <view class="difficult-mode-kicker">PERSONAL PRACTICE</view>
+    <view class="difficult-mode-kicker">个人练习</view>
     <view class="difficult-mode-title">难词专项复习</view>
     <view class="difficult-mode-copy">根据你的 Again、Hard 和记忆稳定度排序，先练最需要巩固的词。</view>
   </view>

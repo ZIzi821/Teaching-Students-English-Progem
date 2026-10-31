@@ -1779,7 +1779,7 @@ Page({
       title: "删除资料？",
       content: `将删除“${material.displayTitle}”及云端文件。`,
       confirmText: "删除",
-      confirmColor: "#b6534b",
+      confirmColor: "#B0432F",
       success: (res) => {
         if (!res.confirm) return;
         wx.cloud.callFunction({
@@ -1804,7 +1804,7 @@ Page({
       title: "清空本节全部课件？",
       content: `将删除当前课程的 ${this.data.materialCount} 份资料及对应云端文件，删除后无法恢复。`,
       confirmText: "全部删除",
-      confirmColor: "#b6534b",
+      confirmColor: "#B0432F",
       success: (res) => {
         if (!res.confirm) return;
         wx.showLoading({ title: "删除中", mask: true });
@@ -2124,14 +2124,14 @@ Page({
       title: "删除这条学生录音？",
       content: `你将删除${label}。请先确认没有选错录音。`,
       confirmText: "继续确认",
-      confirmColor: "#b6534b",
+      confirmColor: "#B0432F",
       success: (firstResult) => {
         if (!firstResult.confirm) return;
         wx.showModal({
           title: "再次确认永久删除",
           content: `${label}删除后无法恢复；如果这是最后一条必交录音，课后任务会重新变为未完成。`,
           confirmText: "永久删除",
-          confirmColor: "#b6534b",
+          confirmColor: "#B0432F",
           success: (secondResult) => {
             if (!secondResult.confirm) return;
             this.setData({ deletingSubmissionId: submission._id });
@@ -2175,7 +2175,7 @@ Page({
         : "确认后，学生端恢复为待完成；已有任务内容和录音继续保留。",
       // 微信真机要求 showModal 的按钮文字不超过 4 个汉字；超长时弹窗可能无法打开。
       confirmText: markCompleted ? "已完成" : "未完成",
-      confirmColor: markCompleted ? "#4f8f73" : "#b36b3f",
+      confirmColor: markCompleted ? "#14645A" : "#B5780F",
       success: (modalRes) => {
         if (!modalRes.confirm) return;
         this.setData({ reviewingHomeworkStatus: status });
@@ -2279,7 +2279,7 @@ Page({
       title: "删除这节课？",
       content: `将永久删除“${lesson.title}”、本课资料、学生录音和错题，删除后无法恢复。`,
       confirmText: "确认删除",
-      confirmColor: "#b6534b",
+      confirmColor: "#B0432F",
       success: (modalRes) => {
         if (!modalRes.confirm) return;
         this.setData({ deletingLesson: true });

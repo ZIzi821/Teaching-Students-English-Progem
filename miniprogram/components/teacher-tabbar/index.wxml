@@ -1,26 +1,19 @@
 <view class="teacher-tabbar" role="navigation" aria-label="教师端底部导航">
   <view class="teacher-tabbar-inner">
     <view class="tab-item {{current === 'home' ? 'tab-active' : ''}}" data-key="home" bindtap="switchTab">
-      <view class="tab-symbol tab-symbol-home"><view class="home-roof"></view><view class="home-body"></view></view>
+      <image class="tab-icon" src="/images/icons/tab/home{{current === 'home' ? '-active' : ''}}.svg" mode="aspectFit"></image>
       <view class="tab-label">首页</view>
     </view>
     <view class="tab-item {{current === 'todos' ? 'tab-active' : ''}}" data-key="todos" bindtap="switchTab">
-      <view class="tab-symbol tab-symbol-todos">
-        <view class="todo-row"><view class="todo-dot"></view><view class="todo-line"></view></view>
-        <view class="todo-row"><view class="todo-dot"></view><view class="todo-line"></view></view>
-        <view class="todo-row"><view class="todo-dot"></view><view class="todo-line"></view></view>
-      </view>
+      <image class="tab-icon" src="/images/icons/tab/todos{{current === 'todos' ? '-active' : ''}}.svg" mode="aspectFit"></image>
       <view class="tab-label">待办</view>
     </view>
     <view class="tab-item {{current === 'workbench' ? 'tab-active' : ''}}" data-key="workbench" bindtap="switchTab">
-      <view class="tab-symbol tab-symbol-workbench"><view class="workbench-cell"></view><view class="workbench-cell"></view><view class="workbench-cell"></view><view class="workbench-cell"></view></view>
+      <image class="tab-icon" src="/images/icons/tab/workbench{{current === 'workbench' ? '-active' : ''}}.svg" mode="aspectFit"></image>
       <view class="tab-label">管理</view>
     </view>
     <view class="tab-item {{current === 'schedule' ? 'tab-active' : ''}}" data-key="schedule" bindtap="switchTab">
-      <view class="tab-symbol tab-symbol-schedule">
-        <view class="calendar-top"></view>
-        <view class="calendar-grid"><view></view><view></view><view></view><view></view></view>
-      </view>
+      <image class="tab-icon" src="/images/icons/tab/schedule{{current === 'schedule' ? '-active' : ''}}.svg" mode="aspectFit"></image>
       <view class="tab-label">日程</view>
     </view>
   </view>

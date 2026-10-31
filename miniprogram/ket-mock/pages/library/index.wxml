@@ -1,6 +1,6 @@
 <view class="page library-page">
   <view class="library-hero">
-    <view class="eyebrow">KET MOCK AUDIO</view>
+    <view class="eyebrow">KET 音频</view>
     <view class="title">模拟考官录音库</view>
     <view class="subtitle">每套需准备完整一组考官与虚拟搭档音频。英文录制稿显示在教师端，学生端播放教师录音。</view>
   </view>

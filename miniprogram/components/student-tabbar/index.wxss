@@ -9,9 +9,8 @@
   bottom: 0;
   left: 0;
   padding-bottom: env(safe-area-inset-bottom);
-  border-top: 1rpx solid #e8ded1;
-  background: rgba(255, 253, 250, 0.98);
-  box-shadow: 0 -8rpx 28rpx rgba(87, 67, 43, 0.08);
+  border-top: 1rpx solid var(--line);
+  background: var(--surface);
 }
 
 .student-tabbar-inner {
@@ -22,136 +21,26 @@
 }
 
 .tab-item {
-  position: relative;
   display: flex;
   width: 31%;
-  height: 90rpx;
+  height: 96rpx;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  color: #8c8175;
-}
-
-.tab-item::before {
-  position: absolute;
-  top: 0;
-  width: 34rpx;
-  height: 5rpx;
-  border-radius: 999rpx;
-  background: transparent;
-  content: "";
+  color: var(--ink-3);
 }
 
 .tab-active {
-  color: #39765d;
+  color: var(--accent);
 }
 
-.tab-active::before {
-  background: #4f8f73;
-}
-
-.tab-symbol {
-  position: relative;
-  width: 42rpx;
-  height: 36rpx;
-  color: currentColor;
+.tab-icon {
+  width: 44rpx;
+  height: 44rpx;
 }
 
 .tab-label {
-  margin-top: 5rpx;
-  font-size: 21rpx;
-  font-weight: 700;
-}
-
-.book-left,
-.book-right {
-  position: absolute;
-  top: 5rpx;
-  box-sizing: border-box;
-  width: 19rpx;
-  height: 27rpx;
-  border: 3rpx solid currentColor;
-  background: #fffdfa;
-}
-
-.book-left {
-  left: 3rpx;
-  border-radius: 6rpx 1rpx 1rpx 6rpx;
-  transform: skewY(7deg);
-}
-
-.book-right {
-  right: 3rpx;
-  border-radius: 1rpx 6rpx 6rpx 1rpx;
-  transform: skewY(-7deg);
-}
-
-.medal-circle {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 8rpx;
-  display: flex;
-  box-sizing: border-box;
-  width: 27rpx;
-  height: 27rpx;
-  align-items: center;
-  justify-content: center;
-  border: 3rpx solid currentColor;
-  border-radius: 50%;
-  background: #fffdfa;
-  font-size: 14rpx;
-}
-
-.medal-ribbon {
-  position: absolute;
-  top: 23rpx;
-  width: 10rpx;
-  height: 13rpx;
-  background: currentColor;
-}
-
-.medal-ribbon-left {
-  left: 12rpx;
-  transform: skewX(-15deg);
-}
-
-.medal-ribbon-right {
-  right: 12rpx;
-  transform: skewX(15deg);
-}
-
-.schedule-body {
-  position: absolute;
-  right: 3rpx;
-  bottom: 1rpx;
-  left: 3rpx;
-  display: flex;
-  box-sizing: border-box;
-  height: 28rpx;
-  align-items: flex-end;
-  justify-content: space-around;
-  padding: 0 5rpx 5rpx;
-  border: 3rpx solid currentColor;
-  border-radius: 5rpx;
-}
-
-.schedule-ring {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  width: 3rpx;
-  height: 10rpx;
-  border-radius: 999rpx;
-  background: currentColor;
-}
-
-.schedule-ring-left { left: 12rpx; }
-.schedule-ring-right { right: 12rpx; }
-
-.schedule-dot {
-  width: 4rpx;
-  height: 4rpx;
-  border-radius: 50%;
-  background: currentColor;
+  margin-top: 2rpx;
+  font-size: 22rpx;
+  font-weight: 500;
 }

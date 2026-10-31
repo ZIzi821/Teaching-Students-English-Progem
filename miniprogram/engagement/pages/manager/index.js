@@ -175,7 +175,7 @@ Page({
       title: "删除挑战选手？",
       content: `删除后，“${name}”会从学生 PK 榜移除；真实学生积分保持原记录。`,
       confirmText: "删除",
-      confirmColor: "#b6534b",
+      confirmColor: "#B0432F",
       success: (modal) => {
         if (!modal.confirm) return;
         this.setData({ deletingProfileId: profileId });

@@ -53,9 +53,9 @@ Page({
           cycleStatus: result.cycleStatus,
           analytics,
           mistakeStatusSegments: [
-            { label: "待复习", value: analytics.pendingCount, color: "#e0b96a" },
+            { label: "待复习", value: analytics.pendingCount, color: "#C9A24A" },
             { label: "已复习", value: analytics.reviewedCount, color: "#7b8eaa" },
-            { label: "已掌握", value: analytics.masteredCount, color: "#4f8f73" },
+            { label: "已掌握", value: analytics.masteredCount, color: "#14645A" },
           ],
           message: "",
         });

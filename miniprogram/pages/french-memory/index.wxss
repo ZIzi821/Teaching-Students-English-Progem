@@ -5,13 +5,13 @@
 .loading-card,
 .message-card,
 .empty-card {
-  color: #817669;
+  color: var(--ink-2);
   line-height: 1.6;
 }
 
 .message-card {
-  color: #8a6730;
-  background: #fff1cf;
+  color: var(--warn);
+  background: var(--warn-soft);
 }
 
 .retry-btn {
@@ -23,38 +23,37 @@
 }
 
 .level-label {
-  color: #4f8f73;
+  color: var(--accent);
   font-size: 22rpx;
-  font-weight: 700;
-  letter-spacing: 2rpx;
+  font-weight: 600;
 }
 
 .word {
   margin-top: 16rpx;
-  color: #243f35;
-  font-size: 46rpx;
-  font-weight: 700;
+  color: var(--accent);
+  font-size: 52rpx;
+  font-weight: 600;
 }
 
 .meaning {
   margin-top: 12rpx;
-  color: #3d352e;
-  font-size: 29rpx;
+  color: var(--ink);
+  font-size: 28rpx;
 }
 
 .ipa,
 .section-hint,
 .disclaimer {
   margin-top: 12rpx;
-  color: #817669;
+  color: var(--ink-2);
   font-size: 24rpx;
   line-height: 1.6;
 }
 
 .section-title {
-  color: #3d352e;
-  font-size: 30rpx;
-  font-weight: 700;
+  color: var(--ink);
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
 .metric-grid {
@@ -66,25 +65,25 @@
 
 .metric {
   padding: 18rpx 12rpx;
-  border-radius: 14rpx;
-  background: #f7f3ea;
+  border-radius: 16rpx;
+  background: var(--surface-2);
   text-align: center;
 }
 
 .metric-value {
-  color: #326d56;
-  font-size: 36rpx;
-  font-weight: 700;
+  color: var(--accent);
+  font-size: 40rpx;
+  font-weight: 600;
 }
 
 .small-value {
-  font-size: 27rpx;
+  font-size: 28rpx;
 }
 
 .metric-label,
 .history-time {
   margin-top: 6rpx;
-  color: #817669;
+  color: var(--ink-2);
   font-size: 22rpx;
 }
 
@@ -99,8 +98,8 @@
   justify-content: space-between;
   gap: 20rpx;
   padding: 15rpx 0;
-  border-bottom: 1rpx solid #eee5d8;
-  color: #62584d;
+  border-bottom: 1rpx solid var(--line);
+  color: var(--ink-2);
   font-size: 24rpx;
 }
 
@@ -111,17 +110,17 @@
 
 .detail-row text:last-child {
   max-width: 66%;
-  color: #243f35;
+  color: var(--accent);
   text-align: right;
 }
 
 .history-rating {
-  color: #3d352e;
+  color: var(--ink);
   font-weight: 600;
 }
 
 .history-result {
-  color: #817669;
+  color: var(--ink-2);
   font-size: 22rpx;
   text-align: right;
 }

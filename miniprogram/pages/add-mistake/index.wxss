@@ -3,15 +3,15 @@
 }
 
 .title {
-  color: #2f2a24;
-  font-size: 42rpx;
-  font-weight: 700;
+  color: var(--ink);
+  font-size: 40rpx;
+  font-weight: 600;
 }
 
 .subtitle {
   margin-top: 12rpx;
-  color: #817669;
-  font-size: 26rpx;
+  color: var(--ink-2);
+  font-size: 28rpx;
   line-height: 1.6;
 }
 
@@ -35,8 +35,8 @@
 
 .label {
   margin-bottom: 12rpx;
-  color: #655b50;
-  font-size: 26rpx;
+  color: var(--ink-2);
+  font-size: 28rpx;
   font-weight: 600;
 }
 
@@ -45,9 +45,9 @@
 .textarea {
   box-sizing: border-box;
   width: 100%;
-  border-radius: 14rpx;
-  background: #f8f2e8;
-  color: #2f2a24;
+  border-radius: 16rpx;
+  background: var(--surface-2);
+  color: var(--ink);
   font-size: 28rpx;
 }
 
@@ -69,8 +69,8 @@
 }
 
 .message-card {
-  color: #8a6730;
-  background: #fff1cf;
+  color: var(--warn);
+  background: var(--warn-soft);
   font-size: 28rpx;
   line-height: 1.6;
 }
@@ -84,9 +84,9 @@
 .advanced-toggle {
   justify-content: space-between;
   padding: 22rpx 0 4rpx;
-  border-top: 1rpx solid #eadfce;
-  color: #4f8f73;
-  font-size: 27rpx;
+  border-top: 1rpx solid var(--line);
+  color: var(--accent);
+  font-size: 28rpx;
   font-weight: 600;
 }
 
@@ -96,7 +96,7 @@
 
 .quick-tip {
   margin: 20rpx 0;
-  color: #817669;
+  color: var(--ink-2);
   font-size: 24rpx;
   text-align: center;
 }

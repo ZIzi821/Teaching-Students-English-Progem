@@ -67,7 +67,7 @@ assert(detailWxml.includes("给学生的动态提醒"), "Student management has 
 assert(homeJs.includes("this.data.isTeacherPreview") && homeJs.includes("Promise.resolve()"), "Teacher preview must not persist student read state");
 assert(homeWxml.includes('class="teacher-homework-dismiss" hover-class="notice-action-pressed"'), "Dismiss-all dynamics action is not visibly interactive");
 assert(homeWxml.includes('class="teacher-homework-link" hover-class="notice-action-pressed"'), "Per-dynamic action is not visibly interactive");
-assert(homeWxss.includes("background: #4f9275") && homeWxss.includes("border: 2rpx solid #4c8a70"), "Dynamic actions must keep the highlighted pill treatment");
+assert(/\.teacher-homework-link\s*\{[^}]*background:\s*var\(--accent\)/.test(homeWxss), "Dynamic actions must keep a filled action treatment");
 assert(workbenchJs.includes("/engagement/pages/manager/index") && workbenchWxml.includes("成就与 PK 管理"), "Teacher workbench has no engagement manager entry");
 assert(managerJs.includes('type: "saveStudentPkEligibility"'), "Teacher cannot control real-student PK participation");
 assert(managerJs.includes('type: "savePkChallengeProfile"') && managerJs.includes('type: "deletePkChallengeProfile"'), "Teacher cannot manage challenge participants");

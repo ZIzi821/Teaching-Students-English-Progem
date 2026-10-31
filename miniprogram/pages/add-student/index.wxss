@@ -3,15 +3,15 @@
 }
 
 .title {
-  color: #2f2a24;
-  font-size: 42rpx;
-  font-weight: 700;
+  color: var(--ink);
+  font-size: 40rpx;
+  font-weight: 600;
 }
 
 .subtitle {
   margin-top: 12rpx;
-  color: #817669;
-  font-size: 26rpx;
+  color: var(--ink-2);
+  font-size: 28rpx;
   line-height: 1.6;
 }
 
@@ -25,8 +25,8 @@
 
 .label {
   margin-bottom: 12rpx;
-  color: #655b50;
-  font-size: 26rpx;
+  color: var(--ink-2);
+  font-size: 28rpx;
   font-weight: 600;
 }
 
@@ -35,16 +35,16 @@
   width: 100%;
   min-height: 82rpx;
   padding: 0 22rpx;
-  border-radius: 14rpx;
-  background: #f8f2e8;
-  color: #2f2a24;
+  border-radius: 16rpx;
+  background: var(--surface-2);
+  color: var(--ink);
   font-size: 28rpx;
   line-height: 82rpx;
 }
 
 .message-card {
-  color: #8a6730;
-  background: #fff1cf;
+  color: var(--warn);
+  background: var(--warn-soft);
   font-size: 28rpx;
   line-height: 1.6;
 }
@@ -58,7 +58,7 @@
 }
 .field-hint {
   margin-top: 10rpx;
-  color: #8a7e70;
+  color: var(--ink-3);
   font-size: 22rpx;
   line-height: 1.5;
 }

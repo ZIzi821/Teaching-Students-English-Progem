@@ -120,7 +120,7 @@ Page({
       title: "删除这道错题？",
       content: "删除后无法恢复。",
       confirmText: "删除",
-      confirmColor: "#b94a48",
+      confirmColor: "#B0432F",
       success: (modalRes) => {
         if (!modalRes.confirm) return;
         this.setData({ deleting: true });

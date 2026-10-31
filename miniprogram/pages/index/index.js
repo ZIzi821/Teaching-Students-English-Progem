@@ -44,6 +44,13 @@ Page({
     studentLearningActivities: [],
     pendingHomework: null,
     homeworkSummary: { pendingCount: 0, completedCount: 0, totalCount: 0 },
+    todoSummary: {
+      totalCount: 0,
+      recordingCount: 0,
+      homeworkCount: 0,
+      vocabularyCount: 0,
+      inactivityCount: 0,
+    },
     studentPlanSteps: [],
     studentsProgress: [],
     vocabularyPulse: {
@@ -188,6 +195,9 @@ Page({
           showStudentSwitcher: role === "teacher" && !isTeacherPreview ? this.data.showStudentSwitcher : false,
           errorMessage: "",
         });
+        if (role === "teacher" && !isTeacherPreview) {
+          this.loadTodoSummary();
+        }
         if (role === "guest" && !isTeacherPreview) {
           wx.navigateTo({
             url: "/pages/bind-student/index",
@@ -200,6 +210,22 @@ Page({
         console.error(err);
         this.setFallbackData("加载遇到问题，请稍后重试");
       });
+  },
+
+  loadTodoSummary() {
+    wx.cloud.callFunction({
+      name: "quickstartFunctions",
+      data: { type: "getTeacherTodos" },
+    }).then((res) => {
+      const summary = res && res.result && res.result.summary;
+      if (summary) this.setData({ todoSummary: Object.assign({}, this.data.todoSummary, summary) });
+    }).catch((err) => {
+      console.error(err);
+    });
+  },
+
+  goTodos() {
+    wx.reLaunch({ url: "/pages/teacher-todos/index" });
   },
 
   setFallbackData(message) {
@@ -556,7 +582,7 @@ Page({
       title: "退出当前身份？",
       content: `即将退出${roleLabel}。课程、错题和学习记录继续保留，以后可再次输入访问码进入。`,
       confirmText: "确认退出",
-      confirmColor: "#a04f43",
+      confirmColor: "#B0432F",
       success: (modalResult) => {
         if (!modalResult.confirm) return;
         wx.showLoading({ title: "正在退出", mask: true });

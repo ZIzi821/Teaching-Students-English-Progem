@@ -281,13 +281,13 @@ Page({
         },
       },
       todaySegments: [
-        { label: "今日完成", value: reviewed, color: "#4f8f73" },
+        { label: "今日完成", value: reviewed, color: "#14645A" },
         { label: "今日剩余", value: Math.max(0, goal - reviewed), color: "#eadfcf" },
       ],
       masterySegments: [
         { label: "未学习", value: Math.max(0, total - mastered - learning), color: "#eadfcf" },
-        { label: "学习中", value: learning, color: "#e0b96a" },
-        { label: "已掌握", value: Math.max(0, mastered - easy), color: "#4f8f73" },
+        { label: "学习中", value: learning, color: "#C9A24A" },
+        { label: "已掌握", value: Math.max(0, mastered - easy), color: "#14645A" },
         { label: "太简单", value: easy, color: "#7b8eaa" },
       ],
       weeklyChartPoints: (weeklyStats.days || []).map((item) => ({
@@ -301,9 +301,9 @@ Page({
   prepareMistakeStatusSegments(analytics) {
     const source = analytics || {};
     return [
-      { label: "待复习", value: Math.max(0, Number(source.pendingCount) || 0), color: "#e0b96a" },
+      { label: "待复习", value: Math.max(0, Number(source.pendingCount) || 0), color: "#C9A24A" },
       { label: "已复习", value: Math.max(0, Number(source.reviewedCount) || 0), color: "#7b8eaa" },
-      { label: "已掌握", value: Math.max(0, Number(source.masteredCount) || 0), color: "#4f8f73" },
+      { label: "已掌握", value: Math.max(0, Number(source.masteredCount) || 0), color: "#14645A" },
     ];
   },
 

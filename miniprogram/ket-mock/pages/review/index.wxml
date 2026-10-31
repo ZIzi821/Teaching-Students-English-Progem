@@ -7,7 +7,7 @@
 
   <block wx:else>
     <view class="review-hero">
-      <view class="eyebrow">KET SPEAKING REVIEW</view>
+      <view class="eyebrow">KET 口语复盘</view>
       <view class="title">{{set.title}}</view>
       <view class="subtitle">{{session.studentNameSnapshot}} · {{session.lessonTitleSnapshot}} · {{session.submittedLabel}}</view>
     </view>

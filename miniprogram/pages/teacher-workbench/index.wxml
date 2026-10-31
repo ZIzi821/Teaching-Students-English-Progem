@@ -1,6 +1,6 @@
 <view class="page workbench-page {{isTeacher ? 'has-teacher-tabbar' : ''}}">
   <view class="workbench-hero">
-    <view class="hero-kicker">TEACHER MANAGEMENT</view>
+    <view class="hero-kicker">管理</view>
     <view class="title">教师管理</view>
     <view class="subtitle">学生账号、课程记录和隐藏资料集中在这里。</view>
   </view>

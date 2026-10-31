@@ -111,7 +111,7 @@ Page({
       title: "确认切换学习阶段",
       content: `将当前阶段切换为“${target.displayLabel}”。历史证据会保留，之后的雷达和备课建议按新阶段生成。`,
       confirmText: "确认切换",
-      confirmColor: "#4f8f73",
+      confirmColor: "#14645A",
       success: (modalResult) => {
         if (!modalResult.confirm) return;
         this.saveLearningPlan({
@@ -132,7 +132,7 @@ Page({
       title: "确认进入下一阶段",
       content: `系统只提供达标建议，最终由老师确认。确定进入“${target.displayLabel}”吗？`,
       confirmText: "确认进入",
-      confirmColor: "#4f8f73",
+      confirmColor: "#14645A",
       success: (modalResult) => {
         if (!modalResult.confirm) return;
         this.saveLearningPlan({

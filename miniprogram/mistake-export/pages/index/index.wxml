@@ -7,7 +7,7 @@
 
   <block wx:elif="{{student}}">
     <view class="hero-card">
-      <view class="eyebrow">TEACHER EXPORT</view>
+      <view class="eyebrow">错题导出</view>
       <view class="hero-title">{{student.name}}的错题汇总</view>
       <view class="hero-copy">可生成保留完整题目、选项和答案的 Word，也可生成更适合 AI 读取的 Markdown。两种格式分别记录，后续去重按各自导出记录计算。</view>
       <view class="hero-stats">

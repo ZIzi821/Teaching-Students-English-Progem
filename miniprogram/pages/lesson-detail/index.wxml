@@ -25,7 +25,7 @@
 
     <view class="section-head">
       <view>
-        <view class="section-kicker">LESSON NOTE</view>
+        <view class="section-kicker">课程记录</view>
         <view class="section-title">本节课记录</view>
       </view>
       <view class="small-action" wx:if="{{isTeacher}}" bindtap="toggleWorkspaceEditor">
@@ -147,7 +147,7 @@
           <view class="label institution-course-setting-label">机构课程</view>
           <view class="field-hint">该开关管理个人课程进度统计；作业、错题、录音、背词和成就记录继续正常使用。</view>
         </view>
-        <switch checked="{{workspaceForm.institutionCourse}}" color="#b18145" bindchange="onInstitutionCourseChange" />
+        <switch checked="{{workspaceForm.institutionCourse}}" color="#B5780F" bindchange="onInstitutionCourseChange" />
       </view>
 
       <view class="previous-lesson-reference" wx:if="{{previousLessonReference}}">
@@ -244,7 +244,7 @@
           <view class="label recording-label">需要学生提交录音</view>
           <view class="field-hint">开启后，学生会在本课程页看到录音按钮。</view>
         </view>
-        <switch checked="{{workspaceForm.recordingTaskEnabled}}" color="#4f8f73" bindchange="onRecordingTaskChange" />
+        <switch checked="{{workspaceForm.recordingTaskEnabled}}" color="#14645A" bindchange="onRecordingTaskChange" />
       </view>
       <view class="field recording-due-field" wx:if="{{workspaceForm.recordingTaskEnabled}}">
         <view class="label">录音作业期限</view>
@@ -403,7 +403,7 @@
 
     <view class="section-head task-section-head" wx:if="{{lesson.homeworkTask || lesson.recordingTaskEnabled || submissions.length}}">
       <view>
-        <view class="section-kicker">AFTER CLASS</view>
+        <view class="section-kicker">课后</view>
         <view class="section-title">课后任务</view>
       </view>
       <view class="submission-count" wx:if="{{lesson.recordingTaskType === 'ket_mock' && ketMockSessions.length}}">{{ketMockSessions.length}} 场模拟</view>
@@ -570,7 +570,7 @@
 
     <view class="section-head material-section-head" wx:if="{{isTeacher || hasPapers}}">
       <view>
-        <view class="section-kicker">OPTIONAL</view>
+        <view class="section-kicker">选填</view>
         <view class="section-title">课件与资料 <text wx:if="{{hasPapers}}">（{{materialCount}}）</text></view>
         <view class="section-hint">图片直接显示在下方，点击即可全屏放大；也可保存原图或在文档菜单中下载。</view>
       </view>
@@ -637,7 +637,7 @@
 
     <view class="section-head mistake-section-head" wx:if="{{isTeacher || mistakeLearningEnabled}}">
       <view>
-        <view class="section-kicker">REAL QUESTIONS ONLY</view>
+        <view class="section-kicker">真实错题</view>
         <view class="section-title">英语错题整理</view>
         <view class="section-hint">学习表现在上方记录；本区整理真实做错的题。</view>
       </view>

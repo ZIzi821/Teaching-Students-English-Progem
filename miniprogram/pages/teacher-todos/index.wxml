@@ -1,6 +1,6 @@
 <view class="page todo-page {{isTeacher ? 'has-teacher-tabbar' : ''}}">
   <view class="todo-hero">
-    <view class="hero-kicker">TEACHER TO-DO</view>
+    <view class="hero-kicker">待办</view>
     <view class="hero-row">
       <view>
         <view class="title">教师待办</view>

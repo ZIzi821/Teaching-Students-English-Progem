@@ -592,7 +592,7 @@ Page({
         ? "开放后，学生可以在这一天的空白时段预约。"
         : "暂停后，该星期停止新增与调整；现有课程继续保留。设置会按星期持续生效。",
       confirmText: nextBookingOpen ? "重新开放" : "暂停预约",
-      confirmColor: nextBookingOpen ? "#4f8f73" : "#b4544d",
+      confirmColor: nextBookingOpen ? "#14645A" : "#b4544d",
       success: (modal) => {
         if (!modal.confirm) return;
         this.setData({ availabilitySaving: true });

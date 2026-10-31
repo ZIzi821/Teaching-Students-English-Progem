@@ -107,7 +107,7 @@ Page({
         ? "保存后会以最新内容重新出现在学生的“我的新动态”中。"
         : "学生下次打开学习首页时会在“我的新动态”中看到这条提醒。",
       confirmText: isEditing ? "保存" : "发布",
-      confirmColor: "#4f8f73",
+      confirmColor: "#14645A",
       success: (modalResult) => {
         if (!modalResult.confirm) return;
         this.saveReminder({ title, content, isEditing });
@@ -155,7 +155,7 @@ Page({
       title: "撤回提醒？",
       content: `撤回“${reminder.title}”后，学生端会立即停止显示；历史记录仍保留在教师端。`,
       confirmText: "撤回",
-      confirmColor: "#a04f43",
+      confirmColor: "#B0432F",
       success: (modalResult) => {
         if (!modalResult.confirm) return;
         this.setData({ saving: true });

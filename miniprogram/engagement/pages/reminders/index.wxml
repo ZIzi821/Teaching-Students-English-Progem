@@ -1,6 +1,6 @@
 <view class="page reminder-page">
   <view class="reminder-hero">
-    <view class="hero-kicker">STUDENT REMINDER</view>
+    <view class="hero-kicker">学生提醒</view>
     <view class="hero-title">{{student ? student.name + '的动态提醒' : '学生动态提醒'}}</view>
     <view class="hero-hint">发布在学生首页“我的新动态”中，可修改或撤回；微信订阅消息由课后任务页单独开启。</view>
   </view>

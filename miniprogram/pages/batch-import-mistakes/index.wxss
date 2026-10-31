@@ -1,10 +1,10 @@
 .lesson-card {
-  background: #e9f4ee;
+  background: var(--accent-soft);
 }
 
 .computer-import-card {
-  border: 2rpx solid #b9d8ca;
-  background: linear-gradient(145deg, #f3fbf7 0%, #e9f4ee 100%);
+  border: 2rpx solid var(--accent-line);
+  background: var(--accent-soft);
 }
 
 .computer-import-badge {
@@ -12,10 +12,10 @@
   margin-bottom: 12rpx;
   padding: 7rpx 16rpx;
   border-radius: 999rpx;
-  color: #3f735d;
-  background: #d7eadf;
+  color: var(--accent);
+  background: var(--accent-soft);
   font-size: 22rpx;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .computer-import-btn {
@@ -23,31 +23,31 @@
   align-items: center;
   justify-content: center;
   min-height: 78rpx;
-  border-radius: 14rpx;
-  color: #ffffff;
-  background: #4f8f73;
+  border-radius: 16rpx;
+  color: var(--on-fill);
+  background: var(--accent);
   font-size: 28rpx;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .local-bridge-status,
 .local-bridge-error {
   margin-top: 18rpx;
   padding: 16rpx 18rpx;
-  border-radius: 14rpx;
+  border-radius: 16rpx;
   font-size: 24rpx;
   line-height: 1.55;
   overflow-wrap: anywhere;
 }
 
 .local-bridge-status {
-  color: #4f6f63;
+  color: var(--accent);
   background: rgba(255, 255, 255, 0.72);
 }
 
 .local-bridge-error {
-  color: #8b4f43;
-  background: #fbe7e1;
+  color: var(--danger);
+  background: var(--danger-soft);
 }
 
 .eyebrow,
@@ -56,21 +56,21 @@
 .preview,
 .file-name,
 .progress-count {
-  color: #817669;
-  font-size: 25rpx;
+  color: var(--ink-2);
+  font-size: 24rpx;
 }
 
 .title {
   margin: 10rpx 0;
-  color: #2f2a24;
-  font-size: 36rpx;
-  font-weight: 700;
+  color: var(--ink);
+  font-size: 40rpx;
+  font-weight: 600;
 }
 
 .section-title {
-  color: #2f2a24;
-  font-size: 30rpx;
-  font-weight: 700;
+  color: var(--ink);
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
 .hint {
@@ -89,7 +89,7 @@
   flex: 0 0 auto;
   min-height: 68rpx;
   padding: 0 24rpx;
-  font-size: 26rpx;
+  font-size: 28rpx;
 }
 
 .file-name {
@@ -104,10 +104,10 @@
   width: 100%;
   min-height: 360rpx;
   padding: 20rpx;
-  border-radius: 14rpx;
-  background: #f8f2e8;
-  color: #2f2a24;
-  font-size: 25rpx;
+  border-radius: 16rpx;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 24rpx;
   line-height: 1.5;
 }
 
@@ -118,29 +118,29 @@
 .missing-box {
   margin-top: 18rpx;
   padding: 18rpx 20rpx;
-  border-radius: 14rpx;
+  border-radius: 16rpx;
   font-size: 24rpx;
   line-height: 1.6;
 }
 
 .missing-box {
-  color: #8a6730;
-  background: #fff1cf;
+  color: var(--warn);
+  background: var(--warn-soft);
 }
 
 .message-card {
-  color: #8a6730;
-  background: #fff1cf;
+  color: var(--warn);
+  background: var(--warn-soft);
 }
 
 .progress-card {
-  color: #4f6f63;
-  background: #e9f4ee;
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .progress-title {
   overflow-wrap: anywhere;
-  font-size: 26rpx;
+  font-size: 28rpx;
   font-weight: 600;
 }
 
@@ -149,13 +149,13 @@
   margin-top: 18rpx;
   overflow: hidden;
   border-radius: 999rpx;
-  background: #d8e3dc;
+  background: var(--accent-soft);
 }
 
 .progress-fill {
   height: 100%;
   border-radius: 999rpx;
-  background: #4f8f73;
+  background: var(--accent);
   transition: width 0.2s ease;
 }
 

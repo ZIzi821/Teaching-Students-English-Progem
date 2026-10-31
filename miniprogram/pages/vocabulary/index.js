@@ -476,13 +476,13 @@ Page({
     const notStartedCount = Math.max(0, totalCount - masteredCount - learningCount);
     return {
       todayChartSegments: [
-        { label: "今日完成", value: reviewed, color: "#4f8f73" },
+        { label: "今日完成", value: reviewed, color: "#14645A" },
         { label: "今日剩余", value: Math.max(0, goal - reviewed), color: "#eadfcf" },
       ],
       masteryChartSegments: [
         { label: "未学习", value: notStartedCount, color: "#eadfcf" },
-        { label: "学习中", value: learningCount, color: "#e0b96a" },
-        { label: "已掌握", value: Math.max(0, masteredCount - easyCount), color: "#4f8f73" },
+        { label: "学习中", value: learningCount, color: "#C9A24A" },
+        { label: "已掌握", value: Math.max(0, masteredCount - easyCount), color: "#14645A" },
         { label: "太简单", value: easyCount, color: "#7b8eaa" },
       ],
     };
@@ -978,7 +978,7 @@ Page({
         title: "忽略这个单词？",
         content: "确认后，这个词会归入已忽略列表。",
         confirmText: "确认忽略",
-        confirmColor: "#b6534b",
+        confirmColor: "#B0432F",
         success: (res) => {
           if (res.confirm) this.submitPendingWord(word, true);
         },

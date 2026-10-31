@@ -3,40 +3,40 @@
 }
 
 .level-tabs { display: flex; gap: 12rpx; }
-.level-tab { flex: 1; padding: 16rpx; border-radius: 14rpx; color: #817669; background: #f5ead8; text-align: center; }
-.level-tab.active { color: #fff; background: #7b8eaa; }
+.level-tab { flex: 1; padding: 16rpx; border-radius: 16rpx; color: var(--ink-2); background: var(--line); text-align: center; }
+.level-tab.active { color: var(--on-fill); background: var(--info); }
 
 .loading-card,
 .empty-card,
 .feature-disabled-card {
-  color: #817669;
+  color: var(--ink-2);
   line-height: 1.6;
 }
 
 .message-card {
-  color: #8a6730;
-  background: #fff1cf;
+  color: var(--warn);
+  background: var(--warn-soft);
   line-height: 1.6;
 }
 
 .retry-btn {
   margin-top: 18rpx;
   min-height: 68rpx;
-  font-size: 26rpx;
+  font-size: 28rpx;
 }
 
 .feature-disabled-title,
 .complete-title {
-  color: #3d352e;
-  font-size: 30rpx;
-  font-weight: 700;
+  color: var(--ink);
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
 .feature-disabled-hint,
 .complete-hint {
   margin-top: 10rpx;
-  color: #817669;
-  font-size: 25rpx;
+  color: var(--ink-2);
+  font-size: 24rpx;
 }
 
 .progress-row {
@@ -46,7 +46,7 @@
 }
 
 .progress-label {
-  color: #817669;
+  color: var(--ink-2);
   font-size: 24rpx;
 }
 
@@ -55,46 +55,46 @@
   margin: 10rpx 0 20rpx;
   overflow: hidden;
   border-radius: 999rpx;
-  background: #eadfcf;
+  background: var(--line);
 }
 
 .progress-fill {
   height: 100%;
   border-radius: 999rpx;
-  background: #7b8eaa;
+  background: var(--info);
 }
 
 .sentence-card {
   padding: 40rpx 30rpx 32rpx;
   text-align: center;
-  background: linear-gradient(150deg, #fffdfa 0%, #f3f6fb 100%);
+  background: var(--surface);
 }
 
 .sentence-eyebrow {
-  color: #7b8eaa;
-  font-size: 23rpx;
-  font-weight: 700;
+  color: var(--info);
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .sentence-text {
   margin-top: 34rpx;
-  color: #243f35;
+  color: var(--accent);
   font-size: 40rpx;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.45;
 }
 
 .sentence-translation {
   margin-top: 20rpx;
-  color: #62584d;
-  font-size: 29rpx;
+  color: var(--ink-2);
+  font-size: 28rpx;
   line-height: 1.6;
 }
 
 .sentence-note {
   margin-top: 16rpx;
-  color: #817669;
-  font-size: 23rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
   line-height: 1.5;
 }
 
@@ -104,16 +104,16 @@
   padding: 0 32rpx;
   border: 0;
   border-radius: 999rpx;
-  color: #526d8c;
-  background: #e4ecf5;
-  font-size: 27rpx;
+  color: var(--info);
+  background: var(--info-soft);
+  font-size: 28rpx;
   font-weight: 600;
   line-height: 76rpx;
 }
 
 .repeat-hint {
-  color: #9b8f81;
-  font-size: 23rpx;
+  color: var(--ink-3);
+  font-size: 22rpx;
   line-height: 1.5;
   text-align: center;
 }
@@ -129,7 +129,7 @@
   width: 100%;
   min-height: 80rpx;
   margin: 0;
-  font-size: 27rpx;
+  font-size: 28rpx;
 }
 
 .next-btn {

@@ -1,6 +1,6 @@
 const frenchPreview = require("../../utils/frenchPreview");
 
-const PALETTE = ["#4f8f73", "#7b8eaa", "#b78a5a", "#a87974", "#8f9a69"];
+const PALETTE = ["#14645A", "#7b8eaa", "#b78a5a", "#a87974", "#8f9a69"];
 const MEMORY_LABELS = { new: "未学习", learning: "学习中", review: "复习中", mastered: "已掌握" };
 const clamp = (value, maximum) => Math.max(0, Math.min(maximum, Number(value) || 0));
 const asArray = (value) => Array.isArray(value) ? value : [];

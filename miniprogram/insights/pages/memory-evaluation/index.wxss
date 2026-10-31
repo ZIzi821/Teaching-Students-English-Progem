@@ -3,30 +3,29 @@
 }
 
 .state-card {
-  color: #5f574f;
-  font-size: 27rpx;
+  color: var(--ink-2);
+  font-size: 28rpx;
   line-height: 1.6;
 }
 
 .state-card.error {
-  color: #8a6730;
-  background: #fff4d8;
+  color: var(--warn);
+  background: var(--warn-soft);
 }
 
 .retry {
   display: inline-flex;
   margin-top: 14rpx;
-  color: #39765d;
-  font-weight: 700;
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .evaluation-hero {
   margin-bottom: 24rpx;
   padding: 34rpx 30rpx;
-  border-radius: 28rpx;
-  color: #ffffff;
-  background: linear-gradient(145deg, #273f52 0%, #3f6e76 68%, #5b8b7a 100%);
-  box-shadow: 0 14rpx 36rpx rgba(39, 63, 82, 0.2);
+  border-radius: 24rpx;
+  color: var(--on-fill);
+  background: var(--info);
 }
 
 .hero-top,
@@ -44,20 +43,19 @@
 .hero-kicker {
   color: rgba(255, 255, 255, 0.72);
   font-size: 22rpx;
-  font-weight: 700;
-  letter-spacing: 2rpx;
+  font-weight: 600;
 }
 
 .hero-title {
   margin-top: 10rpx;
   font-size: 40rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .hero-description {
   margin-top: 18rpx;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 25rpx;
+  font-size: 24rpx;
   line-height: 1.6;
 }
 
@@ -65,29 +63,29 @@
   flex-shrink: 0;
   padding: 9rpx 16rpx;
   border-radius: 999rpx;
-  font-size: 21rpx;
-  font-weight: 800;
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .status-collecting {
-  color: #705329;
-  background: #f8e7b8;
+  color: var(--warn);
+  background: var(--warn-soft);
 }
 
 .status-attention {
-  color: #813d31;
-  background: #f4d3cc;
+  color: var(--danger);
+  background: var(--danger-soft);
 }
 
 .status-stable {
-  color: #245744;
-  background: #d7eee3;
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .status-description {
   margin-top: 16rpx;
   padding: 13rpx 15rpx;
-  border-radius: 14rpx;
+  border-radius: 16rpx;
   color: rgba(255, 255, 255, 0.9);
   background: rgba(255, 255, 255, 0.1);
   font-size: 22rpx;
@@ -98,7 +96,7 @@
   margin-top: 22rpx;
   color: rgba(255, 255, 255, 0.86);
   font-size: 22rpx;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .sample-track {
@@ -112,13 +110,13 @@
 .sample-fill {
   height: 100%;
   border-radius: 999rpx;
-  background: #f2c978;
+  background: var(--warn-fill);
 }
 
 .hero-meta {
   margin-top: 14rpx;
   color: rgba(255, 255, 255, 0.65);
-  font-size: 20rpx;
+  font-size: 22rpx;
 }
 
 .empty-evaluation {
@@ -127,22 +125,22 @@
 }
 
 .empty-icon {
-  color: #4f8f73;
-  font-size: 60rpx;
-  font-weight: 800;
+  color: var(--accent);
+  font-size: 52rpx;
+  font-weight: 600;
 }
 
 .empty-title {
   margin-top: 10rpx;
-  color: #342f2a;
-  font-size: 30rpx;
-  font-weight: 800;
+  color: var(--ink);
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
 .empty-copy {
   margin-top: 13rpx;
-  color: #786f65;
-  font-size: 23rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
   line-height: 1.65;
 }
 
@@ -156,40 +154,39 @@
 .metric-card {
   min-width: 0;
   padding: 24rpx 20rpx;
-  border: 1rpx solid #e7e1d8;
-  border-radius: 22rpx;
-  background: #ffffff;
-  box-shadow: 0 8rpx 22rpx rgba(75, 67, 58, 0.06);
+  border: 1rpx solid var(--line);
+  border-radius: 24rpx;
+  background: var(--surface);
 }
 
 .metric-label,
 .metric-note {
-  color: #7f756a;
-  font-size: 20rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
 }
 
 .metric-value {
   margin: 12rpx 0 9rpx;
-  color: #315f4d;
-  font-size: 39rpx;
-  font-weight: 800;
+  color: var(--accent);
+  font-size: 40rpx;
+  font-weight: 600;
   line-height: 1.15;
 }
 
 .metric-value.metric-small {
-  font-size: 27rpx;
+  font-size: 28rpx;
   line-height: 1.55;
 }
 
 .section-title {
-  color: #2f2a24;
-  font-size: 31rpx;
-  font-weight: 800;
+  color: var(--ink);
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
 .section-hint {
   margin-top: 8rpx;
-  color: #7c7369;
+  color: var(--ink-2);
   font-size: 22rpx;
   line-height: 1.5;
 }
@@ -198,8 +195,8 @@
   display: flex;
   gap: 24rpx;
   margin-top: 19rpx;
-  color: #70675e;
-  font-size: 20rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
 }
 
 .legend-item {
@@ -216,17 +213,17 @@
 
 .predicted-dot,
 .predicted-bar {
-  background: #7f91aa;
+  background: var(--info);
 }
 
 .actual-dot,
 .actual-bar {
-  background: #4f8f73;
+  background: var(--accent);
 }
 
 .bin-row {
   padding: 21rpx 0;
-  border-bottom: 1rpx solid #eee8df;
+  border-bottom: 1rpx solid var(--line);
 }
 
 .bin-row:last-child {
@@ -234,15 +231,15 @@
 }
 
 .bin-label {
-  color: #494139;
-  font-size: 23rpx;
-  font-weight: 700;
+  color: var(--ink);
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .bin-sample,
 .no-bin-data {
-  color: #958b80;
-  font-size: 20rpx;
+  color: var(--ink-3);
+  font-size: 22rpx;
 }
 
 .bar-row {
@@ -252,8 +249,8 @@
 .bar-name {
   width: 58rpx;
   flex-shrink: 0;
-  color: #786f65;
-  font-size: 20rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
 }
 
 .bar-track {
@@ -261,7 +258,7 @@
   overflow: hidden;
   flex: 1;
   border-radius: 999rpx;
-  background: #ece8e1;
+  background: var(--line);
 }
 
 .bar-fill {
@@ -272,8 +269,8 @@
 .bar-value {
   width: 78rpx;
   flex-shrink: 0;
-  color: #5e564e;
-  font-size: 20rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
   text-align: right;
 }
 
@@ -291,30 +288,30 @@
 .quality-item {
   padding: 18rpx 8rpx;
   border-radius: 16rpx;
-  background: #f3f0eb;
+  background: var(--surface-2);
   text-align: center;
 }
 
 .quality-value {
-  color: #315f4d;
-  font-size: 30rpx;
-  font-weight: 800;
+  color: var(--accent);
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
 .quality-label {
   margin-top: 7rpx;
-  color: #786f65;
-  font-size: 18rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
 }
 
 .quality-note,
 .teacher-note {
   margin-top: 18rpx;
   padding: 15rpx 17rpx;
-  border-radius: 14rpx;
-  color: #6f665d;
-  background: #f5f1ea;
-  font-size: 21rpx;
+  border-radius: 16rpx;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  font-size: 22rpx;
   line-height: 1.55;
 }
 
@@ -328,7 +325,7 @@
   justify-content: space-between;
   gap: 16rpx;
   padding: 18rpx 0;
-  border-bottom: 1rpx solid #eee8df;
+  border-bottom: 1rpx solid var(--line);
 }
 
 .source-row:last-child {
@@ -345,26 +342,26 @@
 }
 
 .source-title {
-  color: #443d36;
+  color: var(--ink);
   font-size: 24rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .objective-badge {
   padding: 5rpx 9rpx;
   border-radius: 999rpx;
-  color: #3e6c59;
-  background: #e4f1ea;
-  font-size: 17rpx;
-  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .source-meta,
 .source-score,
 .recent-sample {
   margin-top: 6rpx;
-  color: #82786d;
-  font-size: 20rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
   line-height: 1.45;
 }
 
@@ -374,7 +371,7 @@
 
 .recent-row {
   padding: 19rpx 0;
-  border-bottom: 1rpx solid #eee8df;
+  border-bottom: 1rpx solid var(--line);
 }
 
 .recent-row:last-child {
@@ -382,21 +379,21 @@
 }
 
 .recent-label {
-  color: #494139;
+  color: var(--ink);
   font-size: 24rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .recent-values {
-  color: #526b60;
-  font-size: 21rpx;
-  font-weight: 700;
+  color: var(--ink-2);
+  font-size: 22rpx;
+  font-weight: 600;
   text-align: right;
 }
 
 .recommendation-card {
-  border-color: #eadbb6;
-  background: linear-gradient(145deg, #fffdfa 0%, #fff8e8 100%);
+  border-color: var(--warn-line);
+  background: var(--surface);
 }
 
 .recommendation-row {
@@ -404,8 +401,8 @@
   align-items: flex-start;
   gap: 13rpx;
   margin-top: 17rpx;
-  color: #5e513e;
-  font-size: 23rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
   line-height: 1.6;
 }
 
@@ -417,26 +414,26 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 12rpx;
-  color: #ffffff;
-  background: #c2944f;
-  font-size: 19rpx;
-  font-weight: 800;
+  color: var(--on-fill);
+  background: var(--warn-fill);
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .method-card {
-  border-color: #dfe5e2;
-  background: #f9fbfa;
+  border-color: var(--line);
+  background: var(--accent-soft);
 }
 
 .method-line {
   margin-top: 14rpx;
-  color: #665f57;
+  color: var(--ink-2);
   font-size: 22rpx;
   line-height: 1.65;
 }
 
 .teacher-note {
-  color: #315f4d;
-  background: #e7f2ec;
-  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 600;
 }

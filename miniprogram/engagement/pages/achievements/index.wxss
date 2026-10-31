@@ -9,9 +9,9 @@
   gap: 18rpx;
   margin-bottom: 24rpx;
   padding: 22rpx 24rpx;
-  border: 1rpx solid #b9d8c8;
-  border-radius: 20rpx;
-  background: #edf7f2;
+  border: 1rpx solid var(--accent-line);
+  border-radius: 24rpx;
+  background: var(--accent-soft);
 }
 
 .preview-banner > view:first-child {
@@ -20,32 +20,32 @@
 }
 
 .preview-banner-title {
-  color: #285b47;
-  font-size: 26rpx;
-  font-weight: 800;
+  color: var(--accent);
+  font-size: 28rpx;
+  font-weight: 600;
 }
 
 .preview-banner-hint {
   margin-top: 7rpx;
-  color: #668073;
-  font-size: 21rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
   line-height: 1.45;
 }
 
 .preview-banner-action {
   flex-shrink: 0;
   padding: 13rpx 16rpx;
-  border-radius: 13rpx;
-  color: #fff;
-  background: #4f8f73;
+  border-radius: 12rpx;
+  color: var(--on-fill);
+  background: var(--accent);
   font-size: 22rpx;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .loading-card,
 .error-card {
-  color: #6e6458;
-  font-size: 26rpx;
+  color: var(--ink-2);
+  font-size: 28rpx;
   line-height: 1.6;
   text-align: center;
 }
@@ -58,26 +58,24 @@
   margin-top: 18rpx;
   padding: 0 26rpx;
   border-radius: 999rpx;
-  color: #fff;
-  background: #4f8f73;
-  font-weight: 700;
+  color: var(--on-fill);
+  background: var(--accent);
+  font-weight: 600;
 }
 
 .achievement-hero {
   box-sizing: border-box;
   margin-bottom: 24rpx;
   padding: 34rpx 30rpx;
-  border-radius: 26rpx;
-  color: #fffdf8;
-  background: linear-gradient(140deg, #356f58 0%, #4f8f73 55%, #d0a25c 145%);
-  box-shadow: 0 16rpx 38rpx rgba(55, 104, 82, 0.2);
+  border-radius: 24rpx;
+  color: var(--on-fill);
+  background: var(--accent);
 }
 
 .hero-kicker {
   color: rgba(255, 255, 255, 0.76);
-  font-size: 20rpx;
-  font-weight: 700;
-  letter-spacing: 2rpx;
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .hero-main {
@@ -89,14 +87,14 @@
 }
 
 .hero-title {
-  font-size: 38rpx;
-  font-weight: 800;
+  font-size: 40rpx;
+  font-weight: 600;
 }
 
 .hero-level {
   margin-top: 8rpx;
   color: rgba(255, 255, 255, 0.84);
-  font-size: 25rpx;
+  font-size: 24rpx;
 }
 
 .point-orb {
@@ -112,14 +110,14 @@
 }
 
 .point-number {
-  font-size: 38rpx;
-  font-weight: 800;
+  font-size: 40rpx;
+  font-weight: 600;
 }
 
 .point-label {
   margin-top: 2rpx;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 20rpx;
+  font-size: 22rpx;
 }
 
 .level-track,
@@ -138,13 +136,13 @@
 .achievement-progress-fill {
   height: 100%;
   border-radius: 999rpx;
-  background: #f5d99f;
+  background: var(--warn-soft);
 }
 
 .level-note {
   margin-top: 10rpx;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 21rpx;
+  font-size: 22rpx;
 }
 
 .summary-grid {
@@ -156,22 +154,22 @@
 
 .summary-card {
   padding: 22rpx 10rpx;
-  border: 1rpx solid #eadfcf;
-  border-radius: 18rpx;
-  background: #fffdfa;
+  border: 1rpx solid var(--line);
+  border-radius: 16rpx;
+  background: var(--surface);
   text-align: center;
 }
 
 .summary-number {
-  color: #356f58;
-  font-size: 34rpx;
-  font-weight: 800;
+  color: var(--accent);
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
 .summary-label {
   margin-top: 6rpx;
-  color: #807467;
-  font-size: 20rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
 }
 
 .section-head,
@@ -190,19 +188,19 @@
 }
 
 .section-title {
-  color: #2f2a24;
-  font-size: 31rpx;
-  font-weight: 800;
+  color: var(--ink);
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
 .card-section-title {
-  font-size: 29rpx;
+  font-size: 28rpx;
 }
 
 .section-hint {
   margin-top: 6rpx;
-  color: #897e72;
-  font-size: 21rpx;
+  color: var(--ink-3);
+  font-size: 22rpx;
   line-height: 1.45;
 }
 
@@ -211,10 +209,10 @@
   flex-shrink: 0;
   padding: 8rpx 14rpx;
   border-radius: 999rpx;
-  color: #39765d;
-  background: #e2f1e9;
+  color: var(--accent);
+  background: var(--accent-soft);
   font-size: 22rpx;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .achievement-grid {
@@ -228,14 +226,14 @@
   box-sizing: border-box;
   min-height: 260rpx;
   padding: 22rpx;
-  border: 1rpx solid #e6dccf;
-  border-radius: 20rpx;
-  background: #fffdfa;
+  border: 1rpx solid var(--line);
+  border-radius: 24rpx;
+  background: var(--surface);
 }
 
 .achievement-unlocked {
-  border-color: #cddfd5;
-  background: linear-gradient(150deg, #fffdfa 0%, #edf7f2 100%);
+  border-color: var(--accent-line);
+  background: var(--surface);
 }
 
 .achievement-locked {
@@ -249,47 +247,47 @@
   height: 58rpx;
   align-items: center;
   justify-content: center;
-  border-radius: 18rpx;
-  color: #fff;
-  background: #4f8f73;
+  border-radius: 16rpx;
+  color: var(--on-fill);
+  background: var(--accent);
   font-size: 22rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .achievement-locked .achievement-mark {
-  color: #766c60;
-  background: #e4ddd3;
+  color: var(--ink-2);
+  background: var(--line);
 }
 
 .achievement-title {
   margin-top: 14rpx;
-  color: #31463e;
-  font-size: 25rpx;
-  font-weight: 800;
+  color: var(--accent);
+  font-size: 24rpx;
+  font-weight: 600;
 }
 
 .achievement-description {
   min-height: 62rpx;
   margin-top: 7rpx;
-  color: #7c7165;
-  font-size: 20rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
   line-height: 1.45;
 }
 
 .achievement-progress {
   height: 9rpx;
   margin-top: 14rpx;
-  background: #ebe4da;
+  background: var(--line);
 }
 
 .achievement-progress-fill {
-  background: #d5a85e;
+  background: var(--warn-fill);
 }
 
 .achievement-state {
   margin-top: 7rpx;
-  color: #8b6a37;
-  font-size: 19rpx;
+  color: var(--warn);
+  font-size: 22rpx;
   text-align: right;
 }
 
@@ -302,19 +300,19 @@
 .pk-message {
   margin-top: 18rpx;
   padding: 16rpx 18rpx;
-  border-radius: 14rpx;
-  color: #745724;
-  background: #fff1cf;
-  font-size: 23rpx;
+  border-radius: 16rpx;
+  color: var(--warn);
+  background: var(--warn-soft);
+  font-size: 22rpx;
 }
 
 .pk-relation-note {
   margin-top: 12rpx;
   padding: 14rpx 17rpx;
-  border-radius: 14rpx;
-  color: #5f675f;
-  background: #edf7f2;
-  font-size: 20rpx;
+  border-radius: 16rpx;
+  color: var(--ink-2);
+  background: var(--accent-soft);
+  font-size: 22rpx;
   line-height: 1.55;
 }
 
@@ -328,7 +326,7 @@
 
 .ranking-row {
   min-height: 70rpx;
-  border-bottom: 1rpx solid #eee5da;
+  border-bottom: 1rpx solid var(--line);
 }
 
 .ranking-row:last-child {
@@ -338,8 +336,8 @@
 .ranking-current {
   margin: 0 -12rpx;
   padding: 0 12rpx;
-  border-radius: 14rpx;
-  background: #edf7f2;
+  border-radius: 16rpx;
+  background: var(--accent-soft);
 }
 
 .rank-mark {
@@ -349,25 +347,25 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  color: #71675d;
-  background: #eee8df;
-  font-size: 19rpx;
-  font-weight: 800;
+  color: var(--ink-2);
+  background: var(--line);
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .rank-1 {
-  color: #7b551b;
-  background: #f7d991;
+  color: var(--warn);
+  background: var(--warn-soft);
 }
 
 .rank-2 {
-  color: #566068;
-  background: #dce2e5;
+  color: var(--ink-2);
+  background: var(--info-soft);
 }
 
 .rank-3 {
-  color: #74452f;
-  background: #e9c1a4;
+  color: var(--danger);
+  background: var(--warn-soft);
 }
 
 .rank-copy {
@@ -376,36 +374,36 @@
 }
 
 .rank-name {
-  color: #3e4944;
-  font-size: 25rpx;
-  font-weight: 700;
+  color: var(--ink);
+  font-size: 24rpx;
+  font-weight: 600;
 }
 
 .rank-name text {
   margin-left: 7rpx;
   padding: 3rpx 8rpx;
   border-radius: 999rpx;
-  color: #805b23;
-  background: #f7e4bc;
-  font-size: 16rpx;
+  color: var(--warn);
+  background: var(--warn-soft);
+  font-size: 22rpx;
 }
 
 .rank-source {
   margin-top: 3rpx;
-  color: #918579;
-  font-size: 18rpx;
+  color: var(--ink-3);
+  font-size: 22rpx;
 }
 
 .rank-points {
-  color: #39765d;
+  color: var(--accent);
   font-size: 24rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .privacy-note,
 .evidence-note {
-  color: #92877b;
-  font-size: 20rpx;
+  color: var(--ink-3);
+  font-size: 22rpx;
   line-height: 1.55;
 }
 
@@ -416,16 +414,16 @@
 .breakdown-row,
 .recent-row {
   padding: 18rpx 0;
-  border-bottom: 1rpx solid #eee5da;
+  border-bottom: 1rpx solid var(--line);
 }
 
 .rule-summary {
   margin-top: 18rpx;
   padding: 16rpx 18rpx;
-  border-radius: 14rpx;
-  color: #625a50;
-  background: #f7f1e7;
-  font-size: 20rpx;
+  border-radius: 16rpx;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  font-size: 22rpx;
   line-height: 1.7;
 }
 
@@ -441,17 +439,17 @@
 
 .breakdown-title,
 .recent-title {
-  color: #3d4843;
-  font-size: 25rpx;
-  font-weight: 700;
+  color: var(--ink);
+  font-size: 24rpx;
+  font-weight: 600;
 }
 
 .breakdown-detail,
 .recent-date,
 .breakdown-empty {
   margin-top: 5rpx;
-  color: #8b8074;
-  font-size: 20rpx;
+  color: var(--ink-3);
+  font-size: 22rpx;
   line-height: 1.45;
 }
 
@@ -463,9 +461,9 @@
 .breakdown-points,
 .recent-points {
   flex-shrink: 0;
-  color: #b47b2a;
-  font-size: 25rpx;
-  font-weight: 800;
+  color: var(--warn);
+  font-size: 24rpx;
+  font-weight: 600;
 }
 
 .recent-date {

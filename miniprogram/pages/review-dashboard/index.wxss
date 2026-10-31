@@ -1,25 +1,25 @@
 .hero-card {
-  background: #e9f4ee;
+  background: var(--accent-soft);
 }
 
 .eyebrow {
-  color: #4f6f63;
+  color: var(--accent);
   font-size: 24rpx;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .title {
   margin-top: 10rpx;
-  color: #243f35;
-  font-size: 38rpx;
-  font-weight: 700;
+  color: var(--accent);
+  font-size: 40rpx;
+  font-weight: 600;
   line-height: 1.35;
 }
 
 .subtitle {
   margin-top: 12rpx;
-  color: #62584d;
-  font-size: 26rpx;
+  color: var(--ink-2);
+  font-size: 28rpx;
   line-height: 1.6;
 }
 
@@ -35,14 +35,14 @@
 }
 
 .metric-number {
-  color: #326d56;
-  font-size: 38rpx;
-  font-weight: 700;
+  color: var(--accent);
+  font-size: 40rpx;
+  font-weight: 600;
 }
 
 .metric-label {
   margin-top: 8rpx;
-  color: #817669;
+  color: var(--ink-2);
   font-size: 22rpx;
 }
 
@@ -52,9 +52,9 @@
 
 .section-title {
   margin-bottom: 18rpx;
-  color: #2f2a24;
-  font-size: 30rpx;
-  font-weight: 700;
+  color: var(--ink);
+  font-size: 32rpx;
+  font-weight: 600;
 }
 
 .rank-row {
@@ -67,7 +67,7 @@
 
 .rank-name,
 .rank-count {
-  color: #62584d;
+  color: var(--ink-2);
   font-size: 24rpx;
 }
 
@@ -79,13 +79,13 @@
   height: 16rpx;
   overflow: hidden;
   border-radius: 999rpx;
-  background: #edf0e8;
+  background: var(--accent-soft);
 }
 
 .rank-fill {
   height: 100%;
   border-radius: 999rpx;
-  background: #4f8f73;
+  background: var(--accent);
 }
 
 .tags {
@@ -97,15 +97,15 @@
 .tag {
   padding: 8rpx 14rpx;
   border-radius: 999rpx;
-  color: #6f593d;
-  background: #f5ead8;
+  color: var(--ink-2);
+  background: var(--line);
   font-size: 22rpx;
 }
 
 .suggestion {
   position: relative;
   padding: 22rpx 0;
-  border-bottom: 1rpx solid #eadfcf;
+  border-bottom: 1rpx solid var(--line);
 }
 
 .suggestion:last-child {
@@ -114,14 +114,14 @@
 
 .suggestion-title {
   padding-right: 120rpx;
-  color: #2f2a24;
+  color: var(--ink);
   font-size: 28rpx;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .suggestion-meta {
   margin-top: 10rpx;
-  color: #817669;
+  color: var(--ink-2);
   font-size: 24rpx;
 }
 
@@ -131,15 +131,15 @@
   right: 0;
   padding: 8rpx 14rpx;
   border-radius: 999rpx;
-  color: #4f8f73;
-  background: #e9f4ee;
+  color: var(--accent);
+  background: var(--accent-soft);
   font-size: 22rpx;
 }
 
 .empty,
 .no-permission {
-  color: #8a6730;
-  font-size: 26rpx;
+  color: var(--warn);
+  font-size: 28rpx;
   line-height: 1.6;
 }
 
@@ -151,8 +151,8 @@
   margin-top: 16rpx;
   padding: 0 24rpx;
   border-radius: 999rpx;
-  color: #4f6f63;
-  background: #ffffff;
+  color: var(--accent);
+  background: var(--surface);
   font-size: 24rpx;
-  font-weight: 700;
+  font-weight: 600;
 }

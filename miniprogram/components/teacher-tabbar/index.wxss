@@ -9,9 +9,8 @@
   bottom: 0;
   left: 0;
   padding-bottom: env(safe-area-inset-bottom);
-  border-top: 1rpx solid #e8ded1;
-  background: rgba(255, 253, 250, 0.97);
-  box-shadow: 0 -8rpx 28rpx rgba(87, 67, 43, 0.08);
+  border-top: 1rpx solid var(--line);
+  background: var(--surface);
 }
 
 .teacher-tabbar-inner {
@@ -22,140 +21,26 @@
 }
 
 .tab-item {
-  position: relative;
   display: flex;
   width: 24%;
-  height: 90rpx;
+  height: 96rpx;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  color: #8c8175;
-}
-
-.tab-item::before {
-  position: absolute;
-  top: 0;
-  width: 32rpx;
-  height: 5rpx;
-  border-radius: 999rpx;
-  background: transparent;
-  content: "";
+  color: var(--ink-3);
 }
 
 .tab-active {
-  color: #39765d;
+  color: var(--accent);
 }
 
-.tab-active::before {
-  background: #4f8f73;
-}
-
-.tab-symbol {
-  position: relative;
-  width: 38rpx;
-  height: 34rpx;
-  color: currentColor;
+.tab-icon {
+  width: 44rpx;
+  height: 44rpx;
 }
 
 .tab-label {
-  margin-top: 5rpx;
-  font-size: 21rpx;
-  font-weight: 600;
-}
-
-.home-roof {
-  position: absolute;
-  top: 4rpx;
-  left: 8rpx;
-  box-sizing: border-box;
-  width: 23rpx;
-  height: 23rpx;
-  border-top: 4rpx solid currentColor;
-  border-left: 4rpx solid currentColor;
-  transform: rotate(45deg);
-}
-
-.home-body {
-  position: absolute;
-  bottom: 1rpx;
-  left: 9rpx;
-  box-sizing: border-box;
-  width: 21rpx;
-  height: 19rpx;
-  border: 4rpx solid currentColor;
-  border-top: 0;
-  border-radius: 2rpx;
-}
-
-.tab-symbol-todos {
-  display: flex;
-  box-sizing: border-box;
-  padding: 3rpx 2rpx;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.todo-row {
-  display: flex;
-  height: 7rpx;
-  align-items: center;
-  gap: 5rpx;
-}
-
-.todo-dot {
-  box-sizing: border-box;
-  width: 7rpx;
-  height: 7rpx;
-  border: 2rpx solid currentColor;
-  border-radius: 50%;
-}
-
-.todo-line {
-  width: 23rpx;
-  height: 3rpx;
-  border-radius: 999rpx;
-  background: currentColor;
-}
-
-.tab-symbol-workbench {
-  display: grid;
-  box-sizing: border-box;
-  padding: 3rpx;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rpx;
-}
-
-.workbench-cell {
-  box-sizing: border-box;
-  border: 3rpx solid currentColor;
-  border-radius: 3rpx;
-}
-
-.tab-symbol-schedule {
-  box-sizing: border-box;
-  padding-top: 7rpx;
-  border: 3rpx solid currentColor;
-  border-radius: 5rpx;
-}
-
-.calendar-top {
-  position: absolute;
-  top: 6rpx;
-  right: 0;
-  left: 0;
-  height: 3rpx;
-  background: currentColor;
-}
-
-.calendar-grid {
-  display: grid;
-  padding: 6rpx 5rpx 4rpx;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rpx;
-}
-
-.calendar-grid view {
-  height: 5rpx;
-  border-radius: 1rpx;
-  background: currentColor;
+  margin-top: 2rpx;
+  font-size: 22rpx;
+  font-weight: 500;
 }

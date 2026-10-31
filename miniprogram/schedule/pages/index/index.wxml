@@ -8,7 +8,7 @@
   </view>
 
   <view class="schedule-hero">
-    <view class="hero-kicker">WEEKLY SCHEDULE</view>
+    <view class="hero-kicker">本周日程</view>
     <view class="hero-title">每周上课日程</view>
     <view class="hero-hint" wx:if="{{isTeacher}}">查看所有课程，并按学生维护每周固定上课日和时间。</view>
     <view class="hero-hint" wx:elif="{{student}}">这里显示当前在读学生每周什么时候上课；日程由朱老师统一维护。</view>
@@ -161,7 +161,7 @@
         <view class="fixed-day-row {{item.enabled ? '' : 'fixed-day-disabled'}}" wx:for="{{fixedScheduleDraft}}" wx:key="weekday">
           <view class="fixed-day-head">
             <view class="fixed-day-name">{{item.label}}</view>
-            <switch checked="{{item.enabled}}" color="#4f8f73" data-index="{{index}}" bindchange="onFixedScheduleDayToggle" />
+            <switch checked="{{item.enabled}}" color="#14645A" data-index="{{index}}" bindchange="onFixedScheduleDayToggle" />
           </view>
           <view class="fixed-day-times">
             <picker mode="time" start="09:00" end="22:55" value="{{item.startTime}}" disabled="{{!item.enabled}}" data-index="{{index}}" data-field="startTime" bindchange="onFixedScheduleTimeChange">

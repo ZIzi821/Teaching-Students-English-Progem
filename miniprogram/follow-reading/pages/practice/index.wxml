@@ -15,7 +15,7 @@
 
   <block wx:elif="{{state === 'instructions'}}">
     <view class="hero">
-      <view class="eyebrow">LISTEN · GET READY · SPEAK</view>
+      <view class="eyebrow">听 · 准备 · 跟读</view>
       <view class="hero-title">先听老师，再自己读</view>
       <view class="hero-subtitle">{{lesson.title}} · 第 {{lesson.lessonNo || '—'}} 节</view>
     </view>
@@ -41,7 +41,7 @@
 
   <block wx:elif="{{state === 'awaiting_play' || state === 'playing' || state === 'countdown' || state === 'starting' || state === 'recording' || state === 'stopping' || state === 'between' || state === 'audio_retry' || state === 'item_retry'}}">
     <view class="progress-head">
-      <view><view class="eyebrow">FOLLOW READING</view><view class="position-title">第 {{currentIndex + 1}} 条</view></view>
+      <view><view class="eyebrow">跟读</view><view class="position-title">第 {{currentIndex + 1}} 条</view></view>
       <view class="position-pill">{{positionLabel}}</view>
     </view>
     <view class="progress-track"><view class="progress-fill" style="width: {{progressPercent}}%;"></view></view>

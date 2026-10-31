@@ -1,26 +1,15 @@
 <view class="student-tabbar" role="navigation" aria-label="学生端底部导航">
   <view class="student-tabbar-inner">
     <view class="tab-item {{current === 'learning' ? 'tab-active' : ''}}" data-key="learning" bindtap="switchTab">
-      <view class="tab-symbol learning-symbol">
-        <view class="book-left"></view>
-        <view class="book-right"></view>
-      </view>
+      <image class="tab-icon" src="/images/icons/tab/learning{{current === 'learning' ? '-active' : ''}}.svg" mode="aspectFit"></image>
       <view class="tab-label">学习</view>
     </view>
     <view class="tab-item {{current === 'achievements' ? 'tab-active' : ''}}" data-key="achievements" bindtap="switchTab">
-      <view class="tab-symbol achievement-symbol">
-        <view class="medal-circle">★</view>
-        <view class="medal-ribbon medal-ribbon-left"></view>
-        <view class="medal-ribbon medal-ribbon-right"></view>
-      </view>
+      <image class="tab-icon" src="/images/icons/tab/achievements{{current === 'achievements' ? '-active' : ''}}.svg" mode="aspectFit"></image>
       <view class="tab-label">成就</view>
     </view>
     <view class="tab-item {{current === 'schedule' ? 'tab-active' : ''}}" data-key="schedule" bindtap="switchTab">
-      <view class="tab-symbol schedule-symbol">
-        <view class="schedule-ring schedule-ring-left"></view>
-        <view class="schedule-ring schedule-ring-right"></view>
-        <view class="schedule-body"><view class="schedule-dot"></view><view class="schedule-dot"></view><view class="schedule-dot"></view></view>
-      </view>
+      <image class="tab-icon" src="/images/icons/tab/schedule{{current === 'schedule' ? '-active' : ''}}.svg" mode="aspectFit"></image>
       <view class="tab-label">日程</view>
     </view>
   </view>

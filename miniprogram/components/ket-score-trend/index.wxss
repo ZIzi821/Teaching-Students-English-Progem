@@ -2,10 +2,9 @@
   box-sizing: border-box;
   margin: 26rpx 0;
   padding: 26rpx;
-  border: 1rpx solid #d8e2dc;
-  border-radius: 22rpx;
-  background: #fffdfa;
-  box-shadow: 0 10rpx 26rpx rgba(67, 93, 81, 0.07);
+  border: 1rpx solid var(--accent-line);
+  border-radius: 24rpx;
+  background: var(--surface);
 }
 
 .trend-head,
@@ -25,15 +24,15 @@
 }
 
 .trend-title {
-  color: #2f493e;
-  font-size: 29rpx;
-  font-weight: 900;
+  color: var(--accent);
+  font-size: 28rpx;
+  font-weight: 600;
 }
 
 .trend-subtitle {
   margin-top: 6rpx;
-  color: #897e72;
-  font-size: 19rpx;
+  color: var(--ink-3);
+  font-size: 22rpx;
   line-height: 1.45;
 }
 
@@ -41,19 +40,19 @@
   flex-shrink: 0;
   padding: 7rpx 12rpx;
   border-radius: 999rpx;
-  color: #39765d;
-  background: #e5f1eb;
-  font-size: 19rpx;
-  font-weight: 800;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .trend-empty {
   margin-top: 20rpx;
   padding: 26rpx 20rpx;
   border-radius: 16rpx;
-  color: #817669;
-  background: #f7f3eb;
-  font-size: 21rpx;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  font-size: 22rpx;
   line-height: 1.55;
   text-align: center;
 }
@@ -65,35 +64,35 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 12rpx;
-  border-radius: 19rpx;
-  color: #fff;
-  background: #6e917f;
-  font-size: 18rpx;
-  font-weight: 900;
+  border-radius: 24rpx;
+  color: var(--on-fill);
+  background: var(--ink-3);
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .trend-summary {
   margin-top: 20rpx;
   padding: 19rpx 21rpx;
   border-radius: 16rpx;
-  background: linear-gradient(135deg, #edf7f2 0%, #f8f3e8 100%);
+  background: var(--accent-soft);
 }
 
 .trend-summary-label {
-  color: #6f786f;
-  font-size: 19rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
 }
 
 .trend-summary-score {
   margin-top: 4rpx;
-  color: #315f4c;
-  font-size: 39rpx;
-  font-weight: 900;
+  color: var(--accent);
+  font-size: 40rpx;
+  font-weight: 600;
 }
 
 .trend-summary-score text {
   margin-left: 4rpx;
-  font-size: 20rpx;
+  font-size: 22rpx;
 }
 
 .trend-change {
@@ -102,40 +101,40 @@
 }
 
 .trend-change view {
-  font-size: 27rpx;
-  font-weight: 900;
+  font-size: 28rpx;
+  font-weight: 600;
 }
 
 .trend-change text {
   display: block;
   margin-top: 3rpx;
-  color: #817669;
-  font-size: 17rpx;
+  color: var(--ink-2);
+  font-size: 22rpx;
 }
 
 .change-up {
-  color: #39765d;
+  color: var(--accent);
 }
 
 .change-down {
-  color: #a25b50;
+  color: var(--danger);
 }
 
 .change-steady,
 .change-baseline {
-  color: #83735e;
+  color: var(--ink-2);
 }
 
 .dimension-row {
   margin-top: 21rpx;
   padding-top: 19rpx;
-  border-top: 1rpx solid #eee7dd;
+  border-top: 1rpx solid var(--line);
 }
 
 .dimension-label {
-  color: #454039;
+  color: var(--ink);
   font-size: 22rpx;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .dimension-latest {
@@ -145,15 +144,15 @@
 }
 
 .dimension-latest > text {
-  color: #3d5d50;
-  font-size: 21rpx;
-  font-weight: 900;
+  color: var(--accent);
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .dimension-change {
   min-width: 50rpx;
-  font-size: 18rpx;
-  font-weight: 800;
+  font-size: 22rpx;
+  font-weight: 600;
   text-align: right;
 }
 
@@ -186,8 +185,8 @@
   position: relative;
   overflow: hidden;
   flex: 1;
-  border-radius: 8rpx 8rpx 3rpx 3rpx;
-  background: #f0ece6;
+  border-radius: 12rpx 12rpx 3rpx 3rpx;
+  background: var(--line);
 }
 
 .bar-fill {
@@ -195,7 +194,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: 8rpx 8rpx 3rpx 3rpx;
+  border-radius: 12rpx 12rpx 3rpx 3rpx;
 }
 
 .fill-grammar {
@@ -216,22 +215,22 @@
 
 .bar-score {
   margin-top: 5rpx;
-  color: #776d62;
-  font-size: 16rpx;
-  font-weight: 700;
+  color: var(--ink-2);
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .session-axis {
   margin-top: 19rpx;
   padding-top: 14rpx;
-  border-top: 1rpx dashed #ded6cb;
+  border-top: 1rpx dashed var(--line);
 }
 
 .session-axis-item view {
   overflow: hidden;
-  color: #61594f;
-  font-size: 16rpx;
-  font-weight: 800;
+  color: var(--ink-2);
+  font-size: 22rpx;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -239,21 +238,21 @@
 .session-axis-item text {
   display: block;
   margin-top: 3rpx;
-  color: #9a8f83;
-  font-size: 14rpx;
+  color: var(--ink-3);
+  font-size: 22rpx;
 }
 
 .trend-hidden-note,
 .trend-notice {
   margin-top: 14rpx;
-  color: #8d8277;
-  font-size: 18rpx;
+  color: var(--ink-3);
+  font-size: 22rpx;
   line-height: 1.5;
 }
 
 .trend-notice {
   padding: 13rpx 15rpx;
   border-radius: 12rpx;
-  color: #725f40;
-  background: #faf2df;
+  color: var(--ink-2);
+  background: var(--warn-soft);
 }

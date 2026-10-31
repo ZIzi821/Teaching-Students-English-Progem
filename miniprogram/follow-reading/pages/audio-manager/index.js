@@ -159,7 +159,7 @@ Page({
       title: "删除这段示范音？",
       content: `删除第 ${item.order} 条后，整项跟读会进入待补充状态；重新上传即可开放给学生。`,
       confirmText: "删除",
-      confirmColor: "#b6534b",
+      confirmColor: "#B0432F",
       success: (modal) => {
         if (!modal.confirm) return;
         this.setData({ deletingItemId: item.id });
