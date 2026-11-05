@@ -1,146 +1,107 @@
 <view class="page evaluation-page">
-  <view class="card state-card" wx:if="{{loading}}">正在计算预测与真实反馈的一致性…</view>
-  <view class="card state-card error" wx:elif="{{message}}">
+  <view class="card state-card" wx:if="{{loading && !evaluation}}">正在对比预测与真实反馈…</view>
+  <view class="card state-card" wx:elif="{{message}}">
     <view>{{message}}</view>
     <view class="retry" bindtap="loadEvaluation">重新加载</view>
   </view>
 
   <block wx:if="{{evaluation && student}}">
-    <view class="evaluation-hero">
-      <view class="hero-top">
-        <view>
-          <view class="hero-kicker">{{student.name}} · 英语记忆调度</view>
-          <view class="hero-title">算法效果评估</view>
-        </view>
+    <view class="eval-head">
+      <view class="eval-kicker">{{student.name}} · 背词复习安排</view>
+      <view class="eval-title-row">
+        <view class="eval-title">{{evaluation.verdict.title}}</view>
         <view class="status-pill status-{{evaluation.status.tone}}">{{evaluation.status.label}}</view>
       </view>
-      <view class="hero-description">检验系统预测的保持率，是否与后续真实复习反馈一致。</view>
-      <view class="status-description">{{evaluation.status.description}}</view>
-      <view class="sample-head">
-        <text>首轮判断门槛</text>
-        <text>{{evaluation.sampleSize}} / {{evaluation.sampleTarget}} 次 · {{evaluation.uniqueWordCount}} / {{evaluation.uniqueWordTarget}} 词</text>
-      </view>
-      <view class="sample-track">
-        <view class="sample-fill" style="width: {{evaluation.sampleProgressPercent}}%;"></view>
-      </view>
-      <view class="hero-meta">算法 {{evaluation.algorithmVersion}} · {{evaluation.dateRangeLabel}}</view>
+      <view class="eval-meaning">{{evaluation.verdict.meaning}}</view>
     </view>
 
-    <view class="card empty-evaluation" wx:if="{{!evaluation.hasSample}}">
-      <view class="empty-icon">∿</view>
-      <view class="empty-title">还没有可评估的数据</view>
-      <view class="empty-copy">第一次学习用于建立初始记忆状态；同一单词从第二次有效复习开始进入校准，页面会逐步出现结果。</view>
+    <view class="card sample-card" wx:if="{{evaluation.status.key === 'collecting'}}">
+      <view class="sample-line">
+        <text>首轮判断还需要</text>
+        <text class="sample-value">{{evaluation.sampleSize}} / {{evaluation.sampleTarget}} 次 · {{evaluation.uniqueWordCount}} / {{evaluation.uniqueWordTarget}} 词</text>
+      </view>
+      <view class="ui-bar"><view class="ui-bar-fill" style="width: {{evaluation.sampleProgressPercent}}%;"></view></view>
     </view>
 
-    <view class="metric-grid" wx:if="{{evaluation.hasSample}}">
-      <view class="metric-card">
-        <view class="metric-label">平均预测保持率</view>
-        <view class="metric-value">{{evaluation.predictedDisplay}}</view>
-        <view class="metric-note">复习前模型预测</view>
+    <view class="card compare-card" wx:if="{{evaluation.hasSample}}">
+      <view class="compare-row">
+        <view class="compare-label">系统预测记住</view>
+        <view class="ui-bar compare-bar"><view class="ui-bar-fill compare-predicted" style="width: {{evaluation.predictedRetentionPercent}}%;"></view></view>
+        <view class="compare-value">{{evaluation.predictedDisplay}}</view>
       </view>
-      <view class="metric-card">
-        <view class="metric-label">实际回忆率</view>
-        <view class="metric-value">{{evaluation.actualDisplay}}</view>
-        <view class="metric-note">按反馈口径统计</view>
+      <view class="compare-row">
+        <view class="compare-label">实际记住</view>
+        <view class="ui-bar compare-bar"><view class="ui-bar-fill" style="width: {{evaluation.actualRecallPercent}}%;"></view></view>
+        <view class="compare-value">{{evaluation.actualDisplay}}</view>
       </view>
-      <view class="metric-card">
-        <view class="metric-label">实际 − 预测</view>
-        <view class="metric-value metric-small">{{evaluation.gapDisplay}}</view>
-        <view class="metric-note">正值表示模型偏保守</view>
-      </view>
-      <view class="metric-card">
-        <view class="metric-label">Brier Score</view>
-        <view class="metric-value">{{evaluation.brierDisplay}}</view>
-        <view class="metric-note">越接近 0 越一致</view>
-      </view>
-    </view>
-
-    <view class="card calibration-card" wx:if="{{evaluation.hasSample}}">
-      <view class="section-title">校准分组</view>
-      <view class="section-hint">把预测概率分为 5 组，对比每组的预测值与实际回忆率。</view>
-      <view class="legend-row">
-        <view class="legend-item"><view class="legend-dot predicted-dot"></view>预测</view>
-        <view class="legend-item"><view class="legend-dot actual-dot"></view>实际</view>
-      </view>
-      <view class="bin-row" wx:for="{{evaluation.calibrationBins}}" wx:key="key">
-        <view class="bin-head">
-          <view class="bin-label">预测区间 {{item.label}}</view>
-          <view class="bin-sample">n={{item.sampleSize}}</view>
-        </view>
-        <view wx:if="{{item.hasSample}}">
-          <view class="bar-row">
-            <view class="bar-name">预测</view>
-            <view class="bar-track"><view class="bar-fill predicted-bar" style="width: {{item.predictedBarPercent}}%;"></view></view>
-            <view class="bar-value">{{item.predictedDisplay}}</view>
-          </view>
-          <view class="bar-row">
-            <view class="bar-name">实际</view>
-            <view class="bar-track"><view class="bar-fill actual-bar" style="width: {{item.actualBarPercent}}%;"></view></view>
-            <view class="bar-value">{{item.actualDisplay}}</view>
-          </view>
-        </view>
-        <view class="no-bin-data" wx:else>暂无样本</view>
-      </view>
-    </view>
-
-    <view class="card evidence-card">
-      <view class="section-title">证据质量</view>
-      <view class="quality-grid">
-        <view class="quality-item">
-          <view class="quality-value">{{evaluation.sampleSize}}</view>
-          <view class="quality-label">可评估反馈</view>
-        </view>
-        <view class="quality-item">
-          <view class="quality-value">{{evaluation.uniqueWordCount}}</view>
-          <view class="quality-label">涉及单词</view>
-        </view>
-        <view class="quality-item">
-          <view class="quality-value">{{evaluation.objectiveEvidencePercent}}%</view>
-          <view class="quality-label">小测证据占比</view>
-        </view>
-      </view>
-      <view class="quality-note">校准样本已整理：{{evaluation.excludedColdStartCount}} 次首次学习用于建立初始状态，{{evaluation.excludedQualityCount}} 条其他版本记录归入独立统计。</view>
-
-      <view class="source-list" wx:if="{{evaluation.sourceBreakdown.length}}">
-        <view class="source-row" wx:for="{{evaluation.sourceBreakdown}}" wx:key="key">
-          <view class="source-main">
-            <view class="source-title-row">
-              <view class="source-title">{{item.label}}</view>
-              <view class="objective-badge" wx:if="{{item.objective}}">小测证据</view>
-            </view>
-            <view class="source-meta">{{item.sampleSize}} 次 · 预测 {{item.predictedDisplay}} · 实际 {{item.actualDisplay}}</view>
-          </view>
-          <view class="source-score">Brier {{item.brierDisplay}}</view>
+      <view class="compare-recent">
+        <view class="compare-recent-row" wx:for="{{evaluation.recentRows}}" wx:key="label">
+          <text>{{item.label}} · {{item.sampleSize}} 次</text>
+          <text>预测 {{item.predictedDisplay}} · 实际 {{item.actualDisplay}}</text>
         </view>
       </view>
     </view>
 
-    <view class="card recent-card" wx:if="{{evaluation.hasSample}}">
-      <view class="section-title">近期变化</view>
-      <view class="recent-row" wx:for="{{evaluation.recentRows}}" wx:key="label">
-        <view>
-          <view class="recent-label">{{item.label}}</view>
-          <view class="recent-sample">{{item.sampleSize}} 次反馈</view>
-        </view>
-        <view class="recent-values">预测 {{item.predictedDisplay}} · 实际 {{item.actualDisplay}}</view>
-      </view>
-    </view>
-
-    <view class="card recommendation-card">
-      <view class="section-title">下一步建议</view>
+    <view class="section-title">下一步</view>
+    <view class="card">
       <view class="recommendation-row" wx:for="{{evaluation.recommendations}}" wx:key="index">
         <view class="recommendation-index">{{index + 1}}</view>
-        <view>{{item}}</view>
+        <view class="recommendation-text">{{item}}</view>
       </view>
     </view>
 
-    <view class="card method-card">
-      <view class="section-title">统计口径</view>
-      <view class="method-line">{{evaluation.outcomeDefinition}}</view>
-      <view class="method-line">{{evaluation.samplingNote}}</view>
-      <view class="method-line">{{evaluation.evidenceNote}}</view>
-      <view class="method-line">{{evaluation.scoreNote}}</view>
-      <view class="teacher-note">这些指标用于检查调度算法，参数调整由老师结合课堂表现决定。</view>
-    </view>
+    <block wx:if="{{evaluation.activeBins.length}}">
+      <view class="section-title">校准分组</view>
+      <view class="section-hint">按系统预测的把握程度分组，看每组实际记住了多少。</view>
+      <view class="card">
+        <view class="bin-row" wx:for="{{evaluation.activeBins}}" wx:key="key">
+          <view class="bin-head">
+            <view class="bin-label">预测 {{item.label}} 的复习 · {{item.sampleSize}} 次</view>
+            <view class="bin-flag" wx:if="{{item.largeGap}}">偏差大</view>
+          </view>
+          <view class="compare-row">
+            <view class="compare-label">预测</view>
+            <view class="ui-bar compare-bar"><view class="ui-bar-fill compare-predicted" style="width: {{item.predictedRetentionPercent}}%;"></view></view>
+            <view class="compare-value">{{item.predictedDisplay}}</view>
+          </view>
+          <view class="compare-row">
+            <view class="compare-label">实际</view>
+            <view class="ui-bar compare-bar"><view class="ui-bar-fill" style="width: {{item.actualRecallPercent}}%;"></view></view>
+            <view class="compare-value">{{item.actualDisplay}}</view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <view class="detail-toggle" bindtap="toggleDetails">{{showDetails ? '收起统计细节' : '查看统计细节'}}</view>
+
+    <block wx:if="{{showDetails}}">
+      <view class="card">
+        <view class="detail-row"><text>Brier Score</text><text>{{evaluation.brierDisplay}}（越接近 0 越一致）</text></view>
+        <view class="detail-row"><text>实际 − 预测</text><text>{{evaluation.gapDisplay}}</text></view>
+        <view class="detail-row"><text>可评估反馈</text><text>{{evaluation.sampleSize}} 次 · {{evaluation.uniqueWordCount}} 个词</text></view>
+        <view class="detail-row"><text>小测证据占比</text><text>{{evaluation.objectiveEvidencePercent}}%</text></view>
+        <view class="detail-row"><text>算法与时间</text><text>{{evaluation.algorithmVersion}} · {{evaluation.dateRangeLabel}}</text></view>
+        <view class="detail-note">{{evaluation.excludedColdStartCount}} 次首次学习用于建立初始状态，{{evaluation.excludedQualityCount}} 条其他版本记录不参与校准。</view>
+      </view>
+
+      <view class="card" wx:if="{{evaluation.sourceBreakdown.length}}">
+        <view class="detail-title">按反馈来源</view>
+        <view class="detail-row" wx:for="{{evaluation.sourceBreakdown}}" wx:key="key">
+          <text>{{item.label}}{{item.objective ? '（小测）' : ''}}</text>
+          <text>{{item.sampleSize}} 次 · 预测 {{item.predictedDisplay}} · 实际 {{item.actualDisplay}}</text>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="detail-title">统计口径</view>
+        <view class="detail-note">{{evaluation.outcomeDefinition}}</view>
+        <view class="detail-note">{{evaluation.samplingNote}}</view>
+        <view class="detail-note">{{evaluation.evidenceNote}}</view>
+        <view class="detail-note">{{evaluation.scoreNote}}</view>
+      </view>
+    </block>
+
+    <view class="teacher-note">这些指标用于检查调度算法，参数调整由老师结合课堂表现决定。</view>
   </block>
 </view>

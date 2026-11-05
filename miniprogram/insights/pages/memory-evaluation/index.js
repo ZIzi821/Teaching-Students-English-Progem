@@ -1,8 +1,37 @@
 const { callCloud } = require("../../../utils/cloud");
-const STATUS_DESCRIPTIONS = {
-  collecting: "样本还少，先积累数据，不调整参数。",
-  needs_calibration: "预测与反馈已有明显偏差，建议按区间和来源排查。",
-  initially_stable: "首轮校准表现稳定，继续收集数据验证。",
+const LARGE_BIN_GAP_POINTS = 15;
+
+// 把统计结果翻译成老师能直接判断的一句话结论。
+const buildVerdict = (source, statusKey) => {
+  const gap = Number(source.calibrationGapPoints || 0);
+  if (statusKey === "collecting") {
+    return {
+      title: "数据还不够，先继续背词",
+      meaning: "复习反馈积累到首轮门槛后，这里会给出复习安排是否合适的判断。",
+    };
+  }
+  if (statusKey === "initially_stable") {
+    return {
+      title: "复习安排基本合适",
+      meaning: "系统预测的记住比例和孩子实际表现接近，保持现有安排即可。",
+    };
+  }
+  if (gap > 5) {
+    return {
+      title: "复习安排偏密",
+      meaning: "孩子实际记住的比系统预测的多，部分单词可能复习得过于频繁。",
+    };
+  }
+  if (gap < -5) {
+    return {
+      title: "复习间隔偏长",
+      meaning: "孩子实际记住的比系统预测的少，部分单词需要更早安排复习。",
+    };
+  }
+  return {
+    title: "整体接近，单个词偏差较大",
+    meaning: "总体比例接近，但具体到单个单词时预测还不够准，先看下方分组找出偏差区间。",
+  };
 };
 
 const formatPercent = (value) => (
@@ -33,6 +62,7 @@ Page({
     message: "",
     student: null,
     evaluation: null,
+    showDetails: false,
   },
 
   onLoad(options) {
@@ -98,9 +128,13 @@ Page({
     const firstDate = formatDate(source.firstObservedAtMs);
     const lastDate = formatDate(source.lastObservedAtMs);
     return Object.assign({}, source, {
-      status: Object.assign({}, status, {
-        description: STATUS_DESCRIPTIONS[status.key] || STATUS_DESCRIPTIONS.collecting,
-      }),
+      status,
+      verdict: buildVerdict(source, status.key),
+      activeBins: calibrationBins
+        .filter((item) => item.hasSample)
+        .map((item) => Object.assign({}, item, {
+          largeGap: Math.abs(Number(item.calibrationGapPoints || 0)) > LARGE_BIN_GAP_POINTS,
+        })),
       hasSample: Number(source.sampleSize || 0) > 0,
       predictedDisplay: formatPercent(source.predictedRetentionPercent),
       actualDisplay: formatPercent(source.actualRecallPercent),
@@ -115,5 +149,9 @@ Page({
         ? firstDate === lastDate ? firstDate : `${firstDate} – ${lastDate}`
         : "尚无可评估日期",
     });
+  },
+
+  toggleDetails() {
+    this.setData({ showDetails: !this.data.showDetails });
   },
 });

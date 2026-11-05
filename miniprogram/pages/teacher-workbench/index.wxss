@@ -75,7 +75,7 @@
   margin: 34rpx 0 18rpx;
   color: var(--ink);
   font-size: 30rpx;
-  font-weight: 750;
+  font-weight: 600;
 }
 
 .quick-card {
@@ -232,7 +232,7 @@
 .student-name {
   color: var(--ink);
   font-size: 30rpx;
-  font-weight: 750;
+  font-weight: 600;
 }
 
 .nickname {
@@ -265,4 +265,26 @@
 
 .restore-disabled {
   opacity: 0.58;
+}
+
+.calibration-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.calibration-hint {
+  color: var(--ink-3);
+  font-size: 26rpx;
+}
+
+.calibration-group {
+  margin-bottom: 24rpx;
+}
+
+.calibration-empty {
+  color: var(--ink-3);
+  font-size: 26rpx;
+  text-align: center;
 }

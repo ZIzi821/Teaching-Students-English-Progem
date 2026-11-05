@@ -20,6 +20,22 @@
       </view>
     </view>
 
+    <view class="calibration-head">
+      <view class="section-title">记忆算法校准</view>
+      <view class="calibration-hint" wx:if="{{calibrationLoading}}">正在检查…</view>
+    </view>
+    <view class="ui-group calibration-group" wx:if="{{calibrationRows.length}}">
+      <view class="ui-row" wx:for="{{calibrationRows}}" wx:key="studentId" data-id="{{item.studentId}}" bindtap="goMemoryEvaluation" hover-class="ui-pressed">
+        <view class="ui-row-main">
+          <view class="ui-row-title">{{item.name}}</view>
+          <view class="ui-row-note">{{item.note}}</view>
+        </view>
+        <view class="ui-chip {{item.tone === 'attention' ? 'ui-chip-warn' : item.tone === 'stable' ? 'ui-chip-accent' : ''}}">{{item.statusLabel}}</view>
+        <view class="ui-chevron"></view>
+      </view>
+    </view>
+    <view class="card empty-card calibration-empty" wx:elif="{{!calibrationLoading}}">开启背单词的学生会显示在这里。</view>
+
     <view class="section-title">快捷管理</view>
     <view class="quick-grid">
       <view class="quick-card" bindtap="goStudents">

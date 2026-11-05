@@ -38,6 +38,10 @@ const vocabularyMarkup = read("miniprogram/pages/vocabulary/index.wxml");
 assert(vocabularyScript.includes("goMemoryEvaluation"), "teacher navigation handler is missing");
 assert(vocabularyMarkup.includes('wx:if="{{isTeacherManager}}"') && vocabularyMarkup.includes('bindtap="goMemoryEvaluation"'), "teacher-only entry is missing");
 assert(!read("miniprogram/pages/student-detail/index.wxml").includes("goMemoryEvaluation"), "diagnostic entry must stay out of the student overview");
+const workbenchMarkup = read("miniprogram/pages/teacher-workbench/index.wxml");
+const workbenchScript = read("miniprogram/pages/teacher-workbench/index.js");
+assert(workbenchMarkup.includes("记忆算法校准") && workbenchMarkup.includes('bindtap="goMemoryEvaluation"'), "teacher management must list calibration status per student");
+assert(workbenchScript.includes('type: "getEnglishMemoryEvaluation"'), "teacher management must read each student's calibration status");
 
 const pageMarkup = read("miniprogram/insights/pages/memory-evaluation/index.wxml");
 assert(pageMarkup.includes("Brier Score"), "Brier score explanation is missing");
