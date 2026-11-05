@@ -1,4 +1,12 @@
-const { ALGORITHM_VERSION, DAY_MS } = require("./englishMemoryScheduler");
+const {
+  ALGORITHM_VERSION,
+  DAY_MS,
+  FORGETTING_CURVE_DECAY,
+  FORGETTING_CURVE_FACTOR,
+  MAX_MEMORY_FACTOR,
+  MIN_MEMORY_FACTOR,
+  normalizeMemoryFactor,
+} = require("./englishMemoryScheduler");
 
 const MIN_EVALUATION_SAMPLE = 20;
 const MIN_UNIQUE_WORDS = 5;
@@ -6,6 +14,18 @@ const RECOMMENDED_SAMPLE = 50;
 const HISTORY_LIMIT_PER_WORD = 30;
 const CALIBRATION_BIN_COUNT = 5;
 const FUTURE_TIMESTAMP_TOLERANCE_MS = 5 * 60 * 1000;
+// 校准：先把样本收缩到当前系数（样本越少越保守），再限制单次调整幅度。
+const CALIBRATION_PRIOR_SAMPLE = 100;
+const CALIBRATION_MIN_SAMPLE = 50;
+// 预测与实际的差距至少要超过约两个标准误，才认为不是偶然波动。
+const CALIBRATION_SIGNIFICANCE_Z = 2;
+const CALIBRATION_MAX_STEP = 0.2;
+const CALIBRATION_MIN_CHANGE = 0.05;
+const CALIBRATION_REVIEW_SAMPLE = 50;
+const CALIBRATION_HISTORY_LIMIT = 20;
+const CALIBRATION_SEARCH_MIN = 0.5;
+const CALIBRATION_SEARCH_MAX = 2;
+const CALIBRATION_SEARCH_STEP = 0.01;
 const SUCCESS_RATINGS = new Set(["hard", "known", "easy"]);
 const VALID_RATINGS = new Set(["forgot", "hard", "known", "easy"]);
 
@@ -167,9 +187,113 @@ const buildRecommendations = ({
   return recommendations;
 };
 
-const buildMemoryEvaluation = (progressItems, nowMs = Date.now()) => {
+// 由事件记录的预测保持率和当时的系数，反推“距上次复习的天数 / 原始稳定天数”。
+const getBaseElapsedRatio = (event) => {
+  const retrievability = clamp(event.predicted, 0.001, 0.9999);
+  return event.memoryFactor * (Math.pow(retrievability, -1 / -FORGETTING_CURVE_DECAY) - 1) / FORGETTING_CURVE_FACTOR;
+};
+
+const predictWithFactor = (event, memoryFactor) => clamp(
+  Math.pow(1 + FORGETTING_CURVE_FACTOR * event.baseElapsedRatio / memoryFactor, FORGETTING_CURVE_DECAY),
+  0,
+  1
+);
+
+const scoreFactor = (events, memoryFactor) => {
+  let logLoss = 0;
+  let predictedTotal = 0;
+  events.forEach((event) => {
+    const predicted = predictWithFactor(event, memoryFactor);
+    const clipped = clamp(predicted, 0.01, 0.99);
+    predictedTotal += predicted;
+    logLoss += -(event.outcome * Math.log(clipped) + (1 - event.outcome) * Math.log(1 - clipped));
+  });
+  return {
+    logLoss: events.length ? logLoss / events.length : 0,
+    predictedRetention: events.length ? predictedTotal / events.length : 0,
+  };
+};
+
+const fitMemoryFactor = (events) => {
+  let best = { factor: 1, logLoss: Infinity };
+  for (let factor = CALIBRATION_SEARCH_MIN; factor <= CALIBRATION_SEARCH_MAX + 1e-9; factor += CALIBRATION_SEARCH_STEP) {
+    const { logLoss } = scoreFactor(events, factor);
+    if (logLoss < best.logLoss) best = { factor: round(factor, 2), logLoss };
+  }
+  return best.factor;
+};
+
+const normalizeCalibrationRecord = (calibration) => {
+  const source = calibration || {};
+  return {
+    factor: normalizeMemoryFactor(source.factor),
+    appliedAtMs: asTimestamp(source.appliedAtMs),
+    previousFactor: normalizeMemoryFactor(source.previousFactor),
+    history: Array.isArray(source.history) ? source.history.slice(-CALIBRATION_HISTORY_LIMIT) : [],
+  };
+};
+
+const buildCalibrationSuggestion = ({ events, summary, hasEnoughSample, calibration }) => {
+  const currentFactor = calibration.factor;
+  const applied = calibration.appliedAtMs > 0 && calibration.history.length > 0;
+  const base = {
+    currentFactor,
+    applied,
+    appliedAtMs: calibration.appliedAtMs,
+    history: calibration.history,
+    sampleSinceCalibration: summary.sampleSize,
+    reviewReady: applied && summary.sampleSize >= CALIBRATION_REVIEW_SAMPLE,
+    isDefault: currentFactor === 1,
+    suggestedFactor: currentFactor,
+    changePercent: 0,
+    canApply: false,
+    previewPredictedPercent: null,
+    previewGapPoints: null,
+  };
+  if (!hasEnoughSample || summary.sampleSize < CALIBRATION_MIN_SAMPLE) {
+    return Object.assign(base, { reason: "collecting", minSample: CALIBRATION_MIN_SAMPLE });
+  }
+  const actualRate = summary.successCount / summary.sampleSize;
+  const predictedRate = events.reduce((sum, event) => sum + event.predicted, 0) / summary.sampleSize;
+  const standardError = Math.sqrt(Math.max(0.0001, predictedRate * (1 - predictedRate)) / summary.sampleSize);
+  if (Math.abs(actualRate - predictedRate) < CALIBRATION_SIGNIFICANCE_Z * standardError) {
+    return Object.assign(base, {
+      reason: "not_significant",
+      minSample: CALIBRATION_MIN_SAMPLE,
+      requiredGapPoints: round(CALIBRATION_SIGNIFICANCE_Z * standardError * 100, 1),
+    });
+  }
+  const fitted = fitMemoryFactor(events);
+  const weight = summary.sampleSize / (summary.sampleSize + CALIBRATION_PRIOR_SAMPLE);
+  const shrunk = currentFactor * Math.pow(fitted / currentFactor, weight);
+  const stepped = clamp(
+    shrunk,
+    currentFactor * (1 - CALIBRATION_MAX_STEP),
+    currentFactor * (1 + CALIBRATION_MAX_STEP)
+  );
+  const suggestedFactor = round(clamp(stepped, MIN_MEMORY_FACTOR, MAX_MEMORY_FACTOR), 2);
+  const changePercent = Math.round((suggestedFactor / currentFactor - 1) * 100);
+  const currentScore = scoreFactor(events, currentFactor);
+  const suggestedScore = scoreFactor(events, suggestedFactor);
+  // 方向必须与实际偏差一致：实际记住更多才延长间隔，反之缩短。
+  const sameDirection = (actualRate - predictedRate) * (suggestedFactor - currentFactor) > 0;
+  const improves = sameDirection && suggestedScore.logLoss < currentScore.logLoss;
+  return Object.assign(base, {
+    fittedFactor: fitted,
+    suggestedFactor,
+    changePercent,
+    canApply: improves && Math.abs(suggestedFactor / currentFactor - 1) >= CALIBRATION_MIN_CHANGE,
+    reason: improves ? "ready" : "already_best",
+    previewPredictedPercent: asPercent(suggestedScore.predictedRetention),
+    previewGapPoints: round((actualRate - suggestedScore.predictedRetention) * 100, 1),
+  });
+};
+
+const buildMemoryEvaluation = (progressItems, nowMs = Date.now(), calibrationRecord = null) => {
   const safeNowMs = Math.max(0, asFiniteNumber(nowMs, Date.now()));
+  const calibration = normalizeCalibrationRecord(calibrationRecord);
   const events = [];
+  let excludedBeforeCalibrationCount = 0;
   let historyEventCount = 0;
   let retainedWordCount = 0;
   let excludedColdStartCount = 0;
@@ -202,6 +326,10 @@ const buildMemoryEvaluation = (progressItems, nowMs = Date.now()) => {
         excludedColdStartCount += 1;
         return;
       }
+      if (calibration.appliedAtMs && reviewedAtMs > 0 && reviewedAtMs < calibration.appliedAtMs) {
+        excludedBeforeCalibrationCount += 1;
+        return;
+      }
       if (
         !VALID_RATINGS.has(rating)
         || reviewedAtMs <= 0
@@ -214,15 +342,19 @@ const buildMemoryEvaluation = (progressItems, nowMs = Date.now()) => {
         return;
       }
 
-      events.push({
+      const memoryFactor = normalizeMemoryFactor(event && event.memoryFactor);
+      const reviewEvent = {
         wordKey,
         reviewedAtMs,
         rating,
         source,
         objective: isObjectiveSource(source),
         predicted,
+        memoryFactor,
         outcome: SUCCESS_RATINGS.has(rating) ? 1 : 0,
-      });
+      };
+      reviewEvent.baseElapsedRatio = getBaseElapsedRatio(reviewEvent);
+      events.push(reviewEvent);
     });
   });
 
@@ -276,6 +408,8 @@ const buildMemoryEvaluation = (progressItems, nowMs = Date.now()) => {
     excludedColdStartCount,
     excludedInvalidCount,
     excludedOtherVersionCount,
+    excludedBeforeCalibrationCount,
+    calibration: buildCalibrationSuggestion({ events, summary, hasEnoughSample, calibration }),
     objectiveEvidenceCount,
     objectiveEvidencePercent,
     firstObservedAtMs: firstObservedAtMs ? firstObservedAtMs.reviewedAtMs : 0,
@@ -299,6 +433,11 @@ const buildMemoryEvaluation = (progressItems, nowMs = Date.now()) => {
 
 module.exports = {
   CALIBRATION_BIN_COUNT,
+  CALIBRATION_HISTORY_LIMIT,
+  CALIBRATION_MAX_STEP,
+  CALIBRATION_MIN_SAMPLE,
+  CALIBRATION_REVIEW_SAMPLE,
+  fitMemoryFactor,
   HISTORY_LIMIT_PER_WORD,
   MIN_EVALUATION_SAMPLE,
   MIN_UNIQUE_WORDS,

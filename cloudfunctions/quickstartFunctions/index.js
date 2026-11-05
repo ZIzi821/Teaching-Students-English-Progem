@@ -4,6 +4,7 @@ const appConfig = require("./config");
 const vocabulary = require("./vocabulary");
 const vocabularyQuiz = require("./vocabularyQuiz");
 const englishMemoryAnalytics = require("./englishMemoryAnalytics");
+const englishMemoryScheduler = require("./englishMemoryScheduler");
 const frenchLearning = require("./frenchLearning");
 const courseWorkflow = require("./courseWorkflow");
 const teacherTodos = require("./teacherTodos");
@@ -3056,8 +3057,76 @@ const getEnglishMemoryEvaluation = async (event) => {
       grade: String(studentRes.data.grade || "").slice(0, 40),
       vocabularyEnabled: studentRes.data.vocabularyEnabled === true,
     },
-    evaluation: englishMemoryAnalytics.buildMemoryEvaluation(progressItems),
+    evaluation: englishMemoryAnalytics.buildMemoryEvaluation(
+      progressItems,
+      Date.now(),
+      studentRes.data.englishMemoryCalibration
+    ),
   };
+};
+
+// 老师确认后才写入学生的记忆速度系数；建议值由服务端重新计算，不信任前端传来的数值。
+const saveEnglishMemoryCalibration = async (studentId, student, record) => {
+  const current = student.englishMemoryCalibration || {};
+  const history = (Array.isArray(current.history) ? current.history : [])
+    .concat(record)
+    .slice(-englishMemoryAnalytics.CALIBRATION_HISTORY_LIMIT);
+  await db.collection("students").doc(studentId).update({
+    data: {
+      englishMemoryCalibration: db.command.set({
+        factor: record.factor,
+        previousFactor: record.previousFactor,
+        appliedAtMs: record.appliedAtMs,
+        sampleSize: record.sampleSize,
+        history,
+      }),
+    },
+  });
+};
+
+const updateEnglishMemoryCalibration = async (event) => {
+  await ensureTeacher();
+  await createOneCollection("vocabularyProgress");
+  const data = event.data || {};
+  const studentId = String(data.studentId || "").trim();
+  const action = String(data.action || "").trim();
+  if (!studentId) throw createError("INVALID_STUDENT", "学生信息不完整，请返回后重试");
+  if (["apply", "reset"].indexOf(action) < 0) throw createError("INVALID_CALIBRATION", "校准操作无效，请刷新后重试");
+  const studentRes = await db.collection("students").doc(studentId).get();
+  const student = studentRes.data;
+  if (!student) throw createError("INVALID_STUDENT", "学生不存在或已删除");
+  const currentFactor = englishMemoryScheduler.getStudentMemoryFactor(student);
+  const nowMs = Date.now();
+  if (action === "reset") {
+    if (currentFactor === englishMemoryScheduler.DEFAULT_MEMORY_FACTOR) {
+      throw createError("CALIBRATION_ALREADY_DEFAULT", "当前已经是默认设置");
+    }
+    await saveEnglishMemoryCalibration(studentId, student, {
+      action: "reset",
+      factor: englishMemoryScheduler.DEFAULT_MEMORY_FACTOR,
+      previousFactor: currentFactor,
+      appliedAtMs: nowMs,
+      sampleSize: 0,
+    });
+    return { success: true, factor: englishMemoryScheduler.DEFAULT_MEMORY_FACTOR };
+  }
+  const progressItems = await loadAllVocabularyDocuments("vocabularyProgress", { studentId });
+  const evaluation = englishMemoryAnalytics.buildMemoryEvaluation(progressItems, nowMs, student.englishMemoryCalibration);
+  const suggestion = evaluation.calibration;
+  if (!suggestion.canApply) {
+    throw createError("CALIBRATION_NOT_READY", "当前数据不需要调整，请继续积累复习反馈");
+  }
+  if (Math.abs(Number(data.expectedFactor) - suggestion.suggestedFactor) > 0.001) {
+    throw createError("CALIBRATION_CHANGED", "复习数据刚刚更新，请刷新后再确认");
+  }
+  await saveEnglishMemoryCalibration(studentId, student, {
+    action: "apply",
+    factor: suggestion.suggestedFactor,
+    previousFactor: currentFactor,
+    appliedAtMs: nowMs,
+    sampleSize: evaluation.sampleSize,
+  });
+  return { success: true, factor: suggestion.suggestedFactor };
 };
 
 const getEmptyVocabularySummary = (dailyGoal) => ({
@@ -3594,7 +3663,12 @@ const reviewVocabularyWord = async (event) => {
     }
     const existing = existingRes.data && existingRes.data.length ? existingRes.data[0] : null;
     const existingDailyStats = dailyStatsRes.data && dailyStatsRes.data.length ? dailyStatsRes.data[0] : null;
-    const reviewProgress = vocabulary.buildReviewProgress(existing, data.result, nowMs);
+    const reviewProgress = vocabulary.buildReviewProgress(
+      existing,
+      data.result,
+      nowMs,
+      englishMemoryScheduler.getStudentMemoryFactor(currentStudent)
+    );
     const updateData = Object.assign({}, reviewProgress, {
       studentId,
       wordKey,
@@ -3694,6 +3768,7 @@ const reviewVocabularyQuizAnswer = async (event) => {
       questionType,
       answerMode,
       learningDay,
+      memoryFactor: englishMemoryScheduler.getStudentMemoryFactor(studentRes.data),
     }, nowMs);
     const updateData = Object.assign({}, next, {
       studentId,
@@ -6212,6 +6287,8 @@ exports.main = async (event) => {
         return await getVocabularyData(event);
       case "getEnglishMemoryEvaluation":
         return await getEnglishMemoryEvaluation(event);
+      case "updateEnglishMemoryCalibration":
+        return await updateEnglishMemoryCalibration(event);
       case "getVocabularyCatalog":
         return await getVocabularyCatalog(event);
       case "reviewVocabularyWord":

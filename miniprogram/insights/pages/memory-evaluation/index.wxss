@@ -241,3 +241,70 @@
   font-size: 24rpx;
   text-align: center;
 }
+
+.calibration-card {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+
+.calibration-title {
+  color: var(--accent);
+  font-size: 34rpx;
+  font-weight: 600;
+}
+
+.calibration-text {
+  margin-top: 8rpx;
+  color: var(--ink-2);
+  font-size: 30rpx;
+  line-height: 1.6;
+}
+
+.calibration-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12rpx;
+  margin-top: 24rpx;
+}
+
+.calibration-disabled {
+  opacity: 0.5;
+}
+
+.calibration-status {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.calibration-status-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.calibration-status-title {
+  color: var(--ink);
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.calibration-status-text {
+  margin-top: 4rpx;
+  color: var(--ink-2);
+  font-size: 26rpx;
+}
+
+.calibration-reset {
+  flex-shrink: 0;
+  padding: 10rpx 20rpx;
+  border: 1rpx solid var(--line-strong);
+  border-radius: 12rpx;
+  color: var(--danger);
+  font-size: 26rpx;
+}
+
+.calibration-note {
+  color: var(--ink-2);
+  font-size: 26rpx;
+  line-height: 1.6;
+}

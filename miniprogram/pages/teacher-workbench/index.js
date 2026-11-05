@@ -97,9 +97,17 @@ Page({
       return Object.assign(row, { tone: "unknown", statusLabel: "暂不可用", note: "点进去重新读取" });
     }
     const status = evaluation.status;
-    const note = status.key === "collecting"
+    const calibration = evaluation.calibration || {};
+    const calibrated = calibration.applied === true && calibration.isDefault === false;
+    let note = status.key === "collecting"
       ? `还需 ${Math.max(0, Number(evaluation.remainingToFirstEvaluation) || 0)} 次反馈、${Math.max(0, Number(evaluation.remainingUniqueWords) || 0)} 个词`
       : `预测记住 ${evaluation.predictedRetentionPercent}% · 实际 ${evaluation.actualRecallPercent}%`;
+    if (calibrated && status.key === "collecting") note = `已校准，之后已有 ${calibration.sampleSinceCalibration} 次反馈`;
+    // 有可应用的建议时提示“需要校准”；校准后积累够新数据时提示“可复查”。
+    if (calibration.canApply) return Object.assign(row, { tone: "attention", statusLabel: "需要校准", note });
+    if (calibration.reviewReady) return Object.assign(row, { tone: "attention", statusLabel: "可复查", note });
+    if (calibrated) return Object.assign(row, { tone: "stable", statusLabel: "已校准", note });
+    if (status.key === "needs_calibration") return Object.assign(row, { tone: "collecting", statusLabel: "继续观察", note });
     return Object.assign(row, { tone: status.tone || "collecting", statusLabel: status.label, note });
   },
 

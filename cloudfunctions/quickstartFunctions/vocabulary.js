@@ -550,6 +550,7 @@ const buildVocabularyView = ({
   student,
 }) => {
   const normalizedSettings = normalizeVocabularySettings(settings, library, student);
+  const memoryFactor = englishMemoryScheduler.getStudentMemoryFactor(student);
   const currentLearningDay = getLearningDay(nowMs);
   const selectedLevels = new Set(normalizedSettings.levelIds);
   const disabledUnitIds = new Set(normalizedSettings.disabledUnitIds || []);
@@ -675,7 +676,7 @@ const buildVocabularyView = ({
     const progress = progressByKey.get(key) || {};
     if (progress.excluded === true) return;
     const memoryProgress = englishMemoryScheduler.normalizeProgress(progress, nowMs);
-    const memorySnapshot = englishMemoryScheduler.getMemorySnapshot(memoryProgress, nowMs);
+    const memorySnapshot = englishMemoryScheduler.getMemorySnapshot(memoryProgress, nowMs, memoryFactor);
     const stage = clampStage(progress.stage);
     const nextReviewAtMs = Number(memorySnapshot.nextReviewAtMs) || 0;
     const lastReviewedAtMs = Number(memorySnapshot.lastReviewedAtMs) || 0;
@@ -712,7 +713,7 @@ const buildVocabularyView = ({
       lapses: memorySnapshot.lapses,
       hardCount: memorySnapshot.hardCount,
       currentIntervalDays: memorySnapshot.currentIntervalDays,
-      memoryPriorityScore: englishMemoryScheduler.getReviewPriorityScore(memoryProgress, nowMs),
+      memoryPriorityScore: englishMemoryScheduler.getReviewPriorityScore(memoryProgress, nowMs, memoryFactor),
       memoryScheduleLabel: getMemoryScheduleLabel({ reviewCount, isDue, nextReviewAtMs }, nowMs),
     });
     if (!meaning) {
@@ -756,7 +757,7 @@ const buildVocabularyView = ({
   const newDueWords = dueWords.filter((item) => !reviewedTodayKeys.has(item.key));
   const todayWords = retainedReviewedWords.concat(newDueWords.slice(0, remainingSlots));
   const todayReviewedCount = retainedReviewedWords.length;
-  const memoryOverview = englishMemoryScheduler.buildMemoryOverview(confirmedWords, nowMs);
+  const memoryOverview = englishMemoryScheduler.buildMemoryOverview(confirmedWords, nowMs, memoryFactor);
   const summary = {
     totalCount: confirmedWords.length,
     totalWords: confirmedWords.length,
@@ -803,7 +804,7 @@ const buildVocabularyView = ({
   };
 };
 
-const buildReviewProgress = (existing, result, nowMs = Date.now()) => {
+const buildReviewProgress = (existing, result, nowMs = Date.now(), memoryFactor = 1) => {
   const current = existing || {};
   const currentStage = clampStage(current.stage);
   let nextStage = currentStage;
@@ -813,6 +814,7 @@ const buildReviewProgress = (existing, result, nowMs = Date.now()) => {
   if (result === "easy") nextStage = 5;
   const scheduled = englishMemoryScheduler.scheduleReview(current, result, nowMs, {
     source: "self_rating",
+    memoryFactor,
   });
   const isCorrect = result === "known" || result === "easy";
   return Object.assign({}, scheduled, {
@@ -858,7 +860,7 @@ const buildQuizProgress = (existing, options = {}, nowMs = Date.now()) => {
       current,
       correct ? "known" : "forgot",
       nowMs,
-      { source: correct ? "quiz_input" : `quiz_${answerMode}_wrong` }
+      { source: correct ? "quiz_input" : `quiz_${answerMode}_wrong`, memoryFactor: options.memoryFactor }
     )
     : englishMemoryScheduler.normalizeProgress(current, nowMs);
   return Object.assign({}, scheduled, {

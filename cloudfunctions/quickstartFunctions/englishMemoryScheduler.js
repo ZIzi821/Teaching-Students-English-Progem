@@ -12,6 +12,12 @@ const VALID_STATES = new Set(["new", "learning", "review", "mastered"]);
 const FORGETTING_CURVE_FACTOR = 19 / 81;
 const FORGETTING_CURVE_DECAY = -0.5;
 
+// 每个孩子的记忆速度系数：1 表示默认曲线；大于 1 表示记得更牢、复习间隔更长。
+// 系数只在计算时作用于 stabilityDays，单词进度里保存的仍是未缩放的原始值。
+const DEFAULT_MEMORY_FACTOR = 1;
+const MIN_MEMORY_FACTOR = 0.7;
+const MAX_MEMORY_FACTOR = 1.5;
+
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 const asNumber = (value, fallback = 0) => {
   const parsed = Number(value);
@@ -22,6 +28,13 @@ const round = (value, digits = 3) => {
   return Math.round(value * multiplier) / multiplier;
 };
 const normalizeNowMs = (value) => Math.max(0, asNumber(value, Date.now()));
+const normalizeMemoryFactor = (value) => {
+  const factor = asNumber(value, DEFAULT_MEMORY_FACTOR);
+  return factor > 0 ? round(clamp(factor, MIN_MEMORY_FACTOR, MAX_MEMORY_FACTOR), 3) : DEFAULT_MEMORY_FACTOR;
+};
+const getStudentMemoryFactor = (student) => normalizeMemoryFactor(
+  student && student.englishMemoryCalibration && student.englishMemoryCalibration.factor
+);
 
 const normalizeRating = (value) => {
   const rating = String(value || "").toLowerCase();
@@ -31,11 +44,11 @@ const normalizeRating = (value) => {
   return "";
 };
 
-const getRetrievability = (progress, nowMs = Date.now()) => {
+const getRetrievability = (progress, nowMs = Date.now(), memoryFactor = DEFAULT_MEMORY_FACTOR) => {
   const source = progress || {};
   const safeNowMs = normalizeNowMs(nowMs);
   const lastReviewedAtMs = Math.max(0, asNumber(source.lastReviewedAtMs));
-  const stabilityDays = clamp(asNumber(source.stabilityDays), 0, 3650);
+  const stabilityDays = clamp(asNumber(source.stabilityDays), 0, 3650) * normalizeMemoryFactor(memoryFactor);
   if (!lastReviewedAtMs || !stabilityDays) return 0;
   const elapsedDays = Math.max(0, (safeNowMs - lastReviewedAtMs) / DAY_MS);
   return clamp(
@@ -164,7 +177,7 @@ const calculateInitialSchedule = (rating) => ({
   easy: { stabilityDays: 14, intervalMinutes: 14 * 24 * 60 },
 }[rating]);
 
-const calculateReviewSchedule = (current, rating, retrievability) => {
+const calculateReviewSchedule = (current, rating, retrievability, memoryFactor = DEFAULT_MEMORY_FACTOR) => {
   const stability = Math.max(0.03, current.stabilityDays || 0.03);
   const difficultyFactor = clamp(1.15 - (current.difficulty - 5) * 0.055, 0.65, 1.35);
   const latenessBoost = 1 + Math.max(0, TARGET_RETENTION - retrievability) * 2.2;
@@ -190,7 +203,7 @@ const calculateReviewSchedule = (current, rating, retrievability) => {
   const intervalMinutes = rating === "forgot"
     ? minimumMinutes
     : clamp(
-      Math.round(nextStability * intervalFactor * 24 * 60),
+      Math.round(nextStability * intervalFactor * normalizeMemoryFactor(memoryFactor) * 24 * 60),
       minimumMinutes,
       4200 * 24 * 60
     );
@@ -206,12 +219,13 @@ const scheduleReview = (progress, rating, nowMs = Date.now(), metadata = {}) => 
   }
 
   const safeNowMs = normalizeNowMs(nowMs);
+  const memoryFactor = normalizeMemoryFactor(metadata.memoryFactor);
   const current = normalizeProgress(progress, safeNowMs);
   const isFirstReview = current.reviewCount === 0;
-  const retrievabilityBefore = isFirstReview ? 0 : getRetrievability(current, safeNowMs);
+  const retrievabilityBefore = isFirstReview ? 0 : getRetrievability(current, safeNowMs, memoryFactor);
   const schedule = isFirstReview
     ? calculateInitialSchedule(normalizedRating)
-    : calculateReviewSchedule(current, normalizedRating, retrievabilityBefore);
+    : calculateReviewSchedule(current, normalizedRating, retrievabilityBefore, memoryFactor);
   const difficulty = calculateDifficulty(current.difficulty || 5, normalizedRating);
   const isLapse = normalizedRating === "forgot";
   const isSuccessfulRecall = !isLapse;
@@ -237,6 +251,7 @@ const scheduleReview = (progress, rating, nowMs = Date.now(), metadata = {}) => 
     stateBefore: current.state,
     stateAfter: state,
     retrievabilityBefore: round(retrievabilityBefore, 4),
+    memoryFactor,
     stabilityBeforeDays: round(current.stabilityDays || 0),
     stabilityAfterDays: stabilityDays,
     difficultyBefore: round(current.difficulty || 5),
@@ -263,10 +278,10 @@ const scheduleReview = (progress, rating, nowMs = Date.now(), metadata = {}) => 
   });
 };
 
-const getMemorySnapshot = (progress, nowMs = Date.now()) => {
+const getMemorySnapshot = (progress, nowMs = Date.now(), memoryFactor = DEFAULT_MEMORY_FACTOR) => {
   const safeNowMs = normalizeNowMs(nowMs);
   const current = normalizeProgress(progress, safeNowMs);
-  const retrievability = getRetrievability(current, safeNowMs);
+  const retrievability = getRetrievability(current, safeNowMs, memoryFactor);
   return {
     algorithmVersion: current.algorithmVersion,
     state: current.state,
@@ -284,11 +299,11 @@ const getMemorySnapshot = (progress, nowMs = Date.now()) => {
   };
 };
 
-const getReviewPriorityScore = (progress, nowMs = Date.now()) => {
+const getReviewPriorityScore = (progress, nowMs = Date.now(), memoryFactor = DEFAULT_MEMORY_FACTOR) => {
   const safeNowMs = normalizeNowMs(nowMs);
   const current = normalizeProgress(progress, safeNowMs);
   if (!current.reviewCount || !current.lastReviewedAtMs) return 0;
-  const retrievability = getRetrievability(current, safeNowMs);
+  const retrievability = getRetrievability(current, safeNowMs, memoryFactor);
   const overdueDays = current.nextReviewAtMs && current.nextReviewAtMs < safeNowMs
     ? Math.min(30, (safeNowMs - current.nextReviewAtMs) / DAY_MS)
     : 0;
@@ -302,7 +317,7 @@ const getReviewPriorityScore = (progress, nowMs = Date.now()) => {
   );
 };
 
-const buildMemoryOverview = (progressItems, nowMs = Date.now()) => {
+const buildMemoryOverview = (progressItems, nowMs = Date.now(), memoryFactor = DEFAULT_MEMORY_FACTOR) => {
   const safeNowMs = normalizeNowMs(nowMs);
   const reviewed = (progressItems || [])
     .map((item) => normalizeProgress(item, safeNowMs))
@@ -323,7 +338,7 @@ const buildMemoryOverview = (progressItems, nowMs = Date.now()) => {
   }
   const snapshots = reviewed.map((item) => ({
     progress: item,
-    retention: getRetrievability(item, safeNowMs),
+    retention: getRetrievability(item, safeNowMs, memoryFactor),
   }));
   const dueBy = (offsetDays) => snapshots.filter(({ progress }) => (
     !progress.nextReviewAtMs || progress.nextReviewAtMs <= safeNowMs + offsetDays * DAY_MS
@@ -353,15 +368,22 @@ const buildMemoryOverview = (progressItems, nowMs = Date.now()) => {
 module.exports = {
   ALGORITHM_VERSION,
   DAY_MS,
+  DEFAULT_MEMORY_FACTOR,
+  FORGETTING_CURVE_DECAY,
+  FORGETTING_CURVE_FACTOR,
+  MAX_MEMORY_FACTOR,
+  MIN_MEMORY_FACTOR,
   LEGACY_ALGORITHM_VERSION,
   RATINGS,
   TARGET_RETENTION,
   buildMemoryOverview,
   createEmptyProgress,
   getMemorySnapshot,
+  getStudentMemoryFactor,
   getRetrievability,
   getReviewPriorityScore,
   migrateLegacyProgress,
+  normalizeMemoryFactor,
   normalizeProgress,
   normalizeRating,
   scheduleReview,

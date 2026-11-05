@@ -15,6 +15,25 @@
       <view class="eval-meaning">{{evaluation.verdict.meaning}}</view>
     </view>
 
+    <view class="card calibration-card" wx:if="{{evaluation.calibrationView.showSuggestion}}">
+      <view class="calibration-title">{{evaluation.calibrationView.title}}</view>
+      <view class="calibration-text">{{evaluation.calibrationView.text}}</view>
+      <view class="calibration-actions">
+        <view class="ghost-btn" bindtap="dismissSuggestion">暂不调整</view>
+        <view class="primary-btn {{saving ? 'calibration-disabled' : ''}}" bindtap="applyCalibration">{{saving ? '保存中…' : '应用校准'}}</view>
+      </view>
+    </view>
+
+    <view class="card calibration-note" wx:if="{{evaluation.calibrationView.noteText}}">{{evaluation.calibrationView.noteText}}</view>
+
+    <view class="card calibration-status" wx:if="{{evaluation.calibrationView.statusText}}">
+      <view class="calibration-status-main">
+        <view class="calibration-status-title">{{evaluation.calibrationView.statusTitle}}</view>
+        <view class="calibration-status-text">{{evaluation.calibrationView.statusText}}</view>
+      </view>
+      <view class="calibration-reset" wx:if="{{evaluation.calibrationView.canReset}}" bindtap="resetCalibration">恢复默认</view>
+    </view>
+
     <view class="card sample-card" wx:if="{{evaluation.status.key === 'collecting'}}">
       <view class="sample-line">
         <text>首轮判断还需要</text>

@@ -49,6 +49,14 @@ assert(pageMarkup.includes("参数调整由老师结合课堂表现决定"), "te
 assert(pageMarkup.includes("参数调整由老师结合课堂表现决定"), "teacher parameter gate is missing");
 assert(pageMarkup.includes("校准分组"), "calibration bins are missing");
 
+assert(backend.includes('case "updateEnglishMemoryCalibration"'), "calibration update route is missing");
+assert(
+  /const updateEnglishMemoryCalibration = async \(event\) => \{\s*await ensureTeacher\(\)/.test(backend),
+  "calibration updates must be teacher-only"
+);
+assert(backend.includes("expectedFactor") && backend.includes("CALIBRATION_CHANGED"), "applied factor must be recomputed server-side");
+assert(pageMarkup.includes("应用校准") && pageMarkup.includes("恢复默认"), "teacher must confirm or reset calibration on the page");
+
 const scheduler = read("cloudfunctions/quickstartFunctions/englishMemoryScheduler.js");
 assert(scheduler.includes("algorithmVersion: ALGORITHM_VERSION"), "review events must retain algorithm version");
 
