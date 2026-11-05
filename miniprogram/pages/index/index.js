@@ -1,5 +1,6 @@
 const { prefetchVocabularyAudio } = require("../../utils/vocabularyAudio");
 const { buildHomeworkPlanStep, buildPrimaryLearningAction } = require("../../utils/studentLearningFlow");
+const { callCloud } = require("../../utils/cloud");
 
 const formatHomeworkActivityTime = (timestamp) => {
   const date = new Date(Number(timestamp || 0));
@@ -213,10 +214,7 @@ Page({
   },
 
   loadTodoSummary() {
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getTeacherTodos" },
-    }).then((res) => {
+    callCloud({ type: "getTeacherTodos" }).then((res) => {
       const summary = res && res.result && res.result.summary;
       if (summary) this.setData({ todoSummary: Object.assign({}, this.data.todoSummary, summary) });
     }).catch((err) => {
@@ -282,16 +280,13 @@ Page({
     const normalizedStudentId = String(studentId || "").trim();
     if (!normalizedStudentId || this.prefetchedAudioStudentId === normalizedStudentId) return;
     this.prefetchedAudioStudentId = normalizedStudentId;
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "getVocabularyData",
       data: {
-        type: "getVocabularyData",
-        data: {
-          studentId: normalizedStudentId,
-          browseTab: "today",
-          offset: 0,
-          limit: 30,
-        },
+        studentId: normalizedStudentId,
+        browseTab: "today",
+        offset: 0,
+        limit: 30,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -420,12 +415,9 @@ Page({
 
   markLearningActivitiesViewed(viewedThroughAtMs) {
     if (!wx.cloud || !viewedThroughAtMs) return Promise.reject(new Error("云服务连接遇到问题"));
-    return wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "markLearningActivitiesViewed",
-        data: { viewedThroughAtMs },
-      },
+    return callCloud({
+      type: "markLearningActivitiesViewed",
+      data: { viewedThroughAtMs },
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "同步已读状态失败");
@@ -472,12 +464,9 @@ Page({
 
   markStudentActivitiesViewed(viewedThroughAtMs) {
     if (this.data.isTeacherPreview || !wx.cloud || !viewedThroughAtMs) return Promise.resolve();
-    return wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "markStudentLearningActivitiesViewed",
-        data: { viewedThroughAtMs },
-      },
+    return callCloud({
+      type: "markStudentLearningActivitiesViewed",
+      data: { viewedThroughAtMs },
     });
   },
 
@@ -586,10 +575,7 @@ Page({
       success: (modalResult) => {
         if (!modalResult.confirm) return;
         wx.showLoading({ title: "正在退出", mask: true });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: { type: "unbindIdentity" },
-        }).then((res) => {
+        callCloud({ type: "unbindIdentity" }).then((res) => {
           const result = res.result || {};
           if (!result.success) throw new Error(result.message || "退出失败");
           wx.reLaunch({ url: "/pages/bind-student/index?signedOut=1" });

@@ -2,10 +2,12 @@ const {
   LESSON_TEMPLATE_OPTIONS,
   findTemplate,
 } = require("../../utils/lessonTemplates");
-const { KET_SPEAKING_TASKS, findKetSpeakingTask } = require("../../utils/ketSpeakingTasks");
-const { KET_MOCK_SETS, findKetMockSet } = require("../../utils/ketMockSets");
+const { findKetSpeakingTask } = require("../../utils/ketSpeakingTasks");
+const { findKetMockSet } = require("../../utils/ketMockSets");
+const { getSafeRecordingTaskType } = require("../../utils/lessonTaskOptions");
 const { buildNextLessonTitleSuggestion } = require("../../utils/lessonTitle");
 const { usesLessonDurationMinutes } = require("../../utils/lessonDuration");
+const { callCloud } = require("../../utils/cloud");
 
 const HOMEWORK_REMINDER_TEMPLATE_ID = "Ih535VWa2FCNlCCvZUYFJOt8fOA3EY3l7Pxoa9rszYA";
 const MATERIAL_PREFERENCES_KEY = "lessonMaterialPreferencesV2";
@@ -45,30 +47,6 @@ const LESSON_FOCUS_LABELS = {
   oral: "句型口语",
   reading: "短阅读与衔接",
 };
-const BASIC_RECORDING_TASK_TYPE_OPTIONS = [
-  { value: "manual", label: "独立朗读（学生直接开始）" },
-  { value: "follow_reading", label: "跟读（先听老师示范）" },
-];
-const KET_RECORDING_TASK_TYPE_OPTIONS = [
-  ...BASIC_RECORDING_TASK_TYPE_OPTIONS,
-  { value: "ket_official", label: "KET 官方样题" },
-  { value: "ket_mock", label: "KET 全流程模拟" },
-];
-const FOLLOW_READING_MODE_OPTIONS = [
-  { value: "automatic", label: "自动连续跟读" },
-  { value: "manual", label: "手动逐条播放" },
-];
-const HOMEWORK_DUE_OPTIONS = [
-  { value: -1, label: "以后设置" },
-  { value: 0, label: "当天截止" },
-  { value: 1, label: "1 天后截止" },
-  { value: 2, label: "2 天后截止" },
-  { value: 3, label: "3 天后截止" },
-  { value: 4, label: "4 天后截止" },
-  { value: 5, label: "5 天后截止" },
-  { value: 6, label: "6 天后截止" },
-  { value: 7, label: "7 天后截止" },
-];
 const RECORDING_FEEDBACK_OPTIONS = [
   { label: "发音准确", statuses: ["朗读正确"] },
   { label: "语速自然", statuses: ["朗读正确"] },
@@ -216,26 +194,6 @@ Page({
     learningFocusOptions: [{ value: "", label: "以后标记课程类型" }],
     lessonFocusIndex: 0,
     suggestedSkillId: "",
-    recordingRepeatOptions: [1, 2, 3, 4, 5],
-    recordingPreparationOptions: [0, 3, 5, 10, 15],
-    recordingRepeatIndex: 1,
-    recordingPreparationIndex: 2,
-    recordingTaskTypeOptions: BASIC_RECORDING_TASK_TYPE_OPTIONS,
-    recordingTaskTypeIndex: 0,
-    followReadingModeOptions: FOLLOW_READING_MODE_OPTIONS,
-    followReadingModeIndex: 0,
-    followReadingGapOptions: [1, 2, 3],
-    followReadingGapIndex: 1,
-    followReadingResponseOptions: [3, 5, 8, 10, 15, 20],
-    followReadingResponseIndex: 2,
-    homeworkDueOptions: HOMEWORK_DUE_OPTIONS,
-    homeworkDueIndex: 0,
-    ketSpeakingTasks: KET_SPEAKING_TASKS,
-    ketSpeakingTaskIndex: 0,
-    selectedKetSpeakingTask: KET_SPEAKING_TASKS[0],
-    ketMockSets: KET_MOCK_SETS,
-    ketMockSetIndex: 0,
-    selectedKetMockSet: KET_MOCK_SETS[0],
     ketWeeklyHint: "",
     hasLegacySubmissions: false,
     organizingRecordings: false,
@@ -307,15 +265,12 @@ Page({
   },
 
   loadLesson() {
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "getLessonDetail",
       data: {
-        type: "getLessonDetail",
-        data: {
-          lessonId: this.data.lessonId,
-          previewStudentId: this.data.previewStudentId,
-          mode: this.data.mode,
-        },
+        lessonId: this.data.lessonId,
+        previewStudentId: this.data.previewStudentId,
+        mode: this.data.mode,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -331,22 +286,6 @@ Page({
       const lessonTemplate = findTemplate(lesson.lessonTemplateKey);
       const lessonTemplateIndex = Math.max(0, LESSON_TEMPLATE_OPTIONS.findIndex((item) => item.key === lessonTemplate.key));
       const submissions = this.prepareSubmissions(result.submissions || []);
-      const recordingRepeatIndex = Math.max(0, this.data.recordingRepeatOptions.indexOf(lesson.recordingRepeatCount));
-      const recordingPreparationIndex = Math.max(0, this.data.recordingPreparationOptions.indexOf(lesson.recordingPreparationSeconds));
-      const recordingTaskTypeOptions = lesson.lessonTemplateKey === "molly_oral_ket"
-        ? KET_RECORDING_TASK_TYPE_OPTIONS
-        : BASIC_RECORDING_TASK_TYPE_OPTIONS;
-      const recordingTaskTypeIndex = Math.max(0, recordingTaskTypeOptions.findIndex((item) => item.value === lesson.recordingTaskType));
-      const followReadingModeIndex = Math.max(0, FOLLOW_READING_MODE_OPTIONS.findIndex((item) => item.value === lesson.followReadingMode));
-      const followReadingGapIndex = Math.max(0, this.data.followReadingGapOptions.indexOf(lesson.followReadingGapSeconds));
-      const followReadingResponseIndex = Math.max(0, this.data.followReadingResponseOptions.indexOf(lesson.followReadingResponseSeconds));
-      const homeworkDueIndex = Math.max(0, HOMEWORK_DUE_OPTIONS.findIndex((item) => (
-        item.value === Number(lesson.homeworkDueDays)
-      )));
-      const selectedKetSpeakingTask = findKetSpeakingTask(lesson.ketSpeakingTaskId) || KET_SPEAKING_TASKS[0];
-      const ketSpeakingTaskIndex = Math.max(0, KET_SPEAKING_TASKS.findIndex((item) => item.id === selectedKetSpeakingTask.id));
-      const selectedKetMockSet = findKetMockSet(lesson.ketMockSetId) || KET_MOCK_SETS[0];
-      const ketMockSetIndex = Math.max(0, KET_MOCK_SETS.findIndex((item) => item.id === selectedKetMockSet.id));
       const previousLessonReference = result.previousLesson
         ? Object.assign({}, result.previousLesson, {
           durationMinutes: usesLessonDurationMinutes(student, result.previousLesson.lessonTemplateKey)
@@ -387,18 +326,6 @@ Page({
         workspaceForm: this.createWorkspaceForm(lesson),
         lessonTemplate,
         lessonTemplateIndex,
-        recordingRepeatIndex,
-        recordingPreparationIndex,
-        recordingTaskTypeOptions,
-        recordingTaskTypeIndex,
-        followReadingModeIndex,
-        followReadingGapIndex,
-        followReadingResponseIndex,
-        homeworkDueIndex,
-        selectedKetSpeakingTask,
-        ketSpeakingTaskIndex,
-        selectedKetMockSet,
-        ketMockSetIndex,
         message: "",
       }, () => {
         if (lesson.recordingTaskType === "ket_mock") this.loadKetMockSessions();
@@ -429,12 +356,9 @@ Page({
       return;
     }
     this.setData({ learningPlanLoading: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "getStudentLearningRadar",
-        data: { studentId: this.data.student._id },
-      },
+    callCloud({
+      type: "getStudentLearningRadar",
+      data: { studentId: this.data.student._id },
     }).then((res) => {
       if (requestId !== this.learningPlanOptionsRequestId) return;
       const result = res.result || {};
@@ -794,24 +718,12 @@ Page({
   toggleWorkspaceEditor() {
     if (!this.data.isTeacher) return;
     const opening = !this.data.showWorkspaceEditor;
-    const homeworkDueIndex = Math.max(0, HOMEWORK_DUE_OPTIONS.findIndex((item) => (
-      item.value === Number(this.data.lesson.homeworkDueDays)
-    )));
-    const recordingTaskTypeOptions = this.data.lesson.lessonTemplateKey === "molly_oral_ket"
-      ? KET_RECORDING_TASK_TYPE_OPTIONS
-      : BASIC_RECORDING_TASK_TYPE_OPTIONS;
     const lessonFocusIndex = Math.max(0, this.data.learningFocusOptions.findIndex((item) => (
       item.value === this.data.lesson.lessonFocusType
     )));
     this.setData({
       showWorkspaceEditor: opening,
       workspaceForm: this.createWorkspaceForm(this.data.lesson),
-      homeworkDueIndex,
-      recordingTaskTypeOptions,
-      recordingTaskTypeIndex: Math.max(0, recordingTaskTypeOptions.findIndex((item) => item.value === this.data.lesson.recordingTaskType)),
-      followReadingModeIndex: Math.max(0, FOLLOW_READING_MODE_OPTIONS.findIndex((item) => item.value === this.data.lesson.followReadingMode)),
-      followReadingGapIndex: Math.max(0, this.data.followReadingGapOptions.indexOf(this.data.lesson.followReadingGapSeconds)),
-      followReadingResponseIndex: Math.max(0, this.data.followReadingResponseOptions.indexOf(this.data.lesson.followReadingResponseSeconds)),
       lessonFocusIndex,
     }, () => {
       if (opening) this.checkKetWeeklyStatus();
@@ -837,20 +749,13 @@ Page({
 
   onWorkspaceTemplateChange(e) {
     const option = LESSON_TEMPLATE_OPTIONS[Number(e.detail.value)] || LESSON_TEMPLATE_OPTIONS[0];
-    const recordingTaskTypeOptions = option.key === "molly_oral_ket"
-      ? KET_RECORDING_TASK_TYPE_OPTIONS
-      : BASIC_RECORDING_TASK_TYPE_OPTIONS;
     const currentType = this.data.workspaceForm.recordingTaskType;
-    const safeType = recordingTaskTypeOptions.some((item) => item.value === currentType)
-      ? currentType
-      : "manual";
+    const safeType = getSafeRecordingTaskType(option.key, currentType);
     const durationApplies = usesLessonDurationMinutes(this.data.student, option.key);
     const updates = {
       lessonTemplateIndex: LESSON_TEMPLATE_OPTIONS.indexOf(option),
       lessonTemplate: option,
       "workspaceForm.lessonTemplateKey": option.key,
-      recordingTaskTypeOptions,
-      recordingTaskTypeIndex: Math.max(0, recordingTaskTypeOptions.findIndex((item) => item.value === safeType)),
       "workspaceForm.recordingTaskType": safeType,
     };
     if (!durationApplies) {
@@ -873,79 +778,15 @@ Page({
     this.setData(updates, () => this.loadLearningPlanOptions());
   },
 
-  onRecordingTaskChange(e) {
-    const enabled = Boolean(e.detail.value);
-    const updates = { "workspaceForm.recordingTaskEnabled": enabled };
-    if (enabled && Number(this.data.workspaceForm.homeworkDueDays) < 0) {
-      updates.homeworkDueIndex = 8;
-      updates["workspaceForm.homeworkDueDays"] = 7;
-    }
-    this.setData(updates);
-  },
-
-  onHomeworkDueChange(e) {
-    const index = Number(e.detail.value);
-    const option = HOMEWORK_DUE_OPTIONS[index] || HOMEWORK_DUE_OPTIONS[0];
-    this.setData({
-      homeworkDueIndex: index,
-      "workspaceForm.homeworkDueDays": option.value,
+  onTaskFieldsChange(e) {
+    const { updates, checkKet } = e.detail;
+    const data = {};
+    Object.keys(updates || {}).forEach((key) => {
+      data[`workspaceForm.${key}`] = updates[key];
     });
-  },
-
-  onRecordingTaskTypeChange(e) {
-    const index = Number(e.detail.value);
-    const option = this.data.recordingTaskTypeOptions[index] || this.data.recordingTaskTypeOptions[0];
-    this.setData({
-      recordingTaskTypeIndex: index,
-      "workspaceForm.recordingTaskType": option.value,
-    }, () => {
-      if (option.value === "ket_official") this.applyKetSpeakingTask(this.data.ketSpeakingTaskIndex);
-      else if (option.value === "ket_mock") this.applyKetMockSet(this.data.ketMockSetIndex);
-      else this.setData({ "workspaceForm.ketSpeakingTaskId": "", "workspaceForm.ketMockSetId": "", ketWeeklyHint: "" });
+    this.setData(data, () => {
+      if (checkKet) this.checkKetWeeklyStatus();
     });
-  },
-
-  onKetSpeakingTaskChange(e) {
-    this.applyKetSpeakingTask(Number(e.detail.value));
-  },
-
-  applyKetSpeakingTask(index) {
-    const safeIndex = Math.max(0, Math.min(KET_SPEAKING_TASKS.length - 1, Number(index) || 0));
-    const task = KET_SPEAKING_TASKS[safeIndex];
-    const preparationIndex = Math.max(0, this.data.recordingPreparationOptions.indexOf(task.preparationSeconds));
-    this.setData({
-      ketSpeakingTaskIndex: safeIndex,
-      selectedKetSpeakingTask: task,
-      recordingRepeatIndex: 0,
-      recordingPreparationIndex: preparationIndex,
-      "workspaceForm.ketSpeakingTaskId": task.id,
-      "workspaceForm.ketMockSetId": "",
-      "workspaceForm.recordingPrompt": task.prompt,
-      "workspaceForm.recordingRepeatCount": 1,
-      "workspaceForm.recordingPreparationSeconds": task.preparationSeconds,
-      "workspaceForm.ketSkill": `${task.part} · ${task.topic}`,
-    }, () => this.checkKetWeeklyStatus());
-  },
-
-  onKetMockSetChange(e) {
-    this.applyKetMockSet(Number(e.detail.value));
-  },
-
-  applyKetMockSet(index) {
-    const safeIndex = Math.max(0, Math.min(KET_MOCK_SETS.length - 1, Number(index) || 0));
-    const set = KET_MOCK_SETS[safeIndex];
-    this.setData({
-      ketMockSetIndex: safeIndex,
-      selectedKetMockSet: set,
-      recordingRepeatIndex: 0,
-      recordingPreparationIndex: 0,
-      "workspaceForm.ketSpeakingTaskId": "",
-      "workspaceForm.ketMockSetId": set.id,
-      "workspaceForm.recordingPrompt": `${set.title}：按完整考试流程完成 Part 1 与 Part 2。`,
-      "workspaceForm.recordingRepeatCount": 1,
-      "workspaceForm.recordingPreparationSeconds": 0,
-      "workspaceForm.ketSkill": `Speaking Part 1 + Part 2 · ${set.topic}`,
-    }, () => this.checkKetWeeklyStatus());
   },
 
   checkKetWeeklyStatus() {
@@ -958,15 +799,12 @@ Page({
       this.setData({ ketWeeklyHint: "" });
       return;
     }
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "getKetWeeklyStatus",
       data: {
-        type: "getKetWeeklyStatus",
-        data: {
-          studentId: lesson.studentId,
-          lessonDate: lesson.lessonDate,
-          lessonId: lesson._id,
-        },
+        studentId: lesson.studentId,
+        lessonDate: lesson.lessonDate,
+        lessonId: lesson._id,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -977,53 +815,6 @@ Page({
           : "本周还没有在其他课程布置 KET 口语任务。",
       });
     }).catch(() => {});
-  },
-
-  copyKetSource() {
-    const task = this.data.selectedKetSpeakingTask;
-    if (!task || !task.sourceUrl) return;
-    wx.setClipboardData({ data: task.sourceUrl });
-  },
-
-  onRecordingRepeatChange(e) {
-    const index = Number(e.detail.value);
-    this.setData({
-      recordingRepeatIndex: index,
-      "workspaceForm.recordingRepeatCount": this.data.recordingRepeatOptions[index],
-    });
-  },
-
-  onRecordingPreparationChange(e) {
-    const index = Number(e.detail.value);
-    this.setData({
-      recordingPreparationIndex: index,
-      "workspaceForm.recordingPreparationSeconds": this.data.recordingPreparationOptions[index],
-    });
-  },
-
-  onFollowReadingModeChange(e) {
-    const index = Number(e.detail.value);
-    const option = FOLLOW_READING_MODE_OPTIONS[index] || FOLLOW_READING_MODE_OPTIONS[0];
-    this.setData({
-      followReadingModeIndex: index,
-      "workspaceForm.followReadingMode": option.value,
-    });
-  },
-
-  onFollowReadingGapChange(e) {
-    const index = Number(e.detail.value);
-    this.setData({
-      followReadingGapIndex: index,
-      "workspaceForm.followReadingGapSeconds": this.data.followReadingGapOptions[index],
-    });
-  },
-
-  onFollowReadingResponseChange(e) {
-    const index = Number(e.detail.value);
-    this.setData({
-      followReadingResponseIndex: index,
-      "workspaceForm.followReadingResponseSeconds": this.data.followReadingResponseOptions[index],
-    });
   },
 
   onLessonFocusChange(e) {
@@ -1182,12 +973,9 @@ Page({
     if (!durationApplies) delete workspacePayload.durationMinutes;
     this.setData({ savingWorkspace: true });
     wx.showLoading({ title: "保存中", mask: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "updateLessonWorkspace",
-        data: workspacePayload,
-      },
+    callCloud({
+      type: "updateLessonWorkspace",
+      data: workspacePayload,
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "课后记录保存失败");
@@ -1522,12 +1310,9 @@ Page({
   },
 
   callMaterialRegistration(registrationData) {
-    return wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "addPaper",
-        data: registrationData,
-      },
+    return callCloud({
+      type: "addPaper",
+      data: registrationData,
     }).then((callRes) => {
       const result = callRes.result || {};
       if (result.success === false) {
@@ -1721,10 +1506,7 @@ Page({
 
   updateMaterial(material, updates) {
     wx.showLoading({ title: "保存中", mask: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "updatePaper", data: Object.assign({ paperId: material._id }, updates) },
-    }).then((res) => {
+    callCloud({ type: "updatePaper", data: Object.assign({ paperId: material._id }, updates) }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "资料更新失败");
       wx.showToast({ title: "资料已更新" });
@@ -1786,19 +1568,16 @@ Page({
     const cloudPath = `lesson-materials/${this.data.lesson.studentId}/${this.data.lessonId}/${Date.now()}-${safeFileName}`;
     wx.showLoading({ title: "替换中", mask: true });
     wx.cloud.uploadFile({ cloudPath, filePath: file.filePath })
-      .then((uploadRes) => wx.cloud.callFunction({
-        name: "quickstartFunctions",
+      .then((uploadRes) => callCloud({
+        type: "replacePaperFile",
         data: {
-          type: "replacePaperFile",
-          data: {
-            paperId: material._id,
-            expectedOldFileID: material.fileID,
-            fileID: uploadRes.fileID,
-            fileName: file.fileName,
-            fileSize: file.fileSize,
-            fileExtension: getFileExtension(file.fileName),
-            type: file.type,
-          },
+          paperId: material._id,
+          expectedOldFileID: material.fileID,
+          fileID: uploadRes.fileID,
+          fileName: file.fileName,
+          fileSize: file.fileSize,
+          fileExtension: getFileExtension(file.fileName),
+          type: file.type,
         },
       }))
       .then((res) => {
@@ -1822,10 +1601,7 @@ Page({
       confirmColor: "#B0432F",
       success: (res) => {
         if (!res.confirm) return;
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: { type: "deletePaper", data: { paperId: material._id, lessonId: this.data.lessonId } },
-        }).then((callRes) => {
+        callCloud({ type: "deletePaper", data: { paperId: material._id, lessonId: this.data.lessonId } }).then((callRes) => {
           const result = callRes.result || {};
           if (!result.success) throw new Error(result.message || "删除失败");
           wx.showToast({ title: "资料已删除" });
@@ -1848,10 +1624,7 @@ Page({
       success: (res) => {
         if (!res.confirm) return;
         wx.showLoading({ title: "删除中", mask: true });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: { type: "deleteLessonPapers", data: { lessonId: this.data.lessonId } },
-        }).then((callRes) => {
+        callCloud({ type: "deleteLessonPapers", data: { lessonId: this.data.lessonId } }).then((callRes) => {
           const result = callRes.result || {};
           if (!result.success) throw new Error(result.message || "删除失败");
           wx.showToast({ title: `已删除 ${result.deletedPaperCount || 0} 份资料`, icon: "none" });
@@ -1903,10 +1676,7 @@ Page({
 
   loadKetMockSessions() {
     if (!this.data.lessonId) return;
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "listKetMockSessions", data: { lessonId: this.data.lessonId } },
-    }).then((res) => {
+    callCloud({ type: "listKetMockSessions", data: { lessonId: this.data.lessonId } }).then((res) => {
       const result = res.result || {};
       if (!result.success) return;
       const statusLabels = {
@@ -2016,12 +1786,9 @@ Page({
         if (!modalRes.confirm) return;
         this.setData({ organizingRecordings: true });
         wx.showLoading({ title: "正在整理", mask: true });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: {
-            type: "organizeLessonRecordingFiles",
-            data: { lessonId: this.data.lessonId },
-          },
+        callCloud({
+          type: "organizeLessonRecordingFiles",
+          data: { lessonId: this.data.lessonId },
         }).then((res) => {
           const result = res.result || {};
           if (!result.success && !result.organizedCount) throw new Error(result.message || "旧录音整理失败");
@@ -2128,16 +1895,13 @@ Page({
     if (!this.data.isTeacher || this.data.savingRecordingReview || !editor.submissionId) return;
     this.setData({ savingRecordingReview: true });
     wx.showLoading({ title: "正在保存", mask: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "reviewLessonRecording",
       data: {
-        type: "reviewLessonRecording",
-        data: {
-          submissionId: editor.submissionId,
-          status: editor.status,
-          teacherFeedbackTags: editor.selectedTags || [],
-          teacherFeedbackNote: editor.note || "",
-        },
+        submissionId: editor.submissionId,
+        status: editor.status,
+        teacherFeedbackTags: editor.selectedTags || [],
+        teacherFeedbackNote: editor.note || "",
       },
     }).then((callRes) => {
       const result = callRes.result || {};
@@ -2179,12 +1943,9 @@ Page({
             if (this.data.playingSubmissionId === submission._id && this.audioContext) {
               this.audioContext.stop();
             }
-            wx.cloud.callFunction({
-              name: "quickstartFunctions",
-              data: {
-                type: "deleteLessonRecording",
-                data: { lessonId: this.data.lessonId, submissionId: submission._id },
-              },
+            callCloud({
+              type: "deleteLessonRecording",
+              data: { lessonId: this.data.lessonId, submissionId: submission._id },
             }).then((res) => {
               const result = res.result || {};
               if (!result.success) throw new Error(result.message || "录音删除失败");
@@ -2219,12 +1980,9 @@ Page({
       success: (modalRes) => {
         if (!modalRes.confirm) return;
         this.setData({ reviewingHomeworkStatus: status });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: {
-            type: "reviewLessonHomeworkCompletion",
-            data: { lessonId: this.data.lessonId, status },
-          },
+        callCloud({
+          type: "reviewLessonHomeworkCompletion",
+          data: { lessonId: this.data.lessonId, status },
         }).then((res) => {
           const result = res.result || {};
           if (!result.success) throw new Error(result.message || "任务状态保存失败");
@@ -2263,12 +2021,9 @@ Page({
           return;
         }
         wx.showLoading({ title: "保存提醒", mask: true });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: {
-            type: "subscribeHomeworkReminder",
-            data: { lessonId: this.data.lessonId, subscribed: true },
-          },
+        callCloud({
+          type: "subscribeHomeworkReminder",
+          data: { lessonId: this.data.lessonId, subscribed: true },
         }).then((res) => {
           const result = res.result || {};
           if (!result.success) throw new Error(result.message || "提醒保存失败");
@@ -2324,12 +2079,9 @@ Page({
         if (!modalRes.confirm) return;
         this.setData({ deletingLesson: true });
         wx.showLoading({ title: "删除中", mask: true });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: {
-            type: "deleteLesson",
-            data: { lessonId: this.data.lessonId, expectedTitle: lesson.title },
-          },
+        callCloud({
+          type: "deleteLesson",
+          data: { lessonId: this.data.lessonId, expectedTitle: lesson.title },
         }).then((res) => {
           const result = res.result || {};
           if (!result.success) throw new Error(result.message || "课程删除失败");

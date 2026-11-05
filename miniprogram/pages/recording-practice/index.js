@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 const sanitizePathSegment = (value, fallback, limit = 28) => {
   const safe = String(value || "")
     .trim()
@@ -126,12 +127,9 @@ Page({
       return;
     }
     this.setData({ state: "loading", message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "getLessonDetail",
-        data: { lessonId: this.data.lessonId },
-      },
+    callCloud({
+      type: "getLessonDetail",
+      data: { lessonId: this.data.lessonId },
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "无法读取录音任务");
@@ -300,19 +298,16 @@ Page({
     wx.cloud.uploadFile({ cloudPath, filePath })
       .then((uploadRes) => {
         uploadedFileID = uploadRes.fileID;
-        return wx.cloud.callFunction({
-          name: "quickstartFunctions",
+        return callCloud({
+          type: "submitLessonRecording",
           data: {
-            type: "submitLessonRecording",
-            data: {
-              lessonId: this.data.lessonId,
-              fileID: uploadedFileID,
-              cloudPath,
-              fileName: `第${attemptNo}次-独立朗读录音.mp3`,
-              attemptNo,
-              duration,
-              fileSize,
-            },
+            lessonId: this.data.lessonId,
+            fileID: uploadedFileID,
+            cloudPath,
+            fileName: `第${attemptNo}次-独立朗读录音.mp3`,
+            attemptNo,
+            duration,
+            fileSize,
           },
         });
       })

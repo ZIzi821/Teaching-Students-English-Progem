@@ -1,6 +1,7 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
+const { loadSandboxCloud } = require("./sandbox-cloud");
 const vm = require("vm");
 
 const root = path.resolve(__dirname, "..");
@@ -35,6 +36,7 @@ const createPage = (callFunction) => {
       if (request === "../../utils/lessonTemplates") {
         return require(path.join(root, "miniprogram", "utils", "lessonTemplates"));
       }
+      if (request === "../../utils/cloud") return loadSandboxCloud(sandbox.wx);
       throw new Error(`Unexpected page dependency: ${request}`);
     },
     Page: (value) => { definition = value; },

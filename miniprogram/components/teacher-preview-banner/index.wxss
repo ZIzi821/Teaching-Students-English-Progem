@@ -17,13 +17,13 @@
 }
 
 .preview-title {
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .preview-hint {
   margin-top: 3rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.45;
 }

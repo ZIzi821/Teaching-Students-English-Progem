@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "学习主页",
   "usingComponents": {
-    "data-chart": "/components/data-chart/index"
+    "learning-plan": "/components/learning-plan/index"
   }
 }

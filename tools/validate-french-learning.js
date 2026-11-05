@@ -1,6 +1,7 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
+const { loadSandboxCloud } = require("./sandbox-cloud");
 const vm = require("vm");
 
 const root = path.resolve(__dirname, "..");
@@ -88,6 +89,7 @@ const loadVocabularyPage = (queue, counts) => {
     console, Page: (value) => { definition = value; },
     require: (request) => {
       if (request === "../../utils/frenchPreview") return require(path.join(root, "miniprogram", "utils", "frenchPreview"));
+      if (request === "../../utils/cloud") return loadSandboxCloud(sandbox.wx);
       throw new Error(`Unexpected require: ${request}`);
     },
     wx: { createInnerAudioContext: () => audioContext, showToast() {}, cloud: { callFunction: async ({ data }) => { calls.push(data); return { result: { success: true, data: { enabled: true, queue, counts } } }; } } },
@@ -113,6 +115,7 @@ const loadVocabularyPageWithCloud = (callFunction) => {
     Page: (value) => { definition = value; },
     require: (request) => {
       if (request === "../../utils/frenchPreview") return require(path.join(root, "miniprogram", "utils", "frenchPreview"));
+      if (request === "../../utils/cloud") return loadSandboxCloud(sandbox.wx);
       throw new Error(`Unexpected require: ${request}`);
     },
     wx: { createInnerAudioContext: () => audioContext, showToast() {}, cloud: { callFunction } },

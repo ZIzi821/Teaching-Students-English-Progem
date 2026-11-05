@@ -1,3 +1,4 @@
+const { callCloud } = require('../../utils/cloud');
 const frenchPreview = require("../../utils/frenchPreview");
 
 const normalize = (value) => String(value || '')
@@ -15,7 +16,7 @@ function normalizeActivity(item) {
 Page({
   data: { level: 'A1', loading: true, message: '', items: [], index: 0, current: null, answer: '', tokens: [], usedTokenIndexes: [], showAnswer: false, result: '', saving: false, mode: '', previewStudentId: '', isTeacherPreview: false },
   onLoad(options) { this.requestVersion = 0; this.setData(frenchPreview.parseOptions(options)); this.load(); },
-  cloud(type, data) { return wx.cloud.callFunction({ name: 'quickstartFunctions', data: { type, data: frenchPreview.withData(this, data) } }).then((response) => { const result = response.result || {}; if (result.success === false) throw new Error(result.message || '暂不可用'); return result.data || result; }); },
+  cloud(type, data) { return callCloud({ type, data: frenchPreview.withData(this, data) }).then((response) => { const result = response.result || {}; if (result.success === false) throw new Error(result.message || '暂不可用'); return result.data || result; }); },
   resetExercise(index, items) { this.setData({ index, current: items[index] || null, answer: '', tokens: [], usedTokenIndexes: [], showAnswer: false, result: '', saving: false }); },
   load() {
     const requestVersion = ++this.requestVersion;

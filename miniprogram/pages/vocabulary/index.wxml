@@ -328,6 +328,14 @@
         <view class="memory-empty" wx:else>完成第一次单词复习后，这里会出现个人复习节奏。</view>
         <view class="memory-disclaimer">{{summary.memoryDisclaimer}}</view>
       </view>
+
+      <view class="ui-group" wx:if="{{isTeacherManager}}">
+        <view class="ui-row" bindtap="goMemoryEvaluation" hover-class="ui-pressed">
+          <view class="ui-row-main ui-row-title">复习安排准确度</view>
+          <view class="ui-row-value">{{memoryEvaluationLabel || "查看"}}</view>
+          <view class="ui-chevron"></view>
+        </view>
+      </view>
       </block>
 
       <block wx:if="{{detailSection === 'pending' && isTeacherManager}}">

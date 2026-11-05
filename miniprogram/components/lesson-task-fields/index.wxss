@@ -1,0 +1,140 @@
+.group-title {
+  margin: 8rpx 0 20rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid var(--line);
+  color: var(--ink-2);
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.field {
+  margin-bottom: 28rpx;
+}
+
+.label {
+  margin-bottom: 10rpx;
+  color: var(--ink);
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.input,
+.picker-value,
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1rpx solid var(--line-strong);
+  border-radius: 16rpx;
+  color: var(--ink);
+  background: var(--surface);
+  font-size: 30rpx;
+}
+
+.input,
+.picker-value {
+  min-height: 88rpx;
+  padding: 20rpx 24rpx;
+  line-height: 1.4;
+}
+
+.input {
+  height: 88rpx;
+}
+
+.textarea {
+  height: 168rpx;
+  padding: 20rpx 24rpx;
+}
+
+.textarea-tall {
+  height: 280rpx;
+}
+
+.textarea-locked {
+  color: var(--ink-2);
+  background: var(--surface-2);
+}
+
+.hint {
+  margin-top: 8rpx;
+  color: var(--ink-3);
+  font-size: 26rpx;
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24rpx;
+  margin-bottom: 28rpx;
+  padding: 20rpx 0;
+  border-top: 1rpx solid var(--line);
+  border-bottom: 1rpx solid var(--line);
+}
+
+.switch-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.switch-label {
+  margin-bottom: 0;
+}
+
+.source-card {
+  margin-top: 12rpx;
+  padding: 20rpx 24rpx;
+  border-radius: 16rpx;
+  background: var(--info-soft);
+}
+
+.source-card-mock {
+  background: var(--accent-soft);
+}
+
+.source-title {
+  color: var(--ink);
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.source-line {
+  margin-top: 4rpx;
+  color: var(--ink-2);
+  font-size: 26rpx;
+  word-break: break-word;
+}
+
+.source-copy {
+  margin-top: 12rpx;
+  color: var(--accent);
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.source-warning {
+  margin-top: 12rpx;
+  color: var(--warn);
+  font-size: 26rpx;
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+  margin-bottom: 28rpx;
+}
+
+.option {
+  min-width: 0;
+}
+
+.option-wide {
+  grid-column: 1 / -1;
+}
+
+.meta {
+  margin-bottom: 28rpx;
+  color: var(--ink-2);
+  font-size: 26rpx;
+}

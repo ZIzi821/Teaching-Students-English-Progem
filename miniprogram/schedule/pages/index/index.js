@@ -1,4 +1,5 @@
 const { WEEKDAY_LABELS, buildScheduleDays } = require("../../../utils/scheduleCalendar");
+const { callCloud } = require("../../../utils/cloud");
 
 const TIMELINE_START_MINUTE = 9 * 60;
 const TIMELINE_END_MINUTE = 23 * 60;
@@ -125,14 +126,11 @@ Page({
 
   loadSchedule() {
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "getWeeklySchedule",
       data: {
-        type: "getWeeklySchedule",
-        data: {
-          mode: this.mode,
-          previewStudentId: this.previewStudentId,
-        },
+        mode: this.mode,
+        previewStudentId: this.previewStudentId,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -371,23 +369,20 @@ Page({
       : isTeacherBlock ? "saveTeacherScheduleBlock" : "createScheduleBooking";
     this.setData({ saving: true });
     wx.showLoading({ title: "保存中", mask: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type,
       data: {
-        type,
-        data: {
-          eventId: this.data.editingId,
-          expectedVersion: this.data.editingVersion,
-          studentId: this.data.bookingStudent ? this.data.bookingStudent._id : "",
-          previewStudentId: this.previewStudentId,
-          weekday: Number(form.weekdayIndex) + 1,
-          startTime: form.startTime,
-          endTime: form.endTime,
-          title: form.title,
-          note: form.note,
-          requestId: this.scheduleRequestId,
-          mode: this.mode,
-        },
+        eventId: this.data.editingId,
+        expectedVersion: this.data.editingVersion,
+        studentId: this.data.bookingStudent ? this.data.bookingStudent._id : "",
+        previewStudentId: this.previewStudentId,
+        weekday: Number(form.weekdayIndex) + 1,
+        startTime: form.startTime,
+        endTime: form.endTime,
+        title: form.title,
+        note: form.note,
+        requestId: this.scheduleRequestId,
+        mode: this.mode,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -437,16 +432,13 @@ Page({
 
   cancelEvent(item) {
     this.setData({ cancellingId: item._id });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "cancelScheduleEvent",
       data: {
-        type: "cancelScheduleEvent",
-        data: {
-          eventId: item._id,
-          expectedVersion: Number(item.version) || 1,
-          mode: this.mode,
-          previewStudentId: this.previewStudentId,
-        },
+        eventId: item._id,
+        expectedVersion: Number(item.version) || 1,
+        mode: this.mode,
+        previewStudentId: this.previewStudentId,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -545,22 +537,19 @@ Page({
     }
     this.setData({ fixedScheduleSaving: true });
     wx.showLoading({ title: "保存固定课表", mask: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "saveFixedStudentSchedule",
       data: {
-        type: "saveFixedStudentSchedule",
-        data: {
-          studentId: student._id,
-          mode: this.mode,
-          entries: entries.map((item) => ({
-            weekday: item.weekday,
-            enabled: item.enabled,
-            startTime: item.startTime,
-            endTime: item.endTime,
-            eventId: item.eventId,
-            expectedVersion: item.expectedVersion,
-          })),
-        },
+        studentId: student._id,
+        mode: this.mode,
+        entries: entries.map((item) => ({
+          weekday: item.weekday,
+          enabled: item.enabled,
+          startTime: item.startTime,
+          endTime: item.endTime,
+          eventId: item.eventId,
+          expectedVersion: item.expectedVersion,
+        })),
       },
     }).then((res) => {
       const result = res.result || {};
@@ -596,15 +585,12 @@ Page({
       success: (modal) => {
         if (!modal.confirm) return;
         this.setData({ availabilitySaving: true });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
+        callCloud({
+          type: "setScheduleDayAvailability",
           data: {
-            type: "setScheduleDayAvailability",
-            data: {
-              weekday,
-              bookingOpen: nextBookingOpen,
-              expectedVersion: this.data.availabilityVersion,
-            },
+            weekday,
+            bookingOpen: nextBookingOpen,
+            expectedVersion: this.data.availabilityVersion,
           },
         }).then((res) => {
           const result = res.result || {};

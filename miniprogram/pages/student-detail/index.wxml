@@ -75,15 +75,71 @@
     </view>
 
     <block wx:if="{{activeSection === 'overview'}}">
-      <view class="ui-group entry-group" wx:if="{{isTeacher || frenchLearningForm.enabled}}">
-        <view class="ui-row" wx:if="{{isTeacher}}" bindtap="goStudentReminders" hover-class="ui-pressed">
+      <view class="ui-group overview-group" wx:if="{{isTeacher && planSummary}}">
+        <view class="ui-row" data-section="plan" bindtap="selectSection" hover-class="ui-pressed">
+          <view class="ui-row-main">
+            <view class="overview-label">学习计划 · 第 {{planSummary.stageNumber}} / {{planSummary.stageCount}} 阶段</view>
+            <view class="ui-row-title">{{planSummary.stageTitle}}</view>
+            <view class="ui-row-note">{{planSummary.remainingCount ? '还差 ' + planSummary.remainingCount + ' 项进入下一阶段' : '已满足进入下一阶段的条件'}}</view>
+            <view class="ui-row-note">下节课建议：{{planSummary.nextLessonTitle}}</view>
+          </view>
+          <view class="ui-chevron"></view>
+        </view>
+      </view>
+
+      <view class="card overview-card" wx:if="{{student.vocabularyEnabled}}">
+        <view class="block-head">
+          <view class="overview-label">单词学习</view>
+          <view class="ui-chip ui-chip-accent" wx:if="{{vocabularyOverview.weeklyStats.streakDays}}">连续 {{vocabularyOverview.weeklyStats.streakDays}} 天</view>
+        </view>
+        <view class="overview-number-row">
+          <view class="overview-number">{{vocabularyOverview.summary.todayReviewedCount}}<text class="overview-number-unit"> / {{vocabularyOverview.dailyPlan.dailyGoal}} 个</text></view>
+          <view class="overview-number-note">{{vocabularyOverview.weeklyStats.streakPendingToday ? '今天还没学' : '今日进度'}}</view>
+        </view>
+        <view class="ui-bar overview-bar"><view class="ui-bar-fill" style="width: {{vocabularyOverview.dailyPlan.dailyGoal ? vocabularyOverview.summary.todayReviewedCount * 100 / vocabularyOverview.dailyPlan.dailyGoal : 0}}%;"></view></view>
+        <view class="overview-facts">
+          <view>词库已掌握 {{vocabularyOverview.summary.masteredCount}} / {{vocabularyOverview.summary.totalCount}}</view>
+          <view>近 7 天完成 {{vocabularyOverview.weeklyStats.totalReviewed}} 个<text wx:if="{{vocabularyOverview.weeklyStats.totalReviewActions}}"> · 记住率 {{vocabularyOverview.weeklyStats.fluentRate}}%</text></view>
+        </view>
+        <view class="learning-order-hint">建议顺序：先背单词，再做小测</view>
+        <view class="overview-actions">
+          <view class="primary-btn" bindtap="goVocabularyStudy">{{isTeacher || isTeacherPreview ? '查看背词流程' : '开始今日背词'}}</view>
+          <view class="ghost-btn" bindtap="goVocabularyChallenge">做个性化小测</view>
+        </view>
+        <view class="text-link" bindtap="goVocabulary">单词明细与学习记录 →</view>
+      </view>
+
+      <view class="card overview-card" wx:if="{{analytics && (isTeacher || mistakeLearningForm.enabled)}}">
+        <view class="block-head">
+          <view class="overview-label">错题</view>
+          <view class="ghost-small" bindtap="goReviewDashboard">{{cycleStatus.isReviewPhase ? '开始复习' : '查看复习'}}</view>
+        </view>
+        <view class="overview-number-row">
+          <view class="overview-number">{{analytics.pendingCount}}<text class="overview-number-unit"> 道待复习</text></view>
+          <view class="overview-number-note">共 {{analytics.totalMistakeCount}} 道 · 已掌握 {{analytics.masteredCount}}</view>
+        </view>
+        <view class="rank-block" wx:if="{{analytics.topQuestionTypes.length}}">
+          <view class="rank-row" wx:for="{{analytics.topQuestionTypes}}" wx:key="label">
+            <view class="rank-name">{{item.label}}</view>
+            <view class="ui-bar rank-bar"><view class="ui-bar-fill" style="width: {{item.percent}}%;"></view></view>
+            <view class="rank-count">{{item.count}}</view>
+          </view>
+        </view>
+        <view class="text-link" wx:if="{{isTeacher}}" bindtap="goMistakeExport">导出错题汇总 →</view>
+      </view>
+
+      <view class="ui-group overview-group" wx:if="{{isTeacher}}">
+        <view class="ui-row" bindtap="goStudentReminders" hover-class="ui-pressed">
           <view class="ui-row-main">
             <view class="ui-row-title">给学生的动态提醒</view>
             <view class="ui-row-note">发布、修改或撤回学生首页里的提醒</view>
           </view>
           <view class="ui-chevron"></view>
         </view>
-        <view class="ui-row" wx:if="{{!isTeacher && frenchLearningForm.enabled}}" bindtap="goFrenchLearning" hover-class="ui-pressed">
+      </view>
+
+      <view class="ui-group overview-group" wx:if="{{!isTeacher && frenchLearningForm.enabled}}">
+        <view class="ui-row" bindtap="goFrenchLearning" hover-class="ui-pressed">
           <view class="ui-row-main">
             <view class="ui-row-title">法语学习</view>
             <view class="ui-row-note">A1/A2 词汇、语法、听力、跟读与阅读</view>
@@ -92,120 +148,13 @@
         </view>
       </view>
 
-      <view class="card learning-radar-summary" wx:if="{{isTeacher && learningRadarAvailable && learningRadarSummary}}" bindtap="goLearningInsights">
-        <view class="block-head">
-          <view class="block-head-main">
-            <view class="learning-radar-eyebrow">学习雷达 · 当前阶段</view>
-            <view class="progress-title">{{learningRadarSummary.stageDisplay}}</view>
-          </view>
-          <view class="ui-chevron"></view>
-        </view>
-        <view class="learning-radar-goal">{{learningRadarSummary.stageGoal}}</view>
-        <view class="learning-radar-grid">
-          <view class="learning-radar-cell">
-            <view class="learning-radar-cell-label">证据覆盖</view>
-            <view class="learning-radar-cell-value">{{learningRadarSummary.evidenceCoverage}}</view>
-          </view>
-          <view class="learning-radar-cell">
-            <view class="learning-radar-cell-label">当前重点</view>
-            <view class="learning-radar-cell-value">{{learningRadarSummary.topPriorityLabel}}</view>
-          </view>
-        </view>
-        <view class="learning-radar-next">
-          <view class="learning-radar-next-label">下节课建议 · {{learningRadarSummary.nextLessonDurationMinutes}} 分钟</view>
-          <view class="learning-radar-next-title">{{learningRadarSummary.nextLessonTitle}}</view>
-        </view>
-        <view class="learning-radar-readiness">{{learningRadarSummary.readinessLabel}}</view>
-      </view>
-
-      <view class="card learning-overview-card" wx:if="{{student.vocabularyEnabled}}">
-        <view class="block-head">
-          <view class="progress-title">单词学习</view>
-          <view class="ui-chip ui-chip-accent" wx:if="{{vocabularyOverview.weeklyStats.streakDays}}">
-            连续 {{vocabularyOverview.weeklyStats.streakDays}} 天<text wx:if="{{vocabularyOverview.weeklyStats.streakPendingToday}}"> · 今天还没学</text>
-          </view>
-          <view class="ui-chip" wx:else>还没有连续学习记录</view>
-        </view>
-        <view class="overview-chart-grid">
-          <view class="overview-chart-item">
-            <view class="overview-chart-title">今日目标</view>
-            <data-chart
-              segments="{{vocabularyTodaySegments}}"
-              center-value="{{vocabularyOverview.summary.todayReviewedCount + '/' + vocabularyOverview.dailyPlan.dailyGoal}}"
-              center-label="今日完成"
-              aria-label="今日完成 {{vocabularyOverview.summary.todayReviewedCount}} 个，目标 {{vocabularyOverview.dailyPlan.dailyGoal}} 个"
-            ></data-chart>
-          </view>
-          <view class="overview-chart-item">
-            <view class="overview-chart-title">词库掌握</view>
-            <data-chart
-              segments="{{vocabularyMasterySegments}}"
-              center-value="{{vocabularyOverview.summary.totalCount + ''}}"
-              center-label="词库总数"
-              aria-label="词库共 {{vocabularyOverview.summary.totalCount}} 个，已掌握 {{vocabularyOverview.summary.masteredCount}} 个"
-            ></data-chart>
-          </view>
-        </view>
-        <view class="weekly-mini" wx:if="{{weeklyChartPoints.length}}">
-          <view class="overview-chart-title">近 7 天学习</view>
-          <data-chart
-            type="bar"
-            points="{{weeklyChartPoints}}"
-            aria-label="近七天共完成 {{vocabularyOverview.weeklyStats.totalReviewed}} 个单词"
-          ></data-chart>
-          <view class="weekly-mini-summary">
-            7 天完成 {{vocabularyOverview.weeklyStats.totalReviewed}} 个
-            <text wx:if="{{vocabularyOverview.weeklyStats.totalReviewActions}}"> · 记住率 {{vocabularyOverview.weeklyStats.fluentRate}}%</text>
-          </view>
-        </view>
-        <view class="overview-actions">
-          <view class="learning-order-hint">建议顺序：先背单词，再做小测</view>
-          <view class="primary-btn" bindtap="goVocabularyStudy">
-            ① {{isTeacher || isTeacherPreview ? '查看学生背词流程' : '开始今日背词'}}
-          </view>
-          <view class="ghost-btn overview-challenge" bindtap="goVocabularyChallenge">② 背完后做个性化小测</view>
-          <view class="text-link" bindtap="goVocabulary">查词与查看学习记录 →</view>
-          <view class="text-link" wx:if="{{isTeacher}}" bindtap="goMemoryEvaluation">查看记忆算法评估 →</view>
-        </view>
-      </view>
-
-      <view class="card analytics-card" wx:if="{{analytics && (isTeacher || mistakeLearningForm.enabled)}}">
-        <view class="block-head">
-          <view class="block-head-main">
-            <view class="progress-title">错题分析</view>
-            <view class="progress-label">{{analytics.weakPointSummary}}</view>
-          </view>
-          <view class="ghost-small" bindtap="goReviewDashboard">{{cycleStatus.isReviewPhase ? '开始复习' : '查看复习'}}</view>
-        </view>
-        <view class="mistake-chart-wrap">
-          <data-chart
-            segments="{{mistakeStatusSegments}}"
-            center-value="{{analytics.totalMistakeCount + ''}}"
-            center-label="错题总数"
-            aria-label="错题共 {{analytics.totalMistakeCount}} 道，待复习 {{analytics.pendingCount}} 道，已复习 {{analytics.reviewedCount}} 道，已掌握 {{analytics.masteredCount}} 道"
-          ></data-chart>
-        </view>
-        <view class="rank-block" wx:if="{{analytics.topQuestionTypes.length}}">
-          <view class="overview-chart-title">高频题型</view>
-          <view class="rank-row" wx:for="{{analytics.topQuestionTypes}}" wx:key="label">
-            <view class="rank-name">{{item.label}}</view>
-            <view class="ui-bar rank-bar"><view class="ui-bar-fill" style="width: {{item.percent}}%;"></view></view>
-            <view class="rank-count">{{item.count}}</view>
-          </view>
-        </view>
-        <view class="tags" wx:if="{{analytics.topSkillTags.length}}">
-          <text class="ui-chip" wx:for="{{analytics.topSkillTags}}" wx:key="label">{{item.label}} {{item.count}}</text>
-        </view>
-        <view class="mistake-export-entry" wx:if="{{isTeacher}}" bindtap="goMistakeExport">
-          <view class="ui-row-main">
-            <view class="ui-row-title">导出错题汇总</view>
-            <view class="ui-row-note">按课程范围生成 Word</view>
-          </view>
-          <view class="ui-chevron"></view>
-        </view>
-      </view>
-
       <view class="card no-learning-card" wx:if="{{!isTeacher && !showEnglishLearning && !frenchLearningForm.enabled}}">老师开启学习功能后，这里会显示学习入口。</view>
+    </block>
+
+    <block wx:if="{{activeSection === 'plan'}}">
+      <learning-plan wx:if="{{learningRadar}}" radar="{{learningRadar}}" student-id="{{student._id}}" bindupdated="reloadLearningRadar"></learning-plan>
+      <view class="empty" wx:elif="{{learningRadarLoading}}">正在读取学习计划…</view>
+      <view class="empty" wx:else>当前课程模板还没有阶段计划。</view>
     </block>
 
     <block wx:if="{{activeSection === 'lessons'}}">

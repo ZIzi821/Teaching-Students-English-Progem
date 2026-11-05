@@ -1,3 +1,4 @@
+const { callCloud } = require('../../utils/cloud');
 const frenchPreview = require("../../utils/frenchPreview");
 
 function normalizeActivity(item) {
@@ -20,7 +21,7 @@ Page({
   },
 
   cloud(type, data) {
-    return wx.cloud.callFunction({ name: 'quickstartFunctions', data: { type, data: frenchPreview.withData(this, data) } }).then((response) => {
+    return callCloud({ type, data: frenchPreview.withData(this, data) }).then((response) => {
       const result = response.result || {};
       if (result.success === false) throw new Error(result.message || '暂不可用');
       return result.data || result;

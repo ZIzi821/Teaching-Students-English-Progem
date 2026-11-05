@@ -36,14 +36,14 @@
 
 .study-eyebrow {
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .study-title {
   margin-top: 8rpx;
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
@@ -53,7 +53,7 @@
   border-radius: 999rpx;
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -63,7 +63,7 @@
   border-radius: 16rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.6;
 }
 
@@ -73,7 +73,7 @@
 
 .session-progress-meta {
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .session-progress-track {
@@ -101,7 +101,7 @@
 
 .memory-stage {
   color: var(--warn);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -124,7 +124,7 @@
 .memory-source {
   margin-top: 18rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .pronunciation-action {
@@ -137,7 +137,7 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -149,7 +149,7 @@
 .audio-preload-note {
   margin-top: 13rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .audio-preload-ready {
@@ -164,14 +164,14 @@
   max-width: 560rpx;
   margin: 14rpx auto 0;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }
 
 .memory-prompt {
   margin: 62rpx 0 24rpx;
   color: var(--ink-2);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.7;
 }
 
@@ -184,7 +184,7 @@
   border-radius: 24rpx;
   color: var(--on-fill);
   background: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -196,13 +196,13 @@
 
 .answer-label {
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .answer-meaning {
   margin-top: 12rpx;
   color: var(--ink);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
   line-height: 1.5;
 }
@@ -214,13 +214,13 @@
   border-radius: 999rpx;
   color: var(--ink-2);
   background: var(--line);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .rating-guide {
   margin: 30rpx 8rpx 20rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.55;
 }
 
@@ -237,13 +237,13 @@
 }
 
 .rating-title {
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .rating-note {
   margin-top: 7rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .rating-forgot {
@@ -285,21 +285,21 @@
   border-radius: 50%;
   color: var(--on-fill);
   background: var(--accent);
-  font-size: 52rpx;
+  font-size: 56rpx;
   font-weight: 600;
 }
 
 .completion-title {
   margin-top: 26rpx;
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .completion-hint {
   margin-top: 14rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.6;
 }
 
@@ -316,12 +316,12 @@
   flex-direction: column;
   gap: 6rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .result-number {
   color: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -329,14 +329,14 @@
   margin-top: 16rpx;
   padding: 22rpx;
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .study-tip {
   margin-top: 22rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.6;
   text-align: center;
 }

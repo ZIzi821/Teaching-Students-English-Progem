@@ -33,10 +33,11 @@ assert(
   "evaluation API must be teacher-only"
 );
 
-const detailScript = read("miniprogram/pages/student-detail/index.js");
-const detailMarkup = read("miniprogram/pages/student-detail/index.wxml");
-assert(detailScript.includes("goMemoryEvaluation"), "teacher navigation handler is missing");
-assert(detailMarkup.includes('wx:if="{{isTeacher}}" bindtap="goMemoryEvaluation"'), "teacher-only entry is missing");
+const vocabularyScript = read("miniprogram/pages/vocabulary/index.js");
+const vocabularyMarkup = read("miniprogram/pages/vocabulary/index.wxml");
+assert(vocabularyScript.includes("goMemoryEvaluation"), "teacher navigation handler is missing");
+assert(vocabularyMarkup.includes('wx:if="{{isTeacherManager}}"') && vocabularyMarkup.includes('bindtap="goMemoryEvaluation"'), "teacher-only entry is missing");
+assert(!read("miniprogram/pages/student-detail/index.wxml").includes("goMemoryEvaluation"), "diagnostic entry must stay out of the student overview");
 
 const pageMarkup = read("miniprogram/insights/pages/memory-evaluation/index.wxml");
 assert(pageMarkup.includes("Brier Score"), "Brier score explanation is missing");

@@ -24,12 +24,12 @@
 
 .vocab-kicker {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .vocab-title {
   color: var(--ink);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
   line-height: 1.3;
 }
@@ -37,7 +37,7 @@
 .vocab-note {
   margin-top: 8rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .hero-line {
@@ -50,12 +50,12 @@
 .hero-progress {
   flex-shrink: 0;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .hero-progress-number {
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
@@ -76,7 +76,7 @@
 .disabled-hint {
   margin-top: 4rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .catalog-detail-button {
@@ -91,20 +91,20 @@
 }
 
 .catalog-detail-title {
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .catalog-detail-hint {
   margin-top: 4rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   opacity: 0.85;
 }
 
 .catalog-source-note {
   margin: 16rpx 4rpx 0;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .catalog-empty,
@@ -113,26 +113,26 @@
   border: 1rpx dashed var(--line-strong);
   border-radius: 24rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center;
 }
 
 .view-mode-tip {
   margin: 0 4rpx 8rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .section-title {
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .section-hint {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 /* 单词 */
@@ -152,13 +152,13 @@
 
 .library-toggle-hint {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .library-toggle-action {
   flex-shrink: 0;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
@@ -181,20 +181,20 @@
   padding: 0 24rpx;
   border-radius: 16rpx;
   background: var(--surface-2);
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .clear-search {
   flex-shrink: 0;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .search-scope-hint,
 .result-count {
   margin-top: 12rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .filter-row {
@@ -214,7 +214,7 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 12rpx;
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -232,7 +232,7 @@
   border-radius: 999rpx;
   color: var(--ink-2);
   background: var(--surface);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .tab-active {
@@ -271,7 +271,7 @@
   border-radius: 999rpx;
   color: var(--ink-2);
   background: var(--surface-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 500;
 }
 
@@ -283,7 +283,7 @@
 .word-progress {
   overflow: hidden;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -294,7 +294,7 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 999rpx;
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .pronunciation-playing {
@@ -309,7 +309,7 @@
 
 .word-text {
   color: var(--ink);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
   line-height: 1.3;
   word-break: break-word;
@@ -320,7 +320,7 @@
 .word-memory-schedule {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .meaning-hidden {
@@ -332,7 +332,7 @@
   border-radius: 12rpx;
   color: var(--ink-3);
   background: var(--surface-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .meaning-question {
@@ -347,12 +347,12 @@
 
 .part-of-speech {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .meaning-text {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 500;
   word-break: break-word;
 }
@@ -360,14 +360,14 @@
 .source-context {
   margin-top: 8rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   word-break: break-word;
 }
 
 .source-link {
   margin-top: 8rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .review-actions-four {
@@ -384,7 +384,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 12rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
@@ -411,7 +411,7 @@
 .review-waiting {
   margin-top: 16rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center;
 }
 
@@ -421,14 +421,14 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 12rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center;
 }
 
 .load-more-btn {
   padding: 24rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
   text-align: center;
 }
@@ -456,7 +456,7 @@
 .teacher-daily-count {
   flex-shrink: 0;
   color: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -474,7 +474,7 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 12rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center;
 }
 
@@ -500,7 +500,7 @@
   border-radius: 999rpx;
   color: var(--ink-2);
   background: var(--surface-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .insight-grid {
@@ -519,7 +519,7 @@
 .insight-title {
   margin-bottom: 12rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
   text-align: center;
 }
@@ -528,14 +528,14 @@
   flex-shrink: 0;
   max-width: 260rpx;
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-align: right;
 }
 
 .weekly-summary {
   margin-top: 8rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .memory-scheduler-badge {
@@ -544,7 +544,7 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .memory-retention-row {
@@ -556,7 +556,7 @@
 
 .memory-retention-value {
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
   line-height: 1.2;
 }
@@ -564,7 +564,7 @@
 .memory-retention-label,
 .memory-risk-copy {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .memory-risk-copy {
@@ -588,20 +588,20 @@
 
 .memory-load-value {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .memory-load-label {
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .memory-empty,
 .memory-disclaimer {
   margin-top: 16rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 /* 待确认 */
@@ -622,7 +622,7 @@
 
 .pending-word {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
   word-break: break-word;
 }
@@ -634,7 +634,7 @@
 .pending-label {
   margin-bottom: 8rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .pending-input {
@@ -644,7 +644,7 @@
   padding: 0 20rpx;
   border: 1rpx solid var(--line-strong);
   border-radius: 12rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .pending-actions {
@@ -656,7 +656,7 @@
 
 .pending-btn {
   min-height: 80rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .ignore-btn {

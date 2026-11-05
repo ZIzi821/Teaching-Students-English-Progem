@@ -1,4 +1,5 @@
 const { playReliableAudio, preloadAudioSources } = require("../../../utils/reliableAudio");
+const { callCloud } = require("../../../utils/cloud");
 
 const sanitizeSegment = (value, fallback, limit = 36) => {
   const text = String(value || "").trim().replace(/[\\/:*?"<>|\s]+/g, "-").replace(/-+/g, "-");
@@ -147,15 +148,12 @@ Page({
       return;
     }
     this.setData({ state: "loading", message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "getFollowReadingPractice",
       data: {
-        type: "getFollowReadingPractice",
-        data: {
-          lessonId: this.data.lessonId,
-          mode: this.data.mode,
-          previewStudentId: this.data.previewStudentId,
-        },
+        lessonId: this.data.lessonId,
+        mode: this.data.mode,
+        previewStudentId: this.data.previewStudentId,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -405,15 +403,12 @@ Page({
         return uploadNext(index + 1);
       });
     };
-    uploadNext(0).then(() => wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    uploadNext(0).then(() => callCloud({
+      type: "submitFollowReadingBatch",
       data: {
-        type: "submitFollowReadingBatch",
-        data: {
-          lessonId: this.data.lessonId,
-          requestId: this.batchRequestId,
-          responses: this.localResponses.map((response) => this.uploadedByItemId[response.itemId]),
-        },
+        lessonId: this.data.lessonId,
+        requestId: this.batchRequestId,
+        responses: this.localResponses.map((response) => this.uploadedByItemId[response.itemId]),
       },
     })).then((res) => {
       const result = res.result || {};

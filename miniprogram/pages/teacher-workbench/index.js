@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 Page({
   data: {
     loading: true,
@@ -16,12 +17,9 @@ Page({
 
   loadStudents() {
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "listStudents",
-        data: { includeHidden: true },
-      },
+    callCloud({
+      type: "listStudents",
+      data: { includeHidden: true },
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) {
@@ -70,12 +68,9 @@ Page({
     const studentName = String(event.currentTarget.dataset.name || "这位学生");
     if (!studentId || this.data.restoringId) return;
     this.setData({ restoringId: studentId });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "setStudentVisibility",
-        data: { studentId, hidden: false },
-      },
+    callCloud({
+      type: "setStudentVisibility",
+      data: { studentId, hidden: false },
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "恢复失败");

@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 const FILTERS = [
   { key: "all", label: "全部" },
   { key: "recording", label: "录音" },
@@ -52,10 +53,7 @@ Page({
 
   loadTodos() {
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getTeacherTodos" },
-    }).then((res) => {
+    callCloud({ type: "getTeacherTodos" }).then((res) => {
       const result = res.result || {};
       if (!result.success) {
         this.allTodos = [];

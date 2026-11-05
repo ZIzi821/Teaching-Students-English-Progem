@@ -1,4 +1,5 @@
 const frenchPreview = require("../../utils/frenchPreview");
+const { callCloud } = require("../../utils/cloud");
 
 const PALETTE = ["#14645A", "#7b8eaa", "#b78a5a", "#a87974", "#8f9a69"];
 const MEMORY_LABELS = { new: "未学习", learning: "学习中", review: "复习中", mastered: "已掌握" };
@@ -65,7 +66,7 @@ Page({
   loadDashboard() {
     this.setData({ loading: true, message: "" });
     if (!wx.cloud) { this.setData({ loading: false, message: "微信版本过低，请更新后重试" }); return; }
-    wx.cloud.callFunction({ name: "quickstartFunctions", data: { type: "getFrenchDashboard", data: frenchPreview.withData(this, {}) } })
+    callCloud({ type: "getFrenchDashboard", data: frenchPreview.withData(this, {}) })
       .then((res) => {
         const result = res.result || {};
         if (result.success === false) throw new Error(result.message || "暂时无法读取学习进度");

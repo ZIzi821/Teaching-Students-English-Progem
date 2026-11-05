@@ -1,20 +1,20 @@
 .label {
   margin-bottom: 12rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .question-title {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .question-meta {
   margin-top: 10rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .text-empty {
@@ -34,7 +34,7 @@
   border-radius: 999rpx;
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .field {
@@ -68,14 +68,14 @@
 .review-btn {
   flex: 1;
   min-height: 72rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .status,
 .priority {
   padding: 8rpx 14rpx;
   border-radius: 999rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .status {
@@ -90,7 +90,7 @@
 
 .content {
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.7;
 }
 
@@ -110,13 +110,13 @@
   border-radius: 999rpx;
   color: var(--ink-2);
   background: var(--line);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .no-permission {
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.6;
 }
 .edit-btn {
@@ -126,7 +126,7 @@
 .pending-card {
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .question-text {
@@ -135,7 +135,7 @@
   border-radius: 12rpx;
   background: var(--surface-2);
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.65;
   white-space: pre-wrap;
 }
@@ -147,6 +147,6 @@
   border-radius: 16rpx;
   color: var(--danger);
   background: var(--danger-soft);
-  font-size: 28rpx;
+  font-size: 30rpx;
   text-align: center;
 }

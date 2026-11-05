@@ -21,14 +21,14 @@
 
 .preview-banner-title {
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .preview-banner-hint {
   margin-top: 7rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.45;
 }
 
@@ -38,14 +38,14 @@
   border-radius: 12rpx;
   color: var(--on-fill);
   background: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .loading-card,
 .error-card {
   color: var(--ink-2);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.6;
   text-align: center;
 }
@@ -74,7 +74,7 @@
 
 .hero-kicker {
   color: rgba(255, 255, 255, 0.76);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -87,14 +87,14 @@
 }
 
 .hero-title {
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .hero-level {
   margin-top: 8rpx;
   color: rgba(255, 255, 255, 0.84);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .point-orb {
@@ -110,14 +110,14 @@
 }
 
 .point-number {
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .point-label {
   margin-top: 2rpx;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .level-track,
@@ -142,7 +142,7 @@
 .level-note {
   margin-top: 10rpx;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .summary-grid {
@@ -162,14 +162,14 @@
 
 .summary-number {
   color: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .summary-label {
   margin-top: 6rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .section-head,
@@ -189,18 +189,18 @@
 
 .section-title {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .card-section-title {
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .section-hint {
   margin-top: 6rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.45;
 }
 
@@ -211,7 +211,7 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -250,7 +250,7 @@
   border-radius: 16rpx;
   color: var(--on-fill);
   background: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -262,7 +262,7 @@
 .achievement-title {
   margin-top: 14rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
@@ -270,7 +270,7 @@
   min-height: 62rpx;
   margin-top: 7rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.45;
 }
 
@@ -287,7 +287,7 @@
 .achievement-state {
   margin-top: 7rpx;
   color: var(--warn);
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-align: right;
 }
 
@@ -303,7 +303,7 @@
   border-radius: 16rpx;
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .pk-relation-note {
@@ -312,7 +312,7 @@
   border-radius: 16rpx;
   color: var(--ink-2);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.55;
 }
 
@@ -349,7 +349,7 @@
   border-radius: 50%;
   color: var(--ink-2);
   background: var(--line);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -375,7 +375,7 @@
 
 .rank-name {
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
@@ -385,25 +385,25 @@
   border-radius: 999rpx;
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .rank-source {
   margin-top: 3rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .rank-points {
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .privacy-note,
 .evidence-note {
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.55;
 }
 
@@ -423,7 +423,7 @@
   border-radius: 16rpx;
   color: var(--ink-2);
   background: var(--surface-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.7;
 }
 
@@ -440,7 +440,7 @@
 .breakdown-title,
 .recent-title {
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
@@ -449,7 +449,7 @@
 .breakdown-empty {
   margin-top: 5rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.45;
 }
 
@@ -462,7 +462,7 @@
 .recent-points {
   flex-shrink: 0;
   color: var(--warn);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 

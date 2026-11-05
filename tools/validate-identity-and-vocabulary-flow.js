@@ -1,6 +1,7 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
+const { loadSandboxCloud } = require("./sandbox-cloud");
 const vm = require("vm");
 
 const root = path.resolve(__dirname, "..");
@@ -37,6 +38,10 @@ assert(studyJs.includes("prefetchAudioAhead") && studyJs.includes("includeFallba
 assert(studyWxml.includes("audioPreloadLabel"), "focused study does not show whether pronunciation audio is being prepared");
 
 let studyPage = null;
+const studyWx = {
+  showToast: () => {},
+  vibrateShort: () => {},
+};
 vm.runInNewContext(studyJs, {
   Page: (definition) => { studyPage = definition; },
   require: (modulePath) => {
@@ -46,12 +51,10 @@ vm.runInNewContext(studyJs, {
     if (modulePath === "../../utils/cloudError") {
       return require(path.join(root, "miniprogram", "utils", "cloudError"));
     }
+    if (modulePath === "../../utils/cloud") return loadSandboxCloud(studyWx);
     throw new Error(`Unexpected page dependency: ${modulePath}`);
   },
-  wx: {
-    showToast: () => {},
-    vibrateShort: () => {},
-  },
+  wx: studyWx,
   console,
   setTimeout,
   clearTimeout,

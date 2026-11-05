@@ -14,7 +14,7 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -26,7 +26,7 @@
   border-radius: 16rpx;
   color: var(--on-fill);
   background: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -35,7 +35,7 @@
   margin-top: 18rpx;
   padding: 16rpx 18rpx;
   border-radius: 16rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.55;
   overflow-wrap: anywhere;
 }
@@ -57,19 +57,19 @@
 .file-name,
 .progress-count {
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .title {
   margin: 10rpx 0;
   color: var(--ink);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .section-title {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -89,7 +89,7 @@
   flex: 0 0 auto;
   min-height: 68rpx;
   padding: 0 24rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .file-name {
@@ -107,7 +107,7 @@
   border-radius: 16rpx;
   background: var(--surface-2);
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.5;
 }
 
@@ -119,7 +119,7 @@
   margin-top: 18rpx;
   padding: 18rpx 20rpx;
   border-radius: 16rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.6;
 }
 
@@ -140,7 +140,7 @@
 
 .progress-title {
   overflow-wrap: anywhere;
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 

@@ -17,7 +17,9 @@ const registeredSubpages = (app.subpackages || app.subPackages || []).flatMap((s
 const cloudIndex = read("cloudfunctions", "quickstartFunctions", "index.js");
 const service = read("cloudfunctions", "quickstartFunctions", "followReadingService.js");
 const logic = read("cloudfunctions", "quickstartFunctions", "followReading.js");
-const addLesson = read("miniprogram", "pages", "add-lesson", "index.js");
+const addLesson = read("miniprogram", "pages", "add-lesson", "index.js")
+  + read("miniprogram", "utils", "lessonTaskOptions.js")
+  + read("miniprogram", "components", "lesson-task-fields", "index.js");
 const lessonDetail = read("miniprogram", "pages", "lesson-detail", "index.js");
 const lessonDetailWxml = read("miniprogram", "pages", "lesson-detail", "index.wxml");
 const practice = read("miniprogram", "follow-reading", "pages", "practice", "index.js");

@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 const root = path.join(__dirname, "..", "miniprogram");
-const FONT_SIZES = new Set([22, 24, 28, 32, 40, 52]);
+const FONT_SIZES = new Set([24, 26, 30, 34, 44, 56]);
 const RADII = new Set([12, 16, 24, 999]);
 const CHART_FILE = path.join("components", "ket-score-trend", "index.wxss");
 

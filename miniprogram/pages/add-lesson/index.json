@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "添加英语课"
+  "navigationBarTitleText": "添加英语课",
+  "usingComponents": {
+    "lesson-task-fields": "/components/lesson-task-fields/index"
+  }
 }

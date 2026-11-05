@@ -10,21 +10,21 @@
 
 .eyebrow {
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .practice-title {
   margin-top: 9rpx;
   color: var(--accent);
-  font-size: 52rpx;
+  font-size: 56rpx;
   font-weight: 600;
 }
 
 .lesson-name {
   margin-top: 10rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .prompt-card {
@@ -35,14 +35,14 @@
 
 .prompt-label {
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .prompt-text {
   margin-top: 18rpx;
   color: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
   line-height: 1.65;
   white-space: pre-wrap;
@@ -61,7 +61,7 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -79,7 +79,7 @@
 .step-title {
   margin-bottom: 22rpx;
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
   text-align: left;
 }
@@ -90,7 +90,7 @@
   gap: 15rpx;
   margin-top: 16rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.5;
   text-align: left;
 }
@@ -105,7 +105,7 @@
   border-radius: 50%;
   color: var(--on-fill);
   background: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -118,7 +118,7 @@
 .recording-title,
 .success-title {
   color: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -136,7 +136,7 @@
 .success-detail {
   margin-top: 12rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }
 
@@ -155,7 +155,7 @@
   border-radius: 50%;
   color: var(--on-fill);
   background: var(--accent);
-  font-size: 52rpx;
+  font-size: 56rpx;
   font-weight: 600;
 }
 
@@ -187,7 +187,7 @@
 .recording-timer {
   margin-top: 10rpx;
   color: var(--danger);
-  font-size: 52rpx;
+  font-size: 56rpx;
   font-weight: 600;
 }
 
@@ -200,7 +200,7 @@
   border-radius: 16rpx;
   color: var(--on-fill);
   background: var(--danger);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -227,13 +227,13 @@
 .success-action {
   min-width: 0;
   flex: 1;
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .submission-note,
 .privacy-note {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.55;
   text-align: center;
 }
@@ -265,14 +265,14 @@
 
 .error-title {
   color: var(--danger);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .error-message {
   margin-top: 14rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.6;
 }
 
@@ -300,13 +300,13 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .ket-timing {
   margin-top: 12rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }

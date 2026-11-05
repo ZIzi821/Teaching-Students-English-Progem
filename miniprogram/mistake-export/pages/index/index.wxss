@@ -45,20 +45,20 @@ page {
 
 .eyebrow {
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .hero-title {
   margin-top: 10rpx;
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .hero-copy {
   margin-top: 14rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.7;
 }
 
@@ -83,14 +83,14 @@ page {
 
 .hero-stats text {
   color: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .hero-stats label {
   margin-top: 3rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .card {
@@ -100,7 +100,7 @@ page {
 
 .section-title,
 .history-title {
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -121,7 +121,7 @@ page {
   border-radius: 16rpx;
   background: var(--surface-2);
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.45;
 }
 
@@ -138,7 +138,7 @@ page {
 
 .field-label {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -154,7 +154,7 @@ page {
 .generating-note {
   margin-top: 12rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.6;
 }
 
@@ -178,19 +178,19 @@ page {
 
 .estimate-label {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .estimate-value {
   margin-top: 4rpx;
   color: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .estimate-lessons {
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-align: right;
 }
 
@@ -201,7 +201,7 @@ page {
   border-radius: 16rpx;
   background: var(--accent);
   color: var(--on-fill);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
   text-align: center;
 }
@@ -227,14 +227,14 @@ page {
 
 .history-date {
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .history-range {
   margin-top: 8rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.55;
 }
 
@@ -242,7 +242,7 @@ page {
   flex: none;
   padding: 7rpx 14rpx;
   border-radius: 999rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -264,7 +264,7 @@ page {
 .history-meta {
   margin-top: 18rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
@@ -274,13 +274,13 @@ page {
   border-radius: 12rpx;
   background: var(--danger-soft);
   color: var(--danger);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.55;
 }
 
 .open-btn {
   padding: 17rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .history-actions {
@@ -295,7 +295,7 @@ page {
   border-radius: 16rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
   text-align: center;
 }

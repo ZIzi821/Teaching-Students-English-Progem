@@ -1,3 +1,4 @@
+const { callCloud } = require("../../../utils/cloud");
 const sanitizeSegment = (value, fallback, limit = 50) => {
   const text = String(value || "").trim().replace(/[\\/:*?"<>|\s]+/g, "-").replace(/-+/g, "-");
   return text.slice(0, limit) || fallback;
@@ -30,10 +31,7 @@ Page({
 
   loadLibrary() {
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getKetMockLibrary" },
-    }).then((res) => {
+    callCloud({ type: "getKetMockLibrary" }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "无法读取模拟题录音库");
       const sets = (result.sets || []).map((set) => Object.assign({}, set, {
@@ -93,18 +91,15 @@ Page({
     wx.cloud.uploadFile({ cloudPath, filePath: file.path })
       .then((uploadRes) => {
         uploadedFileID = uploadRes.fileID;
-        return wx.cloud.callFunction({
-          name: "quickstartFunctions",
+        return callCloud({
+          type: "saveKetMockCueAudio",
           data: {
-            type: "saveKetMockCueAudio",
-            data: {
-              setId: set.id,
-              cueId: cue.id,
-              fileID: uploadedFileID,
-              cloudPath,
-              fileName: file.name || `examiner.${extension}`,
-              fileSize: file.size || 0,
-            },
+            setId: set.id,
+            cueId: cue.id,
+            fileID: uploadedFileID,
+            cloudPath,
+            fileName: file.name || `examiner.${extension}`,
+            fileSize: file.size || 0,
           },
         });
       })
@@ -164,10 +159,7 @@ Page({
         if (!modal.confirm) return;
         const key = `${set.id}:${cue.id}`;
         this.setData({ deletingKey: key });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: { type: "deleteKetMockCueAudio", data: { setId: set.id, cueId: cue.id } },
-        }).then((res) => {
+        callCloud({ type: "deleteKetMockCueAudio", data: { setId: set.id, cueId: cue.id } }).then((res) => {
           const result = res.result || {};
           if (!result.success) throw new Error(result.message || "删除失败");
           wx.showToast({ title: "已删除" });

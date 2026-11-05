@@ -5,7 +5,7 @@
 .status-card {
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.6;
   text-align: center;
 }
@@ -36,14 +36,14 @@
 
 .challenge-eyebrow {
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .challenge-title {
   margin-top: 10rpx;
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
   line-height: 1.4;
 }
@@ -51,7 +51,7 @@
 .challenge-summary {
   margin-top: 10rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.55;
 }
 
@@ -61,7 +61,7 @@
   border-radius: 999rpx;
   color: var(--ink-2);
   background: var(--warn-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .preview-tip {
@@ -70,13 +70,13 @@
   border-radius: 16rpx;
   color: var(--ink-2);
   background: var(--warn-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }
 
 .progress-meta {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .challenge-progress {
@@ -100,7 +100,7 @@
 
 .question-type {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-align: center;
 }
 
@@ -108,7 +108,7 @@
   white-space: pre-line;
   margin-top: 24rpx;
   color: var(--ink);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
   line-height: 1.5;
   text-align: center;
@@ -117,13 +117,13 @@
 
 .english-prompt {
   color: var(--accent);
-  font-size: 52rpx;
+  font-size: 56rpx;
 }
 
 .question-meta {
   margin-top: 8rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-align: center;
 }
 
@@ -145,7 +145,7 @@
   justify-content: center;
   border-radius: 12rpx;
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
   line-height: 1;
   text-transform: lowercase;
@@ -213,12 +213,12 @@
   border-radius: 50%;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .choice-label {
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.45;
 }
 
@@ -253,7 +253,7 @@
   border-radius: 16rpx;
   color: var(--accent);
   background: var(--surface-2);
-  font-size: 32rpx;
+  font-size: 34rpx;
   text-align: center;
 }
 
@@ -263,14 +263,14 @@
   border-color: var(--accent);
   border-radius: 999rpx;
   background: var(--surface);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .letter-auto-hint {
   margin-top: 12rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.45;
   text-align: center;
 }
@@ -284,7 +284,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 16rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -312,14 +312,14 @@
 
 .feedback-title {
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .feedback-answer {
   margin-top: 12rpx;
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.55;
 }
 
@@ -327,7 +327,7 @@
 .save-warning {
   margin-top: 10rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }
 
@@ -346,21 +346,21 @@
 
 .result-eyebrow {
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .result-title {
   margin: 12rpx 0 8rpx;
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .result-tip {
   margin-top: 12rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.6;
 }
 

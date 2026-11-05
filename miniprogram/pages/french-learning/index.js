@@ -1,4 +1,5 @@
 const frenchPreview = require("../../utils/frenchPreview");
+const { callCloud } = require("../../utils/cloud");
 
 const EMPTY_DASHBOARD = {
   today: { dueCount: 0, newWordCount: 0, newRemainingCount: 0, reviewedCount: 0, successfulRecallCount: 0, againCount: 0, activityCount: 0, studySessionCount: 0, goal: 0, goalPercent: 0 },
@@ -107,10 +108,7 @@ Page({
       this.setData({ loading: false, message: "微信版本过低，请更新后重试" });
       return;
     }
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getFrenchLearningOverview", data: frenchPreview.withData(this, {}) },
-    })
+    callCloud({ type: "getFrenchLearningOverview", data: frenchPreview.withData(this, {}) })
       .then((res) => {
         const result = res.result || {};
         if (result.success === false) throw new Error(result.message || "暂时无法读取法语学习");
@@ -157,10 +155,7 @@ Page({
     const requestVersion = (this.audioRequestVersion || 0) + 1;
     this.audioRequestVersion = requestVersion;
     this.setData({ spotlightAudioLoading: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getFrenchAudioUrl", data: frenchPreview.withData(this, { audioKey }) },
-    }).then((res) => {
+    callCloud({ type: "getFrenchAudioUrl", data: frenchPreview.withData(this, { audioKey }) }).then((res) => {
       if (
         requestVersion !== this.audioRequestVersion
         || !this.data.dailySpotlight

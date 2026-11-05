@@ -1,3 +1,4 @@
+const { callCloud } = require("../../../utils/cloud");
 const SCORE_OPTIONS = Array.from({ length: 11 }, (_, index) => ({
   value: index / 2,
   label: `${index / 2} 分`,
@@ -66,10 +67,7 @@ Page({
       return;
     }
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getKetMockSessionDetail", data: { sessionId: this.data.sessionId } },
-    }).then((res) => {
+    callCloud({ type: "getKetMockSessionDetail", data: { sessionId: this.data.sessionId } }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "无法读取模拟考试");
       const session = Object.assign({}, result.session, {
@@ -160,12 +158,9 @@ Page({
     if (!this.data.canReview || this.data.saving) return;
     this.setData({ saving: true });
     wx.showLoading({ title: "保存评分", mask: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "reviewKetMockSession",
-        data: { sessionId: this.data.sessionId, assessment: this.data.assessmentForm },
-      },
+    callCloud({
+      type: "reviewKetMockSession",
+      data: { sessionId: this.data.sessionId, assessment: this.data.assessmentForm },
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "评分保存失败");

@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 Page({
   data: {
     students: [],
@@ -92,12 +93,9 @@ Page({
       success: (modalResult) => {
         if (!modalResult.confirm) return;
         this.setData({ hidingId: studentId });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: {
-            type: "setStudentVisibility",
-            data: { studentId, hidden: true },
-          },
+        callCloud({
+          type: "setStudentVisibility",
+          data: { studentId, hidden: true },
         }).then((res) => {
           const result = res.result || {};
           if (!result.success) throw new Error(result.message || "隐藏失败");

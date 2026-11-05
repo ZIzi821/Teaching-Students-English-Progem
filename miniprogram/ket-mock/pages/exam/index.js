@@ -4,6 +4,7 @@ const sanitizeSegment = (value, fallback, limit = 40) => {
 };
 
 const { playReliableAudio, preloadAudioSources } = require("../../../utils/reliableAudio");
+const { callCloud } = require("../../../utils/cloud");
 
 const formatTimer = (seconds) => {
   const total = Math.max(0, Math.trunc(Number(seconds) || 0));
@@ -132,10 +133,7 @@ Page({
       return;
     }
     this.setData({ state: "loading", message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getKetMockExam", data: { lessonId: this.data.lessonId } },
-    }).then((res) => {
+    callCloud({ type: "getKetMockExam", data: { lessonId: this.data.lessonId } }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "无法读取模拟考试");
       const latestSession = result.latestSession || null;
@@ -260,10 +258,7 @@ Page({
 
   createSession() {
     this.setData({ preparationText: "正在建立考试记录" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "startKetMockSession", data: { lessonId: this.data.lessonId } },
-    }).then((res) => {
+    callCloud({ type: "startKetMockSession", data: { lessonId: this.data.lessonId } }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "考试记录建立失败");
       if (result.alreadySubmitted) {
@@ -419,10 +414,7 @@ Page({
   },
 
   submitUploadedResponses(responses) {
-    wx.cloud.callFunction({
-        name: "quickstartFunctions",
-        data: { type: "completeKetMockSession", data: { sessionId: this.data.sessionId, responses } },
-      })
+    callCloud({ type: "completeKetMockSession", data: { sessionId: this.data.sessionId, responses } })
       .then((res) => {
         const result = res.result || {};
         if (!result.success) throw new Error(result.message || "考试提交失败");
@@ -468,10 +460,7 @@ Page({
   abortSessionSilently(reason) {
     const sessionId = this.data.sessionId;
     if (!sessionId) return;
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "abortKetMockSession", data: { sessionId, reason } },
-    }).catch(() => {});
+    callCloud({ type: "abortKetMockSession", data: { sessionId, reason } }).catch(() => {});
   },
 
   clearRecordTimer() {

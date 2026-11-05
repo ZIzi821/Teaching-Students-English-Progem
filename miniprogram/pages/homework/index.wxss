@@ -20,21 +20,21 @@
 
 .preview-title {
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .preview-hint {
   margin-top: 6rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.4;
 }
 
 .preview-action {
   flex-shrink: 0;
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -44,21 +44,21 @@
 
 .eyebrow {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .title {
   margin-top: 8rpx;
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .subtitle {
   margin-top: 10rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .summary-card {
@@ -83,14 +83,14 @@
 
 .summary-number {
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .summary-label {
   margin-top: 4rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   white-space: nowrap;
 }
 
@@ -109,14 +109,14 @@
 
 .section-title {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .section-hint {
   margin-top: 6rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.45;
 }
 
@@ -131,7 +131,7 @@
   border-radius: 999rpx;
   color: var(--ink-2);
   background: var(--line);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   box-sizing: border-box;
 }
@@ -217,13 +217,13 @@
 
 .task-date {
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .task-title {
   margin-top: 7rpx;
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -234,7 +234,7 @@
   border-radius: 999rpx;
   color: var(--warn);
   background: var(--line);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -242,7 +242,7 @@
   flex-shrink: 0;
   padding: 7rpx 12rpx;
   border-radius: 999rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -254,14 +254,14 @@
 .task-copy {
   margin-top: 16rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.55;
 }
 
 .task-meta {
   margin-top: 12rpx;
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .task-deadline {
@@ -269,7 +269,7 @@
   margin-top: 12rpx;
   padding: 7rpx 12rpx;
   border-radius: 999rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -292,7 +292,7 @@
 .task-link {
   margin-top: 17rpx;
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   text-align: right;
 }
@@ -308,7 +308,7 @@
 .completed-toggle-action {
   flex-shrink: 0;
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -319,14 +319,14 @@
 
 .empty-mark {
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .empty-title {
   margin-top: 8rpx;
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -334,7 +334,7 @@
 .state-card,
 .error-card {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }
 

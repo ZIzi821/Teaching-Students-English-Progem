@@ -29,13 +29,16 @@ assert(cloudIndex.includes('case "updateStudentLearningPlan"'), "learning plan u
 assert(cloudIndex.includes("confirmStageChange !== true"), "teacher stage confirmation guard is missing");
 
 const detailPage = read("miniprogram/pages/student-detail/index.wxml");
-assert(detailPage.includes("学习雷达 · 当前阶段"), "student detail radar summary is missing");
+assert(detailPage.includes("<learning-plan"), "student detail plan tab is missing");
 assert(detailPage.includes("下节课建议"), "student detail prep summary is missing");
 
 const radarPage = read("miniprogram/insights/pages/learning-radar/index.wxml");
-assert(radarPage.includes("等待课堂观察，取得证据后评分"), "missing-evidence explanation is missing");
-assert(radarPage.includes("阶段切换由老师结合达标建议确认"), "teacher confirmation notice is missing");
-assert(!radarPage.includes("总周数"), "fixed total weeks must not be displayed");
+assert(radarPage.includes("<learning-plan"), "legacy radar route must render the shared learning plan");
+const planMarkup = read("miniprogram/components/learning-plan/index.wxml");
+assert(read("miniprogram/components/learning-plan/index.js").includes("还没观察"), "unobserved skills must be shown without a score");
+assert(planMarkup.includes("阶段切换由老师结合达标建议确认"), "teacher confirmation notice is missing");
+assert(!planMarkup.includes("总周数"), "fixed total weeks must not be displayed");
+assert(!/priorityScore|coveragePercent|confidenceLabel/.test(planMarkup), "internal radar scores must stay out of the teacher view");
 
 const lessonDetail = read("miniprogram/pages/lesson-detail/index.js");
 assert(lessonDetail.includes('"暂时不会"'), "child-safe observation label is missing");

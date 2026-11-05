@@ -4,11 +4,11 @@
 .tabs .on { background: var(--accent); color: var(--on-fill); }
 .state-card { text-align: center; color: var(--ink-2); }
 .error { color: var(--danger); }
-.retry { margin-top: 16rpx; font-size: 24rpx; }
-.title { font-size: 32rpx; font-weight: 600; color: var(--ink); }
+.retry { margin-top: 16rpx; font-size: 26rpx; }
+.title { font-size: 34rpx; font-weight: 600; color: var(--ink); }
 .title text { float: right; }
-.small, .explain, .mistake { margin-top: 12rpx; color: var(--ink-2); font-size: 24rpx; line-height: 1.6; }
-.completion { margin-top: 12rpx; color: var(--accent); font-size: 24rpx; }
+.small, .explain, .mistake { margin-top: 12rpx; color: var(--ink-2); font-size: 26rpx; line-height: 1.6; }
+.completion { margin-top: 12rpx; color: var(--accent); font-size: 26rpx; }
 .pattern { margin-top: 16rpx; padding: 14rpx; background: var(--accent-soft); color: var(--accent); }
 .example { margin-top: 12rpx; line-height: 1.6; }
-.grammar button { margin-top: 18rpx; font-size: 24rpx; }
+.grammar button { margin-top: 18rpx; font-size: 26rpx; }

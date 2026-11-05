@@ -1,3 +1,4 @@
+const { callCloud } = require("../../../utils/cloud");
 const EMPTY_PROFILE = Object.freeze({
   name: "",
   weeklyBaseScore: "0",
@@ -31,10 +32,7 @@ Page({
 
   loadManager(options = {}) {
     this.setData({ loading: true, message: "" });
-    return wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getTeacherEngagementManager", data: {} },
-    }).then((res) => {
+    return callCloud({ type: "getTeacherEngagementManager", data: {} }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "无法读取成就与 PK 设置");
       this.setData({
@@ -58,10 +56,7 @@ Page({
     const pkEnabled = event.detail.value === true;
     if (!studentId || this.data.savingStudentId) return;
     this.setData({ savingStudentId: studentId });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "saveStudentPkEligibility", data: { studentId, pkEnabled } },
-    }).then((res) => {
+    callCloud({ type: "saveStudentPkEligibility", data: { studentId, pkEnabled } }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "参榜设置保存失败");
       wx.showToast({ title: pkEnabled ? "已加入 PK" : "已移出 PK" });
@@ -139,17 +134,14 @@ Page({
       return wx.showToast({ title: `每日增幅应为 0–${limits.dailyIncrementMax}`, icon: "none" });
     }
     this.setData({ savingProfile: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "savePkChallengeProfile",
       data: {
-        type: "savePkChallengeProfile",
-        data: {
-          profileId: this.data.editingProfileId,
-          name,
-          weeklyBaseScore,
-          dailyIncrement,
-          enabled: form.enabled !== false,
-        },
+        profileId: this.data.editingProfileId,
+        name,
+        weeklyBaseScore,
+        dailyIncrement,
+        enabled: form.enabled !== false,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -179,10 +171,7 @@ Page({
       success: (modal) => {
         if (!modal.confirm) return;
         this.setData({ deletingProfileId: profileId });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: { type: "deletePkChallengeProfile", data: { profileId } },
-        }).then((res) => {
+        callCloud({ type: "deletePkChallengeProfile", data: { profileId } }).then((res) => {
           const result = res.result || {};
           if (!result.success) throw new Error(result.message || "删除失败");
           wx.showToast({ title: "已删除" });

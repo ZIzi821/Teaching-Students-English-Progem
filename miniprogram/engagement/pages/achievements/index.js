@@ -1,3 +1,4 @@
+const { callCloud } = require("../../../utils/cloud");
 Page({
   data: {
     loading: true,
@@ -26,14 +27,11 @@ Page({
 
   loadEngagement(options = {}) {
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "getStudentEngagement",
       data: {
-        type: "getStudentEngagement",
-        data: {
-          mode: this.data.mode,
-          previewStudentId: this.data.previewStudentId,
-        },
+        mode: this.data.mode,
+        previewStudentId: this.data.previewStudentId,
       },
     }).then((res) => {
       const result = res.result || {};

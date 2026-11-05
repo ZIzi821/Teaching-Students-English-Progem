@@ -29,7 +29,7 @@ page {
   color: var(--ink);
   background: var(--bg);
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.5;
 }
 
@@ -72,11 +72,11 @@ button::after {
 .ghost-btn {
   box-sizing: border-box;
   display: flex;
-  min-height: 88rpx;
+  min-height: 96rpx;
   align-items: center;
   justify-content: center;
   border-radius: 16rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -102,7 +102,7 @@ button::after {
 .ui-section {
   margin: 40rpx 0 16rpx 4rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
@@ -134,20 +134,20 @@ button::after {
 
 .ui-row-title {
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 500;
 }
 
 .ui-row-note {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .ui-row-value {
   flex-shrink: 0;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .ui-chevron {
@@ -166,7 +166,7 @@ button::after {
   border-radius: 999rpx;
   color: var(--ink-2);
   background: var(--surface-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 500;
 }
 
@@ -202,7 +202,7 @@ button::after {
   padding: 14rpx 4rpx;
   border-radius: 12rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
   text-align: center;
 }

@@ -1,3 +1,4 @@
+const { callCloud } = require("../../../utils/cloud");
 const formatTime = (timestamp) => {
   const date = new Date(Number(timestamp || 0));
   if (!timestamp || Number.isNaN(date.getTime())) return "刚刚";
@@ -35,12 +36,9 @@ Page({
       return;
     }
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "listStudentReminders",
-        data: { studentId: this.data.studentId },
-      },
+    callCloud({
+      type: "listStudentReminders",
+      data: { studentId: this.data.studentId },
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "提醒暂时无法加载");
@@ -118,16 +116,13 @@ Page({
   saveReminder({ title, content, isEditing }) {
     this.setData({ saving: true });
     wx.showLoading({ title: isEditing ? "保存中" : "发布中", mask: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "saveStudentReminder",
       data: {
-        type: "saveStudentReminder",
-        data: {
-          studentId: this.data.studentId,
-          reminderId: this.data.editingReminderId,
-          title,
-          content,
-        },
+        studentId: this.data.studentId,
+        reminderId: this.data.editingReminderId,
+        title,
+        content,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -159,12 +154,9 @@ Page({
       success: (modalResult) => {
         if (!modalResult.confirm) return;
         this.setData({ saving: true });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: {
-            type: "withdrawStudentReminder",
-            data: { reminderId },
-          },
+        callCloud({
+          type: "withdrawStudentReminder",
+          data: { reminderId },
         }).then((res) => {
           const result = res.result || {};
           if (!result.success) throw new Error(result.message || "撤回失败");

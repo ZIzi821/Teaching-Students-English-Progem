@@ -12,21 +12,21 @@
 
 .hero-kicker {
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .hero-title {
   margin-top: 8rpx;
   color: var(--accent);
-  font-size: 52rpx;
+  font-size: 56rpx;
   font-weight: 600;
 }
 
 .hero-hint {
   margin-top: 10rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.6;
 }
 
@@ -57,9 +57,9 @@
   background: var(--accent-soft);
 }
 
-.preview-title { font-size: 28rpx; font-weight: 600; }
-.preview-hint { margin-top: 5rpx; color: var(--ink-2); font-size: 22rpx; }
-.preview-action { margin-left: 18rpx; color: var(--accent); font-size: 22rpx; font-weight: 600; white-space: nowrap; }
+.preview-title { font-size: 30rpx; font-weight: 600; }
+.preview-hint { margin-top: 5rpx; color: var(--ink-2); font-size: 24rpx; }
+.preview-action { margin-left: 18rpx; color: var(--accent); font-size: 24rpx; font-weight: 600; white-space: nowrap; }
 
 .day-strip {
   margin: 0 -28rpx;
@@ -84,9 +84,9 @@
   background: var(--accent-soft);
 }
 
-.day-week { font-size: 24rpx; font-weight: 600; }
-.day-date { margin-top: 3rpx; color: var(--ink-2); font-size: 22rpx; white-space: nowrap; }
-.day-count { margin-top: 4rpx; color: var(--ink-3); font-size: 22rpx; }
+.day-week { font-size: 26rpx; font-weight: 600; }
+.day-date { margin-top: 3rpx; color: var(--ink-2); font-size: 24rpx; white-space: nowrap; }
+.day-count { margin-top: 4rpx; color: var(--ink-3); font-size: 24rpx; }
 .day-pill-active .day-count { color: var(--accent); }
 .day-pill-active .day-date { color: var(--accent); }
 .day-count-closed,
@@ -99,8 +99,8 @@
   justify-content: space-between;
 }
 
-.summary-title { color: var(--accent); font-size: 32rpx; font-weight: 600; }
-.summary-hint { max-width: 440rpx; margin-top: 4rpx; color: var(--ink-3); font-size: 22rpx; line-height: 1.45; }
+.summary-title { color: var(--accent); font-size: 34rpx; font-weight: 600; }
+.summary-hint { max-width: 440rpx; margin-top: 4rpx; color: var(--ink-3); font-size: 24rpx; line-height: 1.45; }
 .summary-hint-closed { color: var(--danger); }
 
 .summary-actions {
@@ -117,7 +117,7 @@
   border-radius: 999rpx;
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -133,7 +133,7 @@
   border-radius: 999rpx;
   background: var(--accent);
   color: var(--on-fill);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -143,7 +143,7 @@
   border-radius: 999rpx;
   background: var(--line);
   color: var(--danger);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -152,7 +152,7 @@
   display: flex;
   margin-bottom: 14rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   gap: 20rpx;
 }
 
@@ -183,14 +183,14 @@
 
 .fixed-schedule-title {
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .fixed-schedule-hint {
   margin-top: 6rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }
 
@@ -200,14 +200,14 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .fixed-schedule-empty {
   margin-top: 18rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-align: center;
 }
 
@@ -234,20 +234,20 @@
 
 .fixed-schedule-name {
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .fixed-schedule-time {
   margin-top: 5rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .fixed-schedule-action {
   flex-shrink: 0;
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -263,7 +263,7 @@
   border-radius: 16rpx;
   background: var(--surface-2);
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 .timeline-empty-closed { background: var(--danger-soft); color: var(--danger); }
 
@@ -280,7 +280,7 @@
 .hour-label {
   width: 82rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   transform: translateY(-50%);
 }
 
@@ -304,11 +304,11 @@
 }
 
 .schedule-event-actionable {  }
-.event-time { font-size: 22rpx; font-weight: 600; }
-.event-title { overflow: hidden; margin-top: 2rpx; font-size: 22rpx; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.event-own-badge { display: inline-flex; margin-left: 8rpx; padding: 2rpx 8rpx; border-radius: 999rpx; color: var(--on-fill); background: var(--accent); font-size: 22rpx; vertical-align: 3rpx; }
-.event-note { overflow: hidden; color: var(--accent); font-size: 22rpx; text-overflow: ellipsis; white-space: nowrap; }
-.event-action { position: absolute; right: 12rpx; bottom: 7rpx; font-size: 22rpx; opacity: 0.75; }
+.event-time { font-size: 24rpx; font-weight: 600; }
+.event-title { overflow: hidden; margin-top: 2rpx; font-size: 24rpx; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.event-own-badge { display: inline-flex; margin-left: 8rpx; padding: 2rpx 8rpx; border-radius: 999rpx; color: var(--on-fill); background: var(--accent); font-size: 24rpx; vertical-align: 3rpx; }
+.event-note { overflow: hidden; color: var(--accent); font-size: 24rpx; text-overflow: ellipsis; white-space: nowrap; }
+.event-action { position: absolute; right: 12rpx; bottom: 7rpx; font-size: 24rpx; opacity: 0.75; }
 
 .event-monash { background: var(--info-soft); border-color: var(--info); }
 .event-teacher { background: var(--line); border-color: var(--warn-fill); }
@@ -344,11 +344,11 @@
   background: var(--surface);
 }
 
-.modal-title { color: var(--accent); font-size: 32rpx; font-weight: 600; }
-.modal-hint { margin: 8rpx 0 24rpx; color: var(--ink-2); font-size: 22rpx; line-height: 1.5; }
-.booking-closed-note { margin: -8rpx 0 20rpx; padding: 15rpx 18rpx; border-radius: 12rpx; background: var(--danger-soft); color: var(--danger); font-size: 22rpx; line-height: 1.55; }
+.modal-title { color: var(--accent); font-size: 34rpx; font-weight: 600; }
+.modal-hint { margin: 8rpx 0 24rpx; color: var(--ink-2); font-size: 24rpx; line-height: 1.5; }
+.booking-closed-note { margin: -8rpx 0 20rpx; padding: 15rpx 18rpx; border-radius: 12rpx; background: var(--danger-soft); color: var(--danger); font-size: 24rpx; line-height: 1.55; }
 .field { margin-top: 20rpx; }
-.field-label { margin-bottom: 9rpx; color: var(--ink-2); font-size: 22rpx; font-weight: 600; }
+.field-label { margin-bottom: 9rpx; color: var(--ink-2); font-size: 24rpx; font-weight: 600; }
 .picker-value,
 .text-input {
   box-sizing: border-box;
@@ -358,16 +358,16 @@
   border-radius: 16rpx;
   background: var(--surface-2);
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .picker-readonly { color: var(--accent); font-weight: 600; }
 .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; }
 .time-field { min-width: 0; }
-.weekly-note { margin-top: 22rpx; padding: 16rpx 18rpx; border-radius: 12rpx; background: var(--line); color: var(--ink-2); font-size: 22rpx; line-height: 1.5; }
+.weekly-note { margin-top: 22rpx; padding: 16rpx 18rpx; border-radius: 12rpx; background: var(--line); color: var(--ink-2); font-size: 24rpx; line-height: 1.5; }
 .modal-actions { display: grid; margin-top: 26rpx; grid-template-columns: 1fr 1.7fr; gap: 16rpx; }
 .modal-cancel,
-.modal-confirm { padding: 22rpx; border-radius: 16rpx; text-align: center; font-size: 24rpx; font-weight: 600; }
+.modal-confirm { padding: 22rpx; border-radius: 16rpx; text-align: center; font-size: 26rpx; font-weight: 600; }
 .modal-cancel { background: var(--line); color: var(--ink-2); }
 .modal-confirm { background: var(--accent); color: var(--on-fill); }
 .modal-confirm-disabled { opacity: 0.55; }
@@ -383,7 +383,7 @@
 .fixed-day-disabled { border-color: var(--line); background: var(--surface-2); }
 .fixed-day-head { display: flex; align-items: center; justify-content: space-between; }
 .fixed-day-head switch { transform: scale(0.82); transform-origin: right center; }
-.fixed-day-name { color: var(--accent); font-size: 24rpx; font-weight: 600; }
+.fixed-day-name { color: var(--accent); font-size: 26rpx; font-weight: 600; }
 .fixed-day-disabled .fixed-day-name { color: var(--ink-3); }
 .fixed-day-times { display: flex; margin-top: 12rpx; align-items: center; gap: 12rpx; }
 .fixed-day-times picker { min-width: 0; flex: 1; }
@@ -398,9 +398,9 @@
   border-radius: 12rpx;
   background: var(--surface);
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
-.fixed-time-value text { margin-right: 10rpx; color: var(--ink-3); font-size: 22rpx; font-weight: 500; }
+.fixed-time-value text { margin-right: 10rpx; color: var(--ink-3); font-size: 24rpx; font-weight: 500; }
 .fixed-day-disabled .fixed-time-value { color: var(--ink-3); background: var(--line); }
-.fixed-time-arrow { flex-shrink: 0; color: var(--ink-3); font-size: 22rpx; }
+.fixed-time-arrow { flex-shrink: 0; color: var(--ink-3); font-size: 24rpx; }

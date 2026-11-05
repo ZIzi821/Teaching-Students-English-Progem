@@ -1,0 +1,63 @@
+<view class="plan" wx:if="{{plan}}">
+  <view class="plan-card">
+    <view class="plan-stage-head">
+      <view class="plan-stage-count">第 {{plan.stageNumber}} / {{plan.stageCount}} 阶段</view>
+      <picker mode="selector" range="{{plan.stageOptions}}" range-key="displayLabel" value="{{plan.stageIndex}}" disabled="{{saving}}" bindchange="onStageChange">
+        <view class="plan-adjust">调整阶段</view>
+      </picker>
+    </view>
+    <view class="plan-steps">
+      <view class="plan-step plan-step-{{item.state}}" wx:for="{{plan.steps}}" wx:key="stageId"></view>
+    </view>
+    <view class="plan-stage-title">{{plan.stageTitle}}</view>
+    <view class="plan-stage-goal">{{plan.stageGoal}}</view>
+  </view>
+
+  <view class="plan-section-head">
+    <view class="plan-section-title">本阶段目标</view>
+    <view class="plan-section-value">已达标 {{plan.passedSkillCount}} / {{plan.skillCount}}</view>
+  </view>
+  <view class="plan-card plan-goals">
+    <view class="plan-group" wx:for="{{plan.groups}}" wx:key="key" wx:for-item="group">
+      <view class="plan-group-label plan-group-{{group.key}}">{{group.label}} · {{group.skills.length}}</view>
+      <view class="plan-skill" wx:for="{{group.skills}}" wx:key="skillId">
+        <view class="plan-check plan-check-{{group.key}}">{{group.key === 'passed' ? '✓' : ''}}</view>
+        <view class="plan-skill-label">{{item.label}}</view>
+        <view class="plan-core" wx:if="{{item.core}}">核心</view>
+      </view>
+    </view>
+    <view class="plan-empty" wx:if="{{!plan.groups.length}}">本阶段还没有能力目标。</view>
+  </view>
+
+  <view class="plan-section-head">
+    <view class="plan-section-title">下节课建议</view>
+    <view class="plan-section-value">{{plan.prep.durationMinutes}} 分钟</view>
+  </view>
+  <view class="plan-card">
+    <view class="plan-prep-title">{{plan.prep.title}}</view>
+    <view class="plan-prep-reason" wx:if="{{plan.prep.reason}}">{{plan.prep.reason}}</view>
+    <view class="plan-block" wx:for="{{plan.prep.blocks}}" wx:key="index">
+      <view class="plan-block-minutes">{{item.minutes}} 分钟</view>
+      <view class="plan-block-copy">
+        <view class="plan-block-title">{{item.title}}</view>
+        <view class="plan-block-detail">{{item.detail}}</view>
+      </view>
+    </view>
+    <view class="plan-evidence" wx:if="{{plan.prep.evidencePrompt}}">{{plan.prep.evidencePrompt}}</view>
+  </view>
+
+  <view class="plan-section-head">
+    <view class="plan-section-title">进入下一阶段</view>
+    <view class="plan-section-value" wx:if="{{plan.remainingCriteriaCount}}">还差 {{plan.remainingCriteriaCount}} 项</view>
+    <view class="plan-section-value plan-ready" wx:else>条件已满足</view>
+  </view>
+  <view class="plan-card">
+    <view class="plan-criteria" wx:for="{{plan.criteria}}" wx:key="key">
+      <view class="plan-check {{item.passed ? 'plan-check-passed' : 'plan-check-waiting'}}">{{item.passed ? '✓' : ''}}</view>
+      <view class="plan-skill-label">{{item.label}}</view>
+    </view>
+    <view class="primary-btn plan-advance {{saving ? 'plan-disabled' : ''}}" wx:if="{{plan.canAdvance}}" bindtap="confirmNextStage">进入{{plan.nextStageLabel}}</view>
+    <view class="plan-note" wx:elif="{{plan.isFinalStage && !plan.remainingCriteriaCount}}">已经是最后一个阶段。</view>
+    <view class="plan-note">阶段切换由老师结合达标建议确认。</view>
+  </view>
+</view>

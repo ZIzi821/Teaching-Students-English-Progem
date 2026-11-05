@@ -1,0 +1,236 @@
+.plan-card {
+  box-sizing: border-box;
+  padding: 28rpx;
+  border: 1rpx solid var(--line);
+  border-radius: 24rpx;
+  background: var(--surface);
+}
+
+.plan-stage-head,
+.plan-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.plan-stage-count {
+  color: var(--accent);
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.plan-adjust {
+  padding: 8rpx 20rpx;
+  border: 1rpx solid var(--line-strong);
+  border-radius: 12rpx;
+  color: var(--ink-2);
+  font-size: 26rpx;
+}
+
+.plan-steps {
+  display: flex;
+  gap: 8rpx;
+  margin-top: 20rpx;
+}
+
+.plan-step {
+  height: 12rpx;
+  flex: 1;
+  border-radius: 999rpx;
+  background: var(--surface-2);
+}
+
+.plan-step-done {
+  background: var(--accent-line);
+}
+
+.plan-step-current {
+  background: var(--accent);
+}
+
+.plan-stage-title {
+  margin-top: 24rpx;
+  color: var(--ink);
+  font-size: 34rpx;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.plan-stage-goal {
+  margin-top: 8rpx;
+  color: var(--ink-2);
+  font-size: 26rpx;
+}
+
+.plan-section-head {
+  margin: 40rpx 4rpx 16rpx;
+}
+
+.plan-section-title {
+  color: var(--ink);
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.plan-section-value {
+  flex-shrink: 0;
+  color: var(--ink-3);
+  font-size: 26rpx;
+}
+
+.plan-ready {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.plan-goals {
+  padding-top: 8rpx;
+}
+
+.plan-group {
+  padding-top: 20rpx;
+}
+
+.plan-group + .plan-group {
+  margin-top: 12rpx;
+  border-top: 1rpx solid var(--line);
+}
+
+.plan-group-label {
+  margin-bottom: 4rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.plan-group-practicing {
+  color: var(--warn);
+}
+
+.plan-group-waiting {
+  color: var(--ink-3);
+}
+
+.plan-group-passed {
+  color: var(--accent);
+}
+
+.plan-skill,
+.plan-criteria {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 12rpx 0;
+}
+
+.plan-check {
+  display: flex;
+  flex: 0 0 36rpx;
+  height: 36rpx;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--on-fill);
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.plan-check-passed {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.plan-check-practicing {
+  border-color: var(--warn-fill);
+}
+
+.plan-check-waiting {
+  border-style: dashed;
+}
+
+.plan-skill-label {
+  min-width: 0;
+  flex: 1;
+  color: var(--ink);
+  font-size: 30rpx;
+}
+
+.plan-core {
+  flex-shrink: 0;
+  padding: 2rpx 12rpx;
+  border-radius: 999rpx;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-size: 24rpx;
+}
+
+.plan-empty,
+.plan-note {
+  margin-top: 16rpx;
+  color: var(--ink-3);
+  font-size: 26rpx;
+}
+
+.plan-prep-title {
+  color: var(--ink);
+  font-size: 34rpx;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.plan-prep-reason {
+  margin-top: 8rpx;
+  color: var(--ink-2);
+  font-size: 26rpx;
+}
+
+.plan-block {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid var(--line);
+}
+
+.plan-block-minutes {
+  flex: 0 0 96rpx;
+  color: var(--accent);
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.plan-block-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.plan-block-title {
+  color: var(--ink);
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.plan-block-detail {
+  margin-top: 4rpx;
+  color: var(--ink-2);
+  font-size: 26rpx;
+}
+
+.plan-evidence {
+  margin-top: 20rpx;
+  padding: 16rpx 20rpx;
+  border-radius: 12rpx;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  font-size: 26rpx;
+}
+
+.plan-advance {
+  margin-top: 24rpx;
+}
+
+.plan-disabled {
+  opacity: 0.5;
+}

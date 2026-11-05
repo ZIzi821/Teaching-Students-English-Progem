@@ -28,12 +28,12 @@
 
 .install_tip_detail_title {
   font-weight: 400;
-  font-size: 40rpx;
+  font-size: 44rpx;
   text-align: center;
 }
 
 .install_tip_detail_tip {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: rgba(0,0,0,0.4);
   margin-top: 20rpx;
   text-align: left;

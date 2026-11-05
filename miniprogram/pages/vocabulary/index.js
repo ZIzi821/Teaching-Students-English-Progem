@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 const { createVocabularyAudioPlayer } = require("../../utils/vocabularyAudio");
 const { getFriendlyCloudErrorMessage } = require("../../utils/cloudError");
 
@@ -80,6 +81,7 @@ Page({
     wordTabs: WORD_TABS,
     browsePanelOpen: true,
     detailSection: "words",
+    memoryEvaluationLabel: "",
     searchActive: false,
     isStudyMode: true,
     searchKeyword: "",
@@ -186,15 +188,12 @@ Page({
       return Promise.resolve();
     }
     this.setData({ loading: true, message: "" });
-    return wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    return callCloud({
+      type: "getVocabularyCatalog",
       data: {
-        type: "getVocabularyCatalog",
-        data: {
-          studentId: this.data.studentId,
-          previewStudentId: this.data.previewStudentId,
-          mode: this.data.mode,
-        },
+        studentId: this.data.studentId,
+        previewStudentId: this.data.previewStudentId,
+        mode: this.data.mode,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -613,6 +612,30 @@ Page({
     if (section === this.data.detailSection) return;
     this.setData({ detailSection: section }, () => {
       wx.pageScrollTo({ scrollTop: 0, duration: 0 });
+      if (section === "stats") this.loadMemoryEvaluationStatus();
+    });
+  },
+
+  loadMemoryEvaluationStatus() {
+    if (!this.data.isTeacherManager || !this.data.studentId || this.memoryEvaluationRequested) return;
+    this.memoryEvaluationRequested = true;
+    callCloud({
+      type: "getEnglishMemoryEvaluation",
+      data: { studentId: this.data.studentId },
+    }).then((res) => {
+      const result = res.result || {};
+      const status = result.success && result.evaluation && result.evaluation.status;
+      if (status && status.label) this.setData({ memoryEvaluationLabel: status.label });
+    }).catch((err) => {
+      console.error(err);
+      this.memoryEvaluationRequested = false;
+    });
+  },
+
+  goMemoryEvaluation() {
+    if (!this.data.isTeacherManager || !this.data.studentId) return;
+    wx.navigateTo({
+      url: "/insights/pages/memory-evaluation/index?studentId=" + encodeURIComponent(this.data.studentId),
     });
   },
 

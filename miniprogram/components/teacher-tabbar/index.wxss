@@ -41,6 +41,6 @@
 
 .tab-label {
   margin-top: 2rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 500;
 }

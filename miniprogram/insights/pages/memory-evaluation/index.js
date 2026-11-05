@@ -1,3 +1,4 @@
+const { callCloud } = require("../../../utils/cloud");
 const STATUS_DESCRIPTIONS = {
   collecting: "样本还少，先积累数据，不调整参数。",
   needs_calibration: "预测与反馈已有明显偏差，建议按区间和来源排查。",
@@ -50,12 +51,9 @@ Page({
       return;
     }
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "getEnglishMemoryEvaluation",
-        data: { studentId: this.data.studentId },
-      },
+    callCloud({
+      type: "getEnglishMemoryEvaluation",
+      data: { studentId: this.data.studentId },
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "算法评估加载失败");

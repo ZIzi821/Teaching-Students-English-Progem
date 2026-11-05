@@ -13,13 +13,17 @@ const homeWxml = read("miniprogram/pages/index/index.wxml");
 const homeJs = read("miniprogram/pages/index/index.js");
 const studentLearningFlowJs = read("miniprogram/utils/studentLearningFlow.js");
 const lessonJs = read("miniprogram/pages/lesson-detail/index.js");
-const lessonWxml = read("miniprogram/pages/lesson-detail/index.wxml");
+const lessonPageWxml = read("miniprogram/pages/lesson-detail/index.wxml");
+const taskFieldsWxml = read("miniprogram/components/lesson-task-fields/index.wxml");
+// 课后整理与录音设置由共用组件渲染，页面断言同时覆盖组件内容。
+const lessonWxml = lessonPageWxml + taskFieldsWxml;
 const recordingJs = read("miniprogram/pages/recording-practice/index.js");
 const recordingWxml = read("miniprogram/pages/recording-practice/index.wxml");
 const studentJs = read("miniprogram/pages/student-detail/index.js");
 const studentWxml = read("miniprogram/pages/student-detail/index.wxml");
 const addLessonJs = read("miniprogram/pages/add-lesson/index.js");
-const addLessonWxml = read("miniprogram/pages/add-lesson/index.wxml");
+const addLessonPageWxml = read("miniprogram/pages/add-lesson/index.wxml");
+const addLessonWxml = addLessonPageWxml + taskFieldsWxml;
 const homeworkJs = read("miniprogram/pages/homework/index.js");
 const homeworkWxml = read("miniprogram/pages/homework/index.wxml");
 const appJson = JSON.parse(read("miniprogram/app.json"));
@@ -100,7 +104,7 @@ assert(lessonWxml.includes("学生已完成课后任务"), "Teacher completed-ho
 assert(lessonWxml.includes("学生没有完成课后任务"), "Teacher incomplete-homework review action is missing");
 assert(lessonWxml.includes("朗读内容"), "Readable recording prompt label is missing");
 assert(lessonWxml.includes("要完成的任务"), "Readable homework task label is missing");
-assert(/\.recording-task-prompt\s*\{[\s\S]*?font-size:\s*32rpx/.test(read("miniprogram/pages/lesson-detail/index.wxss")), "Recording prompt text is too small for students");
+assert(/\.recording-task-prompt\s*\{[\s\S]*?font-size:\s*34rpx/.test(read("miniprogram/pages/lesson-detail/index.wxss")), "Recording prompt text is too small for students");
 assert(/\.recording-task-prompt\s*\{[\s\S]*?white-space:\s*pre-wrap/.test(read("miniprogram/pages/lesson-detail/index.wxss")), "Recording prompt line breaks are not preserved");
 assert(lessonJs.includes("reviewHomeworkCompletion"), "Teacher homework review handler is missing");
 assert(backend.includes("homeworkTeacherReviewStatus"), "Teacher homework review state is not persisted");
@@ -238,7 +242,8 @@ assert(
   "Microphone permission description is missing"
 );
 
-const handlerNames = Array.from(lessonWxml.matchAll(/(?:bind|catch)(?:tap|input|change)="([A-Za-z0-9_]+)"/g))
+assert(lessonPageWxml.includes("<lesson-task-fields") && addLessonPageWxml.includes("<lesson-task-fields"), "Lesson create and edit must share the task form component");
+const handlerNames = Array.from(lessonPageWxml.matchAll(/(?:bind|catch)(?:tap|input|change)="([A-Za-z0-9_]+)"/g))
   .map((match) => match[1]);
 handlerNames.forEach((handler) => {
   assert(new RegExp(`\\n\\s*${handler}\\s*\\(`).test(lessonJs), `Missing lesson-detail handler: ${handler}`);

@@ -1,4 +1,5 @@
 const challenge = require("../../utils/vocabularyChallenge");
+const { callCloud } = require("../../utils/cloud");
 
 Page({
   data: {
@@ -46,20 +47,17 @@ Page({
 
   loadChallenge() {
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "getVocabularyData",
       data: {
-        type: "getVocabularyData",
-        data: {
-          studentId: this.data.studentId,
-          previewStudentId: this.data.previewStudentId,
-          mode: this.data.mode,
-          browseTab: this.data.scope === "weak" ? "weak" : "all",
-          offset: 0,
-          limit: 100,
-          quizMode: true,
-          quizScope: this.data.scope,
-        },
+        studentId: this.data.studentId,
+        previewStudentId: this.data.previewStudentId,
+        mode: this.data.mode,
+        browseTab: this.data.scope === "weak" ? "weak" : "all",
+        offset: 0,
+        limit: 100,
+        quizMode: true,
+        quizScope: this.data.scope,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -251,17 +249,14 @@ Page({
 
   saveReview(wordKey, questionType, answerMode, isCorrect) {
     this.setData({ saving: true, saveWarning: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "reviewVocabularyQuizAnswer",
       data: {
-        type: "reviewVocabularyQuizAnswer",
-        data: {
-          studentId: this.data.studentId,
-          wordKey,
-          questionType,
-          answerMode,
-          correct: isCorrect,
-        },
+        studentId: this.data.studentId,
+        wordKey,
+        questionType,
+        answerMode,
+        correct: isCorrect,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -302,17 +297,14 @@ Page({
   },
 
   saveSession() {
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "completeVocabularyQuiz",
       data: {
-        type: "completeVocabularyQuiz",
-        data: {
-          studentId: this.data.studentId,
-          scope: this.data.scope,
-          dailyGoal: this.data.dailyGoal,
-          startedAtMs: this.sessionStartedAtMs,
-          results: this.sessionResults,
-        },
+        studentId: this.data.studentId,
+        scope: this.data.scope,
+        dailyGoal: this.data.dailyGoal,
+        startedAtMs: this.sessionStartedAtMs,
+        results: this.sessionResults,
       },
     }).then((res) => {
       const result = res.result || {};

@@ -25,14 +25,14 @@
 
 .trend-title {
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .trend-subtitle {
   margin-top: 6rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.45;
 }
 
@@ -42,7 +42,7 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -52,7 +52,7 @@
   border-radius: 16rpx;
   color: var(--ink-2);
   background: var(--surface-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.55;
   text-align: center;
 }
@@ -67,7 +67,7 @@
   border-radius: 24rpx;
   color: var(--on-fill);
   background: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -80,19 +80,19 @@
 
 .trend-summary-label {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .trend-summary-score {
   margin-top: 4rpx;
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .trend-summary-score text {
   margin-left: 4rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .trend-change {
@@ -101,7 +101,7 @@
 }
 
 .trend-change view {
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -109,7 +109,7 @@
   display: block;
   margin-top: 3rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .change-up {
@@ -133,7 +133,7 @@
 
 .dimension-label {
   color: var(--ink);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -145,13 +145,13 @@
 
 .dimension-latest > text {
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .dimension-change {
   min-width: 50rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   text-align: right;
 }
@@ -216,7 +216,7 @@
 .bar-score {
   margin-top: 5rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -229,7 +229,7 @@
 .session-axis-item view {
   overflow: hidden;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -239,14 +239,14 @@
   display: block;
   margin-top: 3rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .trend-hidden-note,
 .trend-notice {
   margin-top: 14rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }
 

@@ -8,14 +8,14 @@
 
 .title {
   color: var(--ink);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .subtitle {
   margin-top: 12rpx;
   color: var(--ink-2);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.6;
 }
 
@@ -37,27 +37,27 @@
 
 .hidden-summary-title {
   color: var(--warn);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .hidden-summary-hint {
   margin-top: 5rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .hidden-summary-link {
   flex-shrink: 0;
   color: var(--warn);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .no-permission {
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.6;
 }
 
@@ -84,7 +84,7 @@
   border-radius: 50%;
   color: var(--on-fill);
   background: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -95,26 +95,26 @@
 
 .student-name {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .nickname {
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 400;
 }
 
 .student-meta {
   margin-top: 10rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .progress-text {
   margin-top: 12rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .mini-progress {
@@ -157,7 +157,7 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .hide-action {
@@ -166,7 +166,7 @@
   border-radius: 999rpx;
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .hide-action-disabled {
@@ -180,13 +180,13 @@
 
 .empty-title {
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .empty-hint {
   margin-top: 10rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.55;
 }

@@ -1,4 +1,5 @@
 const { playReliableAudio } = require("../../../utils/reliableAudio");
+const { callCloud } = require("../../../utils/cloud");
 
 const sanitizeSegment = (value, fallback, limit = 60) => {
   const text = String(value || "").trim().replace(/[\\/:*?"<>|\s]+/g, "-").replace(/-+/g, "-");
@@ -44,10 +45,7 @@ Page({
       return;
     }
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getFollowReadingAudioManager", data: { lessonId: this.data.lessonId } },
-    }).then((res) => {
+    callCloud({ type: "getFollowReadingAudioManager", data: { lessonId: this.data.lessonId } }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "无法读取跟读示范音频");
       this.setData({
@@ -97,18 +95,15 @@ Page({
     wx.cloud.uploadFile({ cloudPath, filePath: file.path })
       .then((uploadResult) => {
         uploadedFileID = uploadResult.fileID;
-        return wx.cloud.callFunction({
-          name: "quickstartFunctions",
+        return callCloud({
+          type: "saveFollowReadingDemoAudio",
           data: {
-            type: "saveFollowReadingDemoAudio",
-            data: {
-              lessonId: this.data.lessonId,
-              itemId: item.id,
-              fileID: uploadedFileID,
-              cloudPath,
-              fileName: file.name || `teacher-demo.${extension}`,
-              fileSize: file.size || 0,
-            },
+            lessonId: this.data.lessonId,
+            itemId: item.id,
+            fileID: uploadedFileID,
+            cloudPath,
+            fileName: file.name || `teacher-demo.${extension}`,
+            fileSize: file.size || 0,
           },
         });
       })
@@ -163,10 +158,7 @@ Page({
       success: (modal) => {
         if (!modal.confirm) return;
         this.setData({ deletingItemId: item.id });
-        wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: { type: "deleteFollowReadingDemoAudio", data: { lessonId: this.data.lessonId, itemId: item.id } },
-        }).then((res) => {
+        callCloud({ type: "deleteFollowReadingDemoAudio", data: { lessonId: this.data.lessonId, itemId: item.id } }).then((res) => {
           const result = res.result || {};
           if (!result.success) throw new Error(result.message || "删除失败");
           wx.showToast({ title: "已删除" });

@@ -8,14 +8,6 @@
   width: 100%;
 }
 
-.donut-canvas {
-  height: 300rpx;
-}
-
-.bar-canvas {
-  height: 270rpx;
-}
-
 .line-canvas {
   height: 290rpx;
 }
@@ -35,22 +27,125 @@
   pointer-events: none;
 }
 
+.bar-empty-inline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 16rpx;
+  border-radius: 16rpx;
+  color: var(--ink-2);
+  background: var(--surface-2);
+}
+
 .bar-empty-title {
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .bar-empty-hint {
   margin-top: 6rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
+}
+
+/* 柱状图：纯视图实现，不使用 Canvas，避免盖住固定底栏 */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8rpx;
+}
+
+.bar-column {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bar-value {
+  color: var(--ink-2);
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.bar-track {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 160rpx;
+  align-items: flex-end;
+  justify-content: center;
+  margin-top: 4rpx;
+}
+
+.bar-fill {
+  width: 60%;
+  min-height: 4rpx;
+  border-radius: 6rpx 6rpx 0 0;
+  background: var(--accent-line);
+}
+
+.bar-fill-met {
+  background: var(--accent);
+}
+
+.bar-goal {
+  position: absolute;
+  right: 8%;
+  left: 8%;
+  height: 0;
+  border-top: 2rpx dashed var(--warn-fill);
+}
+
+.bar-label {
+  width: 100%;
+  margin-top: 8rpx;
+  padding-top: 8rpx;
+  border-top: 1rpx solid var(--line);
+  color: var(--ink-3);
+  font-size: 24rpx;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 占比图：大数字 + 分段条 + 图例 */
+.donut-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+}
+
+.donut-value {
+  color: var(--ink);
+  font-size: 44rpx;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.donut-label {
+  color: var(--ink-3);
+  font-size: 26rpx;
+}
+
+.stack-bar {
+  display: flex;
+  height: 16rpx;
+  margin-top: 16rpx;
+  overflow: hidden;
+  border-radius: 999rpx;
+  background: var(--surface-2);
+}
+
+.stack-part {
+  height: 100%;
 }
 
 .chart-legend {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240rpx, 1fr));
   gap: 12rpx 18rpx;
-  margin-top: 10rpx;
+  margin-top: 16rpx;
 }
 
 .legend-item {
@@ -59,7 +154,7 @@
   align-items: center;
   gap: 10rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .legend-dot {

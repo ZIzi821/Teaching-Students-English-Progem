@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "学习雷达与备课提示"
+  "navigationBarTitleText": "学习计划",
+  "usingComponents": {
+    "learning-plan": "/components/learning-plan/index"
+  }
 }

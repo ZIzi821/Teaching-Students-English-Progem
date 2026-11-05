@@ -1,28 +1,28 @@
 .manager-page { min-height: 100vh; background: var(--accent-soft), var(--surface-2); }
 .hero { margin: 10rpx 6rpx 28rpx; }
-.eyebrow { color: var(--accent); font-size: 22rpx; font-weight: 600;  }
-.title { margin-top: 8rpx; color: var(--accent); font-size: 40rpx; font-weight: 600; }
-.subtitle { margin-top: 10rpx; color: var(--ink-2); font-size: 22rpx; }
+.eyebrow { color: var(--accent); font-size: 24rpx; font-weight: 600;  }
+.title { margin-top: 8rpx; color: var(--accent); font-size: 44rpx; font-weight: 600; }
+.subtitle { margin-top: 10rpx; color: var(--ink-2); font-size: 24rpx; }
 .state-card, .error-card { margin-top: 70rpx; color: var(--ink-2); text-align: center; }
 .retry { margin-top: 18rpx; color: var(--accent); font-weight: 600; }
 .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14rpx; }
 .summary-card { padding: 23rpx 18rpx; border: 1rpx solid var(--line); border-radius: 16rpx; background: var(--surface); }
-.summary-number { color: var(--accent); font-size: 32rpx; font-weight: 600; }
-.summary-label { margin-top: 7rpx; color: var(--ink-3); font-size: 22rpx; }
-.mode-note, .truth-note { margin-top: 14rpx; padding: 15rpx 17rpx; border-radius: 12rpx; color: var(--ink-2); background: var(--accent-soft); font-size: 22rpx; line-height: 1.55; }
+.summary-number { color: var(--accent); font-size: 34rpx; font-weight: 600; }
+.summary-label { margin-top: 7rpx; color: var(--ink-3); font-size: 24rpx; }
+.mode-note, .truth-note { margin-top: 14rpx; padding: 15rpx 17rpx; border-radius: 12rpx; color: var(--ink-2); background: var(--accent-soft); font-size: 24rpx; line-height: 1.55; }
 .truth-note { color: var(--ink-2); background: var(--warn-soft); }
 .item-card { margin-top: 18rpx; padding: 23rpx; border-color: var(--danger-line); }
 .item-ready { border-color: var(--accent-line); }
 .item-head { display: flex; align-items: flex-start; gap: 14rpx; }
-.item-number { display: flex; width: 42rpx; height: 42rpx; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 50%; color: var(--on-fill); background: var(--accent); font-size: 22rpx; font-weight: 600; }
-.item-text { min-width: 0; flex: 1; color: var(--ink); font-size: 28rpx; font-weight: 600; line-height: 1.55; word-break: break-word; }
-.item-state { flex-shrink: 0; padding: 7rpx 11rpx; border-radius: 999rpx; color: var(--danger); background: var(--danger-soft); font-size: 22rpx; font-weight: 600; }
+.item-number { display: flex; width: 42rpx; height: 42rpx; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 50%; color: var(--on-fill); background: var(--accent); font-size: 24rpx; font-weight: 600; }
+.item-text { min-width: 0; flex: 1; color: var(--ink); font-size: 30rpx; font-weight: 600; line-height: 1.55; word-break: break-word; }
+.item-state { flex-shrink: 0; padding: 7rpx 11rpx; border-radius: 999rpx; color: var(--danger); background: var(--danger-soft); font-size: 24rpx; font-weight: 600; }
 .ready-state { color: var(--accent); background: var(--accent-soft); }
-.file-name { margin: 13rpx 0 0 56rpx; color: var(--ink-3); font-size: 22rpx; word-break: break-all; }
+.file-name { margin: 13rpx 0 0 56rpx; color: var(--ink-3); font-size: 24rpx; word-break: break-all; }
 .actions { display: flex; gap: 10rpx; margin-top: 20rpx; }
-.action { min-width: 0; flex: 1; padding: 16rpx 9rpx; border-radius: 12rpx; color: var(--ink-2); background: var(--line); font-size: 22rpx; font-weight: 600; text-align: center; }
+.action { min-width: 0; flex: 1; padding: 16rpx 9rpx; border-radius: 12rpx; color: var(--ink-2); background: var(--line); font-size: 24rpx; font-weight: 600; text-align: center; }
 .primary-action { color: var(--on-fill); background: var(--accent); }
 .danger-action { color: var(--danger); background: var(--danger-soft); }
 .disabled { opacity: .55; }
-.complete-note { margin: 25rpx 8rpx 10rpx; color: var(--danger); font-size: 22rpx; font-weight: 600; line-height: 1.55; text-align: center; }
+.complete-note { margin: 25rpx 8rpx 10rpx; color: var(--danger); font-size: 24rpx; font-weight: 600; line-height: 1.55; text-align: center; }
 .complete-note-ready { color: var(--accent); }

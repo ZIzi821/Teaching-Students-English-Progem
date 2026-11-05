@@ -1,24 +1,43 @@
-<view class="chart-shell">
-  <canvas
-    id="chartCanvas"
-    class="chart-canvas {{type === 'bar' ? 'bar-canvas' : (type === 'line' ? 'line-canvas' : 'donut-canvas')}}"
-    type="2d"
-    aria-role="img"
-    aria-label="{{resolvedAriaLabel}}"
-  ></canvas>
-  <view
-    wx:if="{{(type === 'bar' && isBarEmpty) || (type === 'line' && isLineEmpty)}}"
-    class="bar-empty-state"
-    aria-hidden="true"
-  >
-    <text class="bar-empty-title">暂无学习记录</text>
-    <text class="bar-empty-hint">开始学习后，这里会显示近期趋势</text>
-  </view>
-  <view class="chart-legend" wx:if="{{type !== 'bar' && type !== 'line'}}">
-    <view class="legend-item" wx:for="{{segments}}" wx:key="label">
-      <view class="legend-dot" style="background: {{item.color}};"></view>
-      <text class="legend-label">{{item.label}}</text>
-      <text class="legend-value">{{item.value}}</text>
+<view class="chart-shell" aria-role="img" aria-label="{{resolvedAriaLabel}}">
+  <block wx:if="{{type === 'line'}}">
+    <canvas id="chartCanvas" class="chart-canvas line-canvas" type="2d"></canvas>
+    <view wx:if="{{isLineEmpty}}" class="bar-empty-state" aria-hidden="true">
+      <text class="bar-empty-title">暂无学习记录</text>
+      <text class="bar-empty-hint">开始学习后，这里会显示近期趋势</text>
     </view>
-  </view>
+  </block>
+
+  <block wx:elif="{{type === 'bar'}}">
+    <view class="bar-chart" wx:if="{{!isBarEmpty}}">
+      <view class="bar-column" wx:for="{{barRows}}" wx:key="label">
+        <view class="bar-value">{{item.value}}</view>
+        <view class="bar-track">
+          <view class="bar-goal" wx:if="{{item.goalPercent}}" style="bottom: {{item.goalPercent}}%;"></view>
+          <view class="bar-fill {{item.met ? 'bar-fill-met' : ''}}" style="height: {{item.heightPercent}}%;"></view>
+        </view>
+        <view class="bar-label">{{item.label}}</view>
+      </view>
+    </view>
+    <view wx:else class="bar-empty-inline">
+      <text class="bar-empty-title">暂无学习记录</text>
+      <text class="bar-empty-hint">开始学习后，这里会显示近期趋势</text>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="donut-summary">
+      <view class="donut-value">{{centerValue}}</view>
+      <view class="donut-label" wx:if="{{centerLabel}}">{{centerLabel}}</view>
+    </view>
+    <view class="stack-bar">
+      <view class="stack-part" wx:for="{{segmentRows}}" wx:key="label" wx:if="{{item.percent > 0}}" style="width: {{item.percent}}%; background: {{item.color}};"></view>
+    </view>
+    <view class="chart-legend">
+      <view class="legend-item" wx:for="{{segmentRows}}" wx:key="label">
+        <view class="legend-dot" style="background: {{item.color}};"></view>
+        <text class="legend-label">{{item.label}}</text>
+        <text class="legend-value">{{item.value}}</text>
+      </view>
+    </view>
+  </block>
 </view>

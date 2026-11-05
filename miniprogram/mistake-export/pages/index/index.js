@@ -1,3 +1,4 @@
+const { callCloud } = require("../../../utils/cloud");
 const SELECTION_MODES = [
   { value: "all", label: "全部课程" },
   { value: "range", label: "选择课程范围" },
@@ -58,12 +59,9 @@ Page({
       return;
     }
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "getMistakeExportWorkspace",
-        data: { studentId: this.data.studentId, exportFormat: this.data.exportFormat },
-      },
+    callCloud({
+      type: "getMistakeExportWorkspace",
+      data: { studentId: this.data.studentId, exportFormat: this.data.exportFormat },
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "无法读取错题导出记录");
@@ -167,19 +165,16 @@ Page({
     const requestId = `mistake_export_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
     this.setData({ creating: true });
     wx.showLoading({ title: `正在生成${this.data.exportFormatLabel}`, mask: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "createMistakeExport",
       data: {
-        type: "createMistakeExport",
-        data: {
-          studentId: this.data.studentId,
-          requestId,
-          exportFormat: this.data.exportFormat,
-          selectionMode: this.data.selectionMode,
-          startLessonId: start ? start._id : "",
-          endLessonId: end ? end._id : "",
-          excludePolicy: this.data.excludePolicy,
-        },
+        studentId: this.data.studentId,
+        requestId,
+        exportFormat: this.data.exportFormat,
+        selectionMode: this.data.selectionMode,
+        startLessonId: start ? start._id : "",
+        endLessonId: end ? end._id : "",
+        excludePolicy: this.data.excludePolicy,
       },
     }).then((res) => {
       const result = res.result || {};

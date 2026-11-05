@@ -2,6 +2,7 @@ const {
   LESSON_TEMPLATE_OPTIONS,
   inferLessonTemplateKey,
 } = require("../../utils/lessonTemplates");
+const { callCloud } = require("../../utils/cloud");
 
 const FALLBACK_VOCABULARY_LEVELS = [
   { id: "0A", label: "英语启蒙（零基础）" },
@@ -62,6 +63,8 @@ Page({
     learningRadarLoading: false,
     learningRadarAvailable: false,
     learningRadarSummary: null,
+    learningRadar: null,
+    planSummary: null,
     mistakeLearningForm: {
       enabled: true,
     },
@@ -77,6 +80,7 @@ Page({
     sectionTabs: [
       { value: "overview", label: "概览" },
       { value: "lessons", label: "课程" },
+      { value: "plan", label: "计划" },
       { value: "settings", label: "设置" },
     ],
     vocabularyOverview: {
@@ -92,10 +96,6 @@ Page({
         streakPendingToday: false,
       },
     },
-    vocabularyTodaySegments: [],
-    vocabularyMasterySegments: [],
-    mistakeStatusSegments: [],
-    weeklyChartPoints: [],
   },
 
   onLoad(options) {
@@ -195,10 +195,6 @@ Page({
           showEnglishLearning: student.vocabularyEnabled === true || englishCourseEnabled || mistakeLearningEnabled,
           vocabularyDailyPlan: vocabularyState.dailyPlan,
           vocabularyOverview: overviewState.overview,
-          vocabularyTodaySegments: overviewState.todaySegments,
-          vocabularyMasterySegments: overviewState.masterySegments,
-          weeklyChartPoints: overviewState.weeklyChartPoints,
-          mistakeStatusSegments: this.prepareMistakeStatusSegments(analytics),
           message: "",
         }, () => {
           if (this.data.isTeacher) this.loadLearningRadar();
@@ -223,12 +219,9 @@ Page({
     if (!this.data.isTeacher || !this.data.studentId || this.data.learningRadarLoading) return;
     const requestedStudentId = this.data.studentId;
     this.setData({ learningRadarLoading: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "getStudentLearningRadar",
-        data: { studentId: requestedStudentId },
-      },
+    callCloud({
+      type: "getStudentLearningRadar",
+      data: { studentId: requestedStudentId },
     }).then((res) => {
       if (this.data.studentId !== requestedStudentId) return;
       const result = res.result || {};
@@ -237,6 +230,8 @@ Page({
       this.setData({
         learningRadarAvailable: radar.available === true,
         learningRadarSummary: radar.available ? radar.summary : null,
+        learningRadar: radar.available ? radar : null,
+        planSummary: radar.available ? this.buildPlanSummary(radar) : null,
       });
     }).catch((err) => {
       console.error(err);
@@ -244,6 +239,8 @@ Page({
       this.setData({
         learningRadarAvailable: false,
         learningRadarSummary: null,
+        learningRadar: null,
+        planSummary: null,
       });
     }).finally(() => {
       if (this.data.studentId === requestedStudentId) {
@@ -252,12 +249,29 @@ Page({
     });
   },
 
+  buildPlanSummary(radar) {
+    const stages = radar.stageOptions || [];
+    const stageIndex = Math.max(0, stages.findIndex((stage) => stage.stageId === radar.currentStage.stageId));
+    const criteria = (radar.stageReadiness && radar.stageReadiness.criteria) || [];
+    return {
+      stageNumber: stageIndex + 1,
+      stageCount: stages.length,
+      stageTitle: radar.currentStage.stageTitle,
+      remainingCount: criteria.filter((item) => !item.passed).length,
+      nextLessonTitle: (radar.prepSuggestion && radar.prepSuggestion.title) || "按当前阶段目标继续",
+    };
+  },
+
+  reloadLearningRadar() {
+    this.loadLearningRadar();
+  },
+
   prepareAnalytics(analytics) {
     if (!analytics) return null;
     const topQuestionTypes = analytics.topQuestionTypes || [];
     const maxQuestionTypeCount = Math.max(1, ...topQuestionTypes.map((item) => Number(item.count) || 0));
     return Object.assign({}, analytics, {
-      topQuestionTypes: topQuestionTypes.map((item) => Object.assign({}, item, {
+      topQuestionTypes: topQuestionTypes.slice(0, 3).map((item) => Object.assign({}, item, {
         percent: Math.round((Number(item.count || 0) / maxQuestionTypeCount) * 100),
       })),
       topSkillTags: analytics.topSkillTags || [],
@@ -274,8 +288,6 @@ Page({
     const goal = Math.max(reviewed, Number(dailyPlan.dailyGoal) || 0);
     const total = Math.max(0, Number(summary.totalCount) || 0);
     const mastered = Math.max(0, Number(summary.masteredCount) || 0);
-    const easy = Math.max(0, Number(summary.easyCount) || 0);
-    const learning = Math.max(0, Number(summary.learningCount) || 0);
     return {
       overview: {
         enabled: source.enabled === true,
@@ -295,31 +307,7 @@ Page({
           streakPendingToday: weeklyStats.streakPendingToday === true,
         },
       },
-      todaySegments: [
-        { label: "今日完成", value: reviewed, color: "#14645A" },
-        { label: "今日剩余", value: Math.max(0, goal - reviewed), color: "#eadfcf" },
-      ],
-      masterySegments: [
-        { label: "未学习", value: Math.max(0, total - mastered - learning), color: "#eadfcf" },
-        { label: "学习中", value: learning, color: "#C9A24A" },
-        { label: "已掌握", value: Math.max(0, mastered - easy), color: "#14645A" },
-        { label: "太简单", value: easy, color: "#7b8eaa" },
-      ],
-      weeklyChartPoints: (weeklyStats.days || []).map((item) => ({
-        label: String(item.label || ""),
-        value: Math.max(0, Number(item.reviewedWordCount) || 0),
-        goal: Math.max(0, Number(item.dailyGoal) || 0),
-      })),
     };
-  },
-
-  prepareMistakeStatusSegments(analytics) {
-    const source = analytics || {};
-    return [
-      { label: "待复习", value: Math.max(0, Number(source.pendingCount) || 0), color: "#C9A24A" },
-      { label: "已复习", value: Math.max(0, Number(source.reviewedCount) || 0), color: "#7b8eaa" },
-      { label: "已掌握", value: Math.max(0, Number(source.masteredCount) || 0), color: "#14645A" },
-    ];
   },
 
   prepareStudent(student) {
@@ -399,12 +387,6 @@ Page({
     });
   },
 
-  goLearningInsights() {
-    if (!this.data.student || !this.data.learningRadarAvailable) return;
-    wx.navigateTo({
-      url: `/insights/pages/learning-radar/index?studentId=${encodeURIComponent(this.data.student._id)}`,
-    });
-  },
 
   goTeacherPreview() {
     wx.navigateTo({
@@ -484,13 +466,6 @@ Page({
     });
   },
 
-  goMemoryEvaluation() {
-    const student = this.data.student;
-    if (!this.data.isTeacher || !student || !student._id) return;
-    wx.navigateTo({
-      url: "/insights/pages/memory-evaluation/index?studentId=" + encodeURIComponent(student._id),
-    });
-  },
 
   goFrenchLearning() {
     const student = this.data.student;
@@ -668,14 +643,11 @@ Page({
       "mistakeLearningForm.enabled": enabled,
       mistakeSaving: true,
     });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "setMistakeLearningSettings",
       data: {
-        type: "setMistakeLearningSettings",
-        data: {
-          studentId: this.data.student._id,
-          enabled,
-        },
+        studentId: this.data.student._id,
+        enabled,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -701,14 +673,11 @@ Page({
       "courseLearningForm.enabled": enabled,
       courseSaving: true,
     });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "setEnglishCourseSettings",
       data: {
-        type: "setEnglishCourseSettings",
-        data: {
-          studentId: this.data.student._id,
-          enabled,
-        },
+        studentId: this.data.student._id,
+        enabled,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -734,14 +703,11 @@ Page({
     const option = LESSON_TEMPLATE_OPTIONS[nextIndex];
     if (!option || nextIndex === previousIndex) return;
     this.setData({ lessonTemplateIndex: nextIndex, lessonTemplateSaving: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "setStudentLessonTemplate",
       data: {
-        type: "setStudentLessonTemplate",
-        data: {
-          studentId: this.data.student._id,
-          lessonTemplateKey: option.key,
-        },
+        studentId: this.data.student._id,
+        lessonTemplateKey: option.key,
       },
     }).then((res) => {
       const result = res.result || {};

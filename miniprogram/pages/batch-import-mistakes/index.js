@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 const LOCAL_BRIDGE_ORIGIN = "http://127.0.0.1:3210";
 const LOCAL_BRIDGE_PROTOCOL_VERSION = 2;
 const LOCAL_BRIDGE_TOKEN = "8393a7c9ed00a70b5cb76a3b466dfb1a198e73a8a9393a3f";
@@ -48,10 +49,7 @@ Page({
   },
 
   loadLesson() {
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getLessonDetail", data: { lessonId: this.data.lessonId } },
-    }).then((res) => {
+    callCloud({ type: "getLessonDetail", data: { lessonId: this.data.lessonId } }).then((res) => {
       const result = res.result || {};
       if (!result.success) {
         this.setData({ message: result.message || "课程读取失败" });
@@ -286,10 +284,7 @@ Page({
     let lastError;
     for (let attempt = 0; attempt <= IMPORT_TRANSACTION_RETRY_DELAYS_MS.length; attempt += 1) {
       try {
-        const res = await wx.cloud.callFunction({
-          name: "quickstartFunctions",
-          data: { type: "batchImportMistakes", data: payload },
-        });
+        const res = await callCloud({ type: "batchImportMistakes", data: payload });
         const batchResult = res.result || {};
         if (!batchResult.success) {
           const error = new Error(batchResult.message || "第 " + batchNo + " 批导入失败");

@@ -8,14 +8,14 @@
 
 .hero-kicker {
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .hero-title {
   margin-top: 10rpx;
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
@@ -24,7 +24,7 @@
 .section-hint,
 .reminder-meta {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.55;
 }
 
@@ -36,7 +36,7 @@
 .error-card,
 .empty-card {
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.6;
   text-align: center;
 }
@@ -58,7 +58,7 @@
 .editor-title,
 .section-title {
   color: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -69,7 +69,7 @@
   flex-shrink: 0;
   padding: 7rpx 13rpx;
   border-radius: 999rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -93,7 +93,7 @@
 .label {
   margin-bottom: 10rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
@@ -105,7 +105,7 @@
   border-radius: 16rpx;
   color: var(--ink);
   background: var(--surface);
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .input {
@@ -124,7 +124,7 @@
   right: 16rpx;
   bottom: 10rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .editor-actions {
@@ -136,7 +136,7 @@
 .editor-button {
   min-width: 0;
   flex: 1;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .button-disabled {
@@ -157,14 +157,14 @@
 
 .reminder-title {
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
 .reminder-content {
   margin-top: 14rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.65;
   white-space: pre-wrap;
   word-break: break-word;
@@ -186,7 +186,7 @@
   min-width: 112rpx;
   padding: 12rpx 18rpx;
   border-radius: 999rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   text-align: center;
 }

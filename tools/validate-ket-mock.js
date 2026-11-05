@@ -87,7 +87,8 @@ assert.ok(cloudIndex.includes('"ketMockAssets"'), "ketMockAssets collection is n
 assert.ok(cloudIndex.includes('"ketMockSessions"'), "ketMockSessions collection is not initialized");
 assert.ok(catalogueBuilder.includes("JSON.stringify(KET_MOCK_SETS"), "KET mock catalogue builder is missing");
 
-const addLessonJs = read("miniprogram", "pages", "add-lesson", "index.js");
+const addLessonJs = read("miniprogram", "pages", "add-lesson", "index.js")
+  + read("miniprogram", "utils", "lessonTaskOptions.js");
 const lessonDetailJs = read("miniprogram", "pages", "lesson-detail", "index.js");
 const workbenchJs = read("miniprogram", "pages", "teacher-workbench", "index.js");
 const libraryWxml = read("miniprogram", "ket-mock", "pages", "library", "index.wxml");

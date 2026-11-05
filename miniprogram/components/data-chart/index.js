@@ -1,11 +1,12 @@
 const DEFAULT_GREEN = "#14645A";
-const EMPTY_COLOR = "#E8E4DA";
 
 Component({
   data: {
     resolvedAriaLabel: "学习数据图表",
     isBarEmpty: false,
     isLineEmpty: false,
+    barRows: [],
+    segmentRows: [],
   },
 
   properties: {
@@ -38,6 +39,7 @@ Component({
   observers: {
     "type,segments,points,centerValue,centerLabel,ariaLabel": function () {
       this.refreshChartMeta();
+      this.refreshViewRows();
       this.scheduleDraw();
     },
   },
@@ -46,6 +48,7 @@ Component({
     ready() {
       this.isReady = true;
       this.refreshChartMeta();
+      this.refreshViewRows();
       this.scheduleDraw();
     },
     detached() {
@@ -102,8 +105,35 @@ Component({
       }
     },
 
+    refreshViewRows() {
+      if (this.data.type === "bar") {
+        const points = this.normalizeBarPoints();
+        const maxValue = Math.max(1, ...points.map((item) => Math.max(item.value, item.goal)));
+        this.setData({
+          barRows: points.map((point) => ({
+            label: point.label,
+            value: point.value,
+            heightPercent: Math.round(point.value / maxValue * 100),
+            goalPercent: point.goal > 0 ? Math.round(point.goal / maxValue * 100) : 0,
+            met: point.goal > 0 && point.value >= point.goal,
+          })),
+        });
+      } else if (this.data.type !== "line") {
+        const segments = (this.data.segments || []).map((item) => Object.assign({}, item, {
+          value: Math.max(0, Number(item.value) || 0),
+          color: item.color || DEFAULT_GREEN,
+        }));
+        const total = segments.reduce((sum, item) => sum + item.value, 0);
+        this.setData({
+          segmentRows: segments.map((item) => Object.assign(item, {
+            percent: total ? Math.round(item.value / total * 1000) / 10 : 0,
+          })),
+        });
+      }
+    },
+
     scheduleDraw() {
-      if (!this.isReady) return;
+      if (!this.isReady || this.data.type !== "line") return;
       if (this.drawTimer) clearTimeout(this.drawTimer);
       this.drawTimer = setTimeout(() => {
         this.drawTimer = null;
@@ -125,107 +155,8 @@ Component({
           canvas.height = field.height * pixelRatio;
           context.scale(pixelRatio, pixelRatio);
           context.clearRect(0, 0, field.width, field.height);
-          if (this.data.type === "bar") {
-            this.drawBars(context, field.width, field.height);
-          } else if (this.data.type === "line") {
-            this.drawLine(context, field.width, field.height);
-          } else {
-            this.drawDonut(context, field.width, field.height);
-          }
+          this.drawLine(context, field.width, field.height);
         });
-    },
-
-    drawDonut(context, width, height) {
-      const segments = (this.data.segments || [])
-        .map((item) => Object.assign({}, item, { value: Math.max(0, Number(item.value) || 0) }))
-        .filter((item) => item.value > 0);
-      const total = segments.reduce((sum, item) => sum + item.value, 0);
-      const centerX = width / 2;
-      const centerY = height / 2;
-      const radius = Math.min(width, height) * 0.31;
-      const lineWidth = Math.max(12, radius * 0.3);
-      context.lineWidth = lineWidth;
-      context.lineCap = "round";
-      context.strokeStyle = EMPTY_COLOR;
-      context.beginPath();
-      context.arc(centerX, centerY, radius, 0, Math.PI * 2);
-      context.stroke();
-
-      if (total > 0) {
-        let start = -Math.PI / 2;
-        segments.forEach((segment) => {
-          const angle = (segment.value / total) * Math.PI * 2;
-          context.strokeStyle = segment.color || DEFAULT_GREEN;
-          context.beginPath();
-          context.arc(centerX, centerY, radius, start, start + Math.max(0, angle - 0.025));
-          context.stroke();
-          start += angle;
-        });
-      }
-
-      context.fillStyle = "#22302C";
-      context.font = "700 28px sans-serif";
-      context.textAlign = "center";
-      context.textBaseline = "middle";
-      context.fillText(String(this.data.centerValue || "0"), centerX, centerY - 8);
-      context.fillStyle = "#7B837E";
-      context.font = "13px sans-serif";
-      context.fillText(String(this.data.centerLabel || ""), centerX, centerY + 22);
-    },
-
-    drawBars(context, width, height) {
-      const points = this.normalizeBarPoints();
-      const padding = { top: 18, right: 12, bottom: 34, left: 12 };
-      const chartWidth = Math.max(0, width - padding.left - padding.right);
-      const chartHeight = Math.max(0, height - padding.top - padding.bottom);
-      const maxValue = Math.max(1, ...points.map((item) => Math.max(item.value, item.goal)));
-      const gap = points.length ? chartWidth / points.length : chartWidth;
-      const barWidth = Math.min(26, gap * 0.48);
-
-      context.strokeStyle = "#E8E4DA";
-      context.lineWidth = 1;
-      context.beginPath();
-      context.moveTo(padding.left, padding.top + chartHeight);
-      context.lineTo(width - padding.right, padding.top + chartHeight);
-      context.stroke();
-
-      points.forEach((point, index) => {
-        const x = padding.left + gap * index + gap / 2;
-        const heightRatio = point.value / maxValue;
-        const barHeight = Math.max(point.value ? 4 : 0, chartHeight * heightRatio);
-        context.fillStyle = point.goal > 0 && point.value >= point.goal ? "#14645A" : "#b9d7c9";
-        context.beginPath();
-        if (context.roundRect) {
-          context.roundRect(x - barWidth / 2, padding.top + chartHeight - barHeight, barWidth, barHeight, 6);
-        } else {
-          context.rect(x - barWidth / 2, padding.top + chartHeight - barHeight, barWidth, barHeight);
-        }
-        context.fill();
-
-        if (point.goal > 0) {
-          const goalY = padding.top + chartHeight - (point.goal / maxValue) * chartHeight;
-          context.save();
-          context.strokeStyle = "#B5780F";
-          context.lineWidth = 2;
-          context.lineCap = "round";
-          context.beginPath();
-          context.moveTo(x - barWidth / 2 - 4, goalY);
-          context.lineTo(x + barWidth / 2 + 4, goalY);
-          context.stroke();
-          context.restore();
-        }
-
-        if (point.value > 0) {
-          context.fillStyle = "#59645F";
-          context.font = "600 12px sans-serif";
-          context.textAlign = "center";
-          context.fillText(String(point.value), x, padding.top + chartHeight - barHeight - 8);
-        }
-        context.fillStyle = "#7B837E";
-        context.font = "11px sans-serif";
-        context.textAlign = "center";
-        context.fillText(point.label, x, height - 10);
-      });
     },
 
     drawLine(context, width, height) {

@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 const formatCompletedTime = (timestamp) => {
   const value = Number(timestamp) || 0;
   if (!value) return "";
@@ -76,15 +77,12 @@ Page({
 
   loadHomework() {
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "listStudentHomework",
       data: {
-        type: "listStudentHomework",
-        data: {
-          studentId: this.data.studentId,
-          previewStudentId: this.data.previewStudentId,
-          mode: this.data.mode,
-        },
+        studentId: this.data.studentId,
+        previewStudentId: this.data.previewStudentId,
+        mode: this.data.mode,
       },
     }).then((res) => {
       const result = res.result || {};

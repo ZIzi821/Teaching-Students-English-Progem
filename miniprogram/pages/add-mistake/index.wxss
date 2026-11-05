@@ -4,14 +4,14 @@
 
 .title {
   color: var(--ink);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .subtitle {
   margin-top: 12rpx;
   color: var(--ink-2);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.6;
 }
 
@@ -36,7 +36,7 @@
 .label {
   margin-bottom: 12rpx;
   color: var(--ink-2);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -48,7 +48,7 @@
   border-radius: 16rpx;
   background: var(--surface-2);
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .input,
@@ -71,7 +71,7 @@
 .message-card {
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.6;
 }
 
@@ -86,7 +86,7 @@
   padding: 22rpx 0 4rpx;
   border-top: 1rpx solid var(--line);
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -97,7 +97,7 @@
 .quick-tip {
   margin: 20rpx 0;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center;
 }
 

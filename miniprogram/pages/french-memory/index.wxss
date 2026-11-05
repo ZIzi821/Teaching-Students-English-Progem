@@ -24,21 +24,21 @@
 
 .level-label {
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .word {
   margin-top: 16rpx;
   color: var(--accent);
-  font-size: 52rpx;
+  font-size: 56rpx;
   font-weight: 600;
 }
 
 .meaning {
   margin-top: 12rpx;
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .ipa,
@@ -46,13 +46,13 @@
 .disclaimer {
   margin-top: 12rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.6;
 }
 
 .section-title {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -72,19 +72,19 @@
 
 .metric-value {
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .small-value {
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .metric-label,
 .history-time {
   margin-top: 6rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .schedule-card .section-title {
@@ -100,7 +100,7 @@
   padding: 15rpx 0;
   border-bottom: 1rpx solid var(--line);
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .detail-row:last-child,
@@ -121,7 +121,7 @@
 
 .history-result {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-align: right;
 }
 

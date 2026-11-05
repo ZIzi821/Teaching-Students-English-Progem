@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 Page({
   data: {
     loading: true,
@@ -22,12 +23,9 @@ Page({
 
   loadCatalog(options = {}) {
     this.setData({ loading: true, noPermission: false, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: {
-        type: "getVocabularyCatalog",
-        data: { scope: "teacher" },
-      },
+    callCloud({
+      type: "getVocabularyCatalog",
+      data: { scope: "teacher" },
     }).then((res) => {
       const result = res.result || {};
       if (!result.success) throw new Error(result.message || "无法读取学生词库");

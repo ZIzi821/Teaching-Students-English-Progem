@@ -32,7 +32,7 @@
 .title {
   margin-top: 16rpx;
   color: var(--ink);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
   line-height: 1.3;
   word-break: break-word;
@@ -41,7 +41,7 @@
 .date {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .preview-tip {
@@ -50,7 +50,7 @@
   border-radius: 12rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .section-head {
@@ -63,7 +63,7 @@
 
 .section-title {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -74,14 +74,14 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--surface);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
 .submission-count {
   flex-shrink: 0;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .empty {
@@ -89,7 +89,7 @@
   border: 1rpx dashed var(--line-strong);
   border-radius: 24rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center;
 }
 
@@ -106,7 +106,7 @@
 .empty-record-hint {
   margin-top: 8rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .record-item {
@@ -125,7 +125,7 @@
 
 .record-label {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .record-value {
@@ -140,7 +140,7 @@
   padding-top: 20rpx;
   border-top: 1rpx solid var(--line);
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .lesson-focus-summary text {
@@ -173,7 +173,7 @@
 
 .observation-skill {
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 500;
 }
 
@@ -186,7 +186,7 @@
 .observation-note {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .observation-status,
@@ -195,7 +195,7 @@
   flex-shrink: 0;
   padding: 4rpx 16rpx;
   border-radius: 999rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 500;
 }
 
@@ -224,7 +224,7 @@
   display: inline-block;
   padding: 12rpx 24rpx;
   color: var(--danger);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 /* 表单 */
@@ -235,7 +235,7 @@
 .label {
   margin-bottom: 10rpx;
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 500;
 }
 
@@ -250,7 +250,7 @@
   border-radius: 16rpx;
   color: var(--ink);
   background: var(--surface);
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .input,
@@ -281,15 +281,10 @@
   height: 200rpx;
 }
 
-.official-prompt {
-  color: var(--ink-2);
-  background: var(--surface-2);
-}
-
 .field-hint {
   margin-top: 8rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .lesson-title-suggestions {
@@ -302,7 +297,7 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .institution-course-setting,
@@ -352,7 +347,7 @@
 .previous-lesson-reference-kicker,
 .learning-plan-lesson-kicker {
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .previous-lesson-reference-title,
@@ -366,13 +361,13 @@
 .previous-lesson-reference-empty {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .previous-lesson-reference-toggle {
   flex-shrink: 0;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .previous-lesson-reference-body {
@@ -384,7 +379,7 @@
   gap: 16rpx;
   padding: 12rpx 0;
   border-top: 1rpx solid var(--line-strong);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .previous-lesson-reference-row text {
@@ -400,10 +395,6 @@
   word-break: break-word;
 }
 
-.recording-due-field {
-  margin-top: 0;
-}
-
 .recording-options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -411,61 +402,15 @@
   margin-bottom: 28rpx;
 }
 
-.recording-option-field {
-  min-width: 0;
-  margin-bottom: 0;
-}
-
 .follow-reading-options {
   margin: 0 0 12rpx;
-}
-
-.follow-reading-wide-option {
-  grid-column: 1 / -1;
-}
-
-.ket-source-card {
-  margin-top: 12rpx;
-  padding: 20rpx 24rpx;
-  border-radius: 16rpx;
-  background: var(--info-soft);
-}
-
-.mock-source-card {
-  background: var(--accent-soft);
-}
-
-.ket-source-title {
-  color: var(--ink);
-  font-size: 24rpx;
-  font-weight: 600;
-}
-
-.ket-source-line {
-  margin-top: 4rpx;
-  color: var(--ink-2);
-  font-size: 24rpx;
-  word-break: break-word;
-}
-
-.ket-source-copy {
-  margin-top: 12rpx;
-  color: var(--accent);
-  font-size: 24rpx;
-  font-weight: 500;
 }
 
 .ket-source-warning,
 .ket-weekly-hint {
   margin-top: 12rpx;
   color: var(--warn);
-  font-size: 24rpx;
-}
-
-.ket-recording-meta {
-  margin-bottom: 28rpx;
-  color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .learning-focus-field {
@@ -489,7 +434,7 @@
 .add-observation {
   flex-shrink: 0;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
@@ -507,7 +452,7 @@
 .observation-mini-label {
   margin-bottom: 8rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .observation-editor-top {
@@ -525,7 +470,7 @@
 .remove-observation {
   flex-shrink: 0;
   color: var(--danger);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .observation-detail-grid {
@@ -536,7 +481,7 @@
 }
 
 .compact-picker {
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .observation-note-input {
@@ -552,7 +497,7 @@
 .recording-prompt-label {
   margin-bottom: 8rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .homework-text {
@@ -580,7 +525,7 @@
 .recording-task-title {
   margin-bottom: 16rpx;
   color: var(--accent);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -590,7 +535,7 @@
   border-radius: 12rpx;
   color: var(--ink-2);
   background: var(--info-soft);
-  font-size: 24rpx;
+  font-size: 26rpx;
   word-break: break-word;
 }
 
@@ -600,7 +545,7 @@
 
 .recording-task-prompt {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   line-height: 1.6;
   white-space: pre-wrap;
   word-break: break-word;
@@ -625,7 +570,7 @@
 .follow-reading-task-item text {
   flex: 0 0 40rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .follow-reading-task-item view {
@@ -636,7 +581,7 @@
 .follow-audio-status {
   margin-top: 12rpx;
   color: var(--warn);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .follow-audio-complete {
@@ -646,7 +591,7 @@
 .manage-follow-audio {
   margin-top: 12rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
@@ -662,7 +607,7 @@
   border-radius: 999rpx;
   color: var(--ink-2);
   background: var(--surface-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 500;
 }
 
@@ -687,12 +632,12 @@
 .preview-recording-note {
   margin-top: 12rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .record-btn {
   display: flex;
-  min-height: 88rpx;
+  min-height: 96rpx;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -719,7 +664,7 @@
 .submission-title,
 .homework-progress-title {
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -751,7 +696,7 @@
 
 .ket-session-time {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .ket-session-score {
@@ -763,7 +708,7 @@
 .ket-session-action {
   flex-shrink: 0;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .submission-row {
@@ -787,7 +732,7 @@
 .submission-prompt {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
   word-break: break-word;
 }
 
@@ -814,13 +759,13 @@
 
 .recording-feedback-title {
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .recording-feedback-time {
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .recording-feedback-tags {
@@ -835,13 +780,13 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .recording-feedback-note {
   margin-top: 8rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   word-break: break-word;
 }
 
@@ -858,7 +803,7 @@
 .delete-recording-btn {
   padding: 12rpx 24rpx;
   border-radius: 12rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
@@ -884,7 +829,7 @@
   border: 1rpx dashed var(--line-strong);
   border-radius: 24rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center;
 }
 
@@ -907,13 +852,13 @@
 
 .recording-maintenance-hint {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .organize-recordings-btn {
   flex-shrink: 0;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
@@ -928,14 +873,14 @@
 .homework-progress-time,
 .teacher-homework-review-hint {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .homework-status-pill {
   flex-shrink: 0;
   padding: 4rpx 16rpx;
   border-radius: 999rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 500;
 }
 
@@ -953,7 +898,7 @@
 .student-homework-review-note {
   margin-top: 12rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .teacher-incomplete-notice {
@@ -962,7 +907,7 @@
   border-radius: 12rpx;
   color: var(--danger);
   background: var(--danger-soft);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .homework-reminder-box {
@@ -973,14 +918,14 @@
 
 .homework-reminder-title {
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
 .homework-reminder-hint {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .homework-reminder-btn {
@@ -990,7 +935,7 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 12rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
@@ -1008,7 +953,7 @@
 .teacher-review-state {
   flex-shrink: 0;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .teacher-homework-review-actions {
@@ -1020,7 +965,7 @@
 
 .teacher-review-btn {
   display: flex;
-  min-height: 88rpx;
+  min-height: 96rpx;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -1028,7 +973,7 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 16rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
   text-align: center;
 }
@@ -1072,13 +1017,13 @@
 
 .purpose-label {
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .purpose-hint {
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .upload-actions {
@@ -1089,7 +1034,7 @@
 
 .upload-action {
   padding: 8rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center;
 }
 
@@ -1100,13 +1045,13 @@
 .upload-hint {
   margin-top: 12rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .advanced-toggle {
   margin-top: 16rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .advanced-fields .input {
@@ -1116,13 +1061,13 @@
 .danger-text-action {
   margin-top: 24rpx;
   color: var(--danger);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .material-group-title {
   margin: 24rpx 4rpx 12rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
@@ -1145,7 +1090,7 @@
 .material-image-hint {
   margin-top: 8rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-align: center;
 }
 
@@ -1163,7 +1108,7 @@
 .file-name {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
   word-break: break-all;
 }
 
@@ -1179,14 +1124,14 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 12rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
 .manage-label {
   margin-left: auto;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 /* 错题 */
@@ -1199,7 +1144,7 @@
 .mistake-action-hint {
   margin-top: 12rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .mistake-card {
@@ -1227,14 +1172,14 @@
   border-radius: 999rpx;
   color: var(--warn);
   background: var(--warn-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 500;
 }
 
 .reason {
   margin-top: 8rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   word-break: break-word;
 }
 
@@ -1250,7 +1195,7 @@
   border-radius: 999rpx;
   color: var(--ink-2);
   background: var(--surface-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 /* 录音反馈面板 */
@@ -1293,25 +1238,25 @@
 
 .recording-review-title {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .recording-review-meta {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .recording-review-close {
   flex-shrink: 0;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .recording-review-label {
   margin: 28rpx 0 12rpx;
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
@@ -1365,7 +1310,7 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 999rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .recording-review-tag-active {
@@ -1385,13 +1330,13 @@
   padding: 16rpx 20rpx;
   border: 1rpx solid var(--line-strong);
   border-radius: 16rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .recording-review-link-note {
   margin-top: 12rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .recording-review-actions {

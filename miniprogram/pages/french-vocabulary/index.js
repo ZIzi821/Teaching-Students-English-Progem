@@ -1,4 +1,5 @@
 const frenchPreview = require("../../utils/frenchPreview");
+const { callCloud } = require("../../utils/cloud");
 
 const PART_OF_SPEECH = {
   noun: "名词",
@@ -92,10 +93,7 @@ Page({
   },
 
   callCloud(type, data) {
-    return wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type, data: frenchPreview.withData(this, data) },
-    }).then((response) => {
+    return callCloud({ type, data: frenchPreview.withData(this, data) }).then((response) => {
       const result = response.result || {};
       if (result.success === false) throw new Error(result.message || "暂时不可用");
       return result.data || result;

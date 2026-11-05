@@ -1,4 +1,5 @@
 const frenchPreview = require("../../utils/frenchPreview");
+const { callCloud } = require("../../utils/cloud");
 
 const STATE_LABELS = {
   new: "未学习",
@@ -71,10 +72,7 @@ Page({
       return;
     }
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
-      data: { type: "getFrenchWordMemory", data: frenchPreview.withData(this, { wordId: this.wordId }) },
-    }).then((response) => {
+    callCloud({ type: "getFrenchWordMemory", data: frenchPreview.withData(this, { wordId: this.wordId }) }).then((response) => {
       const result = response.result || {};
       if (result.success === false) throw new Error(result.message || "暂时无法读取记忆数据");
       const payload = result.data || result;

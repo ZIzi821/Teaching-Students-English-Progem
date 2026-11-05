@@ -1,5 +1,6 @@
 const { createVocabularyAudioPlayer, prefetchVocabularyAudio } = require("../../utils/vocabularyAudio");
 const { getFriendlyCloudErrorMessage } = require("../../utils/cloudError");
+const { callCloud } = require("../../utils/cloud");
 
 const MAX_SESSION_WORDS = 30;
 const AUDIO_PREFETCH_AHEAD = 3;
@@ -74,18 +75,15 @@ Page({
       return;
     }
     this.setData({ loading: true, message: "" });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "getVocabularyData",
       data: {
-        type: "getVocabularyData",
-        data: {
-          studentId: this.data.studentId,
-          previewStudentId: this.data.previewStudentId,
-          mode: this.data.mode,
-          browseTab: "today",
-          offset: 0,
-          limit: MAX_SESSION_WORDS,
-        },
+        studentId: this.data.studentId,
+        previewStudentId: this.data.previewStudentId,
+        mode: this.data.mode,
+        browseTab: "today",
+        offset: 0,
+        limit: MAX_SESSION_WORDS,
       },
     }).then((res) => {
       const result = res.result || {};
@@ -234,15 +232,12 @@ Page({
     }
     if (!this.data.canReview) return;
     this.setData({ reviewing: true });
-    wx.cloud.callFunction({
-      name: "quickstartFunctions",
+    callCloud({
+      type: "reviewVocabularyWord",
       data: {
-        type: "reviewVocabularyWord",
-        data: {
-          studentId: this.data.studentId,
-          wordKey: word.key,
-          result,
-        },
+        studentId: this.data.studentId,
+        wordKey: word.key,
+        result,
       },
     }).then((res) => {
       const response = res.result || {};

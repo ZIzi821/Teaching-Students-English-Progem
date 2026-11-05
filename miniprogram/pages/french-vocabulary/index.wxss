@@ -11,34 +11,34 @@
 
 .difficult-mode-kicker {
   color: var(--warn);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .difficult-mode-title {
   margin-top: 8rpx;
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .difficult-mode-copy {
   margin-top: 8rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }
 
 .level-tabs,.search-row { display: flex; gap: 12rpx; }
 .level-tab { flex: 1; padding: 14rpx; color: var(--ink-2); background: var(--line); border-radius: 16rpx; text-align: center; }
 .level-tab.active { color: var(--on-fill); background: var(--accent); }
-.search-row input { flex: 1; min-height: 70rpx; padding: 0 20rpx; border-radius: 16rpx; background: var(--surface); font-size: 24rpx; }
-.search-btn { width: 120rpx; margin: 0; font-size: 24rpx; }
-.recall-hint { margin-top: 28rpx; color: var(--ink-2); font-size: 24rpx; }
+.search-row input { flex: 1; min-height: 70rpx; padding: 0 20rpx; border-radius: 16rpx; background: var(--surface); font-size: 26rpx; }
+.search-btn { width: 120rpx; margin: 0; font-size: 26rpx; }
+.recall-hint { margin-top: 28rpx; color: var(--ink-2); font-size: 26rpx; }
 .reveal-btn { margin-top: 24rpx; }
 .meaning-en,.meta,.example { margin-top: 12rpx; color: var(--ink-2); line-height: 1.55; }
-.example { padding: 18rpx; border-radius: 16rpx; background: var(--warn-soft); font-size: 24rpx; }
-.memory-link { margin-top: 24rpx; border: 0; color: var(--info); background: var(--info-soft); font-size: 24rpx; }
+.example { padding: 18rpx; border-radius: 16rpx; background: var(--warn-soft); font-size: 26rpx; }
+.memory-link { margin-top: 24rpx; border: 0; color: var(--info); background: var(--info-soft); font-size: 26rpx; }
 
 .loading-card,
 .empty-card,
@@ -56,13 +56,13 @@
 .retry-btn {
   margin-top: 18rpx;
   min-height: 68rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .feature-disabled-title,
 .complete-title {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -70,7 +70,7 @@
 .complete-hint {
   margin-top: 10rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .progress-row {
@@ -81,13 +81,13 @@
 
 .progress-label {
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .round-hint {
   margin-top: 8rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .progress-bar {
@@ -113,7 +113,7 @@
 
 .word-eyebrow {
   color: var(--accent);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -127,7 +127,7 @@
 
 .word-text {
   color: var(--accent);
-  font-size: 52rpx;
+  font-size: 56rpx;
   font-weight: 600;
   line-height: 1.25;
 }
@@ -143,39 +143,39 @@
   border-radius: 50%;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 32rpx;
+  font-size: 34rpx;
   line-height: 76rpx;
 }
 
 .ipa {
   margin-top: 20rpx;
   color: var(--info);
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .word-meta {
   margin-top: 14rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .meaning {
   margin-top: 28rpx;
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .audio-hint {
   margin-top: 36rpx;
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .rating-title {
   margin: 8rpx 0 14rpx;
   color: var(--ink-2);
-  font-size: 28rpx;
+  font-size: 30rpx;
   text-align: center;
 }
 
@@ -190,7 +190,7 @@
   margin: 0;
   border: 0;
   border-radius: 16rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 

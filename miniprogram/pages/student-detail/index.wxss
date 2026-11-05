@@ -30,13 +30,13 @@
 
 .preview-banner-title {
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
 .preview-banner-hint {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .preview-banner-action {
@@ -45,7 +45,7 @@
   border-radius: 12rpx;
   color: var(--on-fill);
   background: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .profile-head {
@@ -64,7 +64,7 @@
   border-radius: 50%;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
@@ -75,14 +75,14 @@
 
 .name {
   color: var(--ink);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
   line-height: 1.3;
 }
 
 .meta {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .progress-card {
@@ -107,7 +107,7 @@
 
 .progress-title {
   color: var(--ink);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -115,7 +115,7 @@
 .cycle-label {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .ghost-small {
@@ -124,7 +124,7 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 12rpx;
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
 }
 
@@ -171,13 +171,13 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 16rpx;
   background: var(--surface);
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .progress-editor-hint {
   margin-top: 8rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .editor-actions,
@@ -189,142 +189,14 @@
 
 .vocabulary-setting-actions {
   margin-top: 24rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .vocabulary-setting-actions .primary-btn,
 .vocabulary-setting-actions .ghost-btn {
   padding: 8rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center;
-}
-
-.entry-group {
-  margin-bottom: 24rpx;
-}
-
-.learning-radar-eyebrow {
-  color: var(--ink-3);
-  font-size: 24rpx;
-}
-
-.learning-radar-goal {
-  margin-top: 12rpx;
-  color: var(--ink-2);
-  font-size: 24rpx;
-}
-
-.learning-radar-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12rpx;
-  margin-top: 20rpx;
-}
-
-.learning-radar-cell {
-  min-width: 0;
-  padding: 16rpx 20rpx;
-  border-radius: 16rpx;
-  background: var(--surface-2);
-}
-
-.learning-radar-cell-label {
-  color: var(--ink-3);
-  font-size: 22rpx;
-}
-
-.learning-radar-cell-value {
-  color: var(--ink);
-  font-size: 24rpx;
-  font-weight: 500;
-  word-break: break-word;
-}
-
-.learning-radar-next {
-  margin-top: 12rpx;
-  padding: 16rpx 20rpx;
-  border-radius: 16rpx;
-  background: var(--accent-soft);
-}
-
-.learning-radar-next-label {
-  color: var(--accent);
-  font-size: 22rpx;
-}
-
-.learning-radar-next-title {
-  color: var(--ink);
-  font-size: 28rpx;
-  font-weight: 500;
-}
-
-.learning-radar-readiness {
-  margin-top: 12rpx;
-  color: var(--ink-3);
-  font-size: 24rpx;
-}
-
-.overview-chart-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16rpx;
-  margin-top: 24rpx;
-}
-
-.overview-chart-item {
-  min-width: 0;
-}
-
-.overview-chart-title {
-  margin-bottom: 12rpx;
-  color: var(--ink-2);
-  font-size: 24rpx;
-  font-weight: 500;
-}
-
-.weekly-mini {
-  margin-top: 24rpx;
-  padding-top: 24rpx;
-  border-top: 1rpx solid var(--line);
-}
-
-.weekly-mini-summary {
-  margin-top: 8rpx;
-  color: var(--ink-3);
-  font-size: 24rpx;
-}
-
-.overview-actions {
-  margin-top: 24rpx;
-  padding-top: 24rpx;
-  border-top: 1rpx solid var(--line);
-}
-
-.learning-order-hint {
-  margin-bottom: 12rpx;
-  color: var(--ink-3);
-  font-size: 24rpx;
-}
-
-.overview-challenge {
-  margin-top: 12rpx;
-}
-
-.text-link {
-  margin-top: 20rpx;
-  color: var(--accent);
-  font-size: 24rpx;
-  font-weight: 500;
-}
-
-.mistake-chart-wrap {
-  margin-top: 24rpx;
-}
-
-.rank-block {
-  margin-top: 24rpx;
-  padding-top: 24rpx;
-  border-top: 1rpx solid var(--line);
 }
 
 .rank-row {
@@ -338,7 +210,7 @@
   flex: 0 0 180rpx;
   overflow: hidden;
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -351,30 +223,14 @@
 .rank-count {
   flex: 0 0 40rpx;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: right;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8rpx;
-  margin-top: 20rpx;
-}
-
-.mistake-export-entry {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-  margin-top: 24rpx;
-  padding-top: 24rpx;
-  border-top: 1rpx solid var(--line);
 }
 
 .no-learning-card,
 .empty {
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center;
 }
 
@@ -413,13 +269,13 @@
 .date {
   flex-shrink: 0;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .lesson-meta {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .lesson-summary {
@@ -427,7 +283,7 @@
   margin-top: 8rpx;
   overflow: hidden;
   color: var(--ink-2);
-  font-size: 24rpx;
+  font-size: 26rpx;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
@@ -494,7 +350,7 @@
 .setting-hint {
   margin-top: 4rpx;
   color: var(--ink-3);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .goal-picker {
@@ -503,7 +359,7 @@
   border: 1rpx solid var(--line-strong);
   border-radius: 12rpx;
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .lesson-template-picker {
@@ -514,7 +370,7 @@
   padding: 24rpx 0;
   border-top: 1rpx solid var(--line);
   color: var(--accent);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
   text-align: center;
 }
@@ -540,7 +396,7 @@
   display: flex;
   align-items: center;
   gap: 12rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .unit-toggle-list {
@@ -557,6 +413,79 @@
 
 .unit-toggle-name {
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 500;
+}
+
+.overview-group,
+.overview-card {
+  margin-bottom: 24rpx;
+}
+
+.overview-label {
+  color: var(--ink-3);
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.overview-number-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-top: 12rpx;
+}
+
+.overview-number {
+  color: var(--ink);
+  font-size: 56rpx;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.overview-number-unit {
+  color: var(--ink-3);
+  font-size: 26rpx;
+  font-weight: 400;
+}
+
+.overview-number-note {
+  flex-shrink: 0;
+  color: var(--ink-3);
+  font-size: 26rpx;
+}
+
+.overview-bar {
+  margin-top: 16rpx;
+}
+
+.overview-facts {
+  margin-top: 16rpx;
+  color: var(--ink-2);
+  font-size: 26rpx;
+  line-height: 1.7;
+}
+
+.learning-order-hint {
+  margin-top: 20rpx;
+  color: var(--ink-3);
+  font-size: 26rpx;
+}
+
+.overview-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+
+.text-link {
+  margin-top: 20rpx;
+  color: var(--accent);
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.rank-block {
+  margin-top: 20rpx;
 }

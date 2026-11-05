@@ -4,7 +4,7 @@
 
 .state-card {
   color: var(--ink-2);
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.6;
 }
 
@@ -42,20 +42,20 @@
 
 .hero-kicker {
   color: rgba(255, 255, 255, 0.72);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .hero-title {
   margin-top: 10rpx;
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
 }
 
 .hero-description {
   margin-top: 18rpx;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1.6;
 }
 
@@ -63,7 +63,7 @@
   flex-shrink: 0;
   padding: 9rpx 16rpx;
   border-radius: 999rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -88,14 +88,14 @@
   border-radius: 16rpx;
   color: rgba(255, 255, 255, 0.9);
   background: rgba(255, 255, 255, 0.1);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }
 
 .sample-head {
   margin-top: 22rpx;
   color: rgba(255, 255, 255, 0.86);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -116,7 +116,7 @@
 .hero-meta {
   margin-top: 14rpx;
   color: rgba(255, 255, 255, 0.65);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .empty-evaluation {
@@ -126,21 +126,21 @@
 
 .empty-icon {
   color: var(--accent);
-  font-size: 52rpx;
+  font-size: 56rpx;
   font-weight: 600;
 }
 
 .empty-title {
   margin-top: 10rpx;
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .empty-copy {
   margin-top: 13rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.65;
 }
 
@@ -162,32 +162,32 @@
 .metric-label,
 .metric-note {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .metric-value {
   margin: 12rpx 0 9rpx;
   color: var(--accent);
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 600;
   line-height: 1.15;
 }
 
 .metric-value.metric-small {
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.55;
 }
 
 .section-title {
   color: var(--ink);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .section-hint {
   margin-top: 8rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.5;
 }
 
@@ -196,7 +196,7 @@
   gap: 24rpx;
   margin-top: 19rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .legend-item {
@@ -232,14 +232,14 @@
 
 .bin-label {
   color: var(--ink);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
 .bin-sample,
 .no-bin-data {
   color: var(--ink-3);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .bar-row {
@@ -250,7 +250,7 @@
   width: 58rpx;
   flex-shrink: 0;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .bar-track {
@@ -270,7 +270,7 @@
   width: 78rpx;
   flex-shrink: 0;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-align: right;
 }
 
@@ -294,14 +294,14 @@
 
 .quality-value {
   color: var(--accent);
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 600;
 }
 
 .quality-label {
   margin-top: 7rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .quality-note,
@@ -311,7 +311,7 @@
   border-radius: 16rpx;
   color: var(--ink-2);
   background: var(--surface-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.55;
 }
 
@@ -343,7 +343,7 @@
 
 .source-title {
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
@@ -352,7 +352,7 @@
   border-radius: 999rpx;
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -361,7 +361,7 @@
 .recent-sample {
   margin-top: 6rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.45;
 }
 
@@ -380,13 +380,13 @@
 
 .recent-label {
   color: var(--ink);
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 600;
 }
 
 .recent-values {
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   text-align: right;
 }
@@ -402,7 +402,7 @@
   gap: 13rpx;
   margin-top: 17rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.6;
 }
 
@@ -416,7 +416,7 @@
   border-radius: 12rpx;
   color: var(--on-fill);
   background: var(--warn-fill);
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
 }
 
@@ -428,7 +428,7 @@
 .method-line {
   margin-top: 14rpx;
   color: var(--ink-2);
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.65;
 }
 
