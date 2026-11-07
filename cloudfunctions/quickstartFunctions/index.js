@@ -1049,12 +1049,7 @@ const buildStudentHomeData = async (student, identity, options = {}) => {
     loadAllStudentDocuments("studentReminders", studentId),
   ]);
   const progress = buildProgress(syncedStudent);
-  const studentLessons = (lessonDocuments || [])
-    .slice()
-    .sort((left, right) => (
-      String(right.lessonDate || "").localeCompare(String(left.lessonDate || ""))
-      || getCreatedTime(right) - getCreatedTime(left)
-    ))
+  const studentLessons = courseWorkflow.sortLessonsByNumber(lessonDocuments || [])
     .map(withTeacherConfirmedHomeworkState)
     .map((lesson) => withHomeworkDeadlineState(lesson));
   const homeworkLessons = studentLessons.filter(hasLessonHomework);
@@ -2382,7 +2377,7 @@ const getStudentDetail = async (event) => {
       vocabularyLibrary.levels.filter((level) => !level.isReferenceOnly).map((level) => level.id),
       vocabularySettings
     ),
-    lessons: lessons
+    lessons: courseWorkflow.sortLessonsByNumber(lessons)
       .map((lesson) => courseWorkflow.withApplicableLessonDuration(lesson, student))
       .map(withTeacherConfirmedHomeworkState)
       .map((lesson) => withHomeworkDeadlineState(lesson)),
@@ -3961,7 +3956,8 @@ const listLessons = async (event) => {
   return {
     success: true,
     role: identity.role,
-    data: (res.data || [])
+    // 单个学生按节次排列；跨学生列表仍按日期。
+    data: (studentId ? courseWorkflow.sortLessonsByNumber(res.data || []) : (res.data || []))
       .map((lesson) => lessonStudent
         ? courseWorkflow.withApplicableLessonDuration(lesson, lessonStudent)
         : lesson)

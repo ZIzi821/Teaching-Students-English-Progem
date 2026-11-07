@@ -283,4 +283,21 @@ assert.strictEqual(
   "teacher-returned work must take priority over an existing submission"
 );
 
+// 课程列表按节次排列：补录的第 13 节即使日期与第 12 节相同、建立时间更晚，也排在第 12 节之前；
+// 没有节次的课按日期插入。
+const orderedLessons = courseWorkflow.sortLessonsByNumber([
+  { _id: "l11", lessonNo: 11, lessonDate: "2026-10-26", createdAt: "2026-10-26T10:00:00Z" },
+  { _id: "l12", lessonNo: 12, lessonDate: "2026-11-02", createdAt: "2026-11-02T12:00:00Z" },
+  { _id: "l13", lessonNo: "13", lessonDate: "2026-11-02", createdAt: "2026-11-02T09:00:00Z" },
+  { _id: "l10", lessonNo: 10, lessonDate: "2026-10-12", createdAt: "2026-10-12T10:00:00Z" },
+  { _id: "coach", lessonNo: "", lessonDate: "2026-10-20", createdAt: "2026-10-20T10:00:00Z" },
+  { _id: "late9", lessonNo: 9, lessonDate: "2026-10-30", createdAt: "2026-10-30T10:00:00Z" },
+]);
+assert.deepStrictEqual(orderedLessons.map((lesson) => lesson._id), ["l13", "l12", "l11", "coach", "l10", "late9"]);
+assert.deepStrictEqual(courseWorkflow.sortLessonsByNumber([]), []);
+assert.deepStrictEqual(
+  courseWorkflow.sortLessonsByNumber([{ _id: "a", lessonDate: "2026-10-01" }, { _id: "b", lessonDate: "2026-10-05" }]).map((lesson) => lesson._id),
+  ["b", "a"]
+);
+
 console.log("courseWorkflow tests passed");

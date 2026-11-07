@@ -437,6 +437,44 @@ const buildHomeworkListGrouping = ({ pendingLessons = [], completedLessons = [] 
   };
 };
 
+const getLessonNumber = (lesson) => {
+  const text = String(lesson && lesson.lessonNo !== undefined && lesson.lessonNo !== null ? lesson.lessonNo : "").trim();
+  return /^\d+$/.test(text) && Number(text) > 0 ? Number(text) : 0;
+};
+
+const getLessonCreatedAtMs = (lesson) => {
+  const value = lesson && (lesson.createdAtMs || lesson.createdAt);
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+  const parsed = Date.parse(String(value || ""));
+  return Number.isNaN(parsed) ? 0 : parsed;
+};
+
+// 同日期时，较晚建立的记录排在前面。
+const compareLessonDateDesc = (left, right) => (
+  String(right.lessonDate || "").localeCompare(String(left.lessonDate || ""))
+  || getLessonCreatedAtMs(right) - getLessonCreatedAtMs(left)
+  || String(right._id || "").localeCompare(String(left._id || ""))
+);
+
+// 单个学生的课程列表按“第几节”从新到旧排列；补录的课只要节次正确，就会回到正确位置。
+// 没有节次的课（如单词陪练）按日期插入：排在第一节日期早于它的有节次课程之前。
+const sortLessonsByNumber = (lessons = []) => {
+  const source = Array.isArray(lessons) ? lessons.filter(Boolean) : [];
+  const numbered = source.filter((lesson) => getLessonNumber(lesson) > 0)
+    .sort((left, right) => getLessonNumber(right) - getLessonNumber(left) || compareLessonDateDesc(left, right));
+  const unnumbered = source.filter((lesson) => getLessonNumber(lesson) <= 0).sort(compareLessonDateDesc);
+  const result = [];
+  let pending = 0;
+  numbered.forEach((lesson) => {
+    while (pending < unnumbered.length && compareLessonDateDesc(unnumbered[pending], lesson) < 0) {
+      result.push(unnumbered[pending]);
+      pending += 1;
+    }
+    result.push(lesson);
+  });
+  return result.concat(unnumbered.slice(pending));
+};
+
 module.exports = {
   DAY_MS,
   HOMEWORK_LIST_GROUPS,
@@ -464,6 +502,7 @@ module.exports = {
   isLateHomeworkSubmission,
   normalizeLessonDurationMinutes,
   sortHomeworkLessons,
+  sortLessonsByNumber,
   usesLessonDurationMinutes,
   withApplicableLessonDuration,
 };
