@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 Page({
   data: {
     students: [],
@@ -47,13 +48,9 @@ Page({
   },
 
   loadMistakeForEdit() {
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "getMistakeDetail",
-          data: { mistakeId: this.mistakeId },
-        },
+    callCloud({
+        type: "getMistakeDetail",
+        data: { mistakeId: this.mistakeId },
       })
       .then((res) => {
         const result = res.result || {};
@@ -92,12 +89,8 @@ Page({
   },
 
   loadStudents() {
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "listStudents",
-        },
+    callCloud({
+        type: "listStudents",
       })
       .then((res) => {
         const result = res.result || {};
@@ -134,14 +127,10 @@ Page({
   },
 
   loadLessons(studentId) {
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "listLessons",
         data: {
-          type: "listLessons",
-          data: {
-            studentId,
-          },
+          studentId,
         },
       })
       .then((res) => {
@@ -215,14 +204,10 @@ Page({
       this.applyPapers([]);
       return;
     }
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "getLessonDetail",
         data: {
-          type: "getLessonDetail",
-          data: {
-            lessonId,
-          },
+          lessonId,
         },
       })
       .then((res) => {
@@ -316,32 +301,28 @@ Page({
     const hasDetailedInfo = this.data.showAdvanced || this.data.isEditing;
     this.setData({ saving: true });
     wx.showLoading({ title: "保存中" });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: this.data.isEditing ? "updateMistake" : "addMistake",
         data: {
-          type: this.data.isEditing ? "updateMistake" : "addMistake",
-          data: {
-            mistakeId: this.mistakeId,
-            studentId: student._id,
-            lessonId: lesson._id,
-            paperId: hasDetailedInfo && paper && paper._id ? paper._id : "",
-            questionNo: form.questionNo,
-            paperSection: hasDetailedInfo ? this.data.paperSections[this.data.paperSectionIndex] : "",
-            questionType: hasDetailedInfo ? this.data.questionTypes[this.data.questionTypeIndex] : "",
-            skillTags: hasDetailedInfo ? tags : [],
-            mistakeReasonType: hasDetailedInfo ? this.data.reasonTypes[this.data.reasonTypeIndex] : "",
-            studentAnswer: form.studentAnswer,
-            correctAnswer: form.correctAnswer,
-            explanation: form.explanation,
-            questionText: form.questionText,
-            reason: form.reason,
-            tags: hasDetailedInfo ? tags : [],
-            reviewPriority: this.data.reviewPriorities[this.data.reviewPriorityIndex],
-            reviewStatus: this.data.reviewStatuses[this.data.reviewStatusIndex],
-            status: this.data.reviewStatuses[this.data.reviewStatusIndex],
-            entryStatus,
-          },
+          mistakeId: this.mistakeId,
+          studentId: student._id,
+          lessonId: lesson._id,
+          paperId: hasDetailedInfo && paper && paper._id ? paper._id : "",
+          questionNo: form.questionNo,
+          paperSection: hasDetailedInfo ? this.data.paperSections[this.data.paperSectionIndex] : "",
+          questionType: hasDetailedInfo ? this.data.questionTypes[this.data.questionTypeIndex] : "",
+          skillTags: hasDetailedInfo ? tags : [],
+          mistakeReasonType: hasDetailedInfo ? this.data.reasonTypes[this.data.reasonTypeIndex] : "",
+          studentAnswer: form.studentAnswer,
+          correctAnswer: form.correctAnswer,
+          explanation: form.explanation,
+          questionText: form.questionText,
+          reason: form.reason,
+          tags: hasDetailedInfo ? tags : [],
+          reviewPriority: this.data.reviewPriorities[this.data.reviewPriorityIndex],
+          reviewStatus: this.data.reviewStatuses[this.data.reviewStatusIndex],
+          status: this.data.reviewStatuses[this.data.reviewStatusIndex],
+          entryStatus,
         },
       })
       .then((res) => {

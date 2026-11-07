@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 Page({
   data: {
     studentId: "",
@@ -26,16 +27,12 @@ Page({
   },
 
   loadAnalytics() {
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "getStudentAnalytics",
         data: {
-          type: "getStudentAnalytics",
-          data: {
-            studentId: this.data.studentId,
-            previewStudentId: this.data.previewStudentId,
-            mode: this.data.mode,
-          },
+          studentId: this.data.studentId,
+          previewStudentId: this.data.previewStudentId,
+          mode: this.data.mode,
         },
       })
       .then((res) => {

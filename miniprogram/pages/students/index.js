@@ -14,12 +14,8 @@ Page({
   },
 
   loadStudents() {
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "listStudents",
-        },
+    callCloud({
+        type: "listStudents",
       })
       .then((res) => {
         const result = res.result || {};

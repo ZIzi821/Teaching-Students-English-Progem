@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 Page({
   data: {
     message: "",
@@ -37,13 +38,9 @@ Page({
 
     this.setData({ operationPending: true });
     wx.showLoading({ title: "保存中", mask: true });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "addStudent",
-          data: form,
-        },
+    callCloud({
+        type: "addStudent",
+        data: form,
       })
       .then((res) => {
         const result = res.result || {};
@@ -78,12 +75,8 @@ Page({
     if (this.data.operationPending) return;
     this.setData({ operationPending: true });
     wx.showLoading({ title: "导入中", mask: true });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "seedStudents",
-        },
+    callCloud({
+        type: "seedStudents",
       })
       .then((res) => {
         const result = res.result || {};

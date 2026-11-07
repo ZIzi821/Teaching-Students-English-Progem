@@ -126,16 +126,12 @@ Page({
   },
 
   loadStudent() {
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "getStudentDetail",
         data: {
-          type: "getStudentDetail",
-          data: {
-            studentId: this.data.studentId,
-            previewStudentId: this.data.previewStudentId,
-            mode: this.data.mode,
-          },
+          studentId: this.data.studentId,
+          previewStudentId: this.data.previewStudentId,
+          mode: this.data.mode,
         },
       })
       .then((res) => {
@@ -559,20 +555,16 @@ Page({
     const form = this.data.vocabularyForm;
     this.setData({ vocabularySaving: true });
     wx.showLoading({ title: "保存中", mask: true });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "updateVocabularySettings",
         data: {
-          type: "updateVocabularySettings",
-          data: {
-            studentId: this.data.student._id,
-            enabled: form.enabled,
-            levelIds: form.levelIds,
-            dailyGoal: form.dailyGoal,
-            includeMistakeWords: form.includeMistakeWords,
-            learningOrder: form.learningOrder,
-            disabledUnitIds: form.disabledUnitIds || [],
-          },
+          studentId: this.data.student._id,
+          enabled: form.enabled,
+          levelIds: form.levelIds,
+          dailyGoal: form.dailyGoal,
+          includeMistakeWords: form.includeMistakeWords,
+          learningOrder: form.learningOrder,
+          disabledUnitIds: form.disabledUnitIds || [],
         },
       })
       .then((res) => {
@@ -606,15 +598,11 @@ Page({
       "frenchLearningForm.enabled": enabled,
       frenchSaving: true,
     });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "setFrenchLearningSettings",
         data: {
-          type: "setFrenchLearningSettings",
-          data: {
-            studentId: this.data.student._id,
-            enabled,
-          },
+          studentId: this.data.student._id,
+          enabled,
         },
       })
       .then((res) => {
@@ -780,13 +768,9 @@ Page({
       payload.completedLessonMinutes = completedMinutes;
     }
     wx.showLoading({ title: "保存中" });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "updateStudentProgress",
-          data: payload,
-        },
+    callCloud({
+        type: "updateStudentProgress",
+        data: payload,
       })
       .then((res) => {
         const result = res.result || {};

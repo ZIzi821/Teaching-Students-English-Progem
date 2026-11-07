@@ -269,22 +269,18 @@ Page({
       wordPageLoading: append || Boolean(this.data.student),
       message: "",
     });
-    return wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    return callCloud({
+        type: "getVocabularyData",
         data: {
-          type: "getVocabularyData",
-          data: {
-            studentId: this.data.studentId,
-            previewStudentId: this.data.previewStudentId,
-            mode: this.data.mode,
-            browseTab: this.data.activeTab,
-            searchKeyword: this.data.searchKeyword,
-            levelId: book.id,
-            unitId: unit.id,
-            offset: append ? this.data.words.length : 0,
-            limit: PAGE_SIZE,
-          },
+          studentId: this.data.studentId,
+          previewStudentId: this.data.previewStudentId,
+          mode: this.data.mode,
+          browseTab: this.data.activeTab,
+          searchKeyword: this.data.searchKeyword,
+          levelId: book.id,
+          unitId: unit.id,
+          offset: append ? this.data.words.length : 0,
+          limit: PAGE_SIZE,
         },
       })
       .then((res) => {
@@ -754,15 +750,11 @@ Page({
       return;
     }
     this.setData({ dailyGoalSaving: true });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "setVocabularyDailyGoal",
         data: {
-          type: "setVocabularyDailyGoal",
-          data: {
-            studentId: this.data.studentId,
-            dailyGoal,
-          },
+          studentId: this.data.studentId,
+          dailyGoal,
         },
       })
       .then((res) => {
@@ -939,16 +931,12 @@ Page({
       return;
     }
     this.setData({ reviewingWordKey: wordKey });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "reviewVocabularyWord",
         data: {
-          type: "reviewVocabularyWord",
-          data: {
-            studentId: this.data.studentId,
-            wordKey,
-            result: resultValue,
-          },
+          studentId: this.data.studentId,
+          wordKey,
+          result: resultValue,
         },
       })
       .then((res) => {
@@ -1037,13 +1025,9 @@ Page({
       data.partOfSpeech = String(word.partOfSpeech || "").trim();
       data.excluded = false;
     }
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "updateVocabularyWord",
-          data,
-        },
+    callCloud({
+        type: "updateVocabularyWord",
+        data,
       })
       .then((res) => {
         const result = res.result || {};

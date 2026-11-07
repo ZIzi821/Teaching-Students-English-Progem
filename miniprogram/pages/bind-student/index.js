@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 Page({
   data: {
     accessCode: "",
@@ -26,14 +27,10 @@ Page({
       return;
     }
     wx.showLoading({ title: "绑定中" });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "bindAccessCode",
         data: {
-          type: "bindAccessCode",
-          data: {
-            accessCode,
-          },
+          accessCode,
         },
       })
       .then((res) => {

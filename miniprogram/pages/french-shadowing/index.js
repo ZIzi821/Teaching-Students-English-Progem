@@ -1,4 +1,5 @@
 const frenchPreview = require("../../utils/frenchPreview");
+const { callCloud } = require("../../utils/cloud");
 
 Page({
   data: {
@@ -64,11 +65,7 @@ Page({
       this.setData({ loading: false, message: "微信版本过低，请更新后重试" });
       return;
     }
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: { type: "getFrenchSentences", data: frenchPreview.withData(this, { level }) },
-      })
+    callCloud({ type: "getFrenchSentences", data: frenchPreview.withData(this, { level }) })
       .then((res) => {
         if (requestVersion !== this.requestVersion) return;
         const result = res.result || {};
@@ -126,11 +123,7 @@ Page({
       return;
     }
     this.setData({ audioLoading: true });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: { type: "getFrenchAudioUrl", data: frenchPreview.withData(this, { audioKey }) },
-      })
+    callCloud({ type: "getFrenchAudioUrl", data: frenchPreview.withData(this, { audioKey }) })
       .then((res) => {
         if (
           audioRequestVersion !== this.audioRequestVersion
@@ -164,13 +157,9 @@ Page({
     const sentence = this.data.currentSentence;
     if (!sentence || !sentence.id || this.data.submitting) return;
     this.setData({ submitting: true });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "completeFrenchSentence",
-          data: frenchPreview.withData(this, { sentenceId: sentence.id }),
-        },
+    callCloud({
+        type: "completeFrenchSentence",
+        data: frenchPreview.withData(this, { sentenceId: sentence.id }),
       })
       .then((res) => {
         const response = res.result || {};

@@ -94,15 +94,11 @@ Page({
       this.setFallbackData("微信版本过低，请更新后重试");
       return;
     }
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "getHomeData",
         data: {
-          type: "getHomeData",
-          data: {
-            mode: this.data.mode,
-            previewStudentId: this.data.previewStudentId,
-          },
+          mode: this.data.mode,
+          previewStudentId: this.data.previewStudentId,
         },
       })
       .then((res) => {

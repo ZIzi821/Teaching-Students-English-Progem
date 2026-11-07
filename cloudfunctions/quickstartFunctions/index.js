@@ -31,6 +31,11 @@ cloud.init({
 });
 
 const db = cloud.database();
+
+// 所有事务遇到云数据库“事务繁忙”时自动重试；事务未提交前失败，重试不会重复写入。
+const runTransaction = (transactionCallback) => runTransactionWithRetry(
+  () => db.runTransaction(transactionCallback)
+);
 const COLLECTIONS = [
   "students",
   "teachers",
@@ -1370,7 +1375,7 @@ const markHomeworkActivitiesViewed = async (event = {}) => {
   if (!requestedAtMs) return { success: true, viewedThroughAtMs: 0 };
   await createOneCollection("systemLocks");
   const stateId = getTeacherHomeworkActivityStateId(identity.openid);
-  const viewedThroughAtMs = await db.runTransaction(async (transaction) => {
+  const viewedThroughAtMs = await runTransaction(async (transaction) => {
     const stateRef = transaction.collection("systemLocks").doc(stateId);
     const current = await getOptionalTransactionDocument(stateRef);
     const nextAtMs = Math.max(Number(current && current.viewedThroughAtMs || 0), requestedAtMs);
@@ -1400,7 +1405,7 @@ const markStudentLearningActivitiesViewed = async (event = {}) => {
   await createOneCollection("systemLocks");
   const studentId = identity.student._id;
   const stateId = getStudentLearningActivityStateId(studentId);
-  const viewedThroughAtMs = await db.runTransaction(async (transaction) => {
+  const viewedThroughAtMs = await runTransaction(async (transaction) => {
     const stateRef = transaction.collection("systemLocks").doc(stateId);
     const current = await getOptionalTransactionDocument(stateRef);
     const nextAtMs = Math.max(Number(current && current.viewedThroughAtMs || 0), requestedAtMs);
@@ -1538,7 +1543,7 @@ const saveStudentReminder = async (event = {}) => {
   if (!studentRes.data) throw createError("INVALID_STUDENT", "学生不存在或已删除");
   const nowMs = Date.now();
   const targetId = reminderId || `student_reminder_${nowMs}_${crypto.randomBytes(6).toString("hex")}`;
-  const reminder = await db.runTransaction(async (transaction) => {
+  const reminder = await runTransaction(async (transaction) => {
     const reminderRef = transaction.collection("studentReminders").doc(targetId);
     const current = await getOptionalTransactionDocument(reminderRef);
     if (reminderId) {
@@ -1590,7 +1595,7 @@ const withdrawStudentReminder = async (event = {}) => {
   }
   await createOneCollection("studentReminders");
   const nowMs = Date.now();
-  const reminder = await db.runTransaction(async (transaction) => {
+  const reminder = await runTransaction(async (transaction) => {
     const reminderRef = transaction.collection("studentReminders").doc(reminderId);
     const current = await getOptionalTransactionDocument(reminderRef);
     if (!current) throw createError("REMINDER_NOT_FOUND", "这条提醒不存在或已经撤回");
@@ -1763,7 +1768,7 @@ const savePkChallengeProfile = async (event = {}) => {
   await assertContentSafe({ texts: [input.name] });
   const nowMs = Date.now();
   const targetId = profileId || `pk_challenge_${nowMs}_${crypto.randomBytes(6).toString("hex")}`;
-  const saved = await db.runTransaction(async (transaction) => {
+  const saved = await runTransaction(async (transaction) => {
     const profileRef = transaction.collection("pkChallengeProfiles").doc(targetId);
     const current = await getOptionalTransactionDocument(profileRef);
     if (profileId && !current) throw createError("PK_CHALLENGE_NOT_FOUND", "挑战选手不存在或已删除");
@@ -1923,7 +1928,7 @@ const bindAccessCode = async (event) => {
 
   const student = res.data[0];
   await createOneCollection("systemLocks");
-  const boundStudent = await db.runTransaction(async (transaction) => {
+  const boundStudent = await runTransaction(async (transaction) => {
     const studentRef = transaction.collection("students").doc(student._id);
     const openIdLockRef = transaction
       .collection("systemLocks")
@@ -1996,7 +2001,7 @@ const unbindIdentity = async () => {
   const identity = await getIdentity();
   const openid = identity.openid || getOpenIdFromContext();
   if (identity.role === "student" && identity.student) {
-    await db.runTransaction(async (transaction) => {
+    await runTransaction(async (transaction) => {
       const studentRef = transaction.collection("students").doc(identity.student._id);
       const currentStudentRes = await studentRef.get();
       const currentStudent = currentStudentRes && currentStudentRes.data;
@@ -2150,7 +2155,7 @@ const addStudent = async (event) => {
     vocabularySettings: vocabulary.getDefaultVocabularySettings(),
     createdAt: db.serverDate(),
   };
-  return await db.runTransaction(async (transaction) => {
+  return await runTransaction(async (transaction) => {
     const accessCodeLockRef = transaction
       .collection("systemLocks")
       .doc(getSystemLockId("student_access_code", accessCode));
@@ -2286,7 +2291,7 @@ const seedStudents = async () => {
       teacherOpenId: teacherIdentity.openid,
     });
     const studentId = `seed_${crypto.createHash("sha1").update(student.accessCode).digest("hex")}`;
-    const created = await db.runTransaction(async (transaction) => {
+    const created = await runTransaction(async (transaction) => {
       const accessCodeLockRef = transaction
         .collection("systemLocks")
         .doc(getSystemLockId("student_access_code", student.accessCode));
@@ -2955,7 +2960,7 @@ const setVocabularyDailyGoal = async (event) => {
   };
   await createOneCollection("vocabularyDailyStats");
   const dailyStatsId = getVocabularyDailyStatsId(studentId, dailyPlan.learningDay);
-  await db.runTransaction(async (transaction) => {
+  await runTransaction(async (transaction) => {
     const studentRef = transaction.collection("students").doc(studentId);
     const dailyStatsRef = transaction.collection("vocabularyDailyStats").doc(dailyStatsId);
     const [currentStudentRes, currentDailyStats] = await Promise.all([
@@ -3885,7 +3890,7 @@ const updateVocabularyWord = async (event) => {
   }
   await assertContentSafe({ texts: [meaning, partOfSpeech] });
   const progressId = vocabulary.getProgressDocumentId(studentId, wordKey);
-  await db.runTransaction(async (transaction) => {
+  await runTransaction(async (transaction) => {
     const ref = transaction.collection("vocabularyProgress").doc(progressId);
     const existingRes = await transaction
       .collection("vocabularyProgress")
@@ -4525,7 +4530,7 @@ const addLesson = async (event) => {
     requestFingerprint,
     createdAt: db.serverDate(),
   };
-  const saved = await db.runTransaction(async (transaction) => {
+  const saved = await runTransaction(async (transaction) => {
     const [studentRes, existingLesson] = await Promise.all([
       transaction.collection("students").doc(lessonPayload.studentId).get(),
       getOptionalTransactionDocument(transaction.collection("lessons").doc(lessonId)),
@@ -4632,7 +4637,7 @@ const updateLessonWorkspace = async (event) => {
   if (progressCountingChanged || durationCountingChanged) {
     await ensureStudentLessonCountSnapshot(currentLessonRes.data.studentId);
   }
-  const saved = await db.runTransaction(async (transaction) => {
+  const saved = await runTransaction(async (transaction) => {
     const lessonRef = transaction.collection("lessons").doc(lessonId);
     const lesson = await getOptionalTransactionDocument(lessonRef);
     if (!lesson || lesson.deleting === true) {
@@ -4733,7 +4738,7 @@ const deleteLesson = async (event) => {
 
   await createOneCollection("systemLocks");
   const deleteLockId = getSystemLockId("lesson_delete", lessonId);
-  const deleteState = await db.runTransaction(async (transaction) => {
+  const deleteState = await runTransaction(async (transaction) => {
     const lessonRef = transaction.collection("lessons").doc(lessonId);
     const deleteLockRef = transaction.collection("systemLocks").doc(deleteLockId);
     const [currentLesson, deleteLock] = await Promise.all([
@@ -5066,7 +5071,7 @@ const addPaper = async (event) => {
     uploadedAtMs: Math.max(0, Number(data.uploadedAtMs) || Date.now()),
     createdAt: db.serverDate(),
   };
-  return await db.runTransaction(async (transaction) => {
+  return await runTransaction(async (transaction) => {
     const paperRef = transaction.collection("papers").doc(paperId);
     const currentPaper = await getOptionalTransactionDocument(paperRef);
     if (currentPaper) {
@@ -5317,7 +5322,7 @@ const resetCompletedHomeworkWhenNoUsableRecording = async (lessonId, invalidated
     .filter(isUsableLessonRecording)
     .map((item) => item._id)
     .filter(Boolean);
-  return db.runTransaction(async (transaction) => {
+  return runTransaction(async (transaction) => {
     const lessonRef = transaction.collection("lessons").doc(lessonId);
     const lesson = await getOptionalTransactionDocument(lessonRef);
     if (!lesson || lesson.deleting === true || lesson.recordingTaskEnabled !== true) return false;
@@ -5371,7 +5376,7 @@ const submitLessonRecording = async (event) => {
   const submittedAtMs = Date.now();
   const submissionId = `submission_${submittedAtMs}_${crypto.randomBytes(8).toString("hex")}`;
   const cloudPath = normalizeLessonText(data.cloudPath, 500);
-  await db.runTransaction(async (transaction) => {
+  await runTransaction(async (transaction) => {
     const lessonRef = transaction.collection("lessons").doc(lessonId);
     const currentLesson = await getOptionalTransactionDocument(lessonRef);
     if (
@@ -5491,7 +5496,7 @@ const reviewLessonRecording = async (event) => {
   if (!submissionId) throw createError("INVALID_RECORDING", "录音信息不完整，请刷新后重试");
   await assertContentSafe({ texts: [feedback.text] });
   const reviewStartedAtMs = Date.now();
-  const submission = await db.runTransaction(async (transaction) => {
+  const submission = await runTransaction(async (transaction) => {
     const submissionRef = transaction.collection("lessonSubmissions").doc(submissionId);
     const current = await getOptionalTransactionDocument(submissionRef);
     if (!current) throw createError("RECORDING_NOT_FOUND", "录音不存在或已删除");
@@ -5531,7 +5536,7 @@ const deleteLessonRecording = async (event) => {
     throw createError("INVALID_RECORDING", "录音信息不完整，请刷新后重试");
   }
   const deletionStartedAtMs = Date.now();
-  const deleted = await db.runTransaction(async (transaction) => {
+  const deleted = await runTransaction(async (transaction) => {
     const submissionRef = transaction.collection("lessonSubmissions").doc(submissionId);
     const [submission, lesson] = await Promise.all([
       getOptionalTransactionDocument(submissionRef),
@@ -5562,7 +5567,7 @@ const reviewLessonHomeworkCompletion = async (event) => {
     throw createError("INVALID_HOMEWORK_REVIEW", "课后任务批改信息不完整，请刷新后重试");
   }
   const reviewedAtMs = Date.now();
-  const result = await db.runTransaction(async (transaction) => {
+  const result = await runTransaction(async (transaction) => {
     const lessonRef = transaction.collection("lessons").doc(lessonId);
     const lesson = await getOptionalTransactionDocument(lessonRef);
     if (!lesson || lesson.deleting === true) {
@@ -5623,7 +5628,7 @@ const subscribeHomeworkReminder = async (event) => {
     throw createError("SUBSCRIPTION_NOT_ACCEPTED", "请先允许微信课后任务提醒");
   }
   ensureEnglishCourseAccess(identity, identity.student);
-  const saved = await db.runTransaction(async (transaction) => {
+  const saved = await runTransaction(async (transaction) => {
     const lessonRef = transaction.collection("lessons").doc(lessonId);
     const lesson = await getOptionalTransactionDocument(lessonRef);
     if (!lesson || lesson.studentId !== identity.student._id || lesson.deleting === true) {
@@ -5759,7 +5764,7 @@ const addMistake = async (event) => {
     vocabularyCandidatesVersion: vocabularyFields.vocabularyCandidatesVersion,
     createdAt: db.serverDate(),
   };
-  return await db.runTransaction(async (transaction) => {
+  return await runTransaction(async (transaction) => {
     await getWritableLessonInTransaction(
       transaction,
       data.lessonId,
@@ -5833,7 +5838,7 @@ const updateMistake = async (event) => {
     vocabularyCandidatesVersion: vocabularyFields.vocabularyCandidatesVersion,
     updatedAt: db.serverDate(),
   };
-  await db.runTransaction(async (transaction) => {
+  await runTransaction(async (transaction) => {
     const mistakeRef = transaction.collection("mistakes").doc(data.mistakeId);
     const [currentMistake] = await Promise.all([
       getOptionalTransactionDocument(mistakeRef),
@@ -6081,7 +6086,7 @@ const updateMistakeReviewStatus = async (event) => {
     ensureMistakeLearningAccess(identity, studentRes.data, data);
   }
   const authorizedStudentId = res.data.studentId;
-  const reviewCount = await db.runTransaction(async (transaction) => {
+  const reviewCount = await runTransaction(async (transaction) => {
     const ref = transaction.collection("mistakes").doc(mistakeId);
     const currentRes = await ref.get();
     const current = currentRes.data;
@@ -6427,10 +6432,28 @@ exports.main = async (event) => {
         };
     }
   } catch (err) {
+    if (isTransactionBusyError(err)) {
+      console.error("transaction busy after retries", event && event.type, err);
+      return {
+        success: false,
+        code: "TRANSACTION_BUSY",
+        message: "云数据库暂时繁忙，已自动重试，请稍后再点一次",
+      };
+    }
+    const message = String(err && err.message || "");
+    // 云数据库原始报错（英文、含错误码）只写日志，不直接展示给老师和学生。
+    if (/(?:document|collection|database|transaction)\.?\w*:fail|DATABASE_/i.test(message)) {
+      console.error("database error", event && event.type, err);
+      return {
+        success: false,
+        code: err.code || "DATABASE_ERROR",
+        message: "保存或读取遇到问题，请稍后重试",
+      };
+    }
     return {
       success: false,
       code: err.code || "SERVER_ERROR",
-      message: err.message || "服务暂时不可用",
+      message: message || "服务暂时不可用",
     };
   }
 };

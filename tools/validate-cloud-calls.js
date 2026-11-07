@@ -21,7 +21,7 @@ walk(root).forEach((file) => {
   if (file === helper) return;
   const source = fs.readFileSync(file, "utf8");
   assert(
-    !source.includes("wx.cloud.callFunction("),
+    !/wx\.cloud\s*\.\s*callFunction\(/.test(source),
     `${path.relative(root, file)}: call quickstartFunctions through utils/cloud.js callCloud()`
   );
 });

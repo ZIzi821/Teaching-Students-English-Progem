@@ -1,3 +1,4 @@
+const { callCloud } = require("../../utils/cloud");
 Page({
   data: {
     mistakeId: "",
@@ -23,14 +24,10 @@ Page({
   },
 
   loadMistake() {
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "getMistakeDetail",
         data: {
-          type: "getMistakeDetail",
-          data: {
-            mistakeId: this.data.mistakeId,
-          },
+          mistakeId: this.data.mistakeId,
         },
       })
       .then((res) => {
@@ -68,15 +65,11 @@ Page({
     if (!this.data.mistakeId || !reviewStatus || this.data.reviewSaving) return;
     this.setData({ reviewSaving: true });
     wx.showLoading({ title: "保存中", mask: true });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "updateMistakeReviewStatus",
         data: {
-          type: "updateMistakeReviewStatus",
-          data: {
-            mistakeId: this.data.mistakeId,
-            reviewStatus,
-          },
+          mistakeId: this.data.mistakeId,
+          reviewStatus,
         },
       })
       .then((res) => {
@@ -125,13 +118,9 @@ Page({
         if (!modalRes.confirm) return;
         this.setData({ deleting: true });
         wx.showLoading({ title: "删除中", mask: true });
-        wx.cloud
-          .callFunction({
-            name: "quickstartFunctions",
-            data: {
-              type: "deleteMistake",
-              data: { mistakeId: this.data.mistakeId },
-            },
+        callCloud({
+            type: "deleteMistake",
+            data: { mistakeId: this.data.mistakeId },
           })
           .then((res) => {
             const result = res.result || {};

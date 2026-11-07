@@ -96,12 +96,8 @@ Page({
   },
 
   loadStudents() {
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "listStudents",
-        },
+    callCloud({
+        type: "listStudents",
       })
       .then((res) => {
         const result = res.result || {};
@@ -286,15 +282,11 @@ Page({
 
     const requestId = (this.lessonNoSuggestionRequestId || 0) + 1;
     this.lessonNoSuggestionRequestId = requestId;
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
+    callCloud({
+        type: "getNextLessonNo",
         data: {
-          type: "getNextLessonNo",
-          data: {
-            studentId: student._id,
-            lessonTemplateKey: this.data.form.lessonTemplateKey,
-          },
+          studentId: student._id,
+          lessonTemplateKey: this.data.form.lessonTemplateKey,
         },
       })
       .then((res) => {
@@ -474,13 +466,9 @@ Page({
     if (durationApplies) lessonPayload.durationMinutes = form.durationMinutes;
     this.setData({ saving: true });
     wx.showLoading({ title: "保存中", mask: true });
-    wx.cloud
-      .callFunction({
-        name: "quickstartFunctions",
-        data: {
-          type: "addLesson",
-          data: lessonPayload,
-        },
+    callCloud({
+        type: "addLesson",
+        data: lessonPayload,
       })
       .then((res) => {
         const result = res.result || {};
@@ -504,9 +492,9 @@ Page({
       })
       .catch((err) => {
         console.error(err);
-        this.setData({
-          message: "加载遇到问题，请稍后重试",
-        });
+        const message = (err && err.message) || "保存遇到问题，请稍后重试";
+        this.setData({ message });
+        wx.showToast({ title: message, icon: "none" });
       })
       .finally(() => {
         wx.hideLoading();
