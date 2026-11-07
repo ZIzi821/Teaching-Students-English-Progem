@@ -601,6 +601,7 @@ Page({
   createWorkspaceForm(lesson) {
     return {
       title: lesson.title || "",
+      lessonDate: lesson.lessonDate || "",
       institutionCourse: lesson.institutionCourse === true,
       lessonTemplateKey: lesson.lessonTemplateKey || "general",
       durationMinutes: lesson.durationMinutes ? String(lesson.durationMinutes) : "",
@@ -742,6 +743,10 @@ Page({
     this.setData({ "workspaceForm.institutionCourse": e.detail.value === true });
   },
 
+  onWorkspaceDateChange(e) {
+    this.setData({ "workspaceForm.lessonDate": e.detail.value }, () => this.checkKetWeeklyStatus());
+  },
+
   applyLessonTitleSuggestion(e) {
     const title = String(e.currentTarget.dataset.title || "").trim();
     if (title) this.setData({ "workspaceForm.title": title });
@@ -803,7 +808,7 @@ Page({
       type: "getKetWeeklyStatus",
       data: {
         studentId: lesson.studentId,
-        lessonDate: lesson.lessonDate,
+        lessonDate: this.data.workspaceForm.lessonDate || lesson.lessonDate,
         lessonId: lesson._id,
       },
     }).then((res) => {

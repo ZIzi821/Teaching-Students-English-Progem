@@ -37,8 +37,11 @@
   line-height: 1.4;
 }
 
+/* 原生 input 不支持上下内边距，用固定高度 + 行高让文字垂直居中 */
 .input {
   height: 88rpx;
+  padding: 0 24rpx;
+  line-height: 88rpx;
 }
 
 .textarea {

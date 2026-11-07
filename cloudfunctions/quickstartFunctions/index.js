@@ -4596,6 +4596,19 @@ const updateLessonWorkspace = async (event) => {
     currentLessonRes.data
   ));
   if (!workspace.title) throw createError("INVALID_LESSON_TITLE", "请填写课程名称");
+  // 上课日期可在编辑时修正（例如补录时选错日期）；不传时保持原日期。
+  if (Object.prototype.hasOwnProperty.call(data, "lessonDate")) {
+    const lessonDate = String(data.lessonDate || "").trim();
+    const parsed = /^(\d{4})-(\d{2})-(\d{2})$/.exec(lessonDate);
+    const valid = parsed && (() => {
+      const date = new Date(Date.UTC(Number(parsed[1]), Number(parsed[2]) - 1, Number(parsed[3])));
+      return date.getUTCFullYear() === Number(parsed[1])
+        && date.getUTCMonth() === Number(parsed[2]) - 1
+        && date.getUTCDate() === Number(parsed[3]);
+    })();
+    if (!valid) throw createError("INVALID_LESSON_DATE", "请选择正确的上课日期");
+    workspace.lessonDate = lessonDate;
+  }
   await assertContentSafe({
     texts: [
       workspace.title,

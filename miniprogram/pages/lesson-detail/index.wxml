@@ -127,6 +127,12 @@
         </view>
       </view>
       <view class="field">
+        <view class="label">上课日期</view>
+        <picker mode="date" value="{{workspaceForm.lessonDate}}" bindchange="onWorkspaceDateChange">
+          <view class="picker-value">{{workspaceForm.lessonDate || '选择日期'}}</view>
+        </picker>
+      </view>
+      <view class="field">
         <view class="label">本节记录模板</view>
         <picker mode="selector" range="{{lessonTemplateOptions}}" range-key="label" value="{{lessonTemplateIndex}}" bindchange="onWorkspaceTemplateChange">
           <view class="picker-value">{{lessonTemplate.label}}</view>
